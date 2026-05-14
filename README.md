@@ -1,10 +1,10 @@
-# Jorge Gómez Chaparro — Portfolio Web
+# Jorge Gomez — Portfolio Web
 
 > "Where code meets storytelling."
 
 Portafolio personal desarrollado con HTML, CSS y JavaScript vanilla. Diseño dark tech, animaciones de scroll y totalmente responsivo.
 
-🔗 Live: https://jorgegmch.github.io/portfolio
+🔗 Live: https://jorgegmch.github.io/portafolio-web/
 
 ---
 
