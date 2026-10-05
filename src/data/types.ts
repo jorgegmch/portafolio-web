@@ -7,10 +7,10 @@
 /** Año y mes en formato ISO, p. ej. "2023-03". No se registra el día. */
 export type YearMonth = `${number}-${number}`
 
-export type CertificationCategory = 'formal' | 'soft-skills' | 'technical-ai'
+export type CertificationCategory = 'formal' | 'soft-skills' | 'technical'
 
-export interface Certification {
-  id: string
+export interface Certification<Id extends string = string> {
+  id: Id
   /** Entidad que certifica; nombre propio, no se traduce. */
   entity: string
   date: YearMonth
@@ -21,8 +21,8 @@ export interface Certification {
 
 export type TechnologyGroup = 'backend' | 'databases' | 'languages' | 'frontend' | 'tools' | 'ai'
 
-export interface Technology {
-  id: string
+export interface Technology<Id extends string = string> {
+  id: Id
   name: string
   group: TechnologyGroup
   /** Archivos de logo dentro de public/tech; puede haber más de uno. */
@@ -31,11 +31,12 @@ export interface Technology {
   primary?: boolean
 }
 
-export interface Project {
+export interface Project<Id extends string = string> {
   /** Nombre exacto del repositorio en GitHub; de él se deriva la URL. */
-  id: string
+  id: Id
   title: string
   /** Etiquetas de stack en texto libre, tomadas de la descripción del repo. */
   stack: readonly string[]
-  featured?: boolean
+  /** Se muestra en el sitio; los no destacados solo se ven en GitHub. */
+  featured: boolean
 }
