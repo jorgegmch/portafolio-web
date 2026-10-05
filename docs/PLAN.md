@@ -4,7 +4,7 @@ Reconstrucción de `portafolio-web` como SPA con Vite + React + TypeScript, con 
 
 Este archivo es la única versión del checklist. Se actualiza al cerrar cada fase, en un commit `docs` propio.
 
-**Estado:** Fases 1 y 2 cerradas. Siguiente: Fase 3.
+**Estado:** Fases 1, 2 y 3 cerradas. Siguiente: Fase 4.
 
 ## Reglas de trabajo
 
@@ -59,17 +59,17 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 - [x] `i18n/`: tipo `Dictionary`, `es.ts` y `en.ts` con la bio aprobada y todos los textos
 - [x] `detectLang` con tests: `?lang=` > localStorage > navegador > `es`
 
-### Fase 3 — Lógica pura y hooks
+### Fase 3 — Lógica pura y hooks (hecha)
 
-- [ ] `calculateAge` con tests (día anterior, día del cumpleaños y día siguiente; años bisiestos; cambio de año)
-- [ ] `useAge`: recalcula al montar y al volver a la pestaña
-- [ ] `assembleContact`: email y WhatsApp se ensamblan bajo demanda (al hacer clic o al enfocar el botón), no al cargar la página; antes de la interacción no existen en el DOM
-- [ ] Tests del contacto: (1) antes del clic el texto no aparece en el DOM, (2) después del clic se abre el enlace correcto, (3) el botón es accesible por teclado
-- [ ] Verificar con grep sobre `dist/` que el contacto no queda como texto literal
-- [ ] `safeStorage`, `formatDate`
-- [ ] `LangProvider` y `useLang` (persistencia y `<html lang>`)
-- [ ] `useOncePerSession`, `useReducedMotion`, `useRevealOnScroll`
-- [ ] `useTheme`: pendiente de decisión (ver abajo)
+- [x] `calculateAge` con tests (día anterior, día del cumpleaños y día siguiente; años bisiestos; cambio de año)
+- [x] `useAge`: recalcula en cada medianoche local y al volver a la pestaña
+- [x] `assembleContact`: el email y el WhatsApp se ensamblan bajo demanda, no al cargar la página
+- [x] `ContactButton` (sin estilos): arma el dato al hacer clic. El de email abre `mailto:` y muestra el correo como texto; el de WhatsApp abre `wa.me` en una pestaña nueva
+- [x] Tests del contacto: antes del clic el dato no está en el DOM, después del clic se abre el enlace correcto, y el botón es accesible por teclado
+- [x] Verificado con grep sobre `dist/` y sobre los archivos versionados que el contacto no queda como texto literal
+- [x] `safeStorage` y `formatYearMonth`
+- [x] `LangProvider` y `useLang` (persistencia y `<html lang>`)
+- [x] `useOncePerSession`, `useReducedMotion`, `useRevealOnScroll`
 
 ### Fase 4 — Layout base
 
@@ -89,7 +89,8 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 - [ ] **Sobre mí:** bio, panel terminal que muestra la salida de `java Developer` con la edad en vivo y sin datos de contacto, 4 tarjetas de estadísticas, botón "Ver certificaciones"
 - [ ] **Tecnologías:** grupos con logos, sin niveles ni porcentajes
 - [ ] **Proyectos:** 5 destacados + botón "Ver todos en GitHub". En orden: LogiTrack IQ (protagonista), LogiTrack API, Inventory Guardian, CRM Registro Campers, n8n Daily News Agent
-- [ ] **Contacto:** email, WhatsApp, LinkedIn y GitHub; sin formulario. Los botones de email y WhatsApp arman el dato al interactuar (clic o foco), no al cargar
+- [ ] **Contacto:** email, WhatsApp, LinkedIn y GitHub; sin formulario. Los botones de email y WhatsApp usan `ContactButton`, que arma el dato al hacer clic y no al cargar
+- [ ] Repetir la verificación con grep sobre `dist/` con la sección de contacto ya montada
 - [ ] `examples/java/Developer.java`: el record real y compilable
 
 ### Fase 7 — Página `/certificaciones`
@@ -108,7 +109,7 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 ### Fase 9 — Calidad y CI
 
 - [ ] Tests de componentes: selector de idioma, dropdown de CV, certificaciones, tarjetas
-- [ ] Smoke test en Playwright
+- [ ] Smoke test en Playwright, incluida la comprobación de que el contacto no aparece en el HTML servido
 - [ ] GitHub Actions: lint, typecheck, tests, build, e2e y `npm audit` en cada push
 - [ ] Lighthouse CI
 - [ ] Dependabot para npm y GitHub Actions
@@ -132,13 +133,17 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 - **Repos públicos contra la tarjeta:** el botón "Ver todos en GitHub" lleva a 19 repos públicos, pero la tarjeta "Proyectos" cuenta los 16 de `data/projects.ts`.
 - **Descripciones en GitHub:** la de `crm-registro-campers` ya no coincide con la del sitio (que aclara que es solo frontend y un módulo de un MVP en equipo); la de `campuslands-erp-cli` tiene una puntuación por corregir, y al corregirla hay que actualizar `en.ts` y `es.ts`.
 - **React en el catálogo de tecnologías:** hoy solo aparece como etiqueta de un proyecto.
-- **`?lang=` y localStorage:** si el idioma recibido por URL se guarda para las siguientes visitas. Se decide en `useLang` (Fase 3).
 - **Tagline del hero:** hoy "Where code meets storytelling." en ambos idiomas. Se decide en la Fase 6.
-- **`useTheme`:** si hace falta, dado que el sitio tendrá solo tema oscuro.
+
+## Decisiones resueltas
+
+- **`?lang=` y localStorage:** un idioma recibido por `?lang=` vale para la visita pero no se guarda. Solo se guarda la elección hecha con el selector, y al elegir se quita `?lang=` de la URL para que no pise la preferencia al recargar.
+- **`useTheme`:** descartado. El sitio tiene un solo tema oscuro y los colores irán en `tokens.css`; si algún día hay tema claro, se añaden entonces el bloque CSS y el hook.
+- **Contacto bajo demanda:** se usa un botón, no un enlace, para que el dato no exista en el DOM antes del clic.
 
 ## Riesgos conocidos
 
-- **Contacto:** el email y el WhatsApp se guardan codificados en `config/contact.ts`, se ensamblan al interactuar y no existen en el DOM al cargar la página. Aun así es ofuscación contra scrapers simples, no protección real.
+- **Contacto:** el email y el WhatsApp se guardan codificados en `config/contact.ts`, se ensamblan al hacer clic y no existen en el DOM al cargar la página. Aun así es ofuscación contra scrapers simples, no protección real.
 - **`jsx-a11y` con ESLint 10:** funciona, pero el plugin solo declara soporte hasta ESLint 9; se permite con un `overrides` en `package.json`.
 - **Open Graph por idioma:** las meta son estáticas, así que la vista previa en redes no cambia con `?lang=`.
 - **PDFs de CV:** todo lo que esté en `public/` es público.
