@@ -2,7 +2,6 @@
 export const storageKeys = {
   local: {
     lang: 'portafolio:lang',
-    theme: 'portafolio:theme',
   },
   session: {
     introSeen: 'portafolio:intro-seen',
