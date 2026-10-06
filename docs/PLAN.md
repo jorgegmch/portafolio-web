@@ -68,7 +68,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 - [ ] Logos SVG de las tecnologías, con licencia verificada
 - [ ] `ai.svg`: icono genérico, sin marcas de empresas de IA, con licencia verificada
 
-## Bucle agéntico
+## Extensiones de Claude Code
 
 - [ ] Skills `verify-contact`, `close-phase` y `pre-push-check`
 - [ ] Hooks, todos escritos en Node: bloquear `git add -A`, `--no-verify` y force push; antes de la Fase 6, un escaneo de datos personales
@@ -81,7 +81,6 @@ Cada pieza nueva exige su excepción en el `.gitignore` del repo, en el mismo co
 
 - **React en el catálogo de tecnologías:** hoy solo aparece como etiqueta de un proyecto.
 - **Tagline del hero:** hoy "Where code meets storytelling." en ambos idiomas. Se decide en la Fase 6.
-- **Memoria automática de Claude Code (Auto-memory activada):** guarda notas fuera del repo; decidir si se desactiva para que `docs/MEMORY.md` sea la única memoria del proyecto.
 
 ## Riesgos conocidos
 

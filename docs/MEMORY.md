@@ -2,7 +2,7 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases está en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 3 cerradas en rebuild/vite-react (scaffold, config, data, i18n, lib, hooks, ContactButton). Rama subida a origin (34 commits); main intacto.
+- Fases 1 a 3 cerradas en rebuild/vite-react (scaffold, config, data, i18n, lib, hooks, ContactButton). Rama subida a origin, sin merge.
 - Falta la Fase 4 (tokens, fuentes, Navbar, Footer, fondo de partículas); la paleta se aprueba antes de aplicarla.
 - Las reglas de .claude/rules/ y los límites de AGENTS.md ya existen.
 - Las descripciones de proyectos están sincronizadas con GitHub.
@@ -22,6 +22,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Commits en inglés: el historial de un repo público lo lee quien lo revise.
 - AGENTS.md se mantiene corto (tope práctico ~150 líneas); las reglas de .claude/rules/ se importan con @ y siempre están cargadas, para que sean vinculantes y se vean en /memory.
 - No se hace merge a main hasta la Fase 10: GitHub Pages sirve main y un proyecto Vite sin compilar lo dejaría en blanco. Al fusionar: merge commit, no squash, para conservar los commits por causa.
+- Dos memorias con reparto: docs/MEMORY.md (versionada) guarda estado y decisiones con su porqué; la memoria automática de Claude Code (local, no versionada) guarda aprendizajes de correcciones y preferencias. No duplicar entre ambas.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
@@ -35,4 +36,4 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 
 ## Próximos pasos
 1. Fase 4: plan por commits y paleta para aprobar.
-2. Bucle agéntico (skills, hooks, subagente, MCP): ver PLAN.md.
+2. Extensiones de Claude Code (skills, hooks, subagente, MCP): ver PLAN.md.
