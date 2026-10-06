@@ -68,16 +68,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 - [ ] Logos SVG de las tecnologías, con licencia verificada
 - [ ] `ai.svg`: icono genérico, sin marcas de empresas de IA, con licencia verificada
 
-## Antes del primer push
-
-- [x] Codificar la fecha de nacimiento (y actualizar entonces `contacto.md` y `arquitectura.md`, y añadir la fecha de nacimiento a la línea «Nunca» de Límites en `AGENTS.md`)
-- [x] Reescribir el historial con rama de respaldo: quitar la fecha en claro y traducir los mensajes a inglés
-- [x] Borrar la rama de respaldo
-- [x] `git log` sin menciones a IA
-- [x] grep sobre `dist/` sin datos personales (verificado antes de 8c69d17, que solo toca documentación; la fecha ya no puede repetirse sin el respaldo)
-- [x] Comprobar que `.claude/settings.local.json` no está versionado
-
-## Bucle agéntico (después de reescribir el historial)
+## Bucle agéntico
 
 - [ ] Skills `verify-contact`, `close-phase` y `pre-push-check`
 - [ ] Hooks, todos escritos en Node: bloquear `git add -A`, `--no-verify` y force push; antes de la Fase 6, un escaneo de datos personales

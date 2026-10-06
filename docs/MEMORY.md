@@ -2,7 +2,7 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases está en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 3 cerradas en rebuild/vite-react (scaffold, config, data, i18n, lib, hooks, ContactButton). Sin push.
+- Fases 1 a 3 cerradas en rebuild/vite-react (scaffold, config, data, i18n, lib, hooks, ContactButton). Rama subida a origin (34 commits); main intacto.
 - Falta la Fase 4 (tokens, fuentes, Navbar, Footer, fondo de partículas); la paleta se aprueba antes de aplicarla.
 - Las reglas de .claude/rules/ y los límites de AGENTS.md ya existen.
 - Las descripciones de proyectos están sincronizadas con GitHub.
@@ -21,6 +21,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Diseño pensado primero para escritorio y adaptado a tablet y teléfono; en táctil el fondo pasa a modo reducido.
 - Commits en inglés: el historial de un repo público lo lee quien lo revise.
 - AGENTS.md se mantiene corto (tope práctico ~150 líneas); las reglas de .claude/rules/ se importan con @ y siempre están cargadas, para que sean vinculantes y se vean en /memory.
+- No se hace merge a main hasta la Fase 10: GitHub Pages sirve main y un proyecto Vite sin compilar lo dejaría en blanco. Al fusionar: merge commit, no squash, para conservar los commits por causa.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
@@ -30,6 +31,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Al verificar commits con checkout: usar stash, nunca checkout --force.
 - Las reglas de .claude/rules/ se descubren al iniciar la sesión (reiniciar tras crearlas) y las de rutas cargan al leer un archivo coincidente; verificado en Windows nativo con una marca de prueba; y, importadas con @, quedan cargadas siempre (también al crear archivos nuevos).
 - Vitest sale con código 1 si no hay ningún archivo de test: configura el runner junto al primer test; en los commits 5 a 8 pasa por eso, no por un test roto.
+- El push lo hago yo en PowerShell, nunca con el botón de VS Code; el agente no se entera de lo que pasa fuera de la sesión: contrasta con git al empezar.
 
 ## Próximos pasos
 1. Fase 4: plan por commits y paleta para aprobar.

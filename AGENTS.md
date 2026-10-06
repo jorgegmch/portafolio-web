@@ -77,6 +77,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 ## Memoria
 
 - Al empezar, leer `docs/MEMORY.md`; al terminar una tarea, actualizarlo (estado, decisiones con su porqué, errores a evitar). Máximo ~50 líneas.
+- Al empezar, contrasta el estado de docs/MEMORY.md con git (`git status -sb`, `git branch -vv`, `git log --oneline -3`) y corrige lo que haya cambiado fuera de la sesión.
 - Si algo se vuelve regla permanente, proponer moverlo a este archivo. Nunca guardar datos sensibles.
 - Sus cambios se commitean junto con el commit `docs` de cierre de fase.
 
