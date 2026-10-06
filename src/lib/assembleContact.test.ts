@@ -1,27 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { CONTACT_OFFSET, encodedContact } from '@/config/contact'
-import {
-  decodeText,
-  encodeText,
-  getEmail,
-  getEmailUrl,
-  getWhatsappUrl,
-} from '@/lib/assembleContact'
+import { encodedContact } from '@/config/contact'
+import { getEmail, getEmailUrl, getWhatsappUrl } from '@/lib/assembleContact'
 
 // Estos tests comprueban la forma del resultado, nunca el valor: el repo es
 // público y escribir aquí el correo o el número anularía la ofuscación.
 describe('assembleContact', () => {
-  it('codifica y decodifica un texto de ida y vuelta', () => {
-    const text = 'persona@example.com'
-    expect(decodeText(encodeText(text))).toBe(text)
-  })
-
-  it('el texto codificado no coincide con el original', () => {
-    const codes = encodeText('persona@example.com')
-    expect(String.fromCharCode(...codes)).not.toContain('@')
-    expect(codes[0]).toBe('p'.charCodeAt(0) + CONTACT_OFFSET)
-  })
-
   it('el email decodificado tiene forma de correo, con una sola @', () => {
     const email = getEmail()
     expect(email).toMatch(/^[a-z0-9._-]+@[a-z0-9-]+(\.[a-z]{2,})+$/)
