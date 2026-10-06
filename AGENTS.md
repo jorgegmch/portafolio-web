@@ -99,6 +99,11 @@ Es ofuscación contra scrapers simples, no protección real. Si tocas esta parte
 ## Límites
 
 - ✅ Siempre: actualizar `docs/MEMORY.md` al terminar cada tarea.
+- ⚠️ Pregunta antes: añadir dependencias (con `npm audit` antes y después) y cualquier petición a terceros en runtime (Google Fonts, analítica, CDN, iframes).
+- 🚫 Nunca: email, teléfono ni cédula en claro en ningún archivo (código, tests, docs, comentarios, metadatos de PDF o imágenes, capturas, logs).
+- 🚫 Nunca: `dangerouslySetInnerHTML`, `innerHTML`, `eval` ni `new Function`.
+- 🚫 Nunca: secretos en variables `VITE_*` (son públicas), ni tokens o claves en archivos del repo o en workflows; usar GitHub Secrets.
+- 🚫 Nunca: `git add .` ni `git add -A` sin revisar `git status`; `--no-verify`; force push; push sin que se pida; commitear `.claude/settings.local.json`.
 
 ## Dependencias
 
