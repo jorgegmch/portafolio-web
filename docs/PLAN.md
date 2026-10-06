@@ -5,55 +5,11 @@ Reconstrucción de `portafolio-web` como SPA con Vite + React + TypeScript, con 
 Este archivo es la única versión del checklist. Se actualiza al cerrar cada fase, en un commit `docs` propio.
 La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizajes y próximos pasos) está en `docs/MEMORY.md`.
 
-**Estado:** Fases 1, 2 y 3 cerradas. Siguiente: Fase 4.
-
-## Un solo lugar por cambio
-
-| Qué cambia | Dónde |
-|---|---|
-| Nombre legal, fecha de nacimiento, rol, ubicación, redes | `src/config/site.ts` |
-| Email y WhatsApp (codificados) | `src/config/contact.ts` |
-| Rutas y anclas de sección | `src/config/routes.ts` |
-| Claves de localStorage / sessionStorage | `src/config/storage.ts` |
-| Proyectos, certificaciones, tecnologías | `src/data/` |
-| Textos en español e inglés | `src/i18n/es.ts`, `src/i18n/en.ts` |
-| Colores, tipografías, espaciados | `src/styles/tokens.css` (Fase 4) |
-
 ## Fases
 
-### Fase 0 — Preparación (parcial)
-
-- [x] Rama `rebuild/vite-react`
-- [x] Decisiones base: npm, CSS Modules, react-router, solo tema oscuro, descripciones EN del repo + ES traducidas, 4 PDFs de CV
-- [ ] Recursos pendientes: ver "Pendiente antes de la Fase 6"
-
-### Fase 1 — Scaffold y tooling (hecha)
-
-- [x] `.gitignore` y `.env.example`
-- [x] Vite + React 19 + TypeScript estricto, alias `@/`
-- [x] ESLint 10 con reglas de capas, `jsx-a11y` y `react-hooks`
-- [x] Vitest + Testing Library
-- [x] `npm audit` sin vulnerabilidades
-- [ ] Importar las fuentes de `@fontsource` (ya instaladas; va en la Fase 4)
-
-### Fase 2 — Config, datos e i18n (hecha)
-
-- [x] `config/`: datos del sitio, contacto codificado, rutas, claves de storage
-- [x] `data/`: tipos, 16 proyectos (5 destacados), 9 certificaciones, 13 tecnologías en 6 grupos
-- [x] `i18n/`: tipo `Dictionary`, `es.ts` y `en.ts` con la bio aprobada y todos los textos
-- [x] `detectLang` con tests: `?lang=` > localStorage > navegador > `es`
-
-### Fase 3 — Lógica pura y hooks (hecha)
-
-- [x] `calculateAge` con tests (día anterior, día del cumpleaños y día siguiente; años bisiestos; cambio de año)
-- [x] `useAge`: recalcula en cada medianoche local y al volver a la pestaña
-- [x] `assembleContact`: el email y el WhatsApp se ensamblan bajo demanda, no al cargar la página
-- [x] `ContactButton` (sin estilos): arma el dato al hacer clic. El de email abre `mailto:` y muestra el correo como texto; el de WhatsApp abre `wa.me` en una pestaña nueva
-- [x] Tests del contacto: antes del clic el dato no está en el DOM, después del clic se abre el enlace correcto, y el botón es accesible por teclado
-- [x] Verificado con grep sobre `dist/` y sobre los archivos versionados que el contacto no queda como texto literal
-- [x] `safeStorage` y `formatYearMonth`
-- [x] `LangProvider` y `useLang` (persistencia y `<html lang>`)
-- [x] `useOncePerSession`, `useReducedMotion`, `useRevealOnScroll`
+- [x] **Fase 1 — Scaffold y tooling:** Vite + React 19 + TypeScript estricto, alias `@/`, ESLint 10 con reglas de capas, Vitest + Testing Library.
+- [x] **Fase 2 — Config, datos e i18n:** `config/`, `data/` (16 proyectos, 9 certificaciones, 13 tecnologías), diccionarios `es.ts` y `en.ts`, `detectLang`.
+- [x] **Fase 3 — Lógica pura y hooks:** `calculateAge`, `useAge`, `assembleContact`, `ContactButton`, `safeStorage`, `LangProvider` y los hooks de sesión, movimiento y scroll.
 
 ### Fase 4 — Layout base
 
@@ -101,7 +57,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 ### Fase 10 — Deploy y cierre
 
 - [ ] `vercel.json`: rewrite de SPA y headers de seguridad (CSP, `X-Content-Type-Options`, `X-Frame-Options`)
-- [ ] Importar el repo en Vercel (integración Git; si algún día se despliega desde Actions, el token va como GitHub Secret)
+- [ ] Importar el repo en Vercel (integración Git)
 - [ ] README nuevo y descripción del repo actualizada
 - [ ] Desactivar GitHub Pages cuando el dominio de Vercel esté confirmado
 
@@ -112,16 +68,32 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 - [ ] Logos SVG de las tecnologías, con licencia verificada
 - [ ] `ai.svg`: icono genérico, sin marcas de empresas de IA, con licencia verificada
 
+## Antes del primer push
+
+- [ ] Codificar la fecha de nacimiento (y actualizar entonces `contacto.md` y `arquitectura.md`, y añadir la fecha de nacimiento a la línea «Nunca» de Límites en `AGENTS.md`)
+- [ ] Reescribir el historial con rama de respaldo: quitar la fecha en claro y traducir los mensajes a inglés
+- [ ] Borrar la rama de respaldo
+- [ ] `git log` sin menciones a IA
+- [ ] grep sobre `dist/` sin datos personales
+- [ ] Comprobar que `.claude/settings.local.json` no está versionado
+
+## Bucle agéntico (después de reescribir el historial)
+
+- [ ] Skills `verify-contact`, `close-phase` y `pre-push-check`
+- [ ] Hooks, todos escritos en Node: bloquear `git add -A`, `--no-verify` y force push; tras crear un archivo, hacer que el agente lo lea (para cargar las reglas por rutas); antes de la Fase 6, un escaneo de datos personales
+- [ ] Subagente `reviewer` al empezar la UI
+- [ ] MCP solo si Playwright no basta
+
+Cada pieza nueva exige su excepción en el `.gitignore` del repo, en el mismo commit que la crea.
+
 ## Pendientes de decisión
 
-- **Repos públicos contra la tarjeta:** el botón "Ver todos en GitHub" lleva a 19 repos públicos, pero la tarjeta "Proyectos" cuenta los 16 de `data/projects.ts`.
-- **Descripciones en GitHub:** la de `crm-registro-campers` ya no coincide con la del sitio (que aclara que es solo frontend y un módulo de un MVP en equipo); la de `campuslands-erp-cli` tiene una puntuación por corregir, y al corregirla hay que actualizar `en.ts` y `es.ts`.
 - **React en el catálogo de tecnologías:** hoy solo aparece como etiqueta de un proyecto.
 - **Tagline del hero:** hoy "Where code meets storytelling." en ambos idiomas. Se decide en la Fase 6.
+- **Memoria automática de Claude Code (Auto-memory activada):** guarda notas fuera del repo; decidir si se desactiva para que `docs/MEMORY.md` sea la única memoria del proyecto.
 
 ## Riesgos conocidos
 
-- **Contacto:** el email y el WhatsApp se guardan codificados en `config/contact.ts`, se ensamblan al hacer clic y no existen en el DOM al cargar la página. Aun así es ofuscación contra scrapers simples, no protección real.
 - **`jsx-a11y` con ESLint 10:** funciona, pero el plugin solo declara soporte hasta ESLint 9; se permite con un `overrides` en `package.json`.
 - **Open Graph por idioma:** las meta son estáticas, así que la vista previa en redes no cambia con `?lang=`.
 - **PDFs de CV:** todo lo que esté en `public/` es público.
