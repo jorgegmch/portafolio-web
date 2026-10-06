@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { site } from '@/config/site'
+import { getBirthDate } from '@/lib/birthDate'
 import { calculateAge, toDateParts, type DateParts } from '@/lib/calculateAge'
 
 const msUntilNextMidnight = (now: Date): number =>
@@ -12,7 +12,7 @@ const msUntilNextMidnight = (now: Date): number =>
  * El timer nunca supera las 24 horas. Un único setTimeout hasta el próximo
  * cumpleaños desbordaría el máximo de ~24,8 días y se dispararía de inmediato.
  */
-export function useAge(birth: DateParts = site.birthDate): number {
+export function useAge(birth: DateParts = getBirthDate()): number {
   const { year, month, day } = birth
   const [age, setAge] = useState(() => calculateAge({ year, month, day }, toDateParts(new Date())))
 

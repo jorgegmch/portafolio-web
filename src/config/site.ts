@@ -1,5 +1,7 @@
 const GITHUB_USER = 'jorgegmch'
 
+export const BIRTH_DATE_OFFSET = 11
+
 export const site = {
   /** Nombre legal, tal como aparece en la cédula (sin tilde en Gomez). */
   legalName: 'Jorge Alberto Gomez Chaparro',
@@ -7,8 +9,13 @@ export const site = {
   role: 'Full Stack Developer',
   location: 'Piedecuesta, Santander, Colombia',
   status: ['open_to_work', 'freelance_disponible'],
-  /** Fecha de ejemplo. El mes va de 1 a 12. */
-  birthDate: { year: 2000, month: 3, day: 15 },
+  /**
+   * Fecha de nacimiento (AAAA-MM-DD) como códigos de carácter desplazados;
+   * la reconstruye lib/birthDate. Es ofuscación contra scrapers simples, no
+   * protección real. Para cambiarla, genera sus códigos con:
+   *   [...'AAAA-MM-DD'].map((c) => c.charCodeAt(0) + BIRTH_DATE_OFFSET)
+   */
+  birthDateCodes: [60, 68, 68, 68, 56, 59, 64, 56, 60, 61],
   /** URL pública sin slash final; se usa para canonical y Open Graph. */
   url: import.meta.env.VITE_SITE_URL ?? '',
   githubUser: GITHUB_USER,
