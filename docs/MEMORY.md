@@ -20,7 +20,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Fuentes con @fontsource y animaciones con canvas propio: sin peticiones a terceros ni librerías extra.
 - Diseño pensado primero para escritorio y adaptado a tablet y teléfono; en táctil el fondo pasa a modo reducido.
 - Commits en inglés: el historial de un repo público lo lee quien lo revise.
-- AGENTS.md se mantiene corto (tope práctico ~90 líneas), con seguridad y límites para que toda herramienta los vea: cada línea que carga siempre compite por atención; el detalle por área va a .claude/rules/ (carga por rutas).
+- AGENTS.md se mantiene corto (tope práctico ~150 líneas); las reglas de .claude/rules/ se importan con @ y siempre están cargadas, para que sean vinculantes y se vean en /memory.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
@@ -28,7 +28,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Una comprobación de ausencia (grep sobre dist/) necesita un control positivo, o pasa sin probar nada.
 - Git no mira dentro de un directorio ignorado: .claude/ está en mi gitignore global y cada pieza nueva de .claude/ necesita su excepción en el .gitignore del repo.
 - Al verificar commits con checkout: usar stash, nunca checkout --force.
-- Las reglas de .claude/rules/ se descubren al iniciar la sesión (reiniciar tras crearlas) y las de rutas cargan al leer un archivo coincidente; verificado en Windows nativo con una marca de prueba.
+- Las reglas de .claude/rules/ se descubren al iniciar la sesión (reiniciar tras crearlas) y las de rutas cargan al leer un archivo coincidente; verificado en Windows nativo con una marca de prueba; y, importadas con @, quedan cargadas siempre (también al crear archivos nuevos).
 - Vitest sale con código 1 si no hay ningún archivo de test: configura el runner junto al primer test; en los commits 5 a 8 pasa por eso, no por un test roto.
 
 ## Próximos pasos

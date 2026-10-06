@@ -1,11 +1,3 @@
----
-paths:
-  - "src/components/**"
-  - "src/pages/**"
-  - "src/hooks/**"
-  - "src/lib/**"
----
-
 # Convenciones de código
 
 ## Reparto de responsabilidades

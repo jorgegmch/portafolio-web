@@ -1,11 +1,3 @@
----
-paths:
-  - "**/*.test.ts"
-  - "**/*.test.tsx"
-  - "src/test/**"
-  - "e2e/**"
----
-
 # Tests
 
 ## Entorno

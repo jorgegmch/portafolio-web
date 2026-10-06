@@ -1,10 +1,3 @@
----
-paths:
-  - "src/components/**"
-  - "src/pages/**"
-  - "**/*.css"
----
-
 # Accesibilidad
 
 ## Estructura

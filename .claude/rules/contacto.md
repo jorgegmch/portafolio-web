@@ -1,14 +1,3 @@
----
-paths:
-  - "src/config/contact.ts"
-  - "src/lib/assembleContact*"
-  - "src/components/ui/ContactButton*"
-  - "src/components/sections/Contact*"
-  - "src/lib/birthDate*"
-  - "src/lib/textCodes*"
-  - "src/config/site.ts"
----
-
 # Contacto ofuscado
 
 El email y el WhatsApp no pueden aparecer como texto literal en ningún archivo del repo, ni en el bundle, ni en el DOM antes de que el visitante interactúe. Es ofuscación contra scrapers simples, no protección real.

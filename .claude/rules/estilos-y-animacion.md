@@ -1,10 +1,3 @@
----
-paths:
-  - "**/*.css"
-  - "src/components/**"
-  - "src/pages/**"
----
-
 # Estilos y animación
 
 ## Tamaños de pantalla

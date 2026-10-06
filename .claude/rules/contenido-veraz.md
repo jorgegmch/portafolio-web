@@ -1,11 +1,3 @@
----
-paths:
-  - "src/data/**"
-  - "src/i18n/**"
-  - "src/pages/**"
-  - "src/components/sections/**"
----
-
 # Contenido veraz
 
 ## Nada inventado

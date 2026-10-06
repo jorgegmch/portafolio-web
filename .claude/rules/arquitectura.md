@@ -1,11 +1,3 @@
----
-paths:
-  - "eslint.config.js"
-  - "src/config/**"
-  - "src/data/**"
-  - "src/i18n/**"
----
-
 # Arquitectura
 
 ## Capas

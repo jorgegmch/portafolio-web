@@ -80,7 +80,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 ## Bucle agéntico (después de reescribir el historial)
 
 - [ ] Skills `verify-contact`, `close-phase` y `pre-push-check`
-- [ ] Hooks, todos escritos en Node: bloquear `git add -A`, `--no-verify` y force push; tras crear un archivo, hacer que el agente lo lea (para cargar las reglas por rutas); antes de la Fase 6, un escaneo de datos personales
+- [ ] Hooks, todos escritos en Node: bloquear `git add -A`, `--no-verify` y force push; antes de la Fase 6, un escaneo de datos personales
 - [ ] Subagente `reviewer` al empezar la UI
 - [ ] MCP solo si Playwright no basta
 
