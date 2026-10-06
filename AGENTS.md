@@ -6,7 +6,7 @@ Guía para agentes de código que trabajan en este repositorio.
 
 Portafolio personal en reconstrucción: SPA con Vite + React 19 + TypeScript estricto, con i18n ES/EN, que se desplegará en Vercel. El trabajo va por fases en la rama `rebuild/vite-react`.
 
-`docs/PLAN.md` es la única fuente del estado del proyecto: fases hechas y pendientes, decisiones abiertas y resueltas, y riesgos. Léelo antes de empezar y actualízalo al cerrar cada fase, en un commit `docs` propio. El `README.md` todavía describe el sitio viejo (HTML estático); se reescribe en la última fase.
+`docs/PLAN.md` contiene las fases, los pendientes de decisión y los riesgos; léelo al empezar cada fase y actualízalo al cerrarla, en un commit `docs` propio. `docs/MEMORY.md` contiene la memoria entre sesiones: estado actual, decisiones con su porqué, aprendizajes y próximos pasos. El `README.md` todavía describe el sitio viejo (HTML estático); se reescribe en la última fase.
 
 ## Comandos
 
@@ -89,6 +89,16 @@ Es ofuscación contra scrapers simples, no protección real. Si tocas esta parte
   - que ningún mensaje de commit mencione a IA: `git log --format=%B | Select-String "claude|anthropic|co-authored"` no debe devolver nada;
   - que ningún archivo versionado contenga datos personales en claro (email, teléfono, número de cédula).
 - Las reglas se editan en este archivo. `CLAUDE.md` solo debe importarlo con `@AGENTS.md` y no duplicar su contenido.
+
+## Memoria
+
+- Al empezar, leer `docs/MEMORY.md`; al terminar una tarea, actualizarlo (estado, decisiones con su porqué, errores a evitar). Máximo ~50 líneas.
+- Si algo se vuelve regla permanente, proponer moverlo a este archivo. Nunca guardar datos sensibles.
+- Sus cambios se commitean junto con el commit `docs` de cierre de fase.
+
+## Límites
+
+- ✅ Siempre: actualizar `docs/MEMORY.md` al terminar cada tarea.
 
 ## Dependencias
 

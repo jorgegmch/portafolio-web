@@ -3,27 +3,11 @@
 Reconstrucción de `portafolio-web` como SPA con Vite + React + TypeScript, con i18n ES/EN, página `/certificaciones`, fondo canvas, animación de carga, calidad automatizada y despliegue en Vercel.
 
 Este archivo es la única versión del checklist. Se actualiza al cerrar cada fase, en un commit `docs` propio.
+La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizajes y próximos pasos) está en `docs/MEMORY.md`.
 
 **Estado:** Fases 1, 2 y 3 cerradas. Siguiente: Fase 4.
 
-## Reglas de trabajo
-
-- Rama `rebuild/vite-react`. Commits separados por causa, con Conventional Commits en español. Sin push hasta que se indique.
-- Antes de escribir código de una fase: plan por commits y plan de tests.
-- Este repositorio es público: ningún documento ni dato lleva número de cédula, y los datos de contacto no se escriben como texto literal.
-
-## Reglas de arquitectura
-
-Un módulo solo importa de su capa o de las inferiores. ESLint lo hace cumplir (`no-restricted-imports`) y obliga a usar el alias `@/` en vez de `../`.
-
-```
-config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layout · components/sections  <-  pages  <-  App
-```
-
-- **Una fuente de verdad por dato.** Los conteos de las tarjetas salen de `data/`, no se escriben a mano.
-- **Estructura y texto separados.** `data/` guarda lo que no se traduce (ids, fechas, nombres propios); `i18n/` guarda los textos, indexados por id. Si a un idioma le falta una clave, TypeScript falla.
-- **DRY con regla de tres.** No se extrae una abstracción hasta la tercera repetición real.
-- **Un solo lugar por cambio:**
+## Un solo lugar por cambio
 
 | Qué cambia | Dónde |
 |---|---|
@@ -134,12 +118,6 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 - **Descripciones en GitHub:** la de `crm-registro-campers` ya no coincide con la del sitio (que aclara que es solo frontend y un módulo de un MVP en equipo); la de `campuslands-erp-cli` tiene una puntuación por corregir, y al corregirla hay que actualizar `en.ts` y `es.ts`.
 - **React en el catálogo de tecnologías:** hoy solo aparece como etiqueta de un proyecto.
 - **Tagline del hero:** hoy "Where code meets storytelling." en ambos idiomas. Se decide en la Fase 6.
-
-## Decisiones resueltas
-
-- **`?lang=` y localStorage:** un idioma recibido por `?lang=` vale para la visita pero no se guarda. Solo se guarda la elección hecha con el selector, y al elegir se quita `?lang=` de la URL para que no pise la preferencia al recargar.
-- **`useTheme`:** descartado. El sitio tiene un solo tema oscuro y los colores irán en `tokens.css`; si algún día hay tema claro, se añaden entonces el bloque CSS y el hook.
-- **Contacto bajo demanda:** se usa un botón, no un enlace, para que el dato no exista en el DOM antes del clic.
 
 ## Riesgos conocidos
 
