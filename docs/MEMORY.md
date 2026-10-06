@@ -11,7 +11,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - npm (único gestor instalado), react-router (ruta /certificaciones) y CSS Modules (decididos en la Fase 0).
 - Un solo tema oscuro; no hay useTheme: evita código sin uso.
 - El contacto se ensambla al interactuar y es un botón, no un enlace: un href inicial expondría el dato en el DOM antes del clic. Es ofuscación, no protección real.
-- La fecha de nacimiento se codificará como el contacto: frena scrapers simples; el historial se reescribe antes del primer push.
+- La fecha de nacimiento va codificada con su propio desplazamiento: frena scrapers simples; es ofuscación, no protección real.
 - ?lang= no se guarda; solo la elección con el selector: un enlace compartido no cambia la preferencia de quien lo abre.
 - 5 proyectos destacados y enlace a GitHub: 16 tarjetas diluyen los mejores.
 - La tarjeta cuenta los 16 proyectos curados; el fork, el monorepo de práctica y portafolio-web no cuentan (reconsiderar portafolio-web en la Fase 10).
@@ -29,8 +29,8 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Git no mira dentro de un directorio ignorado: .claude/ está en mi gitignore global y cada pieza nueva de .claude/ necesita su excepción en el .gitignore del repo.
 - Al verificar commits con checkout: usar stash, nunca checkout --force.
 - Las reglas de .claude/rules/ se descubren al iniciar la sesión (reiniciar tras crearlas) y las de rutas cargan al leer un archivo coincidente; verificado en Windows nativo con una marca de prueba.
+- Vitest sale con código 1 si no hay ningún archivo de test: configura el runner junto al primer test; en los commits 5 a 8 pasa por eso, no por un test roto.
 
 ## Próximos pasos
-1. Codificar la fecha de nacimiento y reescribir el historial (commits en inglés) antes del primer push.
-2. Fase 4: plan por commits y paleta para aprobar.
-3. Bucle agéntico (skills, hooks, subagente, MCP): ver PLAN.md.
+1. Fase 4: plan por commits y paleta para aprobar.
+2. Bucle agéntico (skills, hooks, subagente, MCP): ver PLAN.md.

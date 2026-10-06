@@ -70,8 +70,8 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 
 ## Antes del primer push
 
-- [ ] Codificar la fecha de nacimiento (y actualizar entonces `contacto.md` y `arquitectura.md`, y añadir la fecha de nacimiento a la línea «Nunca» de Límites en `AGENTS.md`)
-- [ ] Reescribir el historial con rama de respaldo: quitar la fecha en claro y traducir los mensajes a inglés
+- [x] Codificar la fecha de nacimiento (y actualizar entonces `contacto.md` y `arquitectura.md`, y añadir la fecha de nacimiento a la línea «Nunca» de Límites en `AGENTS.md`)
+- [x] Reescribir el historial con rama de respaldo: quitar la fecha en claro y traducir los mensajes a inglés
 - [ ] Borrar la rama de respaldo
 - [ ] `git log` sin menciones a IA
 - [ ] grep sobre `dist/` sin datos personales

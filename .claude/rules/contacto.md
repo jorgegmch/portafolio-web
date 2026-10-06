@@ -4,6 +4,9 @@ paths:
   - "src/lib/assembleContact*"
   - "src/components/ui/ContactButton*"
   - "src/components/sections/Contact*"
+  - "src/lib/birthDate*"
+  - "src/lib/textCodes*"
+  - "src/config/site.ts"
 ---
 
 # Contacto ofuscado
@@ -21,6 +24,7 @@ El email y el WhatsApp no pueden aparecer como texto literal en ningún archivo 
 - El contacto solo se ensambla dentro del manejador del clic. Nunca en el render, ni en efectos de montaje, ni en atributos iniciales (`href`, `data-*`, `aria-*`).
 - Es un botón, no un enlace: un `href` inicial expondría el dato.
 - El correo puede mostrarse como texto solo después del clic. El número de WhatsApp no entra nunca al DOM.
+- La fecha de nacimiento se decodifica al renderizar porque se muestra la edad; al DOM solo debe llegar la edad, nunca la fecha.
 
 ## Tests
 

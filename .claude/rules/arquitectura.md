@@ -32,7 +32,8 @@ Un módulo solo importa de su propia capa o de las inferiores:
 
 | Qué cambia | Dónde |
 |---|---|
-| Nombre legal, fecha de nacimiento, rol, ubicación, redes | `src/config/site.ts` |
+| Nombre legal, rol, ubicación, redes | `src/config/site.ts` |
+| Fecha de nacimiento (codificada, con su propio desplazamiento) | `src/config/site.ts` (`birthDateCodes`, `BIRTH_DATE_OFFSET`) |
 | Email y WhatsApp (codificados) | `src/config/contact.ts` |
 | Rutas y anclas de sección | `src/config/routes.ts` |
 | Claves de localStorage / sessionStorage | `src/config/storage.ts` |

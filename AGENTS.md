@@ -56,7 +56,7 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 - Commits separados por causa, con Conventional Commits en inglés (por ejemplo `feat(lib): add age calculation`), sin líneas de atribución ni menciones a herramientas. Los commits anteriores en español se traducen al reescribir el historial. Cada commit debe pasar lint, typecheck y tests por sí solo.
 - Antes de cada push, comprobar:
   - que ningún mensaje de commit mencione a IA: `git log --format=%B | Select-String "claude|anthropic|co-authored"` no debe devolver nada;
-  - que ningún archivo versionado contenga datos personales en claro (email, teléfono, número de cédula).
+  - que ningún archivo versionado contenga datos personales en claro (email, teléfono, número de cédula y fecha de nacimiento).
 - README y descripción del repo en inglés; `AGENTS.md`, `PLAN.md` y `MEMORY.md` en español.
 - Las reglas generales se editan aquí y el detalle por área en `.claude/rules/`. `CLAUDE.md` solo importa `@AGENTS.md` y no duplica su contenido.
 
@@ -70,7 +70,7 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 
 - ✅ Siempre: actualizar `docs/MEMORY.md` al terminar cada tarea.
 - ⚠️ Pregunta antes: añadir dependencias (con `npm audit` antes y después) y cualquier petición a terceros en runtime (Google Fonts, analítica, CDN, iframes).
-- 🚫 Nunca: email, teléfono ni cédula en claro en ningún archivo (código, tests, docs, comentarios, metadatos de PDF o imágenes, capturas, logs) (en documentos se nombra el campo, no su valor).
+- 🚫 Nunca: email, teléfono, cédula ni fecha de nacimiento en claro en ningún archivo (código, tests, docs, comentarios, metadatos de PDF o imágenes, capturas, logs) (en documentos se nombra el campo, no su valor).
 - 🚫 Nunca: `dangerouslySetInnerHTML`, `innerHTML`, `eval` ni `new Function`.
 - 🚫 Nunca: secretos en variables `VITE_*` (son públicas), ni tokens o claves en archivos del repo o en workflows; usar GitHub Secrets.
 - 🚫 Nunca: `git add .` ni `git add -A` sin revisar `git status`; `--no-verify`; force push; push sin que se pida; commitear `.claude/settings.local.json`.
