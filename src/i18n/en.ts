@@ -57,8 +57,7 @@ export const en: Dictionary = {
     heading: 'Featured projects',
     viewRepo: 'View repository',
     viewAll: 'View all on GitHub',
-    // Descriptions match each repository's description on GitHub, except
-    // crm-registro-campers, reworded to make its scope explicit.
+    // Las descripciones coinciden con las de cada repositorio en GitHub.
     items: {
       'logitrack-iq': {
         description:
@@ -74,7 +73,7 @@ export const en: Dictionary = {
       },
       'crm-registro-campers': {
         description:
-          'Camper registration module, part of a CRM MVP built by a team for Campuslands. It is frontend only: React and TypeScript, with JSON Server as a mock API and no backend of its own. Includes role-based sales rep assignment, photo upload and validation, and runs standalone with fictional data.',
+          'Camper registration module of a team-built CRM MVP for Campuslands. React, TypeScript and JSON Server, with role-based sales rep assignment, photo upload and validation. Runs standalone with fictional data.',
       },
       'n8n-daily-news-agent': {
         description:
@@ -82,7 +81,7 @@ export const en: Dictionary = {
       },
       'campuslands-erp-cli': {
         description:
-          'Command-line ERP for academic management students, trainers, schedules and academic-risk tracking. Built in pure Python with JSON-based local persistence and a modular CRUD architecture, with no external database or dependencies.',
+          'Command-line ERP for academic management: students, trainers, schedules and academic-risk tracking. Built in pure Python with JSON-based local persistence and a modular CRUD architecture, with no external database or dependencies.',
       },
       'patitas-felices-web': {
         description:

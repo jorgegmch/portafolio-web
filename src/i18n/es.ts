@@ -72,7 +72,7 @@ export const es: Dictionary = {
       },
       'crm-registro-campers': {
         description:
-          'Módulo de registro de campers, parte de un MVP de CRM hecho en equipo para Campuslands. Es solo frontend: React y TypeScript, con JSON Server como API simulada y sin backend propio. Incluye asignación de asesores comerciales basada en roles, carga de fotos y validación, y funciona de forma independiente con datos ficticios.',
+          'Módulo de registro de campers de un MVP de CRM hecho en equipo para Campuslands. React, TypeScript y JSON Server, con asignación de asesores comerciales basada en roles, carga de fotos y validación. Funciona de forma independiente con datos ficticios.',
       },
       'n8n-daily-news-agent': {
         description:
