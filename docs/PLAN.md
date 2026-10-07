@@ -8,9 +8,10 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 ## Cómo retomar
 
 1. Leer este archivo, `docs/MEMORY.md` y `AGENTS.md`, y contrastar con git (`git status -sb`, `git branch -vv`, `git log --oneline -3`).
-2. **Siguiente paso: la Fase 5 (animación de carga).** Empieza por presentar el plan por commits y el plan de tests, y esperar aprobación antes de escribir código.
-3. Después de la Fase 5 vienen, en este orden, los tres encargos de «Trabajo pendiente aprobado»: el Hero (Fase 6), la transición de idioma y el cursor glitch. Ninguno se ejecuta sin que el autor lo pida.
-4. Antes de cada push: `/pre-push-check`. Al cerrar una fase: `/close-phase <fase>`.
+2. **Siguiente paso: el encargo 1 de «Trabajo pendiente aprobado», el Hero (Fase 6).** El propio encargo dice qué proponer por escrito antes de escribir código; se espera la respuesta del autor. No se ejecuta sin que el autor lo pida.
+3. Después vienen, en este orden, los encargos 2 y 3: la transición de idioma y el cursor glitch. Tampoco se ejecutan sin que el autor lo pida.
+4. La Fase 5 está commiteada en local y sin subir: el push lo hace el autor.
+5. Antes de cada push: `/pre-push-check`. Al cerrar una fase: `/close-phase <fase>`.
 
 ## Fases
 
@@ -20,16 +21,11 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 
 - [x] **Fase 4 — Layout base:** `tokens.css`, `global.css` y fuentes `@fontsource`; `Navbar` con selector ES/EN y menú móvil; `Footer`; `ParticleBackground`; router con `Layout`, páginas mínimas de inicio y certificaciones, favicon y título. Detalle en «Cierre de la Fase 4».
 
-### Fase 5 — Animación de carga
-
-Es el siguiente paso: ver «Cómo retomar».
-
-- [ ] `LoadingIntro`: frase en lenguaje natural que se transforma en código
-- [ ] Botón "Saltar", una sola vez por sesión, respeta `prefers-reduced-motion`
+- [x] **Fase 5 — Animación de carga:** `LoadingIntro` (una frase que se escribe y se transforma en código), botón «Saltar animación», una vez por sesión y sin intro con `prefers-reduced-motion`; montada en `Layout` con el resto de la página inerte. Detalle en «Cierre de la Fase 5».
 
 ### Fase 6 — Secciones de la home
 
-El Hero tiene un encargo aprobado más detallado que esta casilla: el encargo 1 de «Trabajo pendiente aprobado».
+Es el siguiente paso: ver «Cómo retomar». El Hero tiene un encargo aprobado más detallado que esta casilla: el encargo 1 de «Trabajo pendiente aprobado».
 
 - [ ] **Hero:** foto, nombre, tagline, "Ver proyectos", "Descargar CV" con dropdown (versión diseñada y versión ATS, según idioma), iconos del stack principal
 - [ ] **Sobre mí:** bio, panel terminal que muestra la salida de `java Developer` con la edad en vivo y sin datos de contacto, 4 tarjetas de estadísticas, botón "Ver certificaciones"
@@ -118,6 +114,47 @@ El Hero tiene un encargo aprobado más detallado que esta casilla: el encargo 1 
 - **Comprobado a ojo por el autor:** el favicon, el responsive, el foco con Tab y la vuelta desde Certificaciones al inicio con el logo.
 - **Pendiente:** el anillo de foco del `main` al usar el skip link, el panel del menú móvil abierto y cerrado (botón y Esc) y el `scroll-margin-top` de las secciones (Fase 6).
 
+## Cierre de la Fase 5
+
+### Commits
+
+| # | Hash | Commit |
+|---|---|---|
+| 1 | 8bcacb1 | feat(i18n): make intro skip label explicit |
+| 2 | c99185b | feat(lib): add intro frame builder |
+| 3 | 23d58b5 | feat(hooks): add useIntroSequence |
+| 4 | 9131318 | feat(hooks): add useIntroGate |
+| 5 | 75f0023 | feat(layout): add LoadingIntro |
+| 6 | e89c7fa | feat(layout): mount LoadingIntro in Layout |
+| 7 | e94a550 | feat(i18n): update intro phrase |
+| 8 | e52d32a | feat(lib): cap intro duration |
+| 9 | f05fae3 | feat(layout): skip intro with Enter and Space |
+| 10 | 42217f5 | feat(layout): focus intro layer on mount |
+| 11 | da06ea2 | style(layout): restyle intro skip button |
+| 12 | 7f85d53 | style(layout): enlarge intro text |
+| 13 | este commit | docs: update plan and memory after closing Phase 5 |
+
+### Decisiones tomadas
+
+- **Mecánica:** máquina de escribir. Se escribe la frase, se borra solo hasta donde coincide con el código y se completa el código.
+- **Frase:** una por idioma, aprobada por el autor («optimización de procesos» / «process optimization» → `optimize_workflow()`). El botón dice «Saltar animación» / «Skip animation».
+- **Cuándo sale:** en cualquier ruta de entrada, una vez por sesión. Se marca como vista al terminar o al saltar, no al montar.
+- **Movimiento reducido:** no aparece ni se marca como vista. La preferencia se lee solo al montar: cambiarla después ni la activa ni la corta.
+- **Página de debajo:** se monta desde el principio, dentro de un `div` con `inert` mientras dura la intro.
+- **Salida:** la capa se desvanece y se retira con `transitionend`; un respaldo de 1000 ms la retira si el evento no llega.
+- **Duración:** entre 3 y 4 s contando el desvanecimiento, con el mínimo, el tope y un margen de 7 ms por fotograma como constantes. El margen sale de medir en Chrome (entre 5,0 y 6,3 ms por fotograma).
+- **Foco:** empieza en la capa (`tabIndex -1`, sin anillo), no en el botón, para que el anillo del botón solo salga al llegar con Tab. Quitar el anillo de la capa es una excepción aceptada a `accesibilidad.md`, porque no es interactiva.
+- **Teclas:** Enter, NumpadEnter y Espacio saltan con el foco en la capa; las que nacen en el botón las atiende él. Lleva el único `eslint-disable` del proyecto, con su razón.
+- **Botón:** borde `--color-accent`, texto gris que pasa a azul con el puntero o el foco de teclado, y anillo separado del borde con `--space-1`.
+- **Tamaño del texto:** token nuevo `--font-size-intro` (de 16 a 24 px).
+- **Fuera de alcance:** cerrar con Escape y bloquear el scroll durante la intro.
+
+### Revisión
+
+- **Comprobado a ojo por el autor en su Chrome:** el botón (borde azul, texto gris a azul, anillo separado) y el tamaño del texto. En incógnito, Enter salta la intro.
+- **Medido en Chrome headless sobre el build de producción:** la duración (ES entre 3556 y 3614 ms, EN entre 3719 y 3782 ms), el foco inicial y el recorrido con Tab sin entrar en la página, las teclas con la capa y con el botón enfocados, los estados del botón y los anchos a 360, 768 y 1280 px (una sola línea, sin desbordamiento).
+- **Sin revisar:** si el scroll bajo la capa molesta. Siguen pendientes de la Fase 4 el anillo de foco del `main` al usar el skip link, el panel del menú móvil abierto y cerrado (botón y Esc) y el `scroll-margin-top` de las secciones (Fase 6).
+
 ## Trabajo pendiente aprobado
 
 Tres encargos del autor, aprobados y sin ejecutar. Van después de la Fase 5 y en este orden. El texto es literal; la nota inicial de cada uno dice a qué fase de este plan corresponde.
@@ -148,7 +185,12 @@ Tres encargos del autor, aprobados y sin ejecutar. Van después de la Fase 5 y e
 - **`useReducedMotion` duplica `useMediaQuery`.**
 - **Utilidades de test duplicadas** entre los dos archivos del hook de partículas.
 - **El dibujo estático** del fondo, con movimiento reducido, es una foto del momento del cambio.
-- **Tests que leen archivos de disco** (`ParticleBackground`, `Navbar.styles`, `site.title` y `site.icons`): repiten el patrón y dependen de que Vitest se lance desde la raíz del repo; extraer un helper común.
+- **Tests que leen archivos de disco** (ya son seis: `ParticleBackground`, `Navbar.styles`, `site.title`, `site.icons`, `LoadingIntro.styles` e `introFrames.duration`): repiten el patrón y dependen de que Vitest se lance desde la raíz del repo; extraer un helper común.
+- **Respaldo de la intro duplicado entre JS y CSS:** los 1000 ms de `exitFallbackMs` deben superar los 650 ms de `--duration-slow`; hoy solo los une un test.
+- **Secuencias compuestas en la intro:** `buildIntroFrames` separa con `Array.from`, que partiría un emoji con ZWJ o una tilde descompuesta; si una frase las incluye, usar `Intl.Segmenter`.
+- **Desbordamiento de la intro sin test:** que la frase quepa en 360 px solo lo vigila la medición manual en Chrome, no la suite; una frase más larga no haría fallar nada.
+- **Enter en el botón de la intro, en el Chrome del autor:** con el botón enfocado no saltaba y Espacio sí. No se reproduce en incógnito ni en Chrome headless; parece una extensión de su perfil, sin causa confirmada.
+- **Sonda de Chrome fuera del repo:** la duración, el foco, las teclas y los anchos se midieron con scripts desechables que conducen Chrome por DevTools; repetir la medición exige rehacerlos. Candidata a pasar a Playwright en la Fase 9.
 - **Diagrama de capas sin `styles`** en `AGENTS.md` y `.claude/rules/arquitectura.md`.
 - **Reglas desactualizadas:** `.claude/rules/arquitectura.md` aún dice que `tokens.css` no existe, y `.claude/rules/tests.md` no menciona los dobles nuevos de `src/test/`.
 - **`README.md` línea 50** conserva el crédito anterior («Diseñado y construido por Jorge Gomez · 2026»); se corrige al rehacer el README con el procedimiento completo.
@@ -188,3 +230,4 @@ Cada pieza nueva exige su excepción en el `.gitignore` del repo, en el mismo co
 - **PDFs de CV:** todo lo que esté en `public/` es público.
 - **Rutas directas sin `vercel.json`:** hasta que exista el rewrite de SPA (Fase 10), abrir `/certificaciones` directamente en el despliegue dará un 404 del servidor.
 - **Enlaces del Navbar a secciones:** no llevan a ningún sitio hasta la Fase 6, cuando existan las secciones.
+- **La intro y Lighthouse:** en la primera visita la capa tapa la página unos 3,6 s; falta comprobar su efecto en las métricas de la Fase 8.

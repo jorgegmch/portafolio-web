@@ -2,9 +2,8 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases está en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 4 cerradas en rebuild/vite-react y subidas a origin, sin merge.
-- Sigue la Fase 5 (animación de carga). Después, tres encargos ya aprobados: Hero, transición de idioma y cursor glitch; están en PLAN.md.
-- Las reglas de .claude/rules/ y los límites de AGENTS.md ya existen.
+- Fases 1 a 5 cerradas en rebuild/vite-react, sin merge. Las fases 1 a 4 están en origin; la Fase 5 (animación de carga) está commiteada en local y sin subir.
+- Siguen tres encargos ya aprobados, en este orden: Hero (Fase 6), transición de idioma y cursor glitch; están en PLAN.md y ninguno se ejecuta sin que el autor lo pida.
 - Las descripciones de proyectos están sincronizadas con GitHub.
 
 ## Decisiones (y por qué)
@@ -26,6 +25,8 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - permissions.deny frena solo al agente; mis comandos con ! no se bloquean (verificado solo con git push --dry-run).
 - Tres nombres en config/site.ts: el logo muestra site.handle, el h1 del hero site.shortName, y site.legalName queda para la terminal del hero.
 - --nav-height (4,5 rem) es una estimación hecha sin navegador: es ajustable si la barra cambia.
+- Intro: el foco inicial va a la capa y no al botón: un foco puesto por código al cargar muestra el anillo sin que nadie haya usado el teclado.
+- Intro: el margen de duración es por fotograma y no fijo: el retraso real crece con el número de temporizadores encadenados. El resto de decisiones de la intro está en «Cierre de la Fase 5» de PLAN.md.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
@@ -39,7 +40,11 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - No editar archivos con Get-Content/Set-Content de PowerShell 5.1: corrompe la codificación; usar la herramienta de edición.
 - El proyecto no tiene Prettier configurado: lanzarlo reformatea el archivo con su estilo por defecto.
 - Con css: false, Vitest no entrega el texto de un CSS ni con ?raw; los tests que comprueban reglas leen el archivo de disco.
+- Un test que lee el texto del CSS no ve la cascada: `.intro { outline: none }` pasaba y Chrome mostraba el anillo, porque el `:focus-visible` de global.css se carga después con la misma especificidad. Lo que dependa de la cascada se comprueba en el navegador.
+- user-event se cuelga con los temporizadores falsos de Vitest: esos tests usan el reloj real o fireEvent. Y con temporizadores encadenados se avanza una pausa por `act`: React programa el siguiente al salir.
+- Un test que ya pasa contra el esbozo puede estar pasando en vacío: darle un control positivo. Y antes de afirmar qué tests rompe un cambio, comprobarlo (en la Fase 5 la suite no se rompía donde se había previsto).
+- Sin extensión de navegador se puede conducir el Chrome instalado en headless por DevTools con un script de Node sin dependencias, contra `vite preview`; en modo desarrollo los tiempos no valen.
 
 ## Próximos pasos
-1. Fase 5: seguir «Cómo retomar» de PLAN.md.
+1. Encargo 1 (Hero, Fase 6): seguir «Cómo retomar» de PLAN.md, cuando el autor lo pida.
 2. Extensiones de Claude Code pendientes (hooks, subagente, verify-contact): ver PLAN.md.
