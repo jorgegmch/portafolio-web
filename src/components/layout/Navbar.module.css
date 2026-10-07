@@ -1,0 +1,64 @@
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: var(--z-nav);
+}
+
+/* El fondo va en una capa aparte para animar solo su opacidad. */
+.header::before {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-background);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-nav-bg);
+  -webkit-backdrop-filter: blur(var(--blur-nav));
+  backdrop-filter: blur(var(--blur-nav));
+  content: '';
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+.header[data-scrolled='true']::before {
+  opacity: 1;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-4) var(--container-padding);
+}
+
+.brand,
+.link {
+  font-family: var(--font-mono);
+  text-decoration: none;
+}
+
+.brand {
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-wide);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-6);
+  margin-left: auto;
+  list-style: none;
+}
+
+.link {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-normal);
+}
+
+.link:hover {
+  color: var(--color-accent);
+}
