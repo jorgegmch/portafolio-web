@@ -20,7 +20,7 @@ export const es: Dictionary = {
     closeMenu: 'Cerrar menú',
   },
   intro: {
-    phrases: [{ natural: 'optimizar procesos', code: 'optimize_workflow()' }],
+    phrases: [{ natural: 'optimización de procesos', code: 'optimize_workflow()' }],
     skip: 'Saltar animación',
   },
   hero: {
