@@ -1,10 +1,14 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, renderHook, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import App from '@/App'
 import { MAIN_CONTENT_ID, routes } from '@/config/routes'
 import { site } from '@/config/site'
+import { storageKeys } from '@/config/storage'
+import { useIntroGate } from '@/hooks/useIntroGate'
 import { dictionaries } from '@/i18n/index'
+import { buildIntroFrames, INTRO_TIMING } from '@/lib/introFrames'
+import { mockMatchMedia } from '@/test/mockMatchMedia'
 
 // El canvas tiene sus propios tests; aquí solo importa que el fondo esté montado.
 vi.mock('@/hooks/useParticleCanvas', () => ({ useParticleCanvas: vi.fn() }))
@@ -23,6 +27,13 @@ const renderAt = (path: string) => {
 }
 
 const main = () => screen.getByRole('main')
+
+/** Deja la sesión como si la animación de carga ya se hubiera visto. */
+const markIntroSeen = () => {
+  const { result, unmount } = renderHook(() => useIntroGate())
+  act(() => result.current[1]())
+  unmount()
+}
 const pageTitle = (name: string) => within(main()).getByRole('heading', { level: 1, name })
 
 let scrollTo: Mock
@@ -31,6 +42,9 @@ beforeEach(() => {
   scrollTo = vi.fn()
   vi.stubGlobal('scrollTo', scrollTo)
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-CO'])
+  // Estos tests describen la aplicación sin la animación de carga encima; los
+  // de la intro están en su propio bloque, que vuelve a dejar la sesión limpia.
+  markIntroSeen()
 })
 
 afterEach(() => {
@@ -145,6 +159,205 @@ describe('App', () => {
       renderAt(routes.certifications)
 
       expect(scrollTo).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('animación de carga', () => {
+    const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
+    const INTRO_SEEN = storageKeys.session.introSeen
+
+    const skipIntro = () => screen.getByRole('button', { name: es.intro.skip })
+    const querySkipIntro = () => screen.queryByRole('button', { name: es.intro.skip })
+    const skipLink = () => screen.getByRole('link', { name: es.nav.skipToContent })
+    /** El envoltorio de la página, si está inerte. */
+    const inertPage = () => main().closest('[inert]')
+
+    /** Salta la intro y da por terminado su desvanecimiento. */
+    const skipAndFadeOut = () => {
+      const layer = skipIntro().parentElement
+      fireEvent.click(skipIntro())
+      if (layer) fireEvent.transitionEnd(layer)
+    }
+
+    beforeEach(() => {
+      sessionStorage.clear()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    describe('en la primera visita', () => {
+      it('aparece, con el foco en el botón de saltar', () => {
+        renderAt(routes.home)
+
+        expect(skipIntro()).toHaveFocus()
+      })
+
+      it('aparece también al entrar por otra ruta', () => {
+        renderAt(routes.certifications)
+
+        expect(skipIntro()).toBeInTheDocument()
+      })
+
+      it('la página ya está montada debajo, con un solo h1', () => {
+        renderAt(routes.home)
+
+        expect(skipIntro()).toBeInTheDocument()
+        expect(pageTitle(es.hero.heading)).toBeInTheDocument()
+        expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+      })
+
+      it('el resto de la página queda inerte: skip link, fondo, barra, contenido y pie', () => {
+        const { container } = renderAt(routes.home)
+        const page = inertPage()
+
+        expect(page).not.toBeNull()
+        expect(page).toContainElement(skipLink())
+        expect(page).toContainElement(container.querySelector('canvas'))
+        expect(page).toContainElement(screen.getByRole('banner'))
+        expect(page).toContainElement(screen.getByRole('contentinfo'))
+      })
+
+      it('la intro queda fuera de lo inerte: su botón se puede usar', () => {
+        renderAt(routes.home)
+
+        expect(skipIntro().closest('[inert]')).toBeNull()
+      })
+    })
+
+    describe('al saltarla', () => {
+      it('desaparece y la página deja de estar inerte', () => {
+        renderAt(routes.home)
+        expect(inertPage()).not.toBeNull()
+
+        skipAndFadeOut()
+
+        expect(querySkipIntro()).not.toBeInTheDocument()
+        expect(inertPage()).toBeNull()
+      })
+
+      it('mientras se desvanece la página sigue inerte', () => {
+        renderAt(routes.home)
+
+        fireEvent.click(skipIntro())
+
+        expect(skipIntro()).toBeInTheDocument()
+        expect(inertPage()).not.toBeNull()
+      })
+
+      it('la página sigue con un solo h1 y las mismas zonas', () => {
+        renderAt(routes.home)
+
+        skipAndFadeOut()
+
+        expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+        expect(screen.getAllByRole('banner')).toHaveLength(1)
+        expect(screen.getAllByRole('main')).toHaveLength(1)
+        expect(screen.getAllByRole('contentinfo')).toHaveLength(1)
+      })
+
+      it('el siguiente Tab cae en el skip link', async () => {
+        const { user } = renderAt(routes.home)
+        skipAndFadeOut()
+        expect(document.body).toHaveFocus()
+
+        await user.tab()
+
+        expect(skipLink()).toHaveFocus()
+      })
+
+      it('queda marcada como vista en la sesión', () => {
+        renderAt(routes.home)
+        expect(sessionStorage.getItem(INTRO_SEEN)).toBeNull()
+
+        skipAndFadeOut()
+
+        expect(sessionStorage.getItem(INTRO_SEEN)).not.toBeNull()
+      })
+    })
+
+    describe('si se deja terminar sola', () => {
+      const frames = () => {
+        const phrase = es.intro.phrases[0]
+        if (!phrase) throw new Error('El diccionario no tiene ninguna frase para la intro')
+        return buildIntroFrames(phrase.natural, phrase.code)
+      }
+      const advance = (ms: number) => {
+        act(() => {
+          vi.advanceTimersByTime(ms)
+        })
+      }
+      const playToEnd = () => frames().forEach((frame) => advance(frame.holdMs))
+
+      beforeEach(() => {
+        vi.useFakeTimers()
+      })
+
+      it('sigue en pantalla hasta que acaba la secuencia', () => {
+        renderAt(routes.home)
+
+        playToEnd()
+
+        expect(skipIntro()).toBeInTheDocument()
+        expect(inertPage()).not.toBeNull()
+      })
+
+      // jsdom no dispara transitionend: aquí solo actúa el respaldo, que es
+      // justo lo que impide que la página se quede inerte.
+      it('aunque la transición no termine, desaparece y la página deja de estar inerte', () => {
+        renderAt(routes.home)
+        playToEnd()
+        expect(inertPage()).not.toBeNull()
+
+        advance(INTRO_TIMING.exitFallbackMs)
+
+        expect(querySkipIntro()).not.toBeInTheDocument()
+        expect(inertPage()).toBeNull()
+      })
+
+      it('queda marcada como vista en la sesión', () => {
+        renderAt(routes.home)
+        playToEnd()
+        expect(sessionStorage.getItem(INTRO_SEEN)).toBeNull()
+
+        advance(INTRO_TIMING.exitFallbackMs)
+
+        expect(sessionStorage.getItem(INTRO_SEEN)).not.toBeNull()
+      })
+    })
+
+    describe('no aparece', () => {
+      it('en la segunda visita de la sesión', () => {
+        const first = renderAt(routes.home)
+        skipAndFadeOut()
+        first.unmount()
+
+        renderAt(routes.home)
+
+        expect(querySkipIntro()).not.toBeInTheDocument()
+        expect(inertPage()).toBeNull()
+      })
+
+      it('si el visitante pidió reducir el movimiento', () => {
+        mockMatchMedia({ [REDUCED_MOTION]: true })
+
+        renderAt(routes.home)
+
+        expect(querySkipIntro()).not.toBeInTheDocument()
+        expect(inertPage()).toBeNull()
+        expect(pageTitle(es.hero.heading)).toBeInTheDocument()
+      })
+
+      it('al navegar entre páginas después de haberla visto', async () => {
+        const { user } = renderAt(routes.home)
+        skipAndFadeOut()
+
+        await user.click(screen.getByRole('link', { name: es.nav.certifications }))
+
+        expect(pageTitle(es.certifications.heading)).toBeInTheDocument()
+        expect(querySkipIntro()).not.toBeInTheDocument()
+      })
     })
   })
 })
