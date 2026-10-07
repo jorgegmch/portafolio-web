@@ -25,6 +25,10 @@ export const en: Dictionary = {
   },
   hero: {
     heading: site.shortName,
+    greeting: "Hello, I'm",
+    // Provisional text: pending the author's final version.
+    intro:
+      'Full stack developer focused on backend work with Java, Spring Boot and PostgreSQL. I like to understand the business problem before writing code, and to build things that do something useful.',
     tagline: 'Where code meets storytelling.',
     viewProjects: 'View projects',
     downloadCv: 'Download CV',

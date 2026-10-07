@@ -44,6 +44,10 @@ export interface Dictionary {
   hero: {
     /** Título de la página de inicio: el nombre corto, que no se traduce. */
     heading: string
+    /** Saludo sobre el nombre; las mayúsculas sostenidas las pone el CSS. */
+    greeting: string
+    /** Presentación breve bajo el nombre. */
+    intro: string
     tagline: string
     viewProjects: string
     downloadCv: string
