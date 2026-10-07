@@ -1,0 +1,6 @@
+/* Fuentes servidas desde el propio sitio, sin peticiones a terceros. Solo el
+   subconjunto latin y los pesos que usa algún componente; cada peso nuevo se
+   añade aquí junto con el componente que lo necesita. */
+
+@import '@fontsource/outfit/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
