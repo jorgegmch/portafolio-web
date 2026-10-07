@@ -93,6 +93,9 @@
   --focus-ring-width: 0.125rem;
   --focus-ring-offset: 0.125rem;
 
+  --icon-size: 1.5rem;
+  --icon-stroke-width: 0.125rem;
+
   --blur-nav: 1.5rem; /* origen: 24px */
 
   /* Duraciones y easing (origen) */

@@ -62,3 +62,57 @@
 .link:hover {
   color: var(--color-accent);
 }
+
+/* display: flex le ganaría al atributo hidden del menú cerrado. */
+.links[hidden] {
+  display: none;
+}
+
+.menuToggle {
+  display: inline-flex;
+  margin-left: auto;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.menuToggle:hover,
+.menuToggle[aria-expanded='true'] {
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+}
+
+.menuIcon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* Los enlaces pasan a ser un panel bajo la barra, de lado a lado. */
+@media (max-width: 768px) {
+  .links {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-left: 0;
+    padding: var(--space-2) var(--container-padding) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .link {
+    display: block;
+    padding: var(--space-3) 0;
+    font-size: var(--font-size-md);
+  }
+}
