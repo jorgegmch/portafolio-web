@@ -5,4 +5,6 @@
 export const mediaQueries = {
   /** Ancho al que la barra pliega sus enlaces en un menú. */
   compactNav: '(max-width: 768px)',
+  /** Dispositivos sin puntero que se pose, como los táctiles. */
+  noHover: '(hover: none)',
 } as const
