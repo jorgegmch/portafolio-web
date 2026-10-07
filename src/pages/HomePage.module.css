@@ -1,0 +1,8 @@
+.page {
+  padding: var(--space-9) var(--container-padding);
+}
+
+.title {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-regular);
+}

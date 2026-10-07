@@ -42,6 +42,8 @@ export interface Dictionary {
     skip: string
   }
   hero: {
+    /** Título de la página de inicio: el nombre legal, que no se traduce. */
+    heading: string
     tagline: string
     viewProjects: string
     downloadCv: string
