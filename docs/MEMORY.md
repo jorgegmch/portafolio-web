@@ -2,7 +2,7 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases está en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 4 cerradas en rebuild/vite-react. La Fase 4 (layout base, router, favicon y las skills de cierre) son 31 commits aún sin subir; el push lo hace el autor.
+- Fases 1 a 4 cerradas en rebuild/vite-react y subidas a origin, sin merge.
 - Sigue la Fase 5 (animación de carga). Después, tres encargos ya aprobados: Hero, transición de idioma y cursor glitch; están en PLAN.md.
 - Las reglas de .claude/rules/ y los límites de AGENTS.md ya existen.
 - Las descripciones de proyectos están sincronizadas con GitHub.
