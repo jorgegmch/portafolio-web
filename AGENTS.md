@@ -64,7 +64,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 - Al entregar código nuevo: explicar brevemente qué hace y para qué sirve, y después cómo lo logra. Marcar aparte cualquier concepto nuevo para el proyecto.
 - Commits separados por causa, con Conventional Commits en inglés (por ejemplo `feat(lib): add age calculation`), sin líneas de atribución ni menciones a herramientas. Los commits anteriores en español se traducen al reescribir el historial. Cada commit debe pasar lint, typecheck y tests por sí solo.
 - Antes de cada push, comprobar:
-  - que ningún mensaje de commit mencione a IA: `git log --format=%B | Select-String "claude|anthropic|co-authored"` no debe devolver nada;
+  - que ningún mensaje de commit mencione a IA: `git log --format=%B | Select-String "claude|anthropic|co-authored"` en PowerShell, o `git log --format=%B | grep -iE "claude|anthropic|co-authored"` en Bash, no debe devolver nada; una salida vacía solo vale si el comando existe en ese shell y un control positivo da resultados;
   - que ningún archivo versionado contenga datos personales en claro (email, teléfono, número de cédula y fecha de nacimiento).
 - README y descripción del repo en inglés; `AGENTS.md`, `PLAN.md` y `MEMORY.md` en español.
 - Las reglas generales se editan aquí y el detalle por área en `.claude/rules/`. `CLAUDE.md` solo importa `@AGENTS.md` y no duplica su contenido.
@@ -85,7 +85,8 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 
 - ✅ Siempre: actualizar `docs/MEMORY.md` al terminar cada tarea.
 - ⚠️ Pregunta antes: añadir dependencias (con `npm audit` antes y después) y cualquier petición a terceros en runtime (Google Fonts, analítica, CDN, iframes).
+- ⚠️ Pregunta antes: editar archivos fuera del repo (memoria automática, configuración de usuario).
 - 🚫 Nunca: email, teléfono, cédula ni fecha de nacimiento en claro en ningún archivo (código, tests, docs, comentarios, metadatos de PDF o imágenes, capturas, logs) (en documentos se nombra el campo, no su valor).
 - 🚫 Nunca: `dangerouslySetInnerHTML`, `innerHTML`, `eval` ni `new Function`.
 - 🚫 Nunca: secretos en variables `VITE_*` (son públicas), ni tokens o claves en archivos del repo o en workflows; usar GitHub Secrets.
-- 🚫 Nunca: `git add .` ni `git add -A` sin revisar `git status`; `--no-verify`; force push; push sin que se pida; commitear `.claude/settings.local.json`.
+- 🚫 Nunca: `git add .` ni `git add -A`; `--no-verify`; force push; push sin que se pida; commitear `.claude/settings.local.json`. `permissions.deny` en `.claude/settings.json` bloquea al agente push, `git add .`/`-A` y `--no-verify`; no cubre variantes como `git commit -nm` ni `git -c k=v push`.
