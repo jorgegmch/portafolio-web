@@ -3,7 +3,7 @@ import type { Dictionary } from '@/i18n/types'
 
 export const es: Dictionary = {
   meta: {
-    title: `${site.legalName} — ${site.role}`,
+    title: site.title,
     description: `Portafolio de ${site.legalName}, ${site.role}. Backend con Java, Spring Boot y PostgreSQL.`,
   },
   nav: {

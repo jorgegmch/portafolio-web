@@ -9,6 +9,8 @@ export const site = {
   /** Alias público, el del logo. Es el mismo usuario de GitHub. */
   handle: GITHUB_USER,
   role: 'Full Stack Developer',
+  /** Título del documento. index.html lo repite a mano; un test los compara. */
+  title: 'JorgeGomez | Full-Stack Developer',
   /** Año de primera publicación del sitio; es el del aviso de derechos. */
   publishedYear: 2026,
   location: 'Piedecuesta, Santander, Colombia',
