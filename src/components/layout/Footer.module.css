@@ -16,12 +16,6 @@
   color: var(--color-accent);
 }
 
-/* Separador decorativo entre el nombre y el año. */
-.year::before {
-  margin-right: var(--space-2);
-  content: '·';
-}
-
 .social {
   display: flex;
   flex-wrap: wrap;

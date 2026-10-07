@@ -85,7 +85,8 @@ export interface Dictionary {
     email: string
   }
   footer: {
-    builtBy: string
+    /** Aviso de derechos; va tras el año y el nombre. */
+    rights: string
     /** Nombre accesible de la lista de redes. */
     social: string
   }

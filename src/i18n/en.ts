@@ -171,7 +171,7 @@ export const en: Dictionary = {
     email: 'Email',
   },
   footer: {
-    builtBy: 'Designed and built by',
+    rights: 'All rights reserved',
     social: 'Social links',
   },
   common: {

@@ -165,7 +165,7 @@ export const es: Dictionary = {
     email: 'Correo',
   },
   footer: {
-    builtBy: 'Diseñado y construido por',
+    rights: 'Todos los derechos reservados',
     social: 'Redes',
   },
   common: {

@@ -2,19 +2,24 @@ import styles from '@/components/layout/Footer.module.css'
 import { site, socialLinks } from '@/config/site'
 import { useLang } from '@/hooks/useLang'
 
+/** Signos de la frase de derechos; no son texto traducible. */
+const COPYRIGHT_SYMBOL = '©'
+const SENTENCE_END = '.'
+
 /**
- * Pie de página: crédito del autor con el año en curso y enlaces a sus redes.
+ * Pie de página: aviso de derechos con el año de publicación y el nombre del
+ * autor, y enlaces a sus redes.
  * No lleva datos de contacto; esos solo salen por ContactButton.
  */
 export function Footer() {
   const { t } = useLang()
-  const year = new Date().getFullYear()
 
   return (
     <footer className={styles.footer}>
       <p>
-        {t.footer.builtBy} <span className={styles.name}>{site.shortName}</span>{' '}
-        <span className={styles.year}>{year}</span>
+        {COPYRIGHT_SYMBOL} {site.publishedYear}{' '}
+        <span className={styles.name}>{site.shortName}</span>
+        {SENTENCE_END} {t.footer.rights}
       </p>
       <ul className={styles.social} aria-label={t.footer.social}>
         {socialLinks.map(({ id, label, url }) => (

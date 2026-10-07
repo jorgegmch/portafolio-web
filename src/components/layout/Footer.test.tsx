@@ -20,6 +20,8 @@ const renderFooter = () =>
 
 const footer = () => screen.getByRole('contentinfo')
 
+const YEARS_LATER = 15
+
 beforeEach(() => {
   setBrowserLangs(['es-CO'])
 })
@@ -37,41 +39,29 @@ describe('Footer', () => {
     expect(footer()).toBeInTheDocument()
   })
 
-  it('acredita al autor con el texto del diccionario y el nombre de config', () => {
+  it('nombra al autor con el nombre de config, seguido del aviso del diccionario', () => {
     renderFooter()
 
-    expect(footer()).toHaveTextContent(`${es.footer.builtBy} ${site.shortName}`)
+    expect(footer()).toHaveTextContent(`${site.shortName}. ${es.footer.rights}`)
   })
 
   describe('año', () => {
-    it.each([
-      ['el último segundo del año', new Date(2026, 11, 31, 23, 59, 59), '2026'],
-      ['el primer segundo del año siguiente', new Date(2027, 0, 1, 0, 0, 0), '2027'],
-      ['un 29 de febrero', new Date(2028, 1, 29, 12, 0, 0), '2028'],
-    ])('muestra el año en curso en %s', (_name, now, year) => {
+    it('muestra el año de publicación de config', () => {
+      renderFooter()
+
+      expect(footer()).toHaveTextContent(`© ${site.publishedYear} ${site.shortName}`)
+    })
+
+    // Es el año de primera publicación: no avanza con el calendario.
+    it('aunque el reloj marque un año muy posterior, sigue mostrando el de publicación', () => {
+      const yearsLater = site.publishedYear + YEARS_LATER
       vi.useFakeTimers()
-      vi.setSystemTime(now)
+      vi.setSystemTime(new Date(yearsLater, 0, 1))
 
       renderFooter()
 
-      expect(footer()).toHaveTextContent(`${site.shortName} ${year}`)
-    })
-
-    it('tras el cambio de año, el siguiente render muestra el año nuevo', () => {
-      vi.useFakeTimers()
-      vi.setSystemTime(new Date(2026, 11, 31, 23, 59, 59))
-      const { rerender } = renderFooter()
-      expect(footer()).toHaveTextContent('2026')
-
-      vi.setSystemTime(new Date(2027, 0, 1, 0, 0, 1))
-      rerender(
-        <LangProvider>
-          <Footer />
-        </LangProvider>,
-      )
-
-      expect(footer()).toHaveTextContent('2027')
-      expect(footer()).not.toHaveTextContent('2026')
+      expect(footer()).toHaveTextContent(`© ${site.publishedYear} ${site.shortName}`)
+      expect(footer()).not.toHaveTextContent(String(yearsLater))
     })
   })
 
@@ -109,7 +99,7 @@ describe('Footer', () => {
     setBrowserLangs(['en-US'])
     renderFooter()
 
-    expect(footer()).toHaveTextContent(`${en.footer.builtBy} ${site.shortName}`)
+    expect(footer()).toHaveTextContent(`${site.shortName}. ${en.footer.rights}`)
     expect(screen.getByRole('list', { name: en.footer.social })).toBeInTheDocument()
     for (const { label } of socialLinks) {
       expect(
