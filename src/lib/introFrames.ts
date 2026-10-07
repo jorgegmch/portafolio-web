@@ -11,9 +11,9 @@ export const INTRO_TIMING = {
   /** Entre un carácter escrito y el siguiente. */
   typeMs: 35,
   /** Entre un carácter borrado y el siguiente. */
-  eraseMs: 18,
+  eraseMs: 12,
   /** Con la frase completa, antes de empezar a borrarla. */
-  naturalHoldMs: 450,
+  naturalHoldMs: 400,
   /** Con el código completo, antes de terminar. */
   codeHoldMs: 600,
   /**
@@ -22,6 +22,21 @@ export const INTRO_TIMING = {
    */
   exitFallbackMs: 1000,
 } as const
+
+/**
+ * Límites de la duración total de la intro, del primer fotograma al final del
+ * desvanecimiento, en ms. Los vigila introFrames.duration.test.ts con las
+ * frases reales de cada idioma.
+ */
+export const INTRO_MIN_TOTAL_MS = 3000
+export const INTRO_MAX_TOTAL_MS = 4000
+
+/**
+ * Margen por fotograma, en ms: cada temporizador encadenado llega algo tarde
+ * (el navegador lo redondea y React pinta antes de programar el siguiente).
+ * Medido en Chrome sobre el build de producción: entre 5,0 y 6,3 ms.
+ */
+export const INTRO_FRAME_DRIFT_MS = 7
 
 export interface IntroFrame {
   readonly text: string
