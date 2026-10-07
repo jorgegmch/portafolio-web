@@ -2,8 +2,8 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases está en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 3 cerradas en rebuild/vite-react (scaffold, config, data, i18n, lib, hooks, ContactButton). Rama subida a origin, sin merge.
-- Falta la Fase 4 (tokens, fuentes, Navbar, Footer, fondo de partículas); la paleta se aprueba antes de aplicarla.
+- Fases 1 a 4 cerradas en rebuild/vite-react. La Fase 4 (layout base, router, favicon y las skills de cierre) son 31 commits aún sin subir; el push lo hace el autor.
+- Sigue la Fase 5 (animación de carga). Después, tres encargos ya aprobados: Hero, transición de idioma y cursor glitch; están en PLAN.md.
 - Las reglas de .claude/rules/ y los límites de AGENTS.md ya existen.
 - Las descripciones de proyectos están sincronizadas con GitHub.
 
@@ -24,6 +24,8 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - No se hace merge a main hasta la Fase 10: GitHub Pages sirve main y un proyecto Vite sin compilar lo dejaría en blanco. Al fusionar: merge commit, no squash, para conservar los commits por causa.
 - Dos memorias con reparto: docs/MEMORY.md (versionada) guarda estado y decisiones con su porqué; la memoria automática de Claude Code (local, no versionada) guarda aprendizajes de correcciones y preferencias. No duplicar entre ambas.
 - permissions.deny frena solo al agente; mis comandos con ! no se bloquean (verificado solo con git push --dry-run).
+- Tres nombres en config/site.ts: el logo muestra site.handle, el h1 del hero site.shortName, y site.legalName queda para la terminal del hero.
+- --nav-height (4,5 rem) es una estimación hecha sin navegador: es ajustable si la barra cambia.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
@@ -34,7 +36,10 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Las reglas de .claude/rules/ se descubren al iniciar la sesión (reiniciar tras crearlas) y las de rutas cargan al leer un archivo coincidente; verificado en Windows nativo con una marca de prueba; y, importadas con @, quedan cargadas siempre (también al crear archivos nuevos).
 - Vitest sale con código 1 si no hay ningún archivo de test: configura el runner junto al primer test; en los commits 5 a 8 pasa por eso, no por un test roto.
 - El push lo hago yo (con ! o en PowerShell), nunca con el botón de VS Code; el agente no se entera de lo que pasa fuera de la sesión: contrasta con git al empezar.
+- No editar archivos con Get-Content/Set-Content de PowerShell 5.1: corrompe la codificación; usar la herramienta de edición.
+- El proyecto no tiene Prettier configurado: lanzarlo reformatea el archivo con su estilo por defecto.
+- Con css: false, Vitest no entrega el texto de un CSS ni con ?raw; los tests que comprueban reglas leen el archivo de disco.
 
 ## Próximos pasos
-1. Fase 4: plan por commits y paleta para aprobar.
-2. Extensiones de Claude Code (skills, hooks, subagente, MCP): ver PLAN.md.
+1. Fase 5: seguir «Cómo retomar» de PLAN.md.
+2. Extensiones de Claude Code pendientes (hooks, subagente, verify-contact): ver PLAN.md.
