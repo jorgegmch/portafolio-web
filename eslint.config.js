@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint'
 
 // Capas, de la más baja a la más alta. Un módulo solo puede importar de su
 // propia capa o de las que están por debajo:
-//   config · data · i18n · lib  <-  hooks  <-  components/ui
+//   config · data · i18n · lib · styles  <-  hooks  <-  components/ui
 //     <-  components/layout · components/sections  <-  pages  <-  App
 const noParentImports = {
   group: ['../*'],
@@ -58,7 +58,7 @@ export default tseslint.config(
     },
   },
   layer(
-    ['src/config/**', 'src/data/**', 'src/i18n/**', 'src/lib/**'],
+    ['src/config/**', 'src/data/**', 'src/i18n/**', 'src/lib/**', 'src/styles/**'],
     [...HOOKS, ...UI, ...FEATURES, ...PAGES, ...APP],
   ),
   layer(['src/hooks/**'], [...UI, ...FEATURES, ...PAGES, ...APP]),

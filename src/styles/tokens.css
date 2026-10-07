@@ -1,0 +1,123 @@
+/*
+ * Tokens de diseño: única fuente de colores, tipografías, espaciados, radios,
+ * duraciones y easing. Los valores marcados como "origen" salen del CSS del
+ * sitio anterior; las escalas son propias.
+ *
+ * Breakpoints. CSS no admite variables en @media, así que se escriben
+ * literales y solo se usan estos, siempre con max-width (el diseño base es el
+ * de escritorio):
+ *   1280px  escritorio pequeño
+ *   1024px  tablet en horizontal o laptop pequeña
+ *    768px  tablet en vertical (origen)
+ *    480px  teléfono
+ */
+
+:root {
+  /* Fondos (origen) */
+  --color-bg: #08080f;
+  --color-surface: #0e0e1c;
+
+  /* Texto. Contraste sobre --color-surface, el fondo más claro. */
+  --color-text: #eeeef2; /* origen, 16.5:1 */
+  --color-text-muted: #9999b8; /* origen, 6.9:1 */
+  /* El origen era #6b6b8a (3.7:1); se aclaró para cumplir AA. */
+  --color-text-subtle: #8080a0; /* 5.0:1 */
+
+  /* Acentos (origen) */
+  --color-accent: #00d4ff; /* 10.8:1 */
+  --color-accent-alt: #00ff88; /* 14.3:1 */
+
+  /* Bordes (origen). Son decorativos: no llegan a 3:1. */
+  --color-border: rgba(0, 212, 255, 0.13);
+  --color-border-strong: #3a3a5a;
+
+  --color-focus: var(--color-accent);
+
+  /* Fondo decorativo y barra de navegación (origen) */
+  --color-nav-bg: rgba(8, 8, 15, 0.9);
+  --color-grid-line: rgba(0, 212, 255, 0.028);
+  --color-glow-accent: rgba(0, 212, 255, 0.045);
+  --color-glow-accent-alt: rgba(0, 255, 136, 0.04);
+
+  /* Familias (origen) */
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-sans: 'Outfit', 'Helvetica Neue', sans-serif;
+
+  --font-weight-regular: 400;
+
+  /* Tamaños: 12, 13, 14, 16 y 19 px del origen, pasados a rem. */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-md: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.1875rem;
+  /* Tamaños fluidos (origen): tagline, título de sección y nombre. */
+  --font-size-lead: clamp(0.875rem, 1.9vw, 1.3125rem);
+  --font-size-title: clamp(1.625rem, 3.5vw, 2.875rem);
+  --font-size-display: clamp(1.875rem, 5.5vw, 4.5rem);
+
+  --leading-tight: 1.1;
+  --leading-base: 1.6;
+  --leading-relaxed: 1.85;
+
+  --tracking-normal: 0.05em;
+  --tracking-wide: 0.12em;
+  --tracking-wider: 0.2em;
+
+  /* Espaciado: escala de 4 px. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* Contenedor: mismo ancho para la barra, las secciones y el pie. */
+  --container-max: 80rem; /* origen: 1280px */
+  --container-gutter: 8vw; /* origen */
+  --container-padding: max(
+    var(--container-gutter),
+    calc((100% - var(--container-max)) / 2)
+  );
+
+  --grid-size: 3.5rem; /* origen: 56px */
+
+  /* Radios (origen: 2px, 4px y 50%) */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-full: 50%;
+
+  --focus-ring-width: 0.125rem;
+  --focus-ring-offset: 0.125rem;
+
+  --blur-nav: 1.5rem; /* origen: 24px */
+
+  /* Duraciones y easing (origen) */
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 650ms;
+  --ease-standard: ease;
+
+  /* Capas */
+  --z-background: -1;
+  --z-nav: 100; /* origen */
+  --z-skip-link: 200;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --container-gutter: 6vw; /* origen */
+  }
+}
+
+/* Quien usa las duraciones de aquí respeta la preferencia sin más código. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+}
