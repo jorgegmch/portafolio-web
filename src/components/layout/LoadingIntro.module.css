@@ -34,7 +34,7 @@
 .line {
   color: var(--color-text);
   font-family: var(--font-mono);
-  font-size: var(--font-size-lead);
+  font-size: var(--font-size-intro);
   line-height: var(--leading-base);
   text-align: center;
   white-space: pre-wrap;
@@ -45,7 +45,7 @@
 .cursor {
   display: inline-block;
   width: var(--space-2);
-  height: var(--font-size-lead);
+  height: var(--font-size-intro);
   margin-left: var(--space-1);
   background-color: var(--color-accent);
   vertical-align: text-bottom;

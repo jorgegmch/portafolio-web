@@ -64,6 +64,43 @@ describe('LoadingIntro: estilos', () => {
     })
   })
 
+  describe('texto animado', () => {
+    const SIZE_TOKEN = '--font-size-intro'
+    const PREVIOUS_TOKEN = '--font-size-lead'
+
+    /** Mínimo y máximo, en rem, de un token escrito como clamp(mín, fluido, máx). */
+    const clampBounds = (name: string) => {
+      const [, min = '', max = ''] =
+        /^clamp\(\s*([\d.]+)rem\s*,[^,]+,\s*([\d.]+)rem\s*\)$/.exec(token(name)) ?? []
+      return { min: Number.parseFloat(min), max: Number.parseFloat(max) }
+    }
+
+    it('la línea usa el token de tamaño de la intro', () => {
+      expect(rule(introCss, '.line')).toMatchObject({ 'font-size': `var(${SIZE_TOKEN})` })
+    })
+
+    // Su alto es el del texto: si usara otro token, quedaría más bajo que las letras.
+    it('el cursor mide lo mismo que el texto', () => {
+      expect(rule(introCss, '.cursor')).toMatchObject({ height: `var(${SIZE_TOKEN})` })
+    })
+
+    it('el token existe y es fluido: 16 px en pantallas estrechas y 24 px en anchas', () => {
+      expect(token(SIZE_TOKEN)).toBe('clamp(1rem, 2.2vw, 1.5rem)')
+    })
+
+    it('es mayor que el tamaño anterior en los dos extremos', () => {
+      const size = clampBounds(SIZE_TOKEN)
+      const previous = clampBounds(PREVIOUS_TOKEN)
+
+      expect(size.min).toBeGreaterThan(previous.min)
+      expect(size.max).toBeGreaterThan(previous.max)
+    })
+
+    it('la intro ya no usa el tamaño anterior', () => {
+      expect(introCss).not.toContain(PREVIOUS_TOKEN)
+    })
+  })
+
   describe('reglas de estilos', () => {
     it('ninguna otra transición ni animación toca algo distinto de la opacidad', () => {
       const transitions = [...introCss.matchAll(/transition:\s*([^;]+);/g)].map((match) => match[1])
