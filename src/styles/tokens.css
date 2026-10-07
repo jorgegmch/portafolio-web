@@ -86,6 +86,9 @@
     calc((100% - var(--container-max)) / 2)
   );
 
+  /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
+  --measure: 36rem;
+
   /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
   --nav-height: 4.5rem;
 
