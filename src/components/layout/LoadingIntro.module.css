@@ -1,0 +1,71 @@
+/* Capa de la animación de carga: tapa la página hasta que termina. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-intro);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-7);
+  padding: var(--space-5) var(--container-gutter);
+  background-color: var(--color-bg);
+  opacity: 1;
+  transition: opacity var(--duration-slow) var(--ease-standard);
+}
+
+.leaving {
+  opacity: 0;
+}
+
+/* pre-wrap: el espacio final de una frase a medio escribir ocupa su sitio. */
+.line {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lead);
+  line-height: var(--leading-base);
+  text-align: center;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Tiene alto propio: sostiene la línea cuando todavía no hay texto. */
+.cursor {
+  display: inline-block;
+  width: var(--space-2);
+  height: var(--font-size-lead);
+  margin-left: var(--space-1);
+  background-color: var(--color-accent);
+  vertical-align: text-bottom;
+  animation: blink calc(var(--duration-slow) * 2) step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.skip {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-normal);
+  cursor: pointer;
+}
+
+.skip:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+}
+
+/* Las duraciones de los tokens casi llegan a cero: parpadearía sin parar. */
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}

@@ -16,6 +16,11 @@ export const INTRO_TIMING = {
   naturalHoldMs: 450,
   /** Con el código completo, antes de terminar. */
   codeHoldMs: 600,
+  /**
+   * Espera máxima a que la capa termine de desvanecerse. Debe superar a
+   * --duration-slow, la duración de esa transición en CSS.
+   */
+  exitFallbackMs: 1000,
 } as const
 
 export interface IntroFrame {

@@ -112,6 +112,7 @@
   --z-background: -1;
   --z-nav: 100; /* origen */
   --z-skip-link: 200;
+  --z-intro: 300;
 }
 
 @media (max-width: 768px) {
