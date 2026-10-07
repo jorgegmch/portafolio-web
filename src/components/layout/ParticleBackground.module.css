@@ -1,0 +1,11 @@
+/* Fondo decorativo: ocupa toda la ventana y no se desplaza con la página. */
+.canvas {
+  position: fixed;
+  inset: 0;
+  /* Detrás del contenido, y por delante del fondo del body. */
+  z-index: var(--z-background);
+  width: 100%;
+  height: 100%;
+  /* Nunca intercepta clics ni toques. */
+  pointer-events: none;
+}
