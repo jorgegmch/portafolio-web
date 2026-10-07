@@ -5,7 +5,7 @@ argument-hint: "[número de fase]"
 disable-model-invocation: true
 ---
 
-# Cierre de la fase $ARGUMENTS
+# Cierre de la fase $0
 
 Deja el repo en un estado desde el que una sesión nueva pueda retomar el
 trabajo leyendo solo `docs/PLAN.md` y `docs/MEMORY.md`.
@@ -55,10 +55,18 @@ trabajo leyendo solo `docs/PLAN.md` y `docs/MEMORY.md`.
    autor apruebe.
 10. **Commit.** Tras la aprobación: `git add` con los nombres explícitos de
     los archivos editados, y un commit
-    `docs: update plan and memory after closing Phase $ARGUMENTS`, sin líneas
+    `docs: update plan and memory after closing Phase $0`, sin líneas
     de atribución. Después, `git show --stat HEAD` y `git status -sb`.
 
 ## Informe
 
 Qué se cerró, la tabla de commits, lo que quedó pendiente y el siguiente
 paso. Si no pudiste comprobar algo, dilo.
+
+## Contexto del autor
+
+Lo que el autor escribió al invocar la skill. Lo primero es el número de
+fase; el resto, si lo hay, es contexto que no consta en el repo y que hay que
+registrar:
+
+$ARGUMENTS
