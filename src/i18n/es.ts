@@ -13,6 +13,11 @@ export const es: Dictionary = {
     contact: 'Contacto',
     skipToContent: 'Saltar al contenido',
     language: 'Idioma',
+    certifications: 'Certificaciones',
+    main: 'Navegación principal',
+    home: 'Ir al inicio',
+    openMenu: 'Abrir menú',
+    closeMenu: 'Cerrar menú',
   },
   intro: {
     phrases: [{ natural: 'optimizar procesos', code: 'optimize_workflow()' }],
@@ -160,5 +165,9 @@ export const es: Dictionary = {
   },
   footer: {
     builtBy: 'Diseñado y construido por',
+    social: 'Redes',
+  },
+  common: {
+    opensInNewTab: 'se abre en una pestaña nueva',
   },
 }

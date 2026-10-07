@@ -6,6 +6,12 @@ export const LANGS = ['es', 'en'] as const
 export type Lang = (typeof LANGS)[number]
 export const DEFAULT_LANG: Lang = 'es'
 
+/** Nombre de cada idioma en su propia lengua; no se traduce. */
+export const LANG_NAMES: Record<Lang, string> = {
+  es: 'Español',
+  en: 'English',
+}
+
 /**
  * Forma única de los textos del sitio. Cada idioma debe cumplirla completa:
  * si falta una clave, un proyecto o una certificación, TypeScript falla.
@@ -22,6 +28,13 @@ export interface Dictionary {
     contact: string
     skipToContent: string
     language: string
+    certifications: string
+    /** Nombre accesible del landmark de navegación. */
+    main: string
+    /** Nombre accesible del enlace del logo. */
+    home: string
+    openMenu: string
+    closeMenu: string
   }
   intro: {
     /** Frases en lenguaje natural que se transforman en código. */
@@ -71,5 +84,11 @@ export interface Dictionary {
   }
   footer: {
     builtBy: string
+    /** Nombre accesible de la lista de redes. */
+    social: string
+  }
+  common: {
+    /** Aviso para lectores de pantalla en enlaces con target="_blank". */
+    opensInNewTab: string
   }
 }

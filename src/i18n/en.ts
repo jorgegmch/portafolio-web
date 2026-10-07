@@ -13,6 +13,11 @@ export const en: Dictionary = {
     contact: 'Contact',
     skipToContent: 'Skip to content',
     language: 'Language',
+    certifications: 'Certifications',
+    main: 'Main navigation',
+    home: 'Go to top',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
   },
   intro: {
     phrases: [{ natural: 'optimize processes', code: 'optimize_workflow()' }],
@@ -166,5 +171,9 @@ export const en: Dictionary = {
   },
   footer: {
     builtBy: 'Designed and built by',
+    social: 'Social links',
+  },
+  common: {
+    opensInNewTab: 'opens in a new tab',
   },
 }
