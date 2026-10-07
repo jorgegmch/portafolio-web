@@ -21,7 +21,7 @@ export const es: Dictionary = {
   },
   intro: {
     phrases: [{ natural: 'optimizar procesos', code: 'optimize_workflow()' }],
-    skip: 'Saltar',
+    skip: 'Saltar animación',
   },
   hero: {
     heading: site.shortName,
