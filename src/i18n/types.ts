@@ -42,7 +42,7 @@ export interface Dictionary {
     skip: string
   }
   hero: {
-    /** Título de la página de inicio: el nombre legal, que no se traduce. */
+    /** Título de la página de inicio: el nombre corto, que no se traduce. */
     heading: string
     tagline: string
     viewProjects: string

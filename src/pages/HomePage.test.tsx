@@ -41,8 +41,8 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
   })
 
-  it.each(['es', 'en'] as const)('en %s, el título es el nombre legal de config', (lang) => {
-    expect(dictionaries[lang].hero.heading).toBe(site.legalName)
+  it.each(['es', 'en'] as const)('en %s, el título es el nombre corto de config', (lang) => {
+    expect(dictionaries[lang].hero.heading).toBe(site.shortName)
   })
 
   it('tiene un solo h1', () => {
@@ -59,7 +59,7 @@ describe('HomePage', () => {
     renderHome({ withNavbar: true })
 
     expect(mainHeadings()).toHaveLength(1)
-    expect(mainHeadings().at(0)).toHaveTextContent(site.legalName)
+    expect(mainHeadings().at(0)).toHaveTextContent(site.shortName)
     expect(screen.getByRole('banner')).not.toContainElement(mainHeadings().at(0) ?? null)
   })
 

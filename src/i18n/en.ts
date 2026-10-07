@@ -24,7 +24,7 @@ export const en: Dictionary = {
     skip: 'Skip',
   },
   hero: {
-    heading: site.legalName,
+    heading: site.shortName,
     tagline: 'Where code meets storytelling.',
     viewProjects: 'View projects',
     downloadCv: 'Download CV',

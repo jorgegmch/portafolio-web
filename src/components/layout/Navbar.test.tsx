@@ -66,9 +66,10 @@ describe('Navbar', () => {
     it('el nombre del sitio enlaza al inicio', () => {
       renderNavbar()
 
-      const brand = screen.getByRole('link', { name: new RegExp(site.shortName) })
+      const brand = screen.getByRole('link', { name: new RegExp(site.handle) })
       expect(brand).toHaveAttribute('href', routes.home)
-      expect(brand).toHaveAccessibleName(`${site.shortName}: ${es.nav.home}`)
+      expect(brand).toHaveAccessibleName(`${site.handle}: ${es.nav.home}`)
+      expect(brand).toHaveTextContent(site.handle)
     })
 
     it.each([

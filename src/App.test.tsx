@@ -90,7 +90,7 @@ describe('App', () => {
     it('una ruta desconocida redirige al inicio', () => {
       renderAt(UNKNOWN_URL)
 
-      expect(pageTitle(site.legalName)).toBeInTheDocument()
+      expect(pageTitle(site.shortName)).toBeInTheDocument()
       expect(window.location.pathname).toBe(routes.home)
     })
 

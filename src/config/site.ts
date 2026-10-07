@@ -6,6 +6,8 @@ export const site = {
   /** Nombre legal, tal como aparece en la cédula (sin tilde en Gomez). */
   legalName: 'Jorge Alberto Gomez Chaparro',
   shortName: 'Jorge Gomez',
+  /** Alias público, el del logo. Es el mismo usuario de GitHub. */
+  handle: GITHUB_USER,
   role: 'Full Stack Developer',
   location: 'Piedecuesta, Santander, Colombia',
   status: ['open_to_work', 'freelance_disponible'],

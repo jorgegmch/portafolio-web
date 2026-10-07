@@ -78,9 +78,9 @@ export function Navbar() {
         <Link
           className={styles.brand}
           to={routes.home}
-          aria-label={`${site.shortName}: ${t.nav.home}`}
+          aria-label={`${site.handle}: ${t.nav.home}`}
         >
-          {site.shortName}
+          {site.handle}
         </Link>
         {compact && (
           <button

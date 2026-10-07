@@ -40,7 +40,7 @@ const queryMenuToggle = () =>
 const link = (name: string) => screen.getByRole('link', { name })
 const queryLink = (name: string) => screen.queryByRole('link', { name })
 const langToggle = () => screen.getByRole('button', { name: new RegExp(`^${es.nav.language}`) })
-const brand = () => screen.getByRole('link', { name: new RegExp(site.shortName) })
+const brand = () => screen.getByRole('link', { name: new RegExp(site.handle) })
 
 beforeEach(() => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-CO'])
