@@ -246,7 +246,8 @@ playwright-report
 blob-report
 .lighthouseci
 
-# Agent tooling: version only the shared rules
+# Agent tooling: version only shared rules and settings
 !.claude/
 .claude/*
 !.claude/rules/
+!.claude/settings.json
