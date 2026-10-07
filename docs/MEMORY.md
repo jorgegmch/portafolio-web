@@ -2,7 +2,7 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases está en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 5 cerradas en rebuild/vite-react, sin merge. Las fases 1 a 4 están en origin; la Fase 5 (animación de carga) está commiteada en local y sin subir.
+- Fases 1 a 5 cerradas en rebuild/vite-react y subidas a origin, sin merge.
 - Siguen tres encargos ya aprobados, en este orden: Hero (Fase 6), transición de idioma y cursor glitch; están en PLAN.md y ninguno se ejecuta sin que el autor lo pida.
 - Las descripciones de proyectos están sincronizadas con GitHub.
 

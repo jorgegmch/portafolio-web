@@ -10,8 +10,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 1. Leer este archivo, `docs/MEMORY.md` y `AGENTS.md`, y contrastar con git (`git status -sb`, `git branch -vv`, `git log --oneline -3`).
 2. **Siguiente paso: el encargo 1 de «Trabajo pendiente aprobado», el Hero (Fase 6).** El propio encargo dice qué proponer por escrito antes de escribir código; se espera la respuesta del autor. No se ejecuta sin que el autor lo pida.
 3. Después vienen, en este orden, los encargos 2 y 3: la transición de idioma y el cursor glitch. Tampoco se ejecutan sin que el autor lo pida.
-4. La Fase 5 está commiteada en local y sin subir: el push lo hace el autor.
-5. Antes de cada push: `/pre-push-check`. Al cerrar una fase: `/close-phase <fase>`.
+4. Antes de cada push: `/pre-push-check`. Al cerrar una fase: `/close-phase <fase>`.
 
 ## Fases
 
