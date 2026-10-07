@@ -1,0 +1,4 @@
+/* La barra es fija: el contenido le reserva su hueco para no quedar debajo. */
+.main {
+  padding-top: var(--nav-height);
+}
