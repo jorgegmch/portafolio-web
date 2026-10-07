@@ -42,6 +42,7 @@
 .brand {
   color: var(--color-accent);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   letter-spacing: var(--tracking-wide);
 }
 

@@ -44,6 +44,7 @@
   --font-sans: 'Outfit', 'Helvetica Neue', sans-serif;
 
   --font-weight-regular: 400;
+  --font-weight-medium: 500; /* solo la fuente mono lo carga */
 
   /* Tamaños: 12, 13, 14, 16 y 19 px del origen, pasados a rem. */
   --font-size-xs: 0.75rem;
