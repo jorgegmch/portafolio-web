@@ -83,6 +83,9 @@
     calc((100% - var(--container-max)) / 2)
   );
 
+  /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
+  --nav-height: 4.5rem;
+
   --grid-size: 3.5rem; /* origen: 56px */
 
   /* Radios (origen: 2px, 4px y 50%) */

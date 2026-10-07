@@ -29,7 +29,8 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-4) var(--space-6);
-  padding: var(--space-4) var(--container-padding);
+  min-height: var(--nav-height);
+  padding: var(--space-3) var(--container-padding);
 }
 
 .brand,
