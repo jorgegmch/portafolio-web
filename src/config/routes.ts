@@ -13,3 +13,6 @@ export const sections = {
 } as const
 
 export type SectionId = (typeof sections)[keyof typeof sections]
+
+/** Id del contenido principal; es el destino del skip-link. */
+export const MAIN_CONTENT_ID = 'main'

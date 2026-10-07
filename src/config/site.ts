@@ -24,3 +24,9 @@ export const site = {
     linkedin: 'https://www.linkedin.com/in/jorgegmch',
   },
 } as const
+
+/** Redes en el orden en que se muestran. Los nombres son marcas: no se traducen. */
+export const socialLinks = [
+  { id: 'github', label: 'GitHub', url: site.social.github },
+  { id: 'linkedin', label: 'LinkedIn', url: site.social.linkedin },
+] as const
