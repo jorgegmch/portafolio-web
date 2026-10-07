@@ -87,6 +87,21 @@ describe('LoadingIntro: estilos', () => {
       expect(rule(reduced, '.cursor')).toMatchObject({ animation: 'none' })
     })
 
+    // Excepción aceptada a «nunca outline: none»: la capa recibe el foco al
+    // montar, pero no es interactiva. El botón conserva su anillo.
+    // El selector importa: el anillo global es :focus-visible y se carga
+    // después, así que un .intro a secas empataría en especificidad y perdería
+    // (visto en Chrome). Con .intro:focus-visible gana.
+    it('la capa no muestra anillo de foco, con un selector que gana al anillo global', () => {
+      expect(rule(introCss, '.intro:focus-visible')).toMatchObject({ outline: 'none' })
+      expect(rule(introCss, '.intro')).not.toHaveProperty('outline')
+    })
+
+    it('la capa es lo único que quita el anillo: el botón lo conserva', () => {
+      expect(introCss.match(/outline:\s*(?:none|0)\b/g)).toHaveLength(1)
+      expect(rule(introCss, '.skip')).not.toHaveProperty('outline')
+    })
+
     it('no hay colores escritos a mano', () => {
       expect(introCss).not.toMatch(/#[0-9a-f]{3,8}\b|rgba?\(/i)
     })

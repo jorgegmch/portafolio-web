@@ -31,12 +31,14 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
   const { text, phase, skip } = useIntroSequence(frames)
   const leaving = phase === 'leaving'
 
-  const skipRef = useRef<HTMLButtonElement>(null)
+  const layerRef = useRef<HTMLDivElement>(null)
   const finished = useRef(false)
 
-  // La capa tapa la página: el foco empieza en lo único que se puede usar.
+  // La capa tapa la página, así que el foco empieza en ella. No va al botón:
+  // un foco puesto por código al cargar le mostraría el anillo sin que nadie
+  // hubiera usado el teclado. Desde la capa, el primer Tab llega al botón.
   useEffect(() => {
-    skipRef.current?.focus()
+    layerRef.current?.focus()
   }, [])
 
   const finish = useCallback(() => {
@@ -75,10 +77,11 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
   }
 
   return (
-    // La capa no es un control: puede recibir el foco (tabIndex -1) para
+    // La capa no es un control: recibe el foco por código al montar para
     // atender Enter y Espacio, y el elemento accesible es el botón de dentro.
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
+      ref={layerRef}
       className={leaving ? `${styles.intro} ${styles.leaving}` : styles.intro}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
@@ -89,7 +92,7 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
         <span>{text}</span>
         <span className={styles.cursor} />
       </p>
-      <button ref={skipRef} type="button" className={styles.skip} onClick={skip}>
+      <button type="button" className={styles.skip} onClick={skip}>
         {t.intro.skip}
       </button>
     </div>

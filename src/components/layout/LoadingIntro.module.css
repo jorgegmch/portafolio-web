@@ -14,6 +14,18 @@
   transition: opacity var(--duration-slow) var(--ease-standard);
 }
 
+/*
+ * Excepción deliberada a la regla de no quitar el anillo: la capa recibe el
+ * foco al montar, pero no es interactiva y un anillo alrededor de toda la
+ * ventana no orienta a nadie. El botón conserva el suyo.
+ *
+ * Lleva :focus-visible para ganar por especificidad al anillo global de
+ * global.css, que se carga después y con un .intro a secas no se anularía.
+ */
+.intro:focus-visible {
+  outline: none;
+}
+
 .leaving {
   opacity: 0;
 }

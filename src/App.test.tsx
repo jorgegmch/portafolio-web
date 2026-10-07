@@ -188,8 +188,17 @@ describe('App', () => {
     })
 
     describe('en la primera visita', () => {
-      it('aparece, con el foco en el botón de saltar', () => {
+      it('aparece, con el foco en su capa y no en el botón de saltar', () => {
         renderAt(routes.home)
+
+        expect(skipIntro().parentElement).toHaveFocus()
+        expect(skipIntro()).not.toHaveFocus()
+      })
+
+      it('desde la capa, un Tab llega al botón de saltar', async () => {
+        const { user } = renderAt(routes.home)
+
+        await user.tab()
 
         expect(skipIntro()).toHaveFocus()
       })

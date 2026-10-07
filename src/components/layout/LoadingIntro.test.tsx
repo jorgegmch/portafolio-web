@@ -94,9 +94,30 @@ describe('LoadingIntro', () => {
       expect(screen.getAllByRole('button')).toHaveLength(1)
       expect(skipButton()).toHaveAttribute('type', 'button')
     })
+  })
 
-    it('tiene el foco al montar', () => {
+  // El foco empieza en la capa y no en el botón: así el anillo del botón solo
+  // aparece cuando se llega a él con el teclado.
+  describe('foco', () => {
+    it('al montar está en la capa, no en el botón', () => {
+      const { layer } = renderIntro()
+
+      expect(layer).toHaveFocus()
+      expect(skipButton()).not.toHaveFocus()
+    })
+
+    it('la capa puede recibirlo sin entrar en el orden de tabulación', () => {
+      const { layer } = renderIntro()
+
+      expect(layer).toHaveAttribute('tabindex', '-1')
+    })
+
+    it('con un Tab pasa al botón', async () => {
+      vi.useRealTimers()
+      const user = userEvent.setup()
       renderIntro()
+
+      await user.tab()
 
       expect(skipButton()).toHaveFocus()
     })
