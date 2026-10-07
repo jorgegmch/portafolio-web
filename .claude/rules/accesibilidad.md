@@ -11,6 +11,7 @@
 
 - Todo lo interactivo se alcanza y se opera con teclado.
 - El foco siempre es visible: nunca `outline: none` sin reemplazo.
+- Única excepción: una capa no interactiva que recibe el foco por código (la de la animación de carga) puede quitar su anillo, siempre que los controles que contiene conserven el suyo. La excepción se deja comentada en el CSS.
 - Menús desplegables (selector de idioma, descarga de CV): Enter o Espacio abren, Escape cierra y devuelve el foco al botón.
 - El botón que abre un menú lleva `aria-expanded`.
 
