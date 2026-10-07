@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, type TransitionEvent } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type KeyboardEvent,
+  type TransitionEvent,
+} from 'react'
 import styles from '@/components/layout/LoadingIntro.module.css'
 import { useIntroSequence } from '@/hooks/useIntroSequence'
 import { useLang } from '@/hooks/useLang'
@@ -52,9 +59,29 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
     if (leaving && event.target === event.currentTarget) finish()
   }
 
+  // Con el foco en la capa, Enter y Espacio saltan sin pasar antes por el
+  // botón. Las teclas que nacen en el botón no se tocan: él ya salta al
+  // activarse, y atenderlas aquí también pediría saltar dos veces.
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.target !== event.currentTarget) return
+    // Ni la tecla mantenida ni los atajos del navegador son una orden de saltar.
+    if (event.repeat || event.ctrlKey || event.altKey || event.metaKey) return
+    // El Enter del teclado numérico llega con la misma key que el principal.
+    if (event.key !== 'Enter' && event.key !== ' ') return
+
+    // Espacio desplazaría la página de debajo.
+    event.preventDefault()
+    skip()
+  }
+
   return (
+    // La capa no es un control: puede recibir el foco (tabIndex -1) para
+    // atender Enter y Espacio, y el elemento accesible es el botón de dentro.
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className={leaving ? `${styles.intro} ${styles.leaving}` : styles.intro}
+      tabIndex={-1}
+      onKeyDown={handleKeyDown}
       onTransitionEnd={handleTransitionEnd}
     >
       {/* Letras que cambian una a una: para un lector de pantalla son ruido. */}
