@@ -44,6 +44,12 @@ remoto y entrega un veredicto. Es de solo lectura.
    (año, mes y día). Descarta lo que sea claramente otra cosa (hashes,
    versiones, el correo `noreply` de los commits, códigos de carácter de
    `src/config/`). Lista el resto como archivo, línea y tipo, sin el valor.
+   Excepción explícita, solo por nombre de archivo:
+   `public/tech/javascript.svg` contiene dos correos dentro del aviso de la
+   licencia MIT del logo. Son de sus autores y forman parte del texto
+   oficial, así que no se informan. La excepción no cubre ningún otro
+   archivo ni ningún otro tipo de dato en ese: si el archivo tiene un número
+   de correos distinto de dos, o cualquier otra coincidencia, lístalo.
    Control positivo: confirma que el patrón de correo encuentra una dirección
    ficticia de ejemplo pasada por la entrada estándar.
    Límite: esto no comprueba valores concretos; la cédula y la fecha de
