@@ -25,10 +25,19 @@ export interface Technology<Id extends string = string> {
   id: Id
   name: string
   group: TechnologyGroup
-  /** Archivos de logo dentro de public/tech; puede haber más de uno. */
+  /** Archivos de logo dentro de public/tech; vacío si se muestra solo el nombre. */
   logos: readonly string[]
   /** Parte del stack principal (tarjeta de estadísticas). */
   primary?: boolean
+}
+
+export interface HeroBadge<Id extends string = string> {
+  /** Id de la tecnología del catálogo que le da nombre. */
+  technology: Id
+  /** Archivo del icono: en public/tech si es de marca, en public/icons si no. */
+  icon: string
+  /** Logo oficial de una marca, que no se altera. */
+  brand: boolean
 }
 
 export interface Project<Id extends string = string> {

@@ -1,43 +1,24 @@
-import type { Technology } from '@/data/types'
+import type { HeroBadge, Technology } from '@/data/types'
 
 // Sin porcentajes ni niveles: solo qué tecnologías y a qué grupo pertenecen.
 // Los nombres de los grupos (traducibles) viven en i18n/.
+// `logos` solo nombra archivos que existen en public/tech: una tecnología sin
+// logo utilizable se muestra con su nombre.
 const technologyList = [
-  { id: 'java', name: 'Java', group: 'backend', logos: ['java.svg'], primary: true },
-  {
-    id: 'spring-boot',
-    name: 'Spring Boot',
-    group: 'backend',
-    logos: ['spring-boot.svg'],
-    primary: true,
-  },
-  { id: 'spring-security', name: 'Spring Security', group: 'backend', logos: ['spring.svg'] },
-  {
-    id: 'postgresql',
-    name: 'PostgreSQL',
-    group: 'databases',
-    logos: ['postgresql.svg'],
-    primary: true,
-  },
-  { id: 'mysql', name: 'MySQL', group: 'databases', logos: ['mysql.svg'] },
+  { id: 'java', name: 'Java', group: 'backend', logos: ['duke.svg'], primary: true },
+  { id: 'spring-boot', name: 'Spring Boot', group: 'backend', logos: [], primary: true },
+  { id: 'spring-security', name: 'Spring Security', group: 'backend', logos: [] },
+  { id: 'postgresql', name: 'PostgreSQL', group: 'databases', logos: [], primary: true },
+  { id: 'mysql', name: 'MySQL', group: 'databases', logos: [] },
   { id: 'python', name: 'Python', group: 'languages', logos: ['python.svg'] },
-  {
-    id: 'javascript-typescript',
-    name: 'JavaScript/TypeScript',
-    group: 'languages',
-    logos: ['javascript.svg', 'typescript.svg'],
-  },
+  { id: 'javascript', name: 'JavaScript', group: 'languages', logos: ['javascript.svg'] },
+  { id: 'typescript', name: 'TypeScript', group: 'languages', logos: ['typescript.svg'] },
   { id: 'html', name: 'HTML', group: 'frontend', logos: ['html.svg'] },
-  { id: 'css', name: 'CSS', group: 'frontend', logos: ['css.svg'] },
-  { id: 'git-github', name: 'Git/GitHub', group: 'tools', logos: ['git.svg', 'github.svg'] },
-  { id: 'docker', name: 'Docker', group: 'tools', logos: ['docker.svg'] },
-  { id: 'n8n', name: 'n8n', group: 'tools', logos: ['n8n.svg'] },
-  {
-    id: 'ai-development',
-    name: 'AI-assisted/orchestrated development',
-    group: 'ai',
-    logos: ['ai.svg'],
-  },
+  { id: 'css', name: 'CSS', group: 'frontend', logos: [] },
+  { id: 'git-github', name: 'Git/GitHub', group: 'tools', logos: ['git.svg'] },
+  { id: 'docker', name: 'Docker', group: 'tools', logos: [] },
+  { id: 'n8n', name: 'n8n', group: 'tools', logos: [] },
+  { id: 'ai-development', name: 'AI-assisted/orchestrated development', group: 'ai', logos: [] },
 ] as const satisfies readonly Technology[]
 
 export type TechnologyId = (typeof technologyList)[number]['id']
@@ -61,3 +42,20 @@ export const heroLogos = [
 
 /** URL pública de un logo de public/tech. */
 export const techLogoUrl = (file: string) => `${import.meta.env.BASE_URL}tech/${file}`
+
+/**
+ * Pastillas que flotan junto al retrato del Hero, en orden. El nombre visible
+ * es el de la tecnología en el catálogo. `brand` distingue el logo de marca,
+ * que va sin alterar, del icono propio que se usa cuando la marca no deja
+ * mostrar el suyo.
+ */
+export const heroBadges = [
+  { technology: 'python', icon: 'python.svg', brand: true },
+  { technology: 'java', icon: 'duke.svg', brand: true },
+  { technology: 'typescript', icon: 'typescript.svg', brand: true },
+  { technology: 'postgresql', icon: 'database.svg', brand: false },
+] as const satisfies readonly HeroBadge<TechnologyId>[]
+
+/** URL pública del icono de una pastilla: public/tech si es de marca, public/icons si no. */
+export const heroBadgeIconUrl = ({ icon, brand }: HeroBadge) =>
+  brand ? techLogoUrl(icon) : `${import.meta.env.BASE_URL}icons/${icon}`

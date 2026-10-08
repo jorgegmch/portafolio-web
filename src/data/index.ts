@@ -7,6 +7,8 @@ export {
   type ProjectId,
 } from '@/data/projects'
 export {
+  heroBadgeIconUrl,
+  heroBadges,
   heroLogos,
   primaryStack,
   techLogoUrl,
