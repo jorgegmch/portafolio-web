@@ -76,14 +76,14 @@ describe('Hero: estilos', () => {
       expect(cssRule(heroCss, '.photo')).toMatchObject({ width: '100%', height: '100%' })
     })
 
-    // El busto termina en corte recto abajo y a los lados: la máscara lo funde
-    // con el fondo sin tocar el archivo.
-    it('se desvanece hacia abajo y hacia los lados con una máscara', () => {
-      const mask = cssRule(heroCss, '.photo')['mask-image'] ?? ''
-
-      expect(mask).toMatch(/linear-gradient\(to bottom,[^)]*transparent\)/)
-      expect(mask).toMatch(/linear-gradient\(to right,\s*transparent[^)]*transparent\)/)
-      expect(cssRule(heroCss, '.photo')).toMatchObject({ 'mask-composite': 'intersect' })
+    // El busto termina en corte recto abajo: la máscara lo funde con el fondo
+    // sin tocar el archivo. A los lados la foto es silueta: no se difumina.
+    it('se desvanece solo hacia abajo con una máscara', () => {
+      expect(cssRule(heroCss, '.photo')).toMatchObject({
+        'mask-image': 'linear-gradient(to bottom, black 72%, transparent)',
+      })
+      expect(cssRule(heroCss, '.photo')['mask-image']).not.toMatch(/to (right|left)/)
+      expect(cssRule(heroCss, '.photo')).not.toHaveProperty('mask-composite')
     })
 
     it('lleva un halo que la separa del fondo, con tokens', () => {

@@ -49,12 +49,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* El busto termina en corte recto abajo y a los lados: la máscara lo funde
-     con el fondo sin tocar el archivo. */
-  mask-image:
-    linear-gradient(to bottom, black 72%, transparent),
-    linear-gradient(to right, transparent, black 12%, black 88%, transparent);
-  mask-composite: intersect;
+  /* El busto termina en corte recto abajo: la máscara lo funde con el fondo
+     sin tocar el archivo. A los lados la foto es silueta y no se difumina. */
+  mask-image: linear-gradient(to bottom, black 72%, transparent);
   /* Halo que separa la silueta oscura del fondo oscuro. */
   filter: drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo));
 }
