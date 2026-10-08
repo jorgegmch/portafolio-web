@@ -3,5 +3,7 @@
    añade aquí junto con el componente que lo necesita. */
 
 @import '@fontsource/outfit/latin-400.css';
+@import '@fontsource/outfit/latin-600.css';
+@import '@fontsource/outfit/latin-800.css';
 @import '@fontsource/jetbrains-mono/latin-400.css';
 @import '@fontsource/jetbrains-mono/latin-500.css';
