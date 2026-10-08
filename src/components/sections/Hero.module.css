@@ -1,4 +1,9 @@
 .hero {
+  display: grid;
+  /* El texto ocupa lo que queda; el retrato, su ancho o una parte de la fila. */
+  grid-template-columns: minmax(0, 1fr) min(var(--portrait-width), 38%);
+  align-items: center;
+  gap: var(--space-7);
   padding: var(--space-9) var(--container-padding);
   /* La barra es fija: al llegar por el ancla, el inicio no queda debajo. */
   scroll-margin-top: var(--nav-height);
@@ -30,4 +35,35 @@
   margin-top: var(--space-5);
   color: var(--color-text-muted);
   font-size: var(--font-size-lg);
+}
+
+/* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
+   imagen de 4:5 entra sin tocar el diseño. */
+.portrait {
+  aspect-ratio: 4 / 5;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* El busto termina en corte recto abajo y a los lados: la máscara lo funde
+     con el fondo sin tocar el archivo. */
+  mask-image:
+    linear-gradient(to bottom, black 72%, transparent),
+    linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  mask-composite: intersect;
+  /* Halo que separa la silueta oscura del fondo oscuro. */
+  filter: drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo));
+}
+
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .portrait {
+    width: min(100%, var(--portrait-width));
+    justify-self: center;
+  }
 }

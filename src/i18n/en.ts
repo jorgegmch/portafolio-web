@@ -34,7 +34,7 @@ export const en: Dictionary = {
     downloadCv: 'Download CV',
     cvDesigned: 'Designed version (PDF)',
     cvAts: 'ATS version (PDF)',
-    photoAlt: `Photo of ${site.legalName}`,
+    photoAlt: `Illustration of ${site.shortName}`,
   },
   about: {
     heading: 'About me',

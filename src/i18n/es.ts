@@ -34,7 +34,7 @@ export const es: Dictionary = {
     downloadCv: 'Descargar CV',
     cvDesigned: 'Versión diseñada (PDF)',
     cvAts: 'Versión ATS (PDF)',
-    photoAlt: `Foto de ${site.legalName}`,
+    photoAlt: `Ilustración de ${site.shortName}`,
   },
   about: {
     heading: 'Sobre mí',

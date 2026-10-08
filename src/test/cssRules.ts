@@ -19,6 +19,12 @@ export const cssRule = (css: string, selector: string) => {
   )
 }
 
+/** Reglas de dentro de un bloque @media, por ejemplo `(max-width: 768px)`. */
+export const cssMedia = (css: string, query: string) => {
+  const escaped = query.replace(/[()]/g, '\\$&')
+  return new RegExp(`@media ${escaped}\\s*\\{((?:[^{}]*\\{[^}]*\\})*)\\s*\\}`).exec(css)?.[1] ?? ''
+}
+
 /** Primer valor de una variable en un CSS: el de :root, antes de los @media. */
 export const cssToken = (css: string, name: string) =>
   new RegExp(`${name}:\\s*([^;]+);`).exec(css)?.[1] ?? ''

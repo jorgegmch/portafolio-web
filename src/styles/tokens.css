@@ -93,6 +93,11 @@
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
 
+  /* Retrato del hero: ancho máximo (420 px) y halo que lo separa del fondo. */
+  --portrait-width: 26.25rem;
+  --portrait-halo-blur: 1.5rem;
+  --color-halo: rgba(0, 212, 255, 0.3);
+
   /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
   --nav-height: 4.5rem;
 
