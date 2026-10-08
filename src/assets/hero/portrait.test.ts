@@ -29,9 +29,9 @@ describe('retrato del Hero', () => {
       expect(large.height).toBe(small.height * 2)
     })
 
-    it('miden 520 x 650 y 1040 x 1300', () => {
-      expect(small).toMatchObject({ width: 520, height: 650 })
-      expect(large).toMatchObject({ width: 1040, height: 1300 })
+    it('miden 576 x 720 y 1152 x 1440', () => {
+      expect(small).toMatchObject({ width: 576, height: 720 })
+      expect(large).toMatchObject({ width: 1152, height: 1440 })
     })
 
     it('la proporción reservada es 4:5', () => {
@@ -44,8 +44,8 @@ describe('retrato del Hero', () => {
     })
   })
 
-  // La ilustración que hubo antes de la foto ya no se publica.
-  it.each([420, 840])('no queda el archivo de %i px de la ilustración', (width) => {
+  // Ni la ilustración que hubo antes de la foto ni los tamaños anteriores se publican.
+  it.each([420, 840, 520, 1040])('no queda el archivo anterior de %i px', (width) => {
     expect(existsSync(path(width))).toBe(false)
   })
 
