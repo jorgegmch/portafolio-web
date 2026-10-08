@@ -34,15 +34,19 @@ export function Hero() {
         <p className={styles.intro}>{t.hero.intro}</p>
       </div>
       <div className={styles.portrait}>
-        <img
-          className={styles.photo}
-          src={small.src}
-          srcSet={PORTRAIT_SRC_SET}
-          width={small.width}
-          height={small.height}
-          alt={t.hero.photoAlt}
-          decoding="async"
-        />
+        {/* El halo va en el envoltorio y la máscara en la imagen: juntos, la
+            máscara cortaría el halo en línea recta en el borde del cuadro. */}
+        <div className={styles.glow}>
+          <img
+            className={styles.photo}
+            src={small.src}
+            srcSet={PORTRAIT_SRC_SET}
+            width={small.width}
+            height={small.height}
+            alt={t.hero.photoAlt}
+            decoding="async"
+          />
+        </div>
         <div className={styles.icons} aria-hidden="true">
           {heroLogos.map((logo) => (
             // El envoltorio flota y la imagen escala: en un solo elemento,

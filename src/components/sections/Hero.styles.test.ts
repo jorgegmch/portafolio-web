@@ -87,16 +87,33 @@ describe('Hero: estilos', () => {
     })
 
     it('lleva un halo que la separa del fondo, con tokens', () => {
-      expect(cssRule(heroCss, '.photo')).toMatchObject({
+      expect(cssRule(heroCss, '.glow')).toMatchObject({
         filter: 'drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo))',
       })
       expect(cssToken(tokensCss, '--portrait-halo-blur')).toMatch(/^[\d.]+rem$/)
       expect(cssToken(tokensCss, '--color-halo')).toMatch(/^rgba\(/)
     })
 
+    // La máscara recorta todo lo que sale del cuadro de la imagen. Si el halo
+    // fuera de la propia imagen, se cortaría en línea recta en ese borde: va
+    // en el envoltorio, que lo calcula sobre la imagen ya desvanecida.
+    it('el halo va en el envoltorio y la máscara en la imagen, nunca juntos', () => {
+      expect(cssRule(heroCss, '.photo')).not.toHaveProperty('filter')
+      expect(cssRule(heroCss, '.photo')).toHaveProperty('mask-image')
+      expect(cssRule(heroCss, '.glow')).not.toHaveProperty('mask-image')
+    })
+
+    it('el envoltorio del halo llena el hueco reservado, sin recortar', () => {
+      expect(cssRule(heroCss, '.glow')).toMatchObject({ width: '100%', height: '100%' })
+      expect(cssRule(heroCss, '.glow')).not.toHaveProperty('overflow')
+      expect(cssRule(heroCss, '.portrait')).not.toHaveProperty('overflow')
+    })
+
     it('es estática: ni transición, ni animación, ni reacción al puntero', () => {
       expect(cssRule(heroCss, '.photo')).not.toHaveProperty('transition')
       expect(cssRule(heroCss, '.photo')).not.toHaveProperty('animation')
+      expect(cssRule(heroCss, '.glow')).not.toHaveProperty('transition')
+      expect(cssRule(heroCss, '.glow')).not.toHaveProperty('animation')
       expect(heroCss).not.toMatch(/\.(?:photo|portrait):hover/)
     })
   })

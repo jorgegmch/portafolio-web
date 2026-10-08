@@ -104,8 +104,11 @@ describe('Hero: iconos de tecnología', () => {
       renderHero()
 
       const portrait = screen.getByRole('img')
+      const glow = portrait.parentElement
 
-      expect(portrait.parentElement).toContainElement(decoration() as HTMLElement)
+      // Hermana del envoltorio del halo, no hija: dentro, los iconos llevarían halo.
+      expect(glow?.parentElement).toContainElement(decoration() as HTMLElement)
+      expect(glow).not.toContainElement(decoration() as HTMLElement)
       expect(
         portrait.compareDocumentPosition(decoration()) & Node.DOCUMENT_POSITION_FOLLOWING,
       ).toBeTruthy()

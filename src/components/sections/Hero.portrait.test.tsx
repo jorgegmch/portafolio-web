@@ -117,6 +117,21 @@ describe('Hero: retrato', () => {
       expect(follows(intro, image())).toBe(true)
     })
 
+    // El envoltorio lleva el halo: si contuviera algo más, también le daría halo.
+    it('va sola dentro de su envoltorio, que es hermano de la capa decorativa', () => {
+      renderHero()
+
+      const wrapper = image().parentElement
+      const layer = screen.getByRole('region').querySelector('[aria-hidden="true"]')
+
+      expect(wrapper?.children).toHaveLength(1)
+      expect(wrapper).not.toHaveAttribute('aria-hidden')
+      expect(wrapper).not.toHaveAttribute('role')
+      expect(layer).not.toBeNull()
+      expect(wrapper?.parentElement).toBe(layer?.parentElement)
+      expect(wrapper).not.toBe(layer)
+    })
+
     it('es estática: ni enlace, ni botón, ni estilos en línea', () => {
       renderHero()
 

@@ -45,6 +45,14 @@
   aspect-ratio: 4 / 5;
 }
 
+/* Halo que separa la silueta oscura del fondo oscuro. Va fuera de la imagen:
+   así se calcula sobre la foto ya desvanecida y la máscara no lo recorta. */
+.glow {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo));
+}
+
 .photo {
   width: 100%;
   height: 100%;
@@ -52,8 +60,6 @@
   /* El busto termina en corte recto abajo: la máscara lo funde con el fondo
      sin tocar el archivo. A los lados la foto es silueta y no se difumina. */
   mask-image: linear-gradient(to bottom, black 72%, transparent);
-  /* Halo que separa la silueta oscura del fondo oscuro. */
-  filter: drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo));
 }
 
 /* Capa decorativa: los logos que flotan alrededor del retrato. */
