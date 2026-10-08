@@ -31,22 +31,18 @@ afterEach(() => {
 })
 
 describe('Hero: retrato', () => {
-  // Hoy el retrato es un avatar ilustrado provisional. Al poner la foto real
-  // (/update-hero-photo) cambian los dos textos de este bloque, de
-  // «Ilustración de» a «Foto de» y de «Illustration of» a «Photo of», y nada
-  // más de este archivo.
-  describe('avatar provisional: esto cambia con la foto real', () => {
-    const PROVISIONAL_ALT = {
-      es: `Ilustración de ${site.shortName}`,
-      en: `Illustration of ${site.shortName}`,
+  // El retrato es una foto. La de hoy es provisional: sustituirla por la
+  // definitiva (/update-hero-photo) no cambia nada de este archivo.
+  describe('texto alternativo', () => {
+    const PHOTO_ALT = {
+      es: `Foto de ${site.shortName}`,
+      en: `Photo of ${site.shortName}`,
     } as const
 
-    it.each(LANGS)('en %s, el texto alternativo dice que es una ilustración', (lang) => {
-      expect(dictionaries[lang].hero.photoAlt).toBe(PROVISIONAL_ALT[lang])
+    it.each(LANGS)('en %s, dice que es una foto', (lang) => {
+      expect(dictionaries[lang].hero.photoAlt).toBe(PHOTO_ALT[lang])
     })
-  })
 
-  describe('texto alternativo: no cambia con la foto real', () => {
     it.each(LANGS)('en %s, la imagen se llama como dice el diccionario', (lang) => {
       renderHero(lang)
 
@@ -68,7 +64,7 @@ describe('Hero: retrato', () => {
     })
   })
 
-  describe('archivos: salen del módulo del retrato, no cambian con la foto real', () => {
+  describe('archivos: salen del módulo del retrato', () => {
     it('carga el tamaño pequeño por defecto', () => {
       renderHero()
 

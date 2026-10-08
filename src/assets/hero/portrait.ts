@@ -1,5 +1,5 @@
-import small from '@/assets/hero/portrait-420.webp'
-import large from '@/assets/hero/portrait-840.webp'
+import small from '@/assets/hero/portrait-520.webp'
+import large from '@/assets/hero/portrait-1040.webp'
 
 /**
  * Retrato del Hero: único sitio que conoce sus archivos y sus medidas.
@@ -11,7 +11,7 @@ export const portrait = {
   aspectRatio: { width: 4, height: 5 },
   /** Del menor al mayor; el segundo es el de pantallas de alta densidad. */
   sources: [
-    { src: small, width: 420, height: 525 },
-    { src: large, width: 840, height: 1050 },
+    { src: small, width: 520, height: 650 },
+    { src: large, width: 1040, height: 1300 },
   ],
 } as const

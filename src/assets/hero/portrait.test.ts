@@ -29,6 +29,11 @@ describe('retrato del Hero', () => {
       expect(large.height).toBe(small.height * 2)
     })
 
+    it('miden 520 x 650 y 1040 x 1300', () => {
+      expect(small).toMatchObject({ width: 520, height: 650 })
+      expect(large).toMatchObject({ width: 1040, height: 1300 })
+    })
+
     it('la proporción reservada es 4:5', () => {
       expect(portrait.aspectRatio).toEqual({ width: 4, height: 5 })
     })
@@ -37,6 +42,11 @@ describe('retrato del Hero', () => {
       expect(src).toContain(file.replace('.webp', ''))
       expect(src).toMatch(/\.webp$/)
     })
+  })
+
+  // La ilustración que hubo antes de la foto ya no se publica.
+  it.each([420, 840])('no queda el archivo de %i px de la ilustración', (width) => {
+    expect(existsSync(path(width))).toBe(false)
   })
 
   describe.each(sources)('$file', ({ width, height }) => {
@@ -58,6 +68,14 @@ describe('retrato del Hero', () => {
 
     it('lleva transparencia', () => {
       expect(read(width).hasAlpha).toBe(true)
+    })
+
+    // Una foto sin pérdida pesa varias veces más sin que se note la diferencia.
+    it('va comprimido con pérdida', () => {
+      const { chunks } = read(width)
+
+      expect(chunks).toContain('VP8 ')
+      expect(chunks).not.toContain('VP8L')
     })
 
     describe('sin metadatos', () => {
