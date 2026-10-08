@@ -1,6 +1,12 @@
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { heroBadgeIconUrl, heroBadges, technologies } from '@/data/technologies'
+import * as data from '@/data/index'
+import {
+  heroBadgeIconUrl,
+  heroBadges,
+  technologies,
+  technologyName,
+} from '@/data/technologies'
 
 // Los iconos se buscan en disco, desde la raíz del repo.
 const BRAND_DIR = 'public/tech'
@@ -28,6 +34,17 @@ describe('pastillas del Hero', () => {
   // El nombre visible sale del catálogo: una pastilla sin tecnología no tendría texto.
   it.each(heroBadges)('$technology es una tecnología del catálogo, con nombre', (badge) => {
     expect(technology(badge.technology)?.name).toBeTruthy()
+  })
+
+  it.each(technologies)('technologyName da el nombre de $id', ({ id, name }) => {
+    expect(technologyName(id)).toBe(name)
+  })
+
+  // Las pastillas sustituyeron a la lista de logos sueltos.
+  it('ya no existe la lista heroLogos', () => {
+    expect(data).not.toHaveProperty('heroLogos')
+    expect(data).toHaveProperty('heroBadges')
+    expect(data).toHaveProperty('technologyName')
   })
 
   describe('con logo de marca', () => {

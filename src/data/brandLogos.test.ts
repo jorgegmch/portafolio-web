@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { heroLogos, technologies } from '@/data/technologies'
+import { technologies } from '@/data/technologies'
 
 // Los logos se leen de disco, desde la raíz del repo: lo que se comprueba es
 // el archivo que se publica.
@@ -53,17 +53,13 @@ const elements = (file: string) =>
     attributes: [...element.attributes].map(({ name, value }) => [name, value] as const),
   }))
 
-describe('logos del Hero', () => {
+describe('logos de marca con archivo oficial', () => {
   describe('lista', () => {
-    it('son estos cinco, en este orden', () => {
-      expect(heroLogos).toEqual(EXPECTED)
-    })
-
     it('no se repite ninguno', () => {
-      expect(new Set(heroLogos).size).toBe(heroLogos.length)
+      expect(new Set(EXPECTED).size).toBe(EXPECTED.length)
     })
 
-    // Una sola fuente: el Hero no muestra nada que no esté en el catálogo.
+    // Una sola fuente: no se publica un logo que el catálogo no asigne.
     it.each(EXPECTED)('%s pertenece a una tecnología del catálogo', (file) => {
       expect(technologies.flatMap((technology) => technology.logos)).toContain(file)
     })

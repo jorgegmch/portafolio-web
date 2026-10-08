@@ -1,12 +1,21 @@
 .hero {
   display: grid;
-  /* El texto ocupa lo que queda; el retrato, su ancho o una parte de la fila. */
-  grid-template-columns: minmax(0, 1fr) min(var(--portrait-width), 38%);
+  /* El texto nunca baja de lo que mide el nombre; el retrato ocupa hasta su
+     ancho o una parte de la fila, y cede si el nombre lo necesita. */
+  grid-template-columns: minmax(min-content, 1fr) minmax(0, min(var(--portrait-width), 46%));
   align-items: center;
   gap: var(--space-7);
-  padding: var(--space-9) var(--container-padding);
+  /* Sin relleno debajo: el retrato llega al borde y su desvanecido se funde
+     con lo que venga después. */
+  padding: var(--space-9) var(--container-padding) 0;
   /* La barra es fija: al llegar por el ancla, el inicio no queda debajo. */
   scroll-margin-top: var(--nav-height);
+}
+
+/* Lleva el relleno inferior que no tiene la sección: así el texto sigue
+   centrado en la misma franja. */
+.text {
+  padding-bottom: var(--space-9);
 }
 
 .greeting {
@@ -24,6 +33,9 @@
   font-size: var(--font-size-display);
   font-weight: var(--font-weight-extrabold);
   line-height: var(--leading-tight);
+  /* Con el nombre entero como ancho mínimo de su columna, el retrato cede
+     antes de que se parta. */
+  white-space: nowrap;
 }
 
 .lastName {
@@ -40,8 +52,10 @@
 /* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
    imagen de 4:5 entra sin tocar el diseño. */
 .portrait {
-  /* Referencia de las posiciones de los iconos. */
+  /* Referencia de las posiciones de las pastillas. */
   position: relative;
+  /* Anclado abajo: el desvanecido termina en el borde de la sección. */
+  align-self: end;
   aspect-ratio: 4 / 5;
 }
 
@@ -62,63 +76,90 @@
   mask-image: linear-gradient(to bottom, black 72%, transparent);
 }
 
-/* Capa decorativa: los logos que flotan alrededor del retrato. */
-.icons {
+/* Capa decorativa: las pastillas que flotan alrededor del retrato. */
+.badges {
   position: absolute;
   inset: 0;
 }
 
-/* Cada icono trae su posición (--icon-x, --icon-y, en porcentaje del retrato)
-   y su desfase (--float-phase, fracción de la duración) para no flotar a la vez. */
+/* Cada pastilla trae su altura (--badge-y), el lado por el que se ancla
+   (--badge-left o --badge-right, en porcentaje del retrato), su desfase
+   (--float-phase, fracción de la duración) y su tamaño de texto. Las de la
+   derecha se anclan por la derecha para no salirse de la página. */
 .float {
   position: absolute;
-  left: var(--icon-x);
-  top: var(--icon-y);
-  width: var(--hero-icon-size);
-  height: var(--hero-icon-size);
+  top: var(--badge-y);
+  right: var(--badge-right, auto);
+  left: var(--badge-left, auto);
   animation: float var(--duration-float) ease-in-out infinite alternate;
   animation-delay: calc(var(--duration-float) * var(--float-phase));
 }
 
 .float:nth-child(1) {
-  --icon-x: -3%;
-  --icon-y: 30%;
+  --badge-left: -7%;
+  --badge-y: 21%;
   --float-phase: 0;
+
+  font-size: var(--font-size-base);
 }
 
 .float:nth-child(2) {
-  --icon-x: 7%;
-  --icon-y: 4%;
-  --float-phase: -0.4;
+  --badge-right: -3%;
+  --badge-y: 13%;
+  --float-phase: -0.45;
+
+  font-size: var(--font-size-md);
 }
 
 .float:nth-child(3) {
-  --icon-x: 44%;
-  --icon-y: -8%;
-  --float-phase: -0.8;
+  --badge-left: 1%;
+  --badge-y: 63%;
+  --float-phase: -0.9;
+
+  font-size: var(--font-size-md);
 }
 
 .float:nth-child(4) {
-  --icon-x: 81%;
-  --icon-y: 4%;
-  --float-phase: -1.2;
+  --badge-right: 2%;
+  --badge-y: 49%;
+  --float-phase: -1.3;
+
+  font-size: var(--font-size-sm);
 }
 
-.float:nth-child(5) {
-  --icon-x: 91%;
-  --icon-y: 30%;
-  --float-phase: -1.6;
-}
-
-.icon {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.badge {
+  display: flex;
+  gap: var(--badge-gap);
+  align-items: center;
+  padding: var(--badge-padding) var(--badge-padding-end) var(--badge-padding) var(--badge-padding);
+  border: 1px solid var(--color-badge-border);
+  border-radius: var(--badge-radius);
+  background: var(--color-badge-bg);
+  color: var(--color-text);
+  line-height: 1;
+  white-space: nowrap;
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
-.icon:hover {
-  transform: scale(var(--hero-icon-scale));
+.badge:hover {
+  transform: scale(var(--hero-badge-scale));
+}
+
+/* Fondo claro bajo el icono, igual en todas. Es un fondo, no un efecto: el
+   logo de marca va encima sin filtro, opacidad ni sombra. */
+.plate {
+  display: grid;
+  place-items: center;
+  width: var(--badge-plate-size);
+  height: var(--badge-plate-size);
+  border-radius: var(--badge-plate-radius);
+  background: var(--color-plate);
+}
+
+.badgeIcon {
+  width: var(--badge-icon-size);
+  height: var(--badge-icon-size);
+  object-fit: contain;
 }
 
 @keyframes float {
@@ -137,9 +178,22 @@
   }
 }
 
+/* Con la columna de texto ya justa, una pastilla que asome por la izquierda
+   pisaría el párrafo. */
+@media (max-width: 1024px) {
+  .float:nth-child(1) {
+    --badge-left: 0%;
+  }
+}
+
 @media (max-width: 768px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Apilado, la separación de la rejilla ya da el hueco hasta el retrato. */
+  .text {
+    padding-bottom: 0;
   }
 
   .portrait {

@@ -27,18 +27,10 @@ export const technologies: readonly Technology<TechnologyId>[] = technologyList
 
 export const primaryStack = technologies.filter((tech) => tech.primary)
 
-/**
- * Logos que flotan junto al retrato del Hero, en orden. Solo entran los que su
- * marca permite mostrar sin permiso; cada uno pertenece a una tecnología del
- * catálogo de arriba.
- */
-export const heroLogos = [
-  'python.svg',
-  'javascript.svg',
-  'typescript.svg',
-  'git.svg',
-  'html.svg',
-] as const
+/** Nombre propio de una tecnología del catálogo; no se traduce. */
+export const technologyName = (id: TechnologyId): string =>
+  // El tipo ya garantiza que el id existe; sin esta salida, TypeScript no lo sabe.
+  technologies.find((technology) => technology.id === id)?.name ?? id
 
 /** URL pública de un logo de public/tech. */
 export const techLogoUrl = (file: string) => `${import.meta.env.BASE_URL}tech/${file}`

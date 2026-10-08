@@ -34,6 +34,11 @@ describe('Hero: estilos', () => {
     it('el tamaño sale del token del nombre', () => {
       expect(cssRule(heroCss, '.name')).toMatchObject({ 'font-size': 'var(--font-size-display)' })
     })
+
+    // Protegido: el retrato cede ancho antes de que el nombre se parta.
+    it('no se parte en dos líneas', () => {
+      expect(cssRule(heroCss, '.name')).toMatchObject({ 'white-space': 'nowrap' })
+    })
   })
 
   describe('presentación', () => {
@@ -54,6 +59,21 @@ describe('Hero: estilos', () => {
     it('usa el mismo margen lateral que la barra y el pie', () => {
       expect(cssRule(heroCss, '.hero').padding).toContain('var(--container-padding)')
     })
+
+    // El retrato llega hasta el borde inferior: su desvanecido se funde con
+    // lo que venga debajo, sin hueco.
+    it('no deja relleno debajo', () => {
+      expect(cssRule(heroCss, '.hero')).toMatchObject({
+        padding: 'var(--space-9) var(--container-padding) 0',
+      })
+    })
+
+    // El relleno que pierde la sección lo lleva el texto, que así sigue
+    // centrado en la misma franja.
+    it('la columna de texto compensa ese relleno', () => {
+      expect(cssRule(heroCss, '.text')).toMatchObject({ 'padding-bottom': 'var(--space-9)' })
+      expect(cssRule(heroCss, '.hero')).toMatchObject({ 'align-items': 'center' })
+    })
   })
 
   describe('retrato', () => {
@@ -67,9 +87,13 @@ describe('Hero: estilos', () => {
       })
     })
 
-    it('su ancho máximo sale de un token', () => {
+    it('su ancho máximo sale de un token: 36rem', () => {
       expect(cssRule(heroCss, '.hero')['grid-template-columns']).toContain('var(--portrait-width)')
-      expect(cssToken(tokensCss, '--portrait-width')).toMatch(/^[\d.]+rem$/)
+      expect(cssToken(tokensCss, '--portrait-width')).toBe('36rem')
+    })
+
+    it('se ancla al borde inferior de la sección', () => {
+      expect(cssRule(heroCss, '.portrait')).toMatchObject({ 'align-self': 'end' })
     })
 
     it('la imagen llena el hueco reservado', () => {
@@ -122,13 +146,23 @@ describe('Hero: estilos', () => {
     const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '768px', '480px']
     const narrow = cssMedia(heroCss, '(max-width: 768px)')
 
+    // El texto nunca baja de lo que mide el nombre; el retrato ocupa hasta su
+    // ancho o el 46 % de la fila, y cede si el nombre lo necesita.
     it('en escritorio hay dos columnas: texto y retrato', () => {
-      expect(cssRule(heroCss, '.hero')).toMatchObject({ display: 'grid' })
-      expect(cssRule(heroCss, '.hero')['grid-template-columns']).toMatch(/^minmax\(0, 1fr\) \S/)
+      expect(cssRule(heroCss, '.hero')).toMatchObject({
+        display: 'grid',
+        'grid-template-columns':
+          'minmax(min-content, 1fr) minmax(0, min(var(--portrait-width), 46%))',
+      })
     })
 
     it('hasta 768 px el retrato pasa debajo del texto, en una sola columna', () => {
       expect(cssRule(narrow, '.hero')).toMatchObject({ 'grid-template-columns': 'minmax(0, 1fr)' })
+    })
+
+    // Apilado, el hueco entre el texto y el retrato ya lo da la separación de la rejilla.
+    it('hasta 768 px el texto no añade relleno debajo', () => {
+      expect(cssRule(narrow, '.text')).toMatchObject({ 'padding-bottom': '0' })
     })
 
     it('solo usa los breakpoints de tokens.css, siempre con max-width', () => {
@@ -149,12 +183,14 @@ describe('Hero: estilos', () => {
       expect(heroCss).not.toMatch(/#[0-9a-f]{3,8}\b|rgba?\(/i)
     })
 
-    // Los breakpoints de @media van literales: CSS no admite variables ahí.
-    it('no hay medidas sueltas en px ni en rem, salvo los breakpoints', () => {
+    // Los breakpoints de @media van literales: CSS no admite variables ahí. Y
+    // 1px, el grosor de un borde, no necesita variable (regla de estilos).
+    it('no hay medidas sueltas en px ni en rem, salvo los breakpoints y 1px', () => {
       const withoutMediaQueries = heroCss.replace(/@media[^{]*\{/g, '')
+      const withoutHairlines = withoutMediaQueries.replace(/(?<![\d.])1px\b/g, '')
 
       expect(heroCss).toMatch(/@media/)
-      expect(withoutMediaQueries).not.toMatch(/\d(?:px|rem|em)\b/)
+      expect(withoutHairlines).not.toMatch(/\d(?:px|rem|em)\b/)
     })
   })
 })

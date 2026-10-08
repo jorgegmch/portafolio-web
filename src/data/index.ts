@@ -9,10 +9,10 @@ export {
 export {
   heroBadgeIconUrl,
   heroBadges,
-  heroLogos,
   primaryStack,
   techLogoUrl,
   technologies,
+  technologyName,
   type TechnologyId,
 } from '@/data/technologies'
 export type * from '@/data/types'

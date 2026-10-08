@@ -93,16 +93,28 @@
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
 
-  /* Retrato del hero: ancho máximo (420 px) y halo que lo separa del fondo. */
-  --portrait-width: 26.25rem;
+  /* Retrato del hero: ancho máximo (576 px) y halo que lo separa del fondo. */
+  --portrait-width: 36rem;
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);
-  /* Iconos que flotan junto al retrato: tamaño (48 px), cuánto suben, cuánto
-     tarda cada vaivén y cuánto crecen bajo el puntero. */
-  --hero-icon-size: 3rem;
+  /* Pastillas que flotan junto al retrato: cuánto suben, cuánto tarda cada
+     vaivén y cuánto crecen bajo el puntero. */
   --float-distance: 0.5rem;
   --duration-float: 3s;
-  --hero-icon-scale: 1.12;
+  --hero-badge-scale: 1.06;
+  /* Sus medidas van en em: cada pastilla crece con su tamaño de texto. */
+  --badge-padding: 0.4em;
+  --badge-padding-end: 0.85em;
+  --badge-gap: 0.55em;
+  --badge-radius: 0.75em;
+  --badge-plate-size: 1.9em;
+  --badge-plate-radius: 0.45em;
+  --badge-icon-size: 1.35em;
+  /* Fondo translúcido (--color-surface al 72 %) y borde de la pastilla. */
+  --color-badge-bg: rgba(14, 14, 28, 0.72);
+  --color-badge-border: rgba(238, 238, 242, 0.14);
+  /* Placa clara bajo el icono: sin ella, un logo oscuro no se ve. */
+  --color-plate: var(--color-text);
 
   /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
   --nav-height: 4.5rem;
