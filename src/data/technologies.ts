@@ -45,3 +45,16 @@ export type TechnologyId = (typeof technologyList)[number]['id']
 export const technologies: readonly Technology<TechnologyId>[] = technologyList
 
 export const primaryStack = technologies.filter((tech) => tech.primary)
+
+/**
+ * Logos que flotan junto al retrato del Hero, en orden. Solo entran los que su
+ * marca permite mostrar sin permiso; cada uno pertenece a una tecnología del
+ * catálogo de arriba.
+ */
+export const heroLogos = [
+  'python.svg',
+  'javascript.svg',
+  'typescript.svg',
+  'git.svg',
+  'html.svg',
+] as const

@@ -27,7 +27,7 @@ export interface Technology<Id extends string = string> {
   group: TechnologyGroup
   /** Archivos de logo dentro de public/tech; puede haber más de uno. */
   logos: readonly string[]
-  /** Parte del stack principal (tarjeta de estadísticas e iconos del Hero). */
+  /** Parte del stack principal (tarjeta de estadísticas). */
   primary?: boolean
 }
 
