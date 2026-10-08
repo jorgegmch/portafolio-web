@@ -6,5 +6,11 @@ export {
   projectUrl,
   type ProjectId,
 } from '@/data/projects'
-export { heroLogos, primaryStack, technologies, type TechnologyId } from '@/data/technologies'
+export {
+  heroLogos,
+  primaryStack,
+  techLogoUrl,
+  technologies,
+  type TechnologyId,
+} from '@/data/technologies'
 export type * from '@/data/types'

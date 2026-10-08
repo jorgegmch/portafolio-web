@@ -97,6 +97,12 @@
   --portrait-width: 26.25rem;
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);
+  /* Iconos que flotan junto al retrato: tamaño (48 px), cuánto suben, cuánto
+     tarda cada vaivén y cuánto crecen bajo el puntero. */
+  --hero-icon-size: 3rem;
+  --float-distance: 0.5rem;
+  --duration-float: 3s;
+  --hero-icon-scale: 1.12;
 
   /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
   --nav-height: 4.5rem;

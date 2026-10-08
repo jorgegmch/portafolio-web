@@ -40,6 +40,8 @@
 /* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
    imagen de 4:5 entra sin tocar el diseño. */
 .portrait {
+  /* Referencia de las posiciones de los iconos. */
+  position: relative;
   aspect-ratio: 4 / 5;
 }
 
@@ -55,6 +57,81 @@
   mask-composite: intersect;
   /* Halo que separa la silueta oscura del fondo oscuro. */
   filter: drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo));
+}
+
+/* Capa decorativa: los logos que flotan alrededor del retrato. */
+.icons {
+  position: absolute;
+  inset: 0;
+}
+
+/* Cada icono trae su posición (--icon-x, --icon-y, en porcentaje del retrato)
+   y su desfase (--float-phase, fracción de la duración) para no flotar a la vez. */
+.float {
+  position: absolute;
+  left: var(--icon-x);
+  top: var(--icon-y);
+  width: var(--hero-icon-size);
+  height: var(--hero-icon-size);
+  animation: float var(--duration-float) ease-in-out infinite alternate;
+  animation-delay: calc(var(--duration-float) * var(--float-phase));
+}
+
+.float:nth-child(1) {
+  --icon-x: -3%;
+  --icon-y: 30%;
+  --float-phase: 0;
+}
+
+.float:nth-child(2) {
+  --icon-x: 7%;
+  --icon-y: 4%;
+  --float-phase: -0.4;
+}
+
+.float:nth-child(3) {
+  --icon-x: 44%;
+  --icon-y: -8%;
+  --float-phase: -0.8;
+}
+
+.float:nth-child(4) {
+  --icon-x: 81%;
+  --icon-y: 4%;
+  --float-phase: -1.2;
+}
+
+.float:nth-child(5) {
+  --icon-x: 91%;
+  --icon-y: 30%;
+  --float-phase: -1.6;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.icon:hover {
+  transform: scale(var(--hero-icon-scale));
+}
+
+@keyframes float {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(calc(-1 * var(--float-distance)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float {
+    animation: none;
+  }
 }
 
 @media (max-width: 768px) {

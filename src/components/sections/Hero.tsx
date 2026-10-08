@@ -2,6 +2,7 @@ import { useId } from 'react'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
 import { sections } from '@/config/routes'
+import { heroLogos, techLogoUrl } from '@/data/technologies'
 import { useLang } from '@/hooks/useLang'
 import { splitName } from '@/lib/splitName'
 
@@ -15,6 +16,8 @@ const PORTRAIT_SRC_SET = `${small.src} 1x, ${large.src} 2x`
  * breve, con el retrato al lado. Lleva el único h1 de la página; el nombre
  * sale de hero.heading y se parte al renderizar, sin guardarlo dos veces.
  * El retrato es estático y sale entero de assets/hero/portrait.
+ * A su alrededor flotan los logos de data/heroLogos: son decorativos, porque
+ * la sección de tecnologías ya las nombra.
  */
 export function Hero() {
   const { t } = useLang()
@@ -40,6 +43,15 @@ export function Hero() {
           alt={t.hero.photoAlt}
           decoding="async"
         />
+        <div className={styles.icons} aria-hidden="true">
+          {heroLogos.map((logo) => (
+            // El envoltorio flota y la imagen escala: en un solo elemento,
+            // una transformación pisaría a la otra.
+            <span key={logo} className={styles.float}>
+              <img className={styles.icon} src={techLogoUrl(logo)} alt="" decoding="async" />
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   )

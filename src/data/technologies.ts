@@ -58,3 +58,6 @@ export const heroLogos = [
   'git.svg',
   'html.svg',
 ] as const
+
+/** URL pública de un logo de public/tech. */
+export const techLogoUrl = (file: string) => `${import.meta.env.BASE_URL}tech/${file}`
