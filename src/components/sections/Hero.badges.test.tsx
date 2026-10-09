@@ -286,8 +286,8 @@ describe('Hero: pastillas de tecnología', () => {
       })
 
       // Separadas también en vertical: dos del mismo lado no comparten franja.
-      it('en dos columnas, las del mismo lado distan al menos 20 puntos de alto', () => {
-        ;[0, 1].forEach((tier) => {
+      it('en todos los tramos, las del mismo lado distan al menos 20 puntos de alto', () => {
+        ;[0, 1, 2, 3].forEach((tier) => {
           const bySide = (side: string) =>
             heroBadges
               .map((_, i) => i + 1)
@@ -307,7 +307,96 @@ describe('Hero: pastillas de tecnología', () => {
         })
       })
 
-      // El apilado conserva las posiciones y los tamaños que tenía.
+      describe('teléfono (hasta 480 px)', () => {
+        const phone = placementsOf(cssMedia(heroCss, '(max-width: 480px)'))
+        const PHONE = 3
+
+        it('cada pastilla tiene su posición propia', () => {
+          expect(phone.map(({ index }) => index)).toEqual(heroBadges.map((_, i) => i + 1))
+          phone.forEach(({ body }) => expect(valueOf(body, '--badge-y')).toMatch(/^[\d.]+%$/))
+        })
+
+        // Con los tamaños de tablet no caben cinco en un retrato de 270 px sin
+        // tapar la cara: todas pasan al texto más pequeño.
+        it('todas llevan el texto de 13 px', () => {
+          expect(phone).toHaveLength(heroBadges.length)
+          phone.forEach(({ body }) => expect(valueOf(body, 'font-size')).toBe('var(--font-size-sm)'))
+          expect(cssToken(tokensCss, '--font-size-sm')).toBe('0.8125rem')
+        })
+
+        // La cara ocupa del 14 % al 45 % del alto. Una pastilla puede ir
+        // arriba, junto al pelo, o por debajo: ninguna arranca en esa franja.
+        it('ninguna arranca a la altura de la cara', () => {
+          heroBadges.forEach((_, i) => {
+            const y = parseFloat(effective(i + 1, PHONE, '--badge-y') ?? '')
+
+            expect(y <= 10 || y >= 46, `pastilla ${i + 1} al ${y} %`).toBe(true)
+          })
+        })
+
+        // La que va arriba, junto al pelo, se pega al borde exterior para no
+        // tocar la cara.
+        it('la que va arriba queda pegada al borde del retrato', () => {
+          const top = heroBadges.map((_, i) => i + 1).filter((index) => parseFloat(effective(index, PHONE, '--badge-y') ?? '') <= 10)
+
+          expect(top).toHaveLength(1)
+          top.forEach((index) => {
+            const [side] = sidesAt(index, PHONE)
+
+            expect(parseFloat(effective(index, PHONE, side ?? '') ?? '')).toBeLessThanOrEqual(2)
+          })
+        })
+
+        // El margen de la página en teléfono es estrecho: ninguna asoma fuera
+        // del retrato.
+        it('ninguna se sale del retrato por los lados', () => {
+          heroBadges.forEach((_, i) => {
+            const [side] = sidesAt(i + 1, PHONE)
+
+            expect(parseFloat(effective(i + 1, PHONE, side ?? '') ?? '')).toBeGreaterThanOrEqual(0)
+          })
+        })
+
+        it('hay pastillas a los dos lados', () => {
+          const sides = heroBadges.map((_, i) => sidesAt(i + 1, PHONE)[0])
+
+          expect(new Set(sides).size).toBe(2)
+        })
+
+        // A 320 px dos pastillas a la misma altura, una a cada lado, quedarían
+        // casi tocándose en el centro.
+        it('no hay dos a la misma altura', () => {
+          const heights = heroBadges.map((_, i) => effective(i + 1, PHONE, '--badge-y'))
+
+          expect(new Set(heights).size).toBe(heroBadges.length)
+        })
+
+        it('ninguna pasa del 86 % de alto', () => {
+          heroBadges.forEach((_, i) =>
+            expect(parseFloat(effective(i + 1, PHONE, '--badge-y') ?? '')).toBeLessThanOrEqual(86),
+          )
+        })
+      })
+
+      // Apilado en tablet, el retrato mide hasta 576 px: las pastillas van en
+      // anillo, como en escritorio.
+      it('apilado, una pastilla queda abajo hacia el centro y ninguna pasa del 86 % de alto', () => {
+        const STACKED = 2
+        const centred = heroBadges
+          .map((_, i) => i + 1)
+          .filter((index) => {
+            const [side] = sidesAt(index, STACKED)
+            const x = parseFloat(effective(index, STACKED, side ?? '') ?? '')
+            return x >= 20 && x <= 50
+          })
+
+        expect(centred).toHaveLength(1)
+        expect(parseFloat(effective(centred[0] ?? 0, STACKED, '--badge-y') ?? '')).toBeGreaterThanOrEqual(80)
+        heroBadges.forEach((_, i) =>
+          expect(parseFloat(effective(i + 1, STACKED, '--badge-y') ?? '')).toBeLessThanOrEqual(86),
+        )
+      })
+
       it('hasta 1023 px cada pastilla tiene su posición y su tamaño propios', () => {
         const stacked = placementsOf(cssMedia(heroCss, '(max-width: 1023px)'))
 

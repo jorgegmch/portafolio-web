@@ -273,38 +273,39 @@
     justify-self: center;
   }
 
+  /* En anillo, como en escritorio: una a la izquierda, una abajo hacia el
+     centro y tres a la derecha, todas dentro del retrato. */
   .float:nth-child(1) {
     --badge-left: 0%;
-    --badge-y: 21%;
+    --badge-y: 58%;
 
     font-size: var(--font-size-base);
   }
 
   .float:nth-child(2) {
-    --badge-right: -3%;
-    --badge-y: 13%;
+    --badge-right: 0%;
+    --badge-y: 10%;
 
     font-size: var(--font-size-md);
   }
 
   .float:nth-child(3) {
-    --badge-right: initial;
-    --badge-left: 1%;
-    --badge-y: 63%;
+    --badge-right: 24%;
+    --badge-y: 86%;
 
     font-size: var(--font-size-md);
   }
 
   .float:nth-child(4) {
-    --badge-right: 2%;
-    --badge-y: 49%;
+    --badge-right: -2%;
+    --badge-y: 42%;
 
     font-size: var(--font-size-sm);
   }
 
   .float:nth-child(5) {
     --badge-right: 4%;
-    --badge-y: 79%;
+    --badge-y: 66%;
 
     font-size: var(--font-size-sm);
   }
@@ -313,5 +314,45 @@
 @media (max-width: 480px) {
   .hero {
     padding-top: var(--hero-stack-padding-phone);
+  }
+
+  /* El retrato mide menos de 410 px: con los tamaños de tablet las cinco no
+     caben sin tapar la cara. Todas llevan el texto más pequeño; una va
+     arriba, junto al pelo y pegada al borde, y el resto por debajo de la
+     cara, dos a la izquierda y dos a la derecha. */
+  .float:nth-child(1) {
+    --badge-left: 0%;
+    --badge-y: 58%;
+
+    font-size: var(--font-size-sm);
+  }
+
+  .float:nth-child(2) {
+    --badge-right: 0%;
+    --badge-y: 9%;
+
+    font-size: var(--font-size-sm);
+  }
+
+  .float:nth-child(3) {
+    --badge-right: initial;
+    --badge-left: 0%;
+    --badge-y: 84%;
+
+    font-size: var(--font-size-sm);
+  }
+
+  .float:nth-child(4) {
+    --badge-right: 0%;
+    --badge-y: 48%;
+
+    font-size: var(--font-size-sm);
+  }
+
+  .float:nth-child(5) {
+    --badge-right: 2%;
+    --badge-y: 74%;
+
+    font-size: var(--font-size-sm);
   }
 }
