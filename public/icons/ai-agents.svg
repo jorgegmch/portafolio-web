@@ -1,0 +1,11 @@
+<!--
+  Generic AI agents icon drawn for this site: a central node linked to three others.
+  Own work, not a brand logo.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#0e0e1c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="3"/>
+  <circle cx="5" cy="6" r="2"/>
+  <circle cx="19" cy="7" r="2"/>
+  <circle cx="12.5" cy="20" r="2"/>
+  <path d="M9.72 10.05 6.52 7.3M14.44 10.26 17.37 8.16M12.19 14.99 12.38 18"/>
+</svg>

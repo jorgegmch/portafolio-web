@@ -7,6 +7,7 @@ import { parseSvg, svgIssues } from '@/test/svgSafety'
 // el archivo que se publica.
 const DUKE = 'public/tech/duke.svg'
 const DATABASE = 'public/icons/database.svg'
+const AI_AGENTS = 'public/icons/ai-agents.svg'
 
 const tokensCss = readCss('src/styles/tokens.css')
 const read = (path: string) => readFileSync(path, 'utf8')
@@ -139,5 +140,78 @@ describe('icono genérico de base de datos', () => {
   it('su comentario dice que es un dibujo propio, no un logo', () => {
     expect(comment(DATABASE)).toContain('Generic database icon drawn for this site')
     expect(comment(DATABASE)).toContain('not a brand logo')
+  })
+})
+
+describe('icono genérico de agentes de IA', () => {
+  it('existe en public/icons, fuera de la carpeta de logos de marca', () => {
+    expect(existsSync(AI_AGENTS)).toBe(true)
+    expect(AI_AGENTS).not.toContain('/tech/')
+  })
+
+  it('es un SVG seguro como icono estático', () => {
+    expect(svgIssues(read(AI_AGENTS))).toEqual([])
+  })
+
+  it('es cuadrado', () => {
+    expect(parseSvg(read(AI_AGENTS)).documentElement.getAttribute('viewBox')).toBe('0 0 24 24')
+  })
+
+  // Nodos conectados: solo círculos y trazos rectos. Nada de texto, de
+  // destellos ni de formas que puedan parecer el logo de una empresa o de un
+  // modelo de IA.
+  it('se dibuja solo con círculos y trazos', () => {
+    const shapes = [...parseSvg(read(AI_AGENTS)).documentElement.querySelectorAll('*')].map(
+      (element) => element.localName,
+    )
+
+    expect(shapes.length).toBeGreaterThan(0)
+    expect(new Set(shapes)).toEqual(new Set(['circle', 'path']))
+  })
+
+  it('es un nodo central conectado con tres más', () => {
+    const root = parseSvg(read(AI_AGENTS)).documentElement
+    const radii = [...root.querySelectorAll('circle')].map((circle) => Number(circle.getAttribute('r')))
+
+    expect(radii).toHaveLength(4)
+    expect(radii.filter((radius) => radius === Math.max(...radii))).toHaveLength(1)
+  })
+
+  // Los trazos son segmentos rectos: sin curvas no hay espirales, nudos ni estrellas.
+  it('los trazos son solo segmentos rectos', () => {
+    const paths = [...parseSvg(read(AI_AGENTS)).documentElement.querySelectorAll('path')]
+
+    expect(paths.length).toBeGreaterThan(0)
+    paths.forEach((path) => expect(path.getAttribute('d')).toMatch(/^[MmLl\d\s.,-]+$/))
+  })
+
+  it('no nombra ninguna empresa ni modelo de IA', () => {
+    expect(read(AI_AGENTS)).not.toMatch(
+      /openai|chatgpt|gpt|anthropic|claude|gemini|google|copilot|microsoft|meta\b|llama|mistral|deepseek|grok|perplexity/i,
+    )
+  })
+
+  // Va sobre la placa clara de la pastilla: trazo oscuro, del color de un token.
+  it('su trazo es el color de superficie de la paleta, sin relleno', () => {
+    const root = parseSvg(read(AI_AGENTS)).documentElement
+
+    expect(root.getAttribute('stroke')).toBe(cssToken(tokensCss, '--color-surface'))
+    expect(root.getAttribute('fill')).toBe('none')
+  })
+
+  // Los dos iconos propios van juntos en las pastillas: mismo grosor y mismos remates.
+  it('usa el mismo trazo que el icono de base de datos', () => {
+    const own = parseSvg(read(AI_AGENTS)).documentElement
+    const database = parseSvg(read(DATABASE)).documentElement
+
+    ;['stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'viewBox'].forEach((attribute) =>
+      expect(own.getAttribute(attribute)).toBe(database.getAttribute(attribute)),
+    )
+    expect(own.getAttribute('stroke-width')).not.toBeNull()
+  })
+
+  it('su comentario dice que es un dibujo propio, no un logo', () => {
+    expect(comment(AI_AGENTS)).toContain('Generic AI agents icon drawn for this site')
+    expect(comment(AI_AGENTS)).toContain('not a brand logo')
   })
 })
