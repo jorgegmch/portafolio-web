@@ -129,6 +129,8 @@
      puntero. */
   --hero-cta-glow: 1rem;
   --hero-cta-glow-hover: 1.5rem;
+  /* Punto del estado de disponibilidad (10 px). */
+  --hero-status-dot: 0.625rem;
   /* Halo que separa el retrato del fondo. */
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);

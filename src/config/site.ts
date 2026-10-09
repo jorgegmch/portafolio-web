@@ -14,7 +14,6 @@ export const site = {
   /** Año de primera publicación del sitio; es el del aviso de derechos. */
   publishedYear: 2026,
   location: 'Piedecuesta, Santander, Colombia',
-  status: ['open_to_work', 'freelance_disponible'],
   /**
    * Fecha de nacimiento (AAAA-MM-DD) como códigos de carácter desplazados;
    * la reconstruye lib/birthDate. Es ofuscación contra scrapers simples, no

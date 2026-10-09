@@ -2,6 +2,7 @@ import { useId } from 'react'
 import { Link } from 'react-router-dom'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
+import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
@@ -34,8 +35,9 @@ const ROLE_CURSOR = '|'
 
 /**
  * Primera sección de la home: saludo, nombre en dos colores, rol con un
- * cursor decorativo, presentación breve y un botón que lleva a los proyectos,
- * con el retrato al lado. Lleva el
+ * cursor decorativo, presentación breve, un botón que lleva a los proyectos
+ * y, si config/availability lo activa, el estado de disponibilidad, con el
+ * retrato al lado. Lleva el
  * único h1 de la página; el nombre sale de hero.heading y se parte al
  * renderizar, sin guardarlo dos veces.
  * El retrato es estático y sale entero de assets/hero/portrait.
@@ -70,6 +72,12 @@ export function Hero() {
             {t.hero.viewProjects}
           </Link>
         </div>
+        {AVAILABLE_FOR_FREELANCE && (
+          <p className={styles.status}>
+            <span className={styles.statusDot} aria-hidden="true" />
+            {t.hero.availability}
+          </p>
+        )}
       </div>
       <div className={styles.portrait}>
         {/* El halo va en el envoltorio y la máscara en la imagen: juntos, la

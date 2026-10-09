@@ -6,7 +6,13 @@ const GREETINGS = { es: 'Hola, yo soy', en: "Hello, I'm" } as const
 
 const VIEW_PROJECTS = { es: 'Ver proyectos', en: 'View projects' } as const
 
+const AVAILABILITY = { es: 'Disponible para freelance', en: 'Available for freelance' } as const
+
 describe('textos del hero', () => {
+  it.each(LANGS)('en %s, el estado de disponibilidad dice el texto aprobado', (lang) => {
+    expect(dictionaries[lang].hero.availability).toBe(AVAILABILITY[lang])
+  })
+
   it.each(LANGS)('en %s, el botón principal dice el texto aprobado', (lang) => {
     expect(dictionaries[lang].hero.viewProjects).toBe(VIEW_PROJECTS[lang])
   })

@@ -31,6 +31,7 @@ export const en: Dictionary = {
       'Full stack developer focused on backend work with Java, Spring Boot and PostgreSQL. I like to understand the business problem before writing code, and to build things that do something useful.',
     tagline: 'Where code meets storytelling.',
     viewProjects: 'View projects',
+    availability: 'Available for freelance',
     downloadCv: 'Download CV',
     cvDesigned: 'Designed version (PDF)',
     cvAts: 'ATS version (PDF)',

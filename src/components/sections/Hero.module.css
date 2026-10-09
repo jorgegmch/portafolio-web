@@ -120,6 +120,28 @@
   box-shadow: 0 0 var(--hero-cta-glow-hover) color-mix(in srgb, var(--color-accent-alt) 55%, transparent);
 }
 
+/* El estado lo dice el texto; el punto solo lo acompaña. */
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-normal);
+  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
+  text-transform: uppercase;
+}
+
+.statusDot {
+  flex: none;
+  width: var(--hero-status-dot);
+  height: var(--hero-status-dot);
+  border-radius: var(--radius-full);
+  background: var(--color-accent-alt);
+}
+
 /* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
    imagen de 4:5 entra sin tocar el diseño. */
 .portrait {

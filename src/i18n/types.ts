@@ -50,6 +50,8 @@ export interface Dictionary {
     intro: string
     tagline: string
     viewProjects: string
+    /** Estado junto al punto verde; las mayúsculas las pone el CSS. */
+    availability: string
     downloadCv: string
     cvDesigned: string
     cvAts: string

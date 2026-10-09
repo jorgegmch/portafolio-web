@@ -31,6 +31,7 @@ export const es: Dictionary = {
       'Desarrollador full stack enfocado en backend con Java, Spring Boot y PostgreSQL. Me gusta entender el problema de negocio antes de escribir código y construir soluciones que hagan algo útil.',
     tagline: 'Where code meets storytelling.',
     viewProjects: 'Ver proyectos',
+    availability: 'Disponible para freelance',
     downloadCv: 'Descargar CV',
     cvDesigned: 'Versión diseñada (PDF)',
     cvAts: 'Versión ATS (PDF)',

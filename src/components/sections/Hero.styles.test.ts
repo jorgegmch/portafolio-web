@@ -207,7 +207,56 @@ describe('Hero: estilos', () => {
     })
   })
 
+  describe('estado de disponibilidad', () => {
+    const status = cssRule(heroCss, '.status')
+    const dot = cssRule(heroCss, '.statusDot')
+
+    it('va bajo los botones, con el punto y el texto en línea', () => {
+      expect(status).toMatchObject({
+        display: 'flex',
+        'align-items': 'center',
+        gap: 'var(--space-2)',
+        'margin-top': 'var(--space-5)',
+      })
+    })
+
+    it('el texto va en tono apagado, pequeño y en mayúsculas por CSS', () => {
+      expect(status).toMatchObject({
+        color: 'var(--color-text-muted)',
+        'font-family': 'var(--font-mono)',
+        'font-size': 'var(--font-size-sm)',
+        'letter-spacing': 'var(--tracking-normal)',
+        'text-transform': 'uppercase',
+      })
+    })
+
+    it('el punto es un círculo del verde de acento, con el tamaño de su token', () => {
+      expect(dot).toMatchObject({
+        width: 'var(--hero-status-dot)',
+        height: 'var(--hero-status-dot)',
+        'border-radius': 'var(--radius-full)',
+        background: 'var(--color-accent-alt)',
+      })
+      expect(cssToken(tokensCss, '--hero-status-dot')).toBe('0.625rem')
+    })
+
+    it('el punto no se encoge si el texto se parte', () => {
+      expect(dot).toMatchObject({ flex: 'none' })
+    })
+
+    it('es fijo: ni animación ni transición', () => {
+      for (const rule of [status, dot]) {
+        expect(rule).not.toHaveProperty('animation')
+        expect(rule).not.toHaveProperty('transition')
+      }
+    })
+  })
+
   describe('presentación', () => {
+    it('va en el tono apagado de la paleta', () => {
+      expect(cssRule(heroCss, '.intro')).toMatchObject({ color: 'var(--color-text-muted)' })
+    })
+
     it('limita su ancho con un token', () => {
       expect(cssRule(heroCss, '.intro')).toMatchObject({ 'max-width': `var(${MEASURE_TOKEN})` })
       expect(cssToken(tokensCss, MEASURE_TOKEN)).toMatch(/^[\d.]+rem$/)
