@@ -1,5 +1,6 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { projects } from '@/data/projects'
 import { primaryStack, technologies } from '@/data/technologies'
 
 // Los logos se buscan en disco, desde la raíz del repo: lo que se comprueba es
@@ -73,6 +74,33 @@ describe('catálogo de tecnologías', () => {
         logos.forEach((file) => expect(existsSync(`${DIR}/${file}`), file).toBe(true))
       },
     )
+  })
+
+  describe('agentes de IA', () => {
+    it('la entrada se llama «AI Agents», en el grupo de IA y sin logo', () => {
+      expect(byId('ai-agents')).toEqual({ id: 'ai-agents', name: 'AI Agents', group: 'ai', logos: [] })
+    })
+
+    it('sustituye a la entrada anterior, no se suma a ella', () => {
+      expect(byId('ai-development')).toBeUndefined()
+      expect(technologies.filter((technology) => technology.group === 'ai')).toHaveLength(1)
+    })
+
+    // Regla de contenido veraz: una etiqueta se justifica citando de dónde
+    // sale. La entrada lleva al lado los proyectos que la respaldan.
+    it('cita junto a la entrada los proyectos que la respaldan, y existen', () => {
+      const SOURCES = ['n8n-daily-news-agent', 'logitrack-iq']
+      const source = readFileSync('src/data/technologies.ts', 'utf8')
+      const entry = source.indexOf("id: 'ai-agents'")
+      // El comentario va justo encima: las líneas que empiezan por // hasta la entrada.
+      const comment = /((?:^ *\/\/.*\n)+) *\{ $/m.exec(source.slice(0, entry))?.[1] ?? ''
+
+      expect(entry).toBeGreaterThan(-1)
+      SOURCES.forEach((id) => {
+        expect(comment).toContain(id)
+        expect(projects.map((project) => project.id)).toContain(id)
+      })
+    })
   })
 
   it('el stack principal es Java, Spring Boot y PostgreSQL', () => {

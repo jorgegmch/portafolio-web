@@ -59,7 +59,7 @@ describe('Hero: pastillas de tecnología', () => {
     it('hay una pastilla por cada entrada de heroBadges, en su orden', () => {
       renderHero()
 
-      expect(heroBadges).toHaveLength(4)
+      expect(heroBadges).toHaveLength(5)
       expect(wrappers()).toHaveLength(heroBadges.length)
       expect(icons().map((icon) => icon.getAttribute('src'))).toEqual(
         heroBadges.map(heroBadgeIconUrl),
@@ -81,6 +81,7 @@ describe('Hero: pastillas de tecnología', () => {
         'Java',
         'TypeScript',
         'PostgreSQL',
+        'AI Agents',
       ])
     })
   })
@@ -251,7 +252,7 @@ describe('Hero: pastillas de tecnología', () => {
 
     describe('tamaño', () => {
       it.each(placements)('la pastilla $index toma su tamaño de un token de texto', ({ body }) => {
-        expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(md|base|lg)\)$/)
+        expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(sm|md|base|lg)\)$/)
       })
 
       it('no todas miden lo mismo', () => {

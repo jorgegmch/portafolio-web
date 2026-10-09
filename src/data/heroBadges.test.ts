@@ -17,12 +17,13 @@ const brandBadges = heroBadges.filter((badge) => badge.brand)
 const genericBadges = heroBadges.filter((badge) => !badge.brand)
 
 describe('pastillas del Hero', () => {
-  it('son estas cuatro, en este orden', () => {
+  it('son estas cinco, en este orden', () => {
     expect(heroBadges).toEqual([
       { technology: 'python', icon: 'python.svg', brand: true },
       { technology: 'java', icon: 'duke.svg', brand: true },
       { technology: 'typescript', icon: 'typescript.svg', brand: true },
       { technology: 'postgresql', icon: 'database.svg', brand: false },
+      { technology: 'ai-agents', icon: 'ai-agents.svg', brand: false },
     ])
   })
 

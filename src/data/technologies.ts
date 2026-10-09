@@ -18,7 +18,10 @@ const technologyList = [
   { id: 'git-github', name: 'Git/GitHub', group: 'tools', logos: ['git.svg'] },
   { id: 'docker', name: 'Docker', group: 'tools', logos: [] },
   { id: 'n8n', name: 'n8n', group: 'tools', logos: [] },
-  { id: 'ai-development', name: 'AI-assisted/orchestrated development', group: 'ai', logos: [] },
+  // Respaldada por dos proyectos (regla de contenido veraz): n8n-daily-news-agent,
+  // un agente de IA con Gemini en n8n, y logitrack-iq, un flujo de n8n con un
+  // agente de IA que propone órdenes de compra a través de un servidor MCP.
+  { id: 'ai-agents', name: 'AI Agents', group: 'ai', logos: [] },
 ] as const satisfies readonly Technology[]
 
 export type TechnologyId = (typeof technologyList)[number]['id']
@@ -46,6 +49,7 @@ export const heroBadges = [
   { technology: 'java', icon: 'duke.svg', brand: true },
   { technology: 'typescript', icon: 'typescript.svg', brand: true },
   { technology: 'postgresql', icon: 'database.svg', brand: false },
+  { technology: 'ai-agents', icon: 'ai-agents.svg', brand: false },
 ] as const satisfies readonly HeroBadge<TechnologyId>[]
 
 /** URL pública del icono de una pastilla: public/tech si es de marca, public/icons si no. */

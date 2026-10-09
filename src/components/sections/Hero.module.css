@@ -150,6 +150,14 @@
   font-size: var(--font-size-md);
 }
 
+.float:nth-child(5) {
+  --badge-right: 6%;
+  --badge-y: 76%;
+  --float-phase: -1.75;
+
+  font-size: var(--font-size-sm);
+}
+
 .badge {
   display: flex;
   gap: var(--badge-gap);
@@ -277,6 +285,13 @@
   .float:nth-child(4) {
     --badge-right: 2%;
     --badge-y: 49%;
+
+    font-size: var(--font-size-sm);
+  }
+
+  .float:nth-child(5) {
+    --badge-right: 4%;
+    --badge-y: 79%;
 
     font-size: var(--font-size-sm);
   }
