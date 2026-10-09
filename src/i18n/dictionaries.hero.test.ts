@@ -6,11 +6,31 @@ const GREETINGS = { es: 'Hola, yo soy', en: "Hello, I'm" } as const
 
 const VIEW_PROJECTS = { es: 'Ver proyectos', en: 'View projects' } as const
 
-const AVAILABILITY = { es: 'Disponible para freelance', en: 'Available for freelance' } as const
+const AVAILABILITY = {
+  es: 'Disponible para proyectos freelance',
+  en: 'Available for freelance',
+} as const
 
 describe('textos del hero', () => {
   it.each(LANGS)('en %s, el estado de disponibilidad dice el texto aprobado', (lang) => {
     expect(dictionaries[lang].hero.availability).toBe(AVAILABILITY[lang])
+  })
+
+  // El largo no cabe en una línea en los teléfonos más estrechos.
+  it('en español hay además un texto corto, el aprobado', () => {
+    expect(dictionaries.es.hero.availabilityShort).toBe('Freelance disponible')
+  })
+
+  it('el texto corto es más corto que el largo', () => {
+    const { availability, availabilityShort = '' } = dictionaries.es.hero
+
+    expect(availabilityShort.length).toBeGreaterThan(0)
+    expect(availabilityShort.length).toBeLessThan(availability.length)
+  })
+
+  // En inglés el texto cabe en todos los anchos: no se duplica.
+  it('en inglés no hay texto corto', () => {
+    expect(dictionaries.en.hero).not.toHaveProperty('availabilityShort')
   })
 
   it.each(LANGS)('en %s, el botón principal dice el texto aprobado', (lang) => {

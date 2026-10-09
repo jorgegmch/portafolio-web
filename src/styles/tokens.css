@@ -11,6 +11,7 @@
  *   1023px  hasta aquí el hero va apilado: en 1024 ya caben dos columnas
  *    768px  tablet en vertical (origen)
  *    480px  teléfono
+ *    380px  teléfono estrecho: el estado del hero usa su texto corto
  */
 
 :root {

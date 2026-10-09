@@ -52,6 +52,11 @@ export interface Dictionary {
     viewProjects: string
     /** Estado junto al punto verde; las mayúsculas las pone el CSS. */
     availability: string
+    /**
+     * Versión corta del estado, para las pantallas donde `availability` no
+     * cabe en una línea. Solo la define el idioma que la necesita.
+     */
+    availabilityShort?: string
     downloadCv: string
     cvDesigned: string
     cvAts: string

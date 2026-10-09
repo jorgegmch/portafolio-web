@@ -244,6 +244,41 @@ describe('Hero: estilos', () => {
       expect(dot).toMatchObject({ flex: 'none' })
     })
 
+    // El texto largo necesita 314 px de columna, que hay desde 374 px de
+    // ventana; con algo de margen, hasta 380 px se muestra el corto.
+    describe('texto largo y corto', () => {
+      const tight = cssMedia(heroCss, '(max-width: 380px)')
+
+      it('por defecto se ve el largo y el corto no existe', () => {
+        expect(cssRule(heroCss, '.statusShort')).toEqual({ display: 'none' })
+        expect(cssRule(heroCss, '.statusLong')).toEqual({})
+      })
+
+      it('hasta 380 px se ve el corto y el largo no existe', () => {
+        expect(cssRule(tight, '.statusLong')).toEqual({ display: 'none' })
+        expect(cssRule(tight, '.statusShort')).toEqual({ display: 'inline' })
+      })
+
+      // display: none saca el texto del árbol de accesibilidad; visibility u
+      // opacity lo dejarían ocupando sitio o leyéndose dos veces.
+      it('se ocultan con display, nunca con visibility ni opacity', () => {
+        const rules = [cssRule(heroCss, '.statusShort'), cssRule(tight, '.statusLong')]
+
+        for (const rule of rules) {
+          expect(rule).not.toHaveProperty('visibility')
+          expect(rule).not.toHaveProperty('opacity')
+        }
+      })
+
+      it('solo ese tramo cambia cuál se ve', () => {
+        const others = ['(max-width: 1280px)', '(max-width: 1023px)', '(max-width: 480px)']
+
+        for (const query of others) {
+          expect(cssMedia(heroCss, query)).not.toMatch(/\.status(?:Long|Short)/)
+        }
+      })
+    })
+
     it('es fijo: ni animación ni transición', () => {
       for (const rule of [status, dot]) {
         expect(rule).not.toHaveProperty('animation')
@@ -489,7 +524,7 @@ describe('Hero: estilos', () => {
   })
 
   describe('pantallas estrechas', () => {
-    const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '1023px', '768px', '480px']
+    const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '1023px', '768px', '480px', '380px']
     const narrow = cssMedia(heroCss, '(max-width: 1023px)')
     const phone = cssMedia(heroCss, '(max-width: 480px)')
 

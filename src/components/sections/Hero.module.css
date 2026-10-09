@@ -134,6 +134,12 @@
   text-transform: uppercase;
 }
 
+/* Donde el texto largo no cabe en una línea se muestra el corto. Con
+   display: none, el oculto tampoco existe para un lector de pantalla. */
+.statusShort {
+  display: none;
+}
+
 .statusDot {
   flex: none;
   width: var(--hero-status-dot);
@@ -434,5 +440,17 @@
     --badge-y: 74%;
 
     font-size: var(--font-size-sm);
+  }
+}
+
+/* El texto largo del estado necesita 314 px de columna, que hay desde 374 px
+   de ventana: hasta aquí, con algo de margen, va el corto. */
+@media (max-width: 380px) {
+  .statusLong {
+    display: none;
+  }
+
+  .statusShort {
+    display: inline;
   }
 }

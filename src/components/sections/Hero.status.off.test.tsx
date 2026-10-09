@@ -34,6 +34,17 @@ describe('Hero: estado de disponibilidad, desactivado', () => {
     expect(screen.queryByText(dictionaries[lang].hero.availability)).not.toBeInTheDocument()
   })
 
+  it('en español no muestra ni el texto largo ni el corto', () => {
+    renderHero('es')
+
+    const { availability, availabilityShort = '' } = dictionaries.es.hero
+
+    expect(availabilityShort).not.toBe('')
+    expect(screen.queryByText(availability)).not.toBeInTheDocument()
+    expect(screen.queryByText(availabilityShort)).not.toBeInTheDocument()
+    expect(screen.getByRole('region').textContent).not.toContain(availabilityShort)
+  })
+
   // Sin estado no queda ni su párrafo ni su punto: solo saludo, rol y presentación.
   it('no deja ningún elemento vacío en su lugar', () => {
     renderHero()

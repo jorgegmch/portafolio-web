@@ -75,7 +75,15 @@ export function Hero() {
         {AVAILABLE_FOR_FREELANCE && (
           <p className={styles.status}>
             <span className={styles.statusDot} aria-hidden="true" />
-            {t.hero.availability}
+            {/* Con texto corto van los dos y el CSS deja ver uno según el ancho. */}
+            {t.hero.availabilityShort ? (
+              <>
+                <span className={styles.statusLong}>{t.hero.availability}</span>
+                <span className={styles.statusShort}>{t.hero.availabilityShort}</span>
+              </>
+            ) : (
+              t.hero.availability
+            )}
           </p>
         )}
       </div>
