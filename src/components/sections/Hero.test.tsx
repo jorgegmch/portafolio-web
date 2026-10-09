@@ -89,15 +89,24 @@ describe('Hero', () => {
       expect(precedes(role(), screen.getByText(dictionaries.es.hero.intro))).toBe(true)
     })
 
-    // El cursor es un adorno: no añade texto ni lo anuncia un lector de pantalla.
-    it('lleva un cursor decorativo, oculto para lectores de pantalla y sin texto', () => {
+    // El cursor es un adorno: una barra vertical que un lector de pantalla no
+    // anuncia. Fuera de ella, el párrafo solo lleva el rol.
+    it('lleva un cursor decorativo, oculto para lectores de pantalla', () => {
       renderHero()
 
       const hidden = role().querySelectorAll('[aria-hidden="true"]')
 
       expect(hidden).toHaveLength(1)
-      expect(hidden[0]).toBeEmptyDOMElement()
-      expect(role().textContent).toBe(site.role)
+      expect(hidden[0]?.textContent).toBe('|')
+      expect(role().children).toHaveLength(1)
+      expect(role().textContent).toBe(`${site.role}|`)
+    })
+
+    it('el cursor va pegado al rol, sin espacio en el texto', () => {
+      renderHero()
+
+      expect(role().lastChild).toBe(role().querySelector('[aria-hidden="true"]'))
+      expect(role().firstChild?.textContent).toBe(site.role)
     })
   })
 

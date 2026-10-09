@@ -61,38 +61,26 @@ describe('Hero: estilos', () => {
     })
 
     describe('cursor', () => {
-      it('es una barra del color de acento, con el ancho de su token', () => {
-        expect(cssRule(heroCss, '.cursor')).toMatchObject({
-          width: 'var(--hero-cursor-width)',
-          background: 'var(--color-accent)',
-        })
-        expect(cssToken(tokensCss, '--hero-cursor-width')).toMatch(/^[\d.]+rem$/)
+      it('va en el verde de acento de la paleta', () => {
+        expect(cssRule(heroCss, '.cursor')).toMatchObject({ color: 'var(--color-accent-alt)' })
       })
 
-      it('toma el alto de la línea del rol', () => {
-        expect(cssRule(heroCss, '.role')).toMatchObject({ display: 'flex' })
-        expect(cssRule(heroCss, '.cursor')).toMatchObject({ 'align-self': 'stretch' })
+      it('queda pegado al rol, con una separación que sale de un token', () => {
+        expect(cssRule(heroCss, '.cursor')).toMatchObject({ 'margin-left': 'var(--space-1)' })
+        expect(cssRule(heroCss, '.role')).not.toHaveProperty('display')
+        expect(cssRule(heroCss, '.role')).not.toHaveProperty('gap')
       })
 
-      it('parpadea a saltos, con la duración de su token', () => {
-        expect(cssRule(heroCss, '.cursor')).toMatchObject({
-          animation: 'blink var(--duration-cursor) step-end infinite',
-        })
-        expect(cssToken(tokensCss, '--duration-cursor')).toMatch(/^[\d.]+s$/)
+      // No es un cursor de escritura: no parpadea ni se mueve.
+      it('es fijo: ni animación ni transición', () => {
+        expect(Object.keys(cssRule(heroCss, '.cursor')).sort()).toEqual(['color', 'margin-left'])
+        expect(heroCss).not.toMatch(/@keyframes blink/)
+        expect(cssMedia(heroCss, '(prefers-reduced-motion: reduce)')).not.toMatch(/\.cursor/)
       })
 
-      it('el parpadeo solo anima la opacidad', () => {
-        const frames = /@keyframes blink\s*\{([\s\S]*?\})\s*\}/.exec(heroCss)?.[1] ?? ''
-        const properties = [...frames.matchAll(/([a-z-]+)\s*:/g)].map(([, name]) => name)
-
-        expect(properties.length).toBeGreaterThan(0)
-        expect(new Set(properties)).toEqual(new Set(['opacity']))
-      })
-
-      it('con movimiento reducido queda fijo', () => {
-        const reduced = cssMedia(heroCss, '(prefers-reduced-motion: reduce)')
-
-        expect(cssRule(reduced, '.cursor')).toMatchObject({ animation: 'none' })
+      it('no deja tokens sin uso', () => {
+        expect(cssToken(tokensCss, '--hero-cursor-width')).toBe('')
+        expect(cssToken(tokensCss, '--duration-cursor')).toBe('')
       })
     })
 

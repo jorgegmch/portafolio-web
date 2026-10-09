@@ -28,10 +28,14 @@ const PORTRAIT_SIZES = [
   'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
 ].join(', ')
 
+/** Adorno junto al rol; es un signo, no texto traducible. */
+const ROLE_CURSOR = '|'
+
 /**
  * Primera sección de la home: saludo, nombre en dos colores, rol con un
- * cursor decorativo y presentación breve, con el retrato al lado. Lleva el único h1 de la página; el nombre
- * sale de hero.heading y se parte al renderizar, sin guardarlo dos veces.
+ * cursor decorativo y presentación breve, con el retrato al lado. Lleva el
+ * único h1 de la página; el nombre sale de hero.heading y se parte al
+ * renderizar, sin guardarlo dos veces.
  * El retrato es estático y sale entero de assets/hero/portrait.
  * A su alrededor flotan las pastillas de data/heroBadges, con el nombre que
  * cada tecnología tiene en el catálogo: son decorativas, porque la sección de
@@ -51,7 +55,9 @@ export function Hero() {
         </h1>
         <p className={styles.role}>
           {site.role}
-          <span className={styles.cursor} aria-hidden="true" />
+          <span className={styles.cursor} aria-hidden="true">
+            {ROLE_CURSOR}
+          </span>
         </p>
         <p className={styles.intro}>{t.hero.intro}</p>
       </div>

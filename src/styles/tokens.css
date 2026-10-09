@@ -123,10 +123,8 @@
      sus líneas queden lejos del hombro de la figura. */
   --hero-intro-measure: 30rem;
   /* Línea de rol bajo el nombre: siempre mayor que el párrafo (19 px), de
-     20 px en teléfono a 24 px en escritorio. Su cursor: ancho y parpadeo. */
+     20 px en teléfono a 24 px en escritorio. */
   --hero-role-size: clamp(1.25rem, 2.2vw, 1.5rem);
-  --hero-cursor-width: 0.125rem;
-  --duration-cursor: 1.1s;
   /* Halo que separa el retrato del fondo. */
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);

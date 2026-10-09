@@ -65,10 +65,7 @@
   color: var(--color-accent-alt);
 }
 
-/* El texto y su cursor van en línea; el cursor toma el alto de la línea. */
 .role {
-  display: flex;
-  gap: var(--space-2);
   margin-top: var(--space-3);
   color: var(--color-text);
   font-size: var(--hero-role-size);
@@ -76,11 +73,10 @@
   line-height: var(--leading-tight);
 }
 
+/* Adorno fijo junto al rol: no es un cursor de escritura, no parpadea. */
 .cursor {
-  align-self: stretch;
-  width: var(--hero-cursor-width);
-  background: var(--color-accent);
-  animation: blink var(--duration-cursor) step-end infinite;
+  margin-left: var(--space-1);
+  color: var(--color-accent-alt);
 }
 
 .intro {
@@ -230,19 +226,8 @@
   }
 }
 
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-/* Sin movimiento, el cursor se queda fijo. */
 @media (prefers-reduced-motion: reduce) {
   .float {
-    animation: none;
-  }
-
-  .cursor {
     animation: none;
   }
 }
