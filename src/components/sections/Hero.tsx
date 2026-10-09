@@ -13,13 +13,15 @@ const PORTRAIT_SRC_SET = portrait.sources.map(({ src, width }) => `${src} ${widt
 
 /**
  * Ancho del retrato en pantalla, en cada diseño. `sizes` no admite variables
- * de CSS, así que repite las medidas del diseño: apilado, el ancho de la página
- * menos sus márgenes o 36rem; en dos columnas, lo que pide el alto de la
+ * de CSS, así que repite las medidas del diseño: apilado (hasta 1023 px), el
+ * ancho de la página menos sus márgenes, que cambian en 768 px, o 36rem; en
+ * dos columnas, lo que pide el alto de la
  * ventana (menos la barra y el aire sobre el pelo, por la proporción 4:5 de la
  * caja y el 12,5 % transparente de arriba), con tope por ancho.
  */
 const PORTRAIT_SIZES = [
   '(max-width: 768px) min(88vw, 36rem)',
+  '(max-width: 1023px) min(84vw, 36rem)',
   '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
   'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
 ].join(', ')

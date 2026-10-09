@@ -100,6 +100,7 @@ describe('Hero: retrato', () => {
         expect(sizes()).toBe(
           [
             '(max-width: 768px) min(88vw, 36rem)',
+            '(max-width: 1023px) min(84vw, 36rem)',
             '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
             'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
           ].join(', '),
@@ -116,7 +117,7 @@ describe('Hero: retrato', () => {
         expect(queries.length).toBeGreaterThan(0)
         queries.forEach(({ feature, value }) => {
           expect(feature).toBe('max-width')
-          expect([1280, 1024, 768, 480]).toContain(value)
+          expect([1280, 1024, 1023, 768, 480]).toContain(value)
         })
         expect(queries.map(({ value }) => value)).toEqual(
           [...queries].map(({ value }) => value).sort((a, b) => a - b),
@@ -135,6 +136,8 @@ describe('Hero: retrato', () => {
         const stackedGutter = parseFloat(
           cssToken(cssMedia(tokensCss, '(max-width: 768px)'), '--container-gutter'),
         )
+        /** El margen lateral por encima de 768 px: el valor base del token. */
+        const baseGutter = parseFloat(token('--container-gutter'))
         const { width, height } = portrait.aspectRatio
         /** Ancho de la caja por cada unidad de alto libre: proporción / parte que ocupa la figura. */
         const widthPerHeight = (width / height / (1 - Number(token('--portrait-head-room')))).toFixed(4)
@@ -151,6 +154,18 @@ describe('Hero: retrato', () => {
           expect(token('--portrait-share-compact')).toMatch(/^[\d.]+vw$/)
           expect(Number(token('--portrait-head-room'))).toBeGreaterThan(0)
           expect(stackedGutter).toBeGreaterThan(0)
+          expect(baseGutter).toBeGreaterThan(stackedGutter)
+          expect(token('--container-gutter')).toMatch(/^[\d.]+vw$/)
+        })
+
+        // De 769 a 1023 px el retrato también va apilado, pero la página tiene
+        // el margen lateral de escritorio.
+        it('el tramo de 769 a 1023 px usa el margen lateral base', () => {
+          renderHero()
+
+          expect(entries()[1]).toBe(
+            `(max-width: 1023px) min(${100 - 2 * baseGutter}vw, ${token('--portrait-width')})`,
+          )
         })
 
         it('sizes es el que sale de los tokens', () => {
@@ -159,6 +174,7 @@ describe('Hero: retrato', () => {
           expect(sizes()).toBe(
             [
               `(max-width: 768px) min(${100 - 2 * stackedGutter}vw, ${token('--portrait-width')})`,
+              `(max-width: 1023px) min(${100 - 2 * baseGutter}vw, ${token('--portrait-width')})`,
               `(max-width: 1280px) ${twoColumns('--portrait-share-compact')}`,
               twoColumns('--portrait-ramp'),
             ].join(', '),

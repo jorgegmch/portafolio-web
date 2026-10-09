@@ -14,20 +14,21 @@ const read = (width: number) => readWebp(readFileSync(path(width)))
 const METADATA_MARKERS = ['Exif', '<x:xmpmeta', '<?xpacket', 'ICC_PROFILE', 'c2pa', 'tEXt']
 
 const sources = portrait.sources.map((source) => ({ ...source, file: fileName(source.width) }))
-const [small, medium, large] = portrait.sources
+const [small, phone, medium, large] = portrait.sources
 
 describe('retrato del Hero', () => {
   describe('declaración', () => {
-    it('hay tres tamaños, de menor a mayor', () => {
+    it('hay cuatro tamaños, de menor a mayor', () => {
       const widths = portrait.sources.map((source) => source.width)
 
-      expect(widths).toHaveLength(3)
+      expect(widths).toHaveLength(4)
       expect(widths).toEqual([...widths].sort((a, b) => a - b))
       expect(new Set(widths).size).toBe(widths.length)
     })
 
-    it('miden 576 x 720, 1152 x 1440 y 1472 x 1840', () => {
+    it('miden 576 x 720, 800 x 1000, 1152 x 1440 y 1472 x 1840', () => {
       expect(small).toMatchObject({ width: 576, height: 720 })
+      expect(phone).toMatchObject({ width: 800, height: 1000 })
       expect(medium).toMatchObject({ width: 1152, height: 1440 })
       expect(large).toMatchObject({ width: 1472, height: 1840 })
     })
@@ -38,6 +39,14 @@ describe('retrato del Hero', () => {
       const MAX_DISPLAY_WIDTH = 736
 
       expect(large.width).toBe(MAX_DISPLAY_WIDTH * 2)
+    })
+
+    // Apilado en un teléfono, el retrato mide hasta 400 px: a densidad 2 lo
+    // cubre el de 800 sin bajar el de 1152.
+    it('el de 800 dobla el ancho del retrato en un teléfono', () => {
+      const PHONE_DISPLAY_WIDTH = 400
+
+      expect(phone.width).toBe(PHONE_DISPLAY_WIDTH * 2)
     })
 
     it('la proporción reservada es 4:5', () => {

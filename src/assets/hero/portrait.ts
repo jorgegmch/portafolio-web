@@ -1,4 +1,5 @@
 import small from '@/assets/hero/portrait-576.webp'
+import phone from '@/assets/hero/portrait-800.webp'
 import medium from '@/assets/hero/portrait-1152.webp'
 import large from '@/assets/hero/portrait-1472.webp'
 
@@ -13,6 +14,7 @@ export const portrait = {
   /** Del menor al mayor; el navegador elige según el ancho en pantalla y la densidad. */
   sources: [
     { src: small, width: 576, height: 720 },
+    { src: phone, width: 800, height: 1000 },
     { src: medium, width: 1152, height: 1440 },
     { src: large, width: 1472, height: 1840 },
   ],
