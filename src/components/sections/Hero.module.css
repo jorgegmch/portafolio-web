@@ -242,13 +242,14 @@
   }
 }
 
-/* Apilado: el retrato vuelve al flujo, debajo del texto, con el diseño que
-   tenía. Las pastillas conservan aquí sus posiciones y tamaños. */
-@media (max-width: 768px) {
+/* Apilado: por debajo de 1024 px el texto no cabe en el alto que da el
+   retrato, así que el retrato vuelve al flujo, debajo del texto. */
+@media (max-width: 1023px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
+    gap: var(--hero-stack-gap);
     min-height: auto;
-    padding: var(--space-9) var(--container-padding) 0;
+    padding: var(--hero-stack-padding) var(--container-padding) 0;
   }
 
   /* La separación de la rejilla ya da el hueco hasta el retrato. */
@@ -265,7 +266,9 @@
     position: relative;
     right: auto;
     bottom: auto;
-    width: min(100%, var(--portrait-width));
+    /* También por alto: en un teléfono en horizontal, su ancho máximo serían
+       dos pantallas de alto. */
+    width: min(100%, var(--portrait-width), calc(var(--portrait-stack-height) * 4 / 5));
     height: auto;
     justify-self: center;
   }
@@ -304,5 +307,11 @@
     --badge-y: 79%;
 
     font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding-top: var(--hero-stack-padding-phone);
   }
 }

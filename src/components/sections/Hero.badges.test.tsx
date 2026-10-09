@@ -209,17 +209,18 @@ describe('Hero: pastillas de tecnología', () => {
 
       // Posicionado en los dos diseños: anclado en dos columnas, en el flujo apilado.
       it('el retrato es la referencia de las posiciones', () => {
-        const stacked = cssMedia(heroCss, '(max-width: 768px)')
+        const stacked = cssMedia(heroCss, '(max-width: 1023px)')
 
         expect(cssRule(heroCss, '.portrait')).toMatchObject({ position: 'absolute' })
         expect(cssRule(stacked, '.portrait')).toMatchObject({ position: 'relative' })
       })
 
-      /** Los tres tramos del diseño, del más ancho al más estrecho: cada uno hereda del anterior. */
+      /** Los cuatro tramos del diseño, del más ancho al más estrecho: cada uno hereda del anterior. */
       const TIERS = [
         placements,
         placementsOf(cssMedia(heroCss, '(max-width: 1280px)')),
-        placementsOf(cssMedia(heroCss, '(max-width: 768px)')),
+        placementsOf(cssMedia(heroCss, '(max-width: 1023px)')),
+        placementsOf(cssMedia(heroCss, '(max-width: 480px)')),
       ]
       const SIDES = ['--badge-left', '--badge-right'] as const
       /** Valor que tiene una variable de la pastilla en un tramo, con la cascada aplicada. */
@@ -307,8 +308,8 @@ describe('Hero: pastillas de tecnología', () => {
       })
 
       // El apilado conserva las posiciones y los tamaños que tenía.
-      it('hasta 768 px cada pastilla tiene su posición y su tamaño propios', () => {
-        const stacked = placementsOf(cssMedia(heroCss, '(max-width: 768px)'))
+      it('hasta 1023 px cada pastilla tiene su posición y su tamaño propios', () => {
+        const stacked = placementsOf(cssMedia(heroCss, '(max-width: 1023px)'))
 
         expect(stacked.map(({ index }) => index)).toEqual(heroBadges.map((_, i) => i + 1))
         stacked.forEach(({ body }) => {

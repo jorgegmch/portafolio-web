@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { portrait } from '@/assets/hero/portrait'
 import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
@@ -57,7 +58,7 @@ describe('Hero: estilos', () => {
     })
 
     it('apilada conserva el ancho de un párrafo normal', () => {
-      const stacked = cssMedia(heroCss, '(max-width: 768px)')
+      const stacked = cssMedia(heroCss, '(max-width: 1023px)')
 
       expect(cssRule(stacked, '.intro')).toMatchObject({ 'max-width': 'var(--measure)' })
     })
@@ -274,8 +275,9 @@ describe('Hero: estilos', () => {
   })
 
   describe('pantallas estrechas', () => {
-    const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '768px', '480px']
-    const narrow = cssMedia(heroCss, '(max-width: 768px)')
+    const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '1023px', '768px', '480px']
+    const narrow = cssMedia(heroCss, '(max-width: 1023px)')
+    const phone = cssMedia(heroCss, '(max-width: 480px)')
 
     // El texto nunca baja de lo que mide el nombre; la segunda columna
     // reserva el lado del retrato, que va anclado fuera del flujo.
@@ -286,30 +288,67 @@ describe('Hero: estilos', () => {
       })
     })
 
-    it('hasta 768 px el retrato pasa debajo del texto, en una sola columna', () => {
+    // Por debajo de 1024 px el texto ya no cabe en el alto que da el retrato:
+    // en dos columnas el Hero crecía y la figura pisaba el párrafo.
+    it('hasta 1023 px el retrato pasa debajo del texto, en una sola columna', () => {
       expect(cssRule(narrow, '.hero')).toMatchObject({ 'grid-template-columns': 'minmax(0, 1fr)' })
     })
 
-    // El apilado conserva su diseño: relleno arriba, sin alto mínimo y el
-    // hueco hasta el retrato que da la separación de la rejilla.
-    it('hasta 768 px la sección vuelve a su relleno y el texto no añade ninguno', () => {
+    it('ya no se apila en 768 px: el tramo es uno solo, hasta 1023', () => {
+      expect(cssMedia(heroCss, '(max-width: 768px)')).toBe('')
+      expect(narrow).not.toBe('')
+    })
+
+    // Apilado: relleno arriba, sin alto mínimo y un hueco hasta el retrato,
+    // los tres más cortos que en escritorio para que la cara entre antes.
+    it('hasta 1023 px la sección lleva su relleno y su hueco, desde tokens', () => {
       expect(cssRule(narrow, '.hero')).toMatchObject({
-        padding: 'var(--space-9) var(--container-padding) 0',
+        gap: 'var(--hero-stack-gap)',
+        padding: 'var(--hero-stack-padding) var(--container-padding) 0',
         'min-height': 'auto',
       })
       expect(cssRule(narrow, '.text')).toMatchObject({ padding: '0' })
+      expect(cssToken(tokensCss, '--hero-stack-padding')).toBe('4rem')
+      expect(cssToken(tokensCss, '--hero-stack-gap')).toBe('2rem')
     })
 
-    it('hasta 768 px el retrato vuelve al flujo, con su ancho de siempre', () => {
+    it('en teléfono el relleno superior es aún menor', () => {
+      expect(cssRule(phone, '.hero')).toMatchObject({
+        'padding-top': 'var(--hero-stack-padding-phone)',
+      })
+      expect(cssToken(tokensCss, '--hero-stack-padding-phone')).toBe('3rem')
+      expect(parseFloat(cssToken(tokensCss, '--hero-stack-padding-phone'))).toBeLessThan(
+        parseFloat(cssToken(tokensCss, '--hero-stack-padding')),
+      )
+    })
+
+    it('hasta 1023 px el retrato vuelve al flujo, centrado', () => {
       expect(cssRule(narrow, '.portrait')).toMatchObject({
         position: 'relative',
         right: 'auto',
         bottom: 'auto',
-        width: 'min(100%, var(--portrait-width))',
         height: 'auto',
         'justify-self': 'center',
       })
       expect(cssToken(tokensCss, '--portrait-width')).toBe('36rem')
+    })
+
+    // En un teléfono en horizontal, 36rem de ancho son 720 px de alto: dos
+    // pantallas. El alto de la ventana también limita el retrato.
+    it('apilado, el retrato también se limita por el alto de la ventana', () => {
+      const { width, height } = portrait.aspectRatio
+
+      expect(cssRule(narrow, '.portrait')).toMatchObject({
+        width: `min(100%, var(--portrait-width), calc(var(--portrait-stack-height) * ${width} / ${height}))`,
+      })
+      expect(cssToken(tokensCss, '--portrait-stack-height')).toBe('95svh')
+    })
+
+    it('el comentario de tokens.css lista los mismos breakpoints', () => {
+      const header = readFileSync('src/styles/tokens.css', 'utf8').split('*/')[0] ?? ''
+      const listed = [...header.matchAll(/^ \*\s+(\d+px)\b/gm)].map(([, value]) => value)
+
+      expect(listed).toEqual(ALLOWED_BREAKPOINTS)
     })
 
     it('solo usa los breakpoints de tokens.css, siempre con max-width', () => {

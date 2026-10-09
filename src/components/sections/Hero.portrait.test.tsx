@@ -99,8 +99,8 @@ describe('Hero: retrato', () => {
 
         expect(sizes()).toBe(
           [
-            '(max-width: 768px) min(88vw, 36rem)',
-            '(max-width: 1023px) min(84vw, 36rem)',
+            '(max-width: 768px) min(88vw, 36rem, 76vh)',
+            '(max-width: 1023px) min(84vw, 36rem, 76vh)',
             '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
             'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
           ].join(', '),
@@ -142,6 +142,10 @@ describe('Hero: retrato', () => {
         /** Ancho de la caja por cada unidad de alto libre: proporción / parte que ocupa la figura. */
         const widthPerHeight = (width / height / (1 - Number(token('--portrait-head-room')))).toFixed(4)
         const byHeight = `calc((100vh - ${rem('--nav-height') + rem('--portrait-head-gap')}rem) * ${widthPerHeight})`
+        /** Tope por alto del retrato apilado, pasado a ancho con la proporción de la caja. */
+        const stackHeight = `${(parseFloat(token('--portrait-stack-height')) * width) / height}vh`
+        const stacked = (gutter: number) =>
+          `min(${100 - 2 * gutter}vw, ${token('--portrait-width')}, ${stackHeight})`
         const twoColumns = (share: string) =>
           `min(${token(share)}, ${token('--portrait-max-width')}, ${byHeight})`
 
@@ -154,6 +158,7 @@ describe('Hero: retrato', () => {
           expect(token('--portrait-share-compact')).toMatch(/^[\d.]+vw$/)
           expect(Number(token('--portrait-head-room'))).toBeGreaterThan(0)
           expect(stackedGutter).toBeGreaterThan(0)
+          expect(token('--portrait-stack-height')).toMatch(/^[\d.]+svh$/)
           expect(baseGutter).toBeGreaterThan(stackedGutter)
           expect(token('--container-gutter')).toMatch(/^[\d.]+vw$/)
         })
@@ -163,9 +168,7 @@ describe('Hero: retrato', () => {
         it('el tramo de 769 a 1023 px usa el margen lateral base', () => {
           renderHero()
 
-          expect(entries()[1]).toBe(
-            `(max-width: 1023px) min(${100 - 2 * baseGutter}vw, ${token('--portrait-width')})`,
-          )
+          expect(entries()[1]).toBe(`(max-width: 1023px) ${stacked(baseGutter)}`)
         })
 
         it('sizes es el que sale de los tokens', () => {
@@ -173,8 +176,8 @@ describe('Hero: retrato', () => {
 
           expect(sizes()).toBe(
             [
-              `(max-width: 768px) min(${100 - 2 * stackedGutter}vw, ${token('--portrait-width')})`,
-              `(max-width: 1023px) min(${100 - 2 * baseGutter}vw, ${token('--portrait-width')})`,
+              `(max-width: 768px) ${stacked(stackedGutter)}`,
+              `(max-width: 1023px) ${stacked(baseGutter)}`,
               `(max-width: 1280px) ${twoColumns('--portrait-share-compact')}`,
               twoColumns('--portrait-ramp'),
             ].join(', '),
@@ -185,7 +188,7 @@ describe('Hero: retrato', () => {
         it('el CSS calcula el retrato con esos tokens, en esos tramos', () => {
           const base = cssRule(heroCss, '.hero')
           const compact = cssRule(cssMedia(heroCss, '(max-width: 1280px)'), '.hero')
-          const stacked = cssRule(cssMedia(heroCss, '(max-width: 768px)'), '.portrait')
+          const stackedRule = cssRule(cssMedia(heroCss, '(max-width: 1023px)'), '.portrait')
 
           expect(base['--portrait-height']).toContain(
             '(100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))',
@@ -195,7 +198,9 @@ describe('Hero: retrato', () => {
           expect(compact['--portrait-cap']).toBe(
             'min(var(--portrait-max-width), var(--portrait-share-compact))',
           )
-          expect(stacked.width).toBe('min(100%, var(--portrait-width))')
+          expect(stackedRule.width).toBe(
+            `min(100%, var(--portrait-width), calc(var(--portrait-stack-height) * ${width} / ${height}))`,
+          )
         })
       })
 

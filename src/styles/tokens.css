@@ -8,6 +8,7 @@
  * de escritorio):
  *   1280px  escritorio pequeño
  *   1024px  tablet en horizontal o laptop pequeña
+ *   1023px  hasta aquí el hero va apilado: en 1024 ya caben dos columnas
  *    768px  tablet en vertical (origen)
  *    480px  teléfono
  */
@@ -93,8 +94,15 @@
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
 
-  /* Retrato del hero, apilado bajo el texto: ancho máximo (576 px). */
+  /* Retrato del hero, apilado bajo el texto: ancho máximo (576 px) y alto
+     máximo, que solo manda en un teléfono en horizontal. */
   --portrait-width: 36rem;
+  --portrait-stack-height: 95svh;
+  /* Hero apilado: relleno superior (menor en teléfono) y hueco entre el texto
+     y el retrato, más cortos que en escritorio para que la cara entre antes. */
+  --hero-stack-padding: 4rem;
+  --hero-stack-padding-phone: 3rem;
+  --hero-stack-gap: 2rem;
   /* En dos columnas se dimensiona por el alto de la ventana, con tope por
      ancho. Hasta 1280 px, una parte de la ventana: el párrafo ocupa más
      líneas y la figura lo alcanzaría. Por encima, una rampa que arranca en
