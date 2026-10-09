@@ -100,7 +100,7 @@ describe('Hero: retrato', () => {
         expect(sizes()).toBe(
           [
             '(max-width: 768px) min(88vw, 36rem)',
-            '(max-width: 1280px) min(43vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+            '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
             'min(54vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
           ].join(', '),
         )

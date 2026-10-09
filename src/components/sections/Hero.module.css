@@ -62,7 +62,7 @@
 }
 
 .intro {
-  max-width: var(--measure);
+  max-width: var(--hero-intro-measure);
   margin-top: var(--space-5);
   color: var(--color-text-muted);
   font-size: var(--font-size-lg);
@@ -204,10 +204,15 @@
 }
 
 /* Con el párrafo en más líneas, la figura lo alcanza antes: el tope por
-   ancho baja, y las pastillas de la izquierda con él. */
+   ancho baja, el texto baja menos, y las pastillas de la izquierda se mueven
+   con ellos. */
 @media (max-width: 1280px) {
   .hero {
     --portrait-cap: min(var(--portrait-max-width), var(--portrait-share-compact));
+  }
+
+  .text {
+    padding-top: var(--hero-text-offset-compact);
   }
 
   .float:nth-child(1) {
@@ -232,6 +237,11 @@
   /* La separación de la rejilla ya da el hueco hasta el retrato. */
   .text {
     padding: 0;
+  }
+
+  /* Sin retrato al lado, el párrafo recupera su ancho normal. */
+  .intro {
+    max-width: var(--measure);
   }
 
   .portrait {

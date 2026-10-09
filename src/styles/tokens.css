@@ -100,13 +100,18 @@
      párrafo ocupa más líneas y la figura lo alcanzaría). */
   --portrait-max-width: 46rem;
   --portrait-share: 54vw;
-  --portrait-share-compact: 43vw;
+  --portrait-share-compact: 41vw;
   /* Aire entre la barra y el pelo, y parte de la caja que queda vacía sobre
      el pelo (el lienzo de la foto deja transparente el 12,5 % de arriba). */
   --portrait-head-gap: 2rem;
   --portrait-head-room: 0.125;
-  /* Distancia del texto al borde superior: lo deja a la altura de la cabeza. */
-  --hero-text-offset: 5rem;
+  /* Distancia del texto al borde superior: lo deja a la altura de la cabeza.
+     Desde 1280 px baja menos, porque el retrato es más pequeño. */
+  --hero-text-offset: 8rem;
+  --hero-text-offset-compact: 6rem;
+  /* Ancho del párrafo junto al retrato: más corto que --measure, para que
+     sus líneas queden lejos del hombro de la figura. */
+  --hero-intro-measure: 30rem;
   /* Halo que separa el retrato del fondo. */
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);

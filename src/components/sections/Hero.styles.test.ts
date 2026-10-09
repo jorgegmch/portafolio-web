@@ -5,7 +5,7 @@ import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
 const heroCss = readCss('src/components/sections/Hero.module.css')
 const tokensCss = readCss('src/styles/tokens.css')
 
-const MEASURE_TOKEN = '--measure'
+const MEASURE_TOKEN = '--hero-intro-measure'
 
 describe('Hero: estilos', () => {
   describe('saludo', () => {
@@ -46,6 +46,21 @@ describe('Hero: estilos', () => {
       expect(cssRule(heroCss, '.intro')).toMatchObject({ 'max-width': `var(${MEASURE_TOKEN})` })
       expect(cssToken(tokensCss, MEASURE_TOKEN)).toMatch(/^[\d.]+rem$/)
     })
+
+    // Más estrecho que un párrafo normal: sus líneas quedan más lejos del
+    // hombro de la figura, que es la parte más ancha.
+    it('en dos columnas es más estrecha que un párrafo normal: 30rem', () => {
+      expect(cssToken(tokensCss, MEASURE_TOKEN)).toBe('30rem')
+      expect(parseFloat(cssToken(tokensCss, MEASURE_TOKEN))).toBeLessThan(
+        parseFloat(cssToken(tokensCss, '--measure')),
+      )
+    })
+
+    it('apilada conserva el ancho de un párrafo normal', () => {
+      const stacked = cssMedia(heroCss, '(max-width: 768px)')
+
+      expect(cssRule(stacked, '.intro')).toMatchObject({ 'max-width': 'var(--measure)' })
+    })
   })
 
   describe('sección', () => {
@@ -73,7 +88,21 @@ describe('Hero: estilos', () => {
       expect(cssRule(heroCss, '.text')).toMatchObject({
         padding: 'var(--hero-text-offset) 0 var(--space-7)',
       })
-      expect(cssToken(tokensCss, '--hero-text-offset')).toMatch(/^[\d.]+rem$/)
+      expect(cssToken(tokensCss, '--hero-text-offset')).toBe('8rem')
+    })
+
+    // Con el retrato más pequeño hay menos alto: si el texto bajara lo mismo,
+    // se acercaría al hombro y no dejaría sitio debajo.
+    it('desde 1280 px el texto baja menos, con su propio token', () => {
+      const compact = cssMedia(heroCss, '(max-width: 1280px)')
+
+      expect(cssRule(compact, '.text')).toMatchObject({
+        'padding-top': 'var(--hero-text-offset-compact)',
+      })
+      expect(cssToken(tokensCss, '--hero-text-offset-compact')).toBe('6rem')
+      expect(parseFloat(cssToken(tokensCss, '--hero-text-offset-compact'))).toBeLessThan(
+        parseFloat(cssToken(tokensCss, '--hero-text-offset')),
+      )
     })
 
     // La caja del retrato invade la columna de texto por su zona transparente.
@@ -103,7 +132,7 @@ describe('Hero: estilos', () => {
       it('las medidas salen de tokens', () => {
         expect(cssToken(tokensCss, '--portrait-max-width')).toBe('46rem')
         expect(cssToken(tokensCss, '--portrait-share')).toBe('54vw')
-        expect(cssToken(tokensCss, '--portrait-share-compact')).toBe('43vw')
+        expect(cssToken(tokensCss, '--portrait-share-compact')).toBe('41vw')
         expect(cssToken(tokensCss, '--portrait-head-gap')).toBe('2rem')
         expect(cssToken(tokensCss, '--portrait-head-room')).toBe('0.125')
       })
