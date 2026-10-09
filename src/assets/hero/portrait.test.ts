@@ -14,24 +14,30 @@ const read = (width: number) => readWebp(readFileSync(path(width)))
 const METADATA_MARKERS = ['Exif', '<x:xmpmeta', '<?xpacket', 'ICC_PROFILE', 'c2pa', 'tEXt']
 
 const sources = portrait.sources.map((source) => ({ ...source, file: fileName(source.width) }))
-const [small, large] = portrait.sources
+const [small, medium, large] = portrait.sources
 
 describe('retrato del Hero', () => {
   describe('declaración', () => {
-    it('hay dos tamaños, el menor primero', () => {
-      expect(portrait.sources).toHaveLength(2)
-      expect(small.width).toBeLessThan(large.width)
+    it('hay tres tamaños, de menor a mayor', () => {
+      const widths = portrait.sources.map((source) => source.width)
+
+      expect(widths).toHaveLength(3)
+      expect(widths).toEqual([...widths].sort((a, b) => a - b))
+      expect(new Set(widths).size).toBe(widths.length)
     })
 
-    // Para pantallas de alta densidad: el grande dobla exactamente al pequeño.
-    it('el grande mide el doble que el pequeño', () => {
-      expect(large.width).toBe(small.width * 2)
-      expect(large.height).toBe(small.height * 2)
-    })
-
-    it('miden 576 x 720 y 1152 x 1440', () => {
+    it('miden 576 x 720, 1152 x 1440 y 1472 x 1840', () => {
       expect(small).toMatchObject({ width: 576, height: 720 })
-      expect(large).toMatchObject({ width: 1152, height: 1440 })
+      expect(medium).toMatchObject({ width: 1152, height: 1440 })
+      expect(large).toMatchObject({ width: 1472, height: 1840 })
+    })
+
+    // El retrato se muestra hasta a 46rem (736 px): el mayor lo cubre al doble
+    // de densidad sin ampliarse.
+    it('el mayor dobla el ancho máximo al que se muestra el retrato', () => {
+      const MAX_DISPLAY_WIDTH = 736
+
+      expect(large.width).toBe(MAX_DISPLAY_WIDTH * 2)
     })
 
     it('la proporción reservada es 4:5', () => {

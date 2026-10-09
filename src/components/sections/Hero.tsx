@@ -6,10 +6,23 @@ import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologie
 import { useLang } from '@/hooks/useLang'
 import { splitName } from '@/lib/splitName'
 
-const [small, large] = portrait.sources
+const [small] = portrait.sources
 
-/** El tamaño pequeño para pantallas normales y el grande para las de alta densidad. */
-const PORTRAIT_SRC_SET = `${small.src} 1x, ${large.src} 2x`
+/** Cada archivo con su ancho: el navegador elige según `sizes` y la densidad. */
+const PORTRAIT_SRC_SET = portrait.sources.map(({ src, width }) => `${src} ${width}w`).join(', ')
+
+/**
+ * Ancho del retrato en pantalla, en cada diseño. `sizes` no admite variables
+ * de CSS, así que repite las medidas del diseño: apilado, el ancho de la página
+ * menos sus márgenes o 36rem; en dos columnas, lo que pide el alto de la
+ * ventana (menos la barra y el aire sobre el pelo, por la proporción 4:5 de la
+ * caja y el 12,5 % transparente de arriba), con tope por ancho.
+ */
+const PORTRAIT_SIZES = [
+  '(max-width: 768px) min(88vw, 36rem)',
+  '(max-width: 1280px) min(43vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+  'min(54vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+].join(', ')
 
 /**
  * Primera sección de la home: saludo, nombre en dos colores y presentación
@@ -42,6 +55,7 @@ export function Hero() {
             className={styles.photo}
             src={small.src}
             srcSet={PORTRAIT_SRC_SET}
+            sizes={PORTRAIT_SIZES}
             width={small.width}
             height={small.height}
             alt={t.hero.photoAlt}

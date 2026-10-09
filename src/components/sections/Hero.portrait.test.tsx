@@ -21,7 +21,7 @@ const renderHero = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   )
 }
 
-const [small, large] = portrait.sources
+const [small] = portrait.sources
 const image = () => screen.getByRole('img')
 const heading = () => screen.getByRole('heading', { level: 1 })
 
@@ -71,10 +71,63 @@ describe('Hero: retrato', () => {
       expect(image()).toHaveAttribute('src', small.src)
     })
 
-    it('ofrece el grande a las pantallas de alta densidad', () => {
+    // Con el ancho de cada archivo, el navegador elige según lo que mide el
+    // retrato en pantalla y la densidad, no solo según la densidad.
+    it('ofrece todos los tamaños con su ancho', () => {
       renderHero()
 
-      expect(image()).toHaveAttribute('srcset', `${small.src} 1x, ${large.src} 2x`)
+      expect(portrait.sources.length).toBeGreaterThan(2)
+      expect(image()).toHaveAttribute(
+        'srcset',
+        portrait.sources.map(({ src, width }) => `${src} ${width}w`).join(', '),
+      )
+    })
+
+    describe('sizes: el ancho del retrato en cada diseño', () => {
+      const sizes = () => image().getAttribute('sizes') ?? ''
+      const entries = () => sizes().split(/,\s*(?=\()|,\s*(?=min\()/)
+
+      it('lo declara, porque srcset lleva anchos', () => {
+        renderHero()
+
+        expect(sizes()).not.toBe('')
+      })
+
+      it('es exactamente este', () => {
+        renderHero()
+
+        expect(sizes()).toBe(
+          [
+            '(max-width: 768px) min(88vw, 36rem)',
+            '(max-width: 1280px) min(43vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+            'min(54vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+          ].join(', '),
+        )
+      })
+
+      it('solo usa breakpoints de tokens.css, con max-width, de menor a mayor', () => {
+        renderHero()
+
+        const queries = [...sizes().matchAll(/\(([a-z-]+): (\d+)px\)/g)].map(
+          ([, feature = '', value = '']) => ({ feature, value: Number(value) }),
+        )
+
+        expect(queries.length).toBeGreaterThan(0)
+        queries.forEach(({ feature, value }) => {
+          expect(feature).toBe('max-width')
+          expect([1280, 1024, 768, 480]).toContain(value)
+        })
+        expect(queries.map(({ value }) => value)).toEqual(
+          [...queries].map(({ value }) => value).sort((a, b) => a - b),
+        )
+      })
+
+      // La última entrada no lleva condición: es la del diseño base, de escritorio.
+      it('termina con el ancho del diseño de escritorio, sin condición', () => {
+        renderHero()
+
+        expect(entries().at(-1)).toMatch(/^min\(/)
+      })
     })
 
     // Con el ancho y el alto en el HTML, el navegador reserva el hueco antes
