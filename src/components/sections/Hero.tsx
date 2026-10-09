@@ -1,7 +1,8 @@
 import { useId } from 'react'
+import { Link } from 'react-router-dom'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
-import { sections } from '@/config/routes'
+import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
 import { useLang } from '@/hooks/useLang'
@@ -33,7 +34,8 @@ const ROLE_CURSOR = '|'
 
 /**
  * Primera sección de la home: saludo, nombre en dos colores, rol con un
- * cursor decorativo y presentación breve, con el retrato al lado. Lleva el
+ * cursor decorativo, presentación breve y un botón que lleva a los proyectos,
+ * con el retrato al lado. Lleva el
  * único h1 de la página; el nombre sale de hero.heading y se parte al
  * renderizar, sin guardarlo dos veces.
  * El retrato es estático y sale entero de assets/hero/portrait.
@@ -60,6 +62,14 @@ export function Hero() {
           </span>
         </p>
         <p className={styles.intro}>{t.hero.intro}</p>
+        <div className={styles.actions}>
+          <Link
+            className={styles.primary}
+            to={{ pathname: routes.home, hash: `#${sections.projects}` }}
+          >
+            {t.hero.viewProjects}
+          </Link>
+        </div>
       </div>
       <div className={styles.portrait}>
         {/* El halo va en el envoltorio y la máscara en la imagen: juntos, la

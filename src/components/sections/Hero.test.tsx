@@ -1,7 +1,8 @@
 import { render, screen, within } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Hero } from '@/components/sections/Hero'
-import { sections } from '@/config/routes'
+import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
@@ -16,9 +17,11 @@ const setBrowserLang = (lang: keyof typeof BROWSER_LANGS) =>
 const renderHero = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   setBrowserLang(lang)
   return render(
-    <LangProvider>
-      <Hero />
-    </LangProvider>,
+    <MemoryRouter>
+      <LangProvider>
+        <Hero />
+      </LangProvider>
+    </MemoryRouter>,
   )
 }
 
@@ -107,6 +110,53 @@ describe('Hero', () => {
 
       expect(role().lastChild).toBe(role().querySelector('[aria-hidden="true"]'))
       expect(role().firstChild?.textContent).toBe(site.role)
+    })
+  })
+
+  describe('botón «Ver proyectos»', () => {
+    const link = (lang: keyof typeof BROWSER_LANGS = 'es') =>
+      screen.getByRole('link', { name: dictionaries[lang].hero.viewProjects })
+
+    // Las mayúsculas son cosa del CSS: el nombre accesible es el del diccionario.
+    it.each(LANGS)('en %s, es un enlace con el texto del diccionario', (lang) => {
+      renderHero(lang)
+
+      expect(link(lang).tagName).toBe('A')
+      expect(link(lang)).toHaveTextContent(new RegExp(`^${dictionaries[lang].hero.viewProjects}$`))
+    })
+
+    it('lleva a la sección de proyectos de la home', () => {
+      renderHero()
+
+      expect(link()).toHaveAttribute('href', `${routes.home}#${sections.projects}`)
+    })
+
+    it('se abre en la misma pestaña', () => {
+      renderHero()
+
+      expect(link()).not.toHaveAttribute('target')
+    })
+
+    it('va después de la presentación', () => {
+      renderHero()
+
+      expect(precedes(screen.getByText(dictionaries.es.hero.intro), link())).toBe(true)
+    })
+
+    it('queda fuera de la capa decorativa', () => {
+      renderHero()
+
+      expect(link().closest('[aria-hidden="true"]')).toBeNull()
+    })
+
+    // «Descargar CV» no se muestra hasta que existan los PDFs: el Hero se
+    // compone con un solo botón.
+    it('es el único enlace del Hero mientras no haya CV', () => {
+      renderHero()
+
+      expect(screen.getAllByRole('link')).toHaveLength(1)
+      expect(screen.queryByText(dictionaries.es.hero.downloadCv)).not.toBeInTheDocument()
+      expect(screen.queryByRole('button')).not.toBeInTheDocument()
     })
   })
 

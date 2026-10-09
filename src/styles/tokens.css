@@ -125,6 +125,10 @@
   /* Línea de rol bajo el nombre: siempre mayor que el párrafo (19 px), de
      20 px en teléfono a 24 px en escritorio. */
   --hero-role-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  /* Brillo del botón principal: radio de la sombra, en reposo y bajo el
+     puntero. */
+  --hero-cta-glow: 1rem;
+  --hero-cta-glow-hover: 1.5rem;
   /* Halo que separa el retrato del fondo. */
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);
@@ -156,9 +160,13 @@
   --radius-sm: 0.125rem;
   --radius-md: 0.25rem;
   --radius-full: 50%;
+  /* Cápsula: extremos redondos del todo, sea cual sea el alto. */
+  --radius-pill: 100rem;
 
   --focus-ring-width: 0.125rem;
   --focus-ring-offset: 0.125rem;
+  /* Alto mínimo de lo que se pulsa con el dedo (44 px). */
+  --touch-target: 2.75rem;
 
   --icon-size: 1.5rem;
   --icon-stroke-width: 0.125rem;

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { portrait } from '@/assets/hero/portrait'
 import { Hero } from '@/components/sections/Hero'
@@ -16,9 +17,11 @@ const setBrowserLang = (lang: keyof typeof BROWSER_LANGS) =>
 const renderHero = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   setBrowserLang(lang)
   return render(
-    <LangProvider>
-      <Hero />
-    </LangProvider>,
+    <MemoryRouter>
+      <LangProvider>
+        <Hero />
+      </LangProvider>
+    </MemoryRouter>,
   )
 }
 

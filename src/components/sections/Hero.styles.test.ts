@@ -111,6 +111,102 @@ describe('Hero: estilos', () => {
     })
   })
 
+  describe('botones', () => {
+    const phone = cssMedia(heroCss, '(max-width: 480px)')
+
+    it('van en una fila que puede partirse, separada del párrafo', () => {
+      expect(cssRule(heroCss, '.actions')).toMatchObject({
+        display: 'flex',
+        'flex-wrap': 'wrap',
+        gap: 'var(--space-4)',
+        'margin-top': 'var(--space-6)',
+      })
+    })
+
+    describe('principal', () => {
+      const primary = cssRule(heroCss, '.primary')
+
+      it('tiene forma de cápsula, con un radio que sale de un token', () => {
+        expect(primary).toMatchObject({ 'border-radius': 'var(--radius-pill)' })
+        expect(cssToken(tokensCss, '--radius-pill')).toMatch(/^[\d.]+rem$/)
+        expect(parseFloat(cssToken(tokensCss, '--radius-pill'))).toBeGreaterThanOrEqual(50)
+      })
+
+      it('va relleno con el verde de acento y texto del color de fondo', () => {
+        expect(primary).toMatchObject({
+          background: 'var(--color-accent-alt)',
+          color: 'var(--color-bg)',
+          border: '1px solid var(--color-accent-alt)',
+        })
+      })
+
+      it('lleva el texto en mayúsculas por CSS, con la tipografía de tokens', () => {
+        expect(primary).toMatchObject({
+          'text-transform': 'uppercase',
+          'font-family': 'var(--font-mono)',
+          'font-size': 'var(--font-size-md)',
+          'font-weight': 'var(--font-weight-medium)',
+          'letter-spacing': 'var(--tracking-normal)',
+          'white-space': 'nowrap',
+        })
+      })
+
+      // Es un enlace con aspecto de botón: sin el subrayado de los enlaces.
+      it('no va subrayado', () => {
+        expect(primary).toMatchObject({ 'text-decoration': 'none' })
+      })
+
+      it('centra su texto y no baja del alto táctil', () => {
+        expect(primary).toMatchObject({
+          display: 'inline-flex',
+          'align-items': 'center',
+          'min-height': 'var(--touch-target)',
+          padding: 'var(--space-3) var(--space-5)',
+        })
+        expect(cssToken(tokensCss, '--touch-target')).toBe('2.75rem')
+      })
+
+      // El brillo es una sombra: no ocupa sitio ni mueve nada. Su color se
+      // deriva del verde de la paleta, sin escribir ninguno.
+      it('lleva un brillo derivado del verde de acento', () => {
+        expect(primary['box-shadow']).toBe(
+          '0 0 var(--hero-cta-glow) color-mix(in srgb, var(--color-accent-alt) 35%, transparent)',
+        )
+        expect(cssToken(tokensCss, '--hero-cta-glow')).toMatch(/^[\d.]+rem$/)
+      })
+
+      it('bajo el puntero el brillo crece, sin cambiar nada más', () => {
+        const hover = cssRule(heroCss, '.primary:hover')
+
+        expect(Object.keys(hover)).toEqual(['box-shadow'])
+        expect(hover['box-shadow']).toBe(
+          '0 0 var(--hero-cta-glow-hover) color-mix(in srgb, var(--color-accent-alt) 55%, transparent)',
+        )
+        expect(parseFloat(cssToken(tokensCss, '--hero-cta-glow-hover'))).toBeGreaterThan(
+          parseFloat(cssToken(tokensCss, '--hero-cta-glow')),
+        )
+      })
+
+      // Solo se animan transform y opacity: el brillo cambia de golpe, también
+      // con movimiento reducido.
+      it('no lleva transición ni animación', () => {
+        expect(primary).not.toHaveProperty('transition')
+        expect(primary).not.toHaveProperty('animation')
+      })
+
+      it('no quita el anillo de foco', () => {
+        expect(heroCss).not.toMatch(/outline\s*:/)
+      })
+
+      it('en teléfono lleva el texto de 13 px y menos relleno, con el mismo alto táctil', () => {
+        expect(cssRule(phone, '.primary')).toEqual({
+          padding: 'var(--space-2) var(--space-4)',
+          'font-size': 'var(--font-size-sm)',
+        })
+      })
+    })
+  })
+
   describe('presentación', () => {
     it('limita su ancho con un token', () => {
       expect(cssRule(heroCss, '.intro')).toMatchObject({ 'max-width': `var(${MEASURE_TOKEN})` })

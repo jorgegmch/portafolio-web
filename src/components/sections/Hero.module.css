@@ -86,6 +86,40 @@
   font-size: var(--font-size-lg);
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+/* Cápsula rellena. El brillo es una sombra del verde de la paleta: no ocupa
+   sitio. Cambia de golpe bajo el puntero, porque solo se animan transform y
+   opacity. */
+.primary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--color-accent-alt);
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-alt);
+  box-shadow: 0 0 var(--hero-cta-glow) color-mix(in srgb, var(--color-accent-alt) 35%, transparent);
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-normal);
+  text-decoration: none;
+  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.primary:hover {
+  box-shadow: 0 0 var(--hero-cta-glow-hover) color-mix(in srgb, var(--color-accent-alt) 55%, transparent);
+}
+
 /* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
    imagen de 4:5 entra sin tocar el diseño. */
 .portrait {
@@ -332,6 +366,12 @@
 @media (max-width: 480px) {
   .hero {
     padding-top: var(--hero-stack-padding-phone);
+  }
+
+  /* Más estrecho, para que quepan dos en fila; el alto táctil no cambia. */
+  .primary {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
   }
 
   /* El retrato mide menos de 410 px: con los tamaños de tablet las cinco no

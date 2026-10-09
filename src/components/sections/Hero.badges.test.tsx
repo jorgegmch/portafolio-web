@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Hero } from '@/components/sections/Hero'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
@@ -11,9 +12,11 @@ const tokensCss = readCss('src/styles/tokens.css')
 const renderHero = () => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-CO'])
   return render(
-    <LangProvider>
-      <Hero />
-    </LangProvider>,
+    <MemoryRouter>
+      <LangProvider>
+        <Hero />
+      </LangProvider>
+    </MemoryRouter>,
   )
 }
 
