@@ -60,19 +60,25 @@ describe('Hero: estilos', () => {
       expect(cssRule(heroCss, '.hero').padding).toContain('var(--container-padding)')
     })
 
-    // El retrato llega hasta el borde inferior: su desvanecido se funde con
-    // lo que venga debajo, sin hueco.
-    it('no deja relleno debajo', () => {
-      expect(cssRule(heroCss, '.hero')).toMatchObject({
-        padding: 'var(--space-9) var(--container-padding) 0',
-      })
+    // El retrato llega hasta el borde inferior y sube hasta casi tocar la
+    // barra: la sección no pone relleno ni arriba ni abajo.
+    it('no deja relleno arriba ni abajo', () => {
+      expect(cssRule(heroCss, '.hero')).toMatchObject({ padding: '0 var(--container-padding)' })
     })
 
-    // El relleno que pierde la sección lo lleva el texto, que así sigue
-    // centrado en la misma franja.
-    it('la columna de texto compensa ese relleno', () => {
-      expect(cssRule(heroCss, '.text')).toMatchObject({ 'padding-bottom': 'var(--space-9)' })
-      expect(cssRule(heroCss, '.hero')).toMatchObject({ 'align-items': 'center' })
+    // El texto va arriba, a la altura de la cabeza, donde la figura es
+    // estrecha: más abajo, el hombro lo pisaría.
+    it('el texto empieza arriba, a una distancia que sale de un token', () => {
+      expect(cssRule(heroCss, '.hero')).toMatchObject({ 'align-items': 'start' })
+      expect(cssRule(heroCss, '.text')).toMatchObject({
+        padding: 'var(--hero-text-offset) 0 var(--space-7)',
+      })
+      expect(cssToken(tokensCss, '--hero-text-offset')).toMatch(/^[\d.]+rem$/)
+    })
+
+    // La caja del retrato invade la columna de texto por su zona transparente.
+    it('el texto queda por encima de la caja del retrato', () => {
+      expect(cssRule(heroCss, '.text')).toMatchObject({ position: 'relative', 'z-index': '1' })
     })
   })
 
@@ -87,13 +93,72 @@ describe('Hero: estilos', () => {
       })
     })
 
-    it('su ancho máximo sale de un token: 36rem', () => {
-      expect(cssRule(heroCss, '.hero')['grid-template-columns']).toContain('var(--portrait-width)')
-      expect(cssToken(tokensCss, '--portrait-width')).toBe('36rem')
+    describe('tamaño en dos columnas: lo que pide el alto de la ventana, con tope por ancho', () => {
+      const hero = cssRule(heroCss, '.hero')
+      const compact = cssRule(cssMedia(heroCss, '(max-width: 1280px)'), '.hero')
+      /** Una fórmula partida en varias líneas, en una sola. */
+      const flat = (value = '') =>
+        value.replace(/\s+/g, ' ').replace(/\( /g, '(').replace(/ \)/g, ')')
+
+      it('las medidas salen de tokens', () => {
+        expect(cssToken(tokensCss, '--portrait-max-width')).toBe('46rem')
+        expect(cssToken(tokensCss, '--portrait-share')).toBe('54vw')
+        expect(cssToken(tokensCss, '--portrait-share-compact')).toBe('43vw')
+        expect(cssToken(tokensCss, '--portrait-head-gap')).toBe('2rem')
+        expect(cssToken(tokensCss, '--portrait-head-room')).toBe('0.125')
+      })
+
+      it('el tope por ancho es el menor entre el máximo y una parte de la ventana', () => {
+        expect(hero['--portrait-cap']).toBe('min(var(--portrait-max-width), var(--portrait-share))')
+      })
+
+      // Con el párrafo en más líneas, la figura lo alcanzaría antes.
+      it('desde 1280 px el tope por ancho es más bajo', () => {
+        expect(compact['--portrait-cap']).toBe(
+          'min(var(--portrait-max-width), var(--portrait-share-compact))',
+        )
+      })
+
+      // Alto = (ventana - barra - aire sobre el pelo) / parte de la caja que
+      // ocupa la figura; o el que corresponde al tope por ancho, si es menor.
+      it('el alto sale de la ventana, la barra y el aire sobre el pelo', () => {
+        expect(flat(hero['--portrait-height'])).toBe(
+          'min(calc((100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))), calc(var(--portrait-cap) * 5 / 4))',
+        )
+      })
+
+      it('la proporción de esa fórmula es la del módulo del retrato', () => {
+        expect(hero['--portrait-height']).toContain(`* ${height} / ${width})`)
+      })
+
+      // Así el pelo queda siempre a la misma distancia de la barra y el
+      // retrato termina en el borde inferior.
+      it('el alto mínimo de la sección se deriva del retrato', () => {
+        expect(flat(hero['min-height'])).toBe(
+          'calc(var(--portrait-height) * (1 - var(--portrait-head-room)) + var(--portrait-head-gap))',
+        )
+      })
+
+      it('el retrato toma ese alto y su ancho sale de la proporción', () => {
+        expect(cssRule(heroCss, '.portrait')).toMatchObject({ height: 'var(--portrait-height)' })
+        expect(cssRule(heroCss, '.portrait')).not.toHaveProperty('width')
+      })
     })
 
-    it('se ancla al borde inferior de la sección', () => {
-      expect(cssRule(heroCss, '.portrait')).toMatchObject({ 'align-self': 'end' })
+    it('se ancla abajo a la derecha, fuera del flujo', () => {
+      expect(cssRule(heroCss, '.hero')).toMatchObject({ position: 'relative' })
+      expect(cssRule(heroCss, '.portrait')).toMatchObject({
+        position: 'absolute',
+        right: 'var(--container-padding)',
+        bottom: '0',
+      })
+    })
+
+    // La caja se mete en la columna de texto: no debe quedarse con los clics
+    // ni con la selección. Las pastillas sí reaccionan al puntero.
+    it('la caja no intercepta el puntero, las pastillas sí', () => {
+      expect(cssRule(heroCss, '.portrait')).toMatchObject({ 'pointer-events': 'none' })
+      expect(cssRule(heroCss, '.badge')).toMatchObject({ 'pointer-events': 'auto' })
     })
 
     it('la imagen llena el hueco reservado', () => {
@@ -146,13 +211,12 @@ describe('Hero: estilos', () => {
     const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '768px', '480px']
     const narrow = cssMedia(heroCss, '(max-width: 768px)')
 
-    // El texto nunca baja de lo que mide el nombre; el retrato ocupa hasta su
-    // ancho o el 46 % de la fila, y cede si el nombre lo necesita.
-    it('en escritorio hay dos columnas: texto y retrato', () => {
+    // El texto nunca baja de lo que mide el nombre; la segunda columna
+    // reserva el lado del retrato, que va anclado fuera del flujo.
+    it('en escritorio hay dos columnas: texto y el lado del retrato', () => {
       expect(cssRule(heroCss, '.hero')).toMatchObject({
         display: 'grid',
-        'grid-template-columns':
-          'minmax(min-content, 1fr) minmax(0, min(var(--portrait-width), 46%))',
+        'grid-template-columns': 'minmax(min-content, 1fr) minmax(0, 46%)',
       })
     })
 
@@ -160,9 +224,26 @@ describe('Hero: estilos', () => {
       expect(cssRule(narrow, '.hero')).toMatchObject({ 'grid-template-columns': 'minmax(0, 1fr)' })
     })
 
-    // Apilado, el hueco entre el texto y el retrato ya lo da la separación de la rejilla.
-    it('hasta 768 px el texto no añade relleno debajo', () => {
-      expect(cssRule(narrow, '.text')).toMatchObject({ 'padding-bottom': '0' })
+    // El apilado conserva su diseño: relleno arriba, sin alto mínimo y el
+    // hueco hasta el retrato que da la separación de la rejilla.
+    it('hasta 768 px la sección vuelve a su relleno y el texto no añade ninguno', () => {
+      expect(cssRule(narrow, '.hero')).toMatchObject({
+        padding: 'var(--space-9) var(--container-padding) 0',
+        'min-height': 'auto',
+      })
+      expect(cssRule(narrow, '.text')).toMatchObject({ padding: '0' })
+    })
+
+    it('hasta 768 px el retrato vuelve al flujo, con su ancho de siempre', () => {
+      expect(cssRule(narrow, '.portrait')).toMatchObject({
+        position: 'relative',
+        right: 'auto',
+        bottom: 'auto',
+        width: 'min(100%, var(--portrait-width))',
+        height: 'auto',
+        'justify-self': 'center',
+      })
+      expect(cssToken(tokensCss, '--portrait-width')).toBe('36rem')
     })
 
     it('solo usa los breakpoints de tokens.css, siempre con max-width', () => {

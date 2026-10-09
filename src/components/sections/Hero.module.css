@@ -1,21 +1,40 @@
 .hero {
+  /* Tope por ancho del retrato en dos columnas. */
+  --portrait-cap: min(var(--portrait-max-width), var(--portrait-share));
+  /* Alto del retrato: el que deja el pelo a --portrait-head-gap de la barra
+     (ventana menos barra y ese aire, entre la parte de la caja que ocupa la
+     figura), o el que corresponde al tope por ancho si es menor. */
+  --portrait-height: min(
+    calc((100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))),
+    calc(var(--portrait-cap) * 5 / 4)
+  );
+
+  /* Referencia del retrato, que va anclado fuera del flujo. */
+  position: relative;
   display: grid;
-  /* El texto nunca baja de lo que mide el nombre; el retrato ocupa hasta su
-     ancho o una parte de la fila, y cede si el nombre lo necesita. */
-  grid-template-columns: minmax(min-content, 1fr) minmax(0, min(var(--portrait-width), 46%));
-  align-items: center;
+  /* El texto nunca baja de lo que mide el nombre; la segunda columna reserva
+     el lado del retrato. */
+  grid-template-columns: minmax(min-content, 1fr) minmax(0, 46%);
+  align-items: start;
   gap: var(--space-7);
-  /* Sin relleno debajo: el retrato llega al borde y su desvanecido se funde
-     con lo que venga después. */
-  padding: var(--space-9) var(--container-padding) 0;
+  /* De la figura a la barra queda el aire del token y abajo el retrato llega
+     al borde: así su desvanecido se funde con lo que venga después. */
+  min-height: calc(
+    var(--portrait-height) * (1 - var(--portrait-head-room)) + var(--portrait-head-gap)
+  );
+  /* Sin relleno arriba ni abajo: el alto lo marca el retrato. */
+  padding: 0 var(--container-padding);
   /* La barra es fija: al llegar por el ancla, el inicio no queda debajo. */
   scroll-margin-top: var(--nav-height);
 }
 
-/* Lleva el relleno inferior que no tiene la sección: así el texto sigue
-   centrado en la misma franja. */
+/* Arriba, a la altura de la cabeza, donde la figura es estrecha: más abajo,
+   el hombro lo pisaría. Queda por encima de la caja del retrato, que invade
+   esta columna por su zona transparente. */
 .text {
-  padding-bottom: var(--space-9);
+  position: relative;
+  z-index: 1;
+  padding: var(--hero-text-offset) 0 var(--space-7);
 }
 
 .greeting {
@@ -52,11 +71,15 @@
 /* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
    imagen de 4:5 entra sin tocar el diseño. */
 .portrait {
-  /* Referencia de las posiciones de las pastillas. */
-  position: relative;
-  /* Anclado abajo: el desvanecido termina en el borde de la sección. */
-  align-self: end;
+  /* Anclado abajo a la derecha: el desvanecido termina en el borde de la
+     sección. También es la referencia de las posiciones de las pastillas. */
+  position: absolute;
+  right: var(--container-padding);
+  bottom: 0;
+  height: var(--portrait-height);
   aspect-ratio: 4 / 5;
+  /* La caja se mete en la columna de texto: no se queda con el puntero. */
+  pointer-events: none;
 }
 
 /* Halo que separa la silueta oscura del fondo oscuro. Va fuera de la imagen:
@@ -96,35 +119,35 @@
 }
 
 .float:nth-child(1) {
-  --badge-left: -7%;
-  --badge-y: 21%;
+  --badge-left: 3%;
+  --badge-y: 66%;
   --float-phase: 0;
+
+  font-size: var(--font-size-lg);
+}
+
+.float:nth-child(2) {
+  --badge-right: -2%;
+  --badge-y: 16%;
+  --float-phase: -0.45;
 
   font-size: var(--font-size-base);
 }
 
-.float:nth-child(2) {
-  --badge-right: -3%;
-  --badge-y: 13%;
-  --float-phase: -0.45;
-
-  font-size: var(--font-size-md);
-}
-
 .float:nth-child(3) {
-  --badge-left: 1%;
-  --badge-y: 63%;
+  --badge-left: 16%;
+  --badge-y: 84%;
   --float-phase: -0.9;
 
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
 }
 
 .float:nth-child(4) {
-  --badge-right: 2%;
-  --badge-y: 49%;
+  --badge-right: 1%;
+  --badge-y: 47%;
   --float-phase: -1.3;
 
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
 }
 
 .badge {
@@ -138,6 +161,8 @@
   color: var(--color-text);
   line-height: 1;
   white-space: nowrap;
+  /* El retrato no intercepta el puntero; la pastilla sí, para ampliarse. */
+  pointer-events: auto;
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
@@ -178,26 +203,71 @@
   }
 }
 
-/* Con la columna de texto ya justa, una pastilla que asome por la izquierda
-   pisaría el párrafo. */
-@media (max-width: 1024px) {
+/* Con el párrafo en más líneas, la figura lo alcanza antes: el tope por
+   ancho baja, y las pastillas de la izquierda con él. */
+@media (max-width: 1280px) {
+  .hero {
+    --portrait-cap: min(var(--portrait-max-width), var(--portrait-share-compact));
+  }
+
   .float:nth-child(1) {
-    --badge-left: 0%;
+    --badge-y: 72%;
+  }
+
+  .float:nth-child(3) {
+    --badge-left: 10%;
+    --badge-y: 87%;
   }
 }
 
+/* Apilado: el retrato vuelve al flujo, debajo del texto, con el diseño que
+   tenía. Las pastillas conservan aquí sus posiciones y tamaños. */
 @media (max-width: 768px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+    padding: var(--space-9) var(--container-padding) 0;
   }
 
-  /* Apilado, la separación de la rejilla ya da el hueco hasta el retrato. */
+  /* La separación de la rejilla ya da el hueco hasta el retrato. */
   .text {
-    padding-bottom: 0;
+    padding: 0;
   }
 
   .portrait {
+    position: relative;
+    right: auto;
+    bottom: auto;
     width: min(100%, var(--portrait-width));
+    height: auto;
     justify-self: center;
+  }
+
+  .float:nth-child(1) {
+    --badge-left: 0%;
+    --badge-y: 21%;
+
+    font-size: var(--font-size-base);
+  }
+
+  .float:nth-child(2) {
+    --badge-right: -3%;
+    --badge-y: 13%;
+
+    font-size: var(--font-size-md);
+  }
+
+  .float:nth-child(3) {
+    --badge-left: 1%;
+    --badge-y: 63%;
+
+    font-size: var(--font-size-md);
+  }
+
+  .float:nth-child(4) {
+    --badge-right: 2%;
+    --badge-y: 49%;
+
+    font-size: var(--font-size-sm);
   }
 }

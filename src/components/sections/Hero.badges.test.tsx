@@ -206,28 +206,52 @@ describe('Hero: pastillas de tecnología', () => {
         expect(right.length).toBeGreaterThan(0)
       })
 
-      it('la columna del retrato es la referencia de las posiciones', () => {
-        expect(cssRule(heroCss, '.portrait')).toMatchObject({ position: 'relative' })
+      // Posicionado en los dos diseños: anclado en dos columnas, en el flujo apilado.
+      it('el retrato es la referencia de las posiciones', () => {
+        const stacked = cssMedia(heroCss, '(max-width: 768px)')
+
+        expect(cssRule(heroCss, '.portrait')).toMatchObject({ position: 'absolute' })
+        expect(cssRule(stacked, '.portrait')).toMatchObject({ position: 'relative' })
       })
 
-      // Con la columna de texto más estrecha, una pastilla que asome por la
-      // izquierda pisaría el párrafo.
-      it('desde 1024 px ninguna pastilla asoma por la izquierda del retrato', () => {
-        const narrow = placementsOf(cssMedia(heroCss, '(max-width: 1024px)'))
-        const base = placements.filter(({ body }) => valueOf(body, '--badge-left')?.startsWith('-'))
+      // Las de la izquierda van bajo el párrafo. Con el párrafo en más
+      // líneas, tienen que bajar para no pisarlo.
+      it('desde 1280 px las pastillas de la izquierda bajan', () => {
+        const compact = placementsOf(cssMedia(heroCss, '(max-width: 1280px)'))
+        const left = placements.filter(({ body }) => valueOf(body, '--badge-left'))
 
-        expect(base.length).toBeGreaterThan(0)
-        base.forEach(({ index }) => {
-          const override = narrow.find((placement) => placement.index === index)
+        expect(left.length).toBeGreaterThan(0)
+        left.forEach(({ index, body }) => {
+          const override = compact.find((placement) => placement.index === index)
 
-          expect(valueOf(override?.body ?? '', '--badge-left')).toMatch(/^[\d.]+%$/)
+          expect(parseFloat(valueOf(override?.body ?? '', '--badge-y') ?? '')).toBeGreaterThan(
+            parseFloat(valueOf(body, '--badge-y') ?? ''),
+          )
         })
+      })
+
+      // El apilado conserva las posiciones y los tamaños que tenía.
+      it('hasta 768 px cada pastilla tiene su posición y su tamaño propios', () => {
+        const stacked = placementsOf(cssMedia(heroCss, '(max-width: 768px)'))
+
+        expect(stacked.map(({ index }) => index)).toEqual(heroBadges.map((_, i) => i + 1))
+        stacked.forEach(({ body }) => {
+          expect(valueOf(body, '--badge-y')).toMatch(/^-?[\d.]+%$/)
+          expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(sm|md|base)\)$/)
+        })
+      })
+
+      // Ninguna asoma por la izquierda: ahí está el texto.
+      it('ninguna pastilla de la izquierda se sale del retrato', () => {
+        placements
+          .filter(({ body }) => valueOf(body, '--badge-left'))
+          .forEach(({ body }) => expect(valueOf(body, '--badge-left')).toMatch(/^[\d.]+%$/))
       })
     })
 
     describe('tamaño', () => {
       it.each(placements)('la pastilla $index toma su tamaño de un token de texto', ({ body }) => {
-        expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(sm|md|base)\)$/)
+        expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(md|base|lg)\)$/)
       })
 
       it('no todas miden lo mismo', () => {
@@ -247,6 +271,12 @@ describe('Hero: pastillas de tecnología', () => {
         '--badge-icon-size',
       ])('%s existe como token, en em', (token) => {
         expect(cssToken(tokensCss, token)).toMatch(/^[\d.]+em$/)
+      })
+
+      // Duke es alto y estrecho: con un icono menor apenas se distingue.
+      it('la placa mide 2.1em y el icono 1.65em', () => {
+        expect(cssToken(tokensCss, '--badge-plate-size')).toBe('2.1em')
+        expect(cssToken(tokensCss, '--badge-icon-size')).toBe('1.65em')
       })
 
       it('el icono cabe dentro de la placa', () => {

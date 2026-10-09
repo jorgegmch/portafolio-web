@@ -93,8 +93,21 @@
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
 
-  /* Retrato del hero: ancho máximo (576 px) y halo que lo separa del fondo. */
+  /* Retrato del hero, apilado bajo el texto: ancho máximo (576 px). */
   --portrait-width: 36rem;
+  /* En dos columnas se dimensiona por el alto de la ventana, con tope por
+     ancho: 736 px o una parte de la ventana (menor desde 1280 px, donde el
+     párrafo ocupa más líneas y la figura lo alcanzaría). */
+  --portrait-max-width: 46rem;
+  --portrait-share: 54vw;
+  --portrait-share-compact: 43vw;
+  /* Aire entre la barra y el pelo, y parte de la caja que queda vacía sobre
+     el pelo (el lienzo de la foto deja transparente el 12,5 % de arriba). */
+  --portrait-head-gap: 2rem;
+  --portrait-head-room: 0.125;
+  /* Distancia del texto al borde superior: lo deja a la altura de la cabeza. */
+  --hero-text-offset: 5rem;
+  /* Halo que separa el retrato del fondo. */
   --portrait-halo-blur: 1.5rem;
   --color-halo: rgba(0, 212, 255, 0.3);
   /* Pastillas que flotan junto al retrato: cuánto suben, cuánto tarda cada
@@ -107,9 +120,9 @@
   --badge-padding-end: 0.85em;
   --badge-gap: 0.55em;
   --badge-radius: 0.75em;
-  --badge-plate-size: 1.9em;
+  --badge-plate-size: 2.1em;
   --badge-plate-radius: 0.45em;
-  --badge-icon-size: 1.35em;
+  --badge-icon-size: 1.65em;
   /* Fondo translúcido (--color-surface al 72 %) y borde de la pastilla. */
   --color-badge-bg: rgba(14, 14, 28, 0.72);
   --color-badge-border: rgba(238, 238, 242, 0.14);
