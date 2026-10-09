@@ -1,11 +1,11 @@
 <!--
-  Generic AI agents icon drawn for this site: a central node linked to three others.
+  Generic AI agents icon drawn for this site: a robot face.
   Own work, not a brand logo.
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#0e0e1c" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="12" cy="12" r="3"/>
-  <circle cx="5" cy="6" r="2"/>
-  <circle cx="19" cy="7" r="2"/>
-  <circle cx="12.5" cy="20" r="2"/>
-  <path d="M9.72 10.05 6.52 7.3M14.44 10.26 17.37 8.16M12.19 14.99 12.38 18"/>
+  <rect x="3.5" y="7.5" width="17" height="13" rx="4"/>
+  <circle cx="12" cy="3.25" r="1.25"/>
+  <circle cx="8.75" cy="12.75" r="1.5"/>
+  <circle cx="15.25" cy="12.75" r="1.5"/>
+  <path d="M12 4.5V7.5M9.5 16.75H14.5"/>
 </svg>

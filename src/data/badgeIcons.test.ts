@@ -157,37 +157,69 @@ describe('icono genérico de agentes de IA', () => {
     expect(parseSvg(read(AI_AGENTS)).documentElement.getAttribute('viewBox')).toBe('0 0 24 24')
   })
 
-  // Nodos conectados: solo círculos y trazos rectos. Nada de texto, de
-  // destellos ni de formas que puedan parecer el logo de una empresa o de un
-  // modelo de IA.
-  it('se dibuja solo con círculos y trazos', () => {
-    const shapes = [...parseSvg(read(AI_AGENTS)).documentElement.querySelectorAll('*')].map(
-      (element) => element.localName,
-    )
+  const root = () => parseSvg(read(AI_AGENTS)).documentElement
+  const all = (name: string) => [...root().querySelectorAll(name)]
+  const number = (element: Element, attribute: string) => Number(element.getAttribute(attribute))
+
+  // Una cara de robot: una cabeza, círculos y trazos. Nada de texto ni de
+  // formas que puedan parecer el logo de una empresa o de un modelo de IA.
+  it('se dibuja solo con un rectángulo, círculos y trazos', () => {
+    const shapes = all('*').map((element) => element.localName)
 
     expect(shapes.length).toBeGreaterThan(0)
-    expect(new Set(shapes)).toEqual(new Set(['circle', 'path']))
+    shapes.forEach((shape) => expect(['rect', 'circle', 'path']).toContain(shape))
   })
 
-  it('es un nodo central conectado con tres más', () => {
-    const root = parseSvg(read(AI_AGENTS)).documentElement
-    const radii = [...root.querySelectorAll('circle')].map((circle) => Number(circle.getAttribute('r')))
-
-    expect(radii).toHaveLength(4)
-    expect(radii.filter((radius) => radius === Math.max(...radii))).toHaveLength(1)
+  // Si crece, deja de leerse a 21 px y empieza a parecerse a un personaje.
+  it('no pasa de seis formas', () => {
+    expect(all('*').length).toBeLessThanOrEqual(6)
   })
 
-  // Los trazos son segmentos rectos: sin curvas no hay espirales, nudos ni estrellas.
+  // Cabeza rectangular de esquinas redondeadas: no una cúpula ni un semicírculo.
+  it('la cabeza es un único rectángulo de esquinas redondeadas, centrado', () => {
+    const [head, ...rest] = all('rect')
+
+    expect(head).toBeDefined()
+    expect(rest).toHaveLength(0)
+    expect(number(head as Element, 'rx')).toBeGreaterThan(0)
+    expect(number(head as Element, 'x') * 2 + number(head as Element, 'width')).toBe(24)
+  })
+
+  // Dos ojos separados, no un visor continuo.
+  it('tiene dos ojos iguales, dentro de la cabeza y simétricos', () => {
+    const head = all('rect')[0] as Element
+    const top = number(head, 'y')
+    const eyes = all('circle').filter((circle) => number(circle, 'cy') > top)
+    const [left, right] = eyes.sort((a, b) => number(a, 'cx') - number(b, 'cx'))
+
+    expect(eyes).toHaveLength(2)
+    expect(number(left as Element, 'r')).toBe(number(right as Element, 'r'))
+    expect(number(left as Element, 'cy')).toBe(number(right as Element, 'cy'))
+    expect(number(left as Element, 'cx') + number(right as Element, 'cx')).toBe(24)
+    expect(number(left as Element, 'cy')).toBeLessThan(top + number(head, 'height'))
+  })
+
+  // Una sola antena, con su bolita: no dos.
+  it('tiene una sola antena con una bolita, centrada sobre la cabeza', () => {
+    const top = number(all('rect')[0] as Element, 'y')
+    const balls = all('circle').filter((circle) => number(circle, 'cy') < top)
+
+    expect(balls).toHaveLength(1)
+    expect(number(balls[0] as Element, 'cx')).toBe(12)
+  })
+
+  // Los trazos (antena y boca) son segmentos rectos: sin curvas no hay
+  // cúpulas, sonrisas de mascota ni espirales.
   it('los trazos son solo segmentos rectos', () => {
-    const paths = [...parseSvg(read(AI_AGENTS)).documentElement.querySelectorAll('path')]
+    const paths = all('path')
 
     expect(paths.length).toBeGreaterThan(0)
-    paths.forEach((path) => expect(path.getAttribute('d')).toMatch(/^[MmLl\d\s.,-]+$/))
+    paths.forEach((path) => expect(path.getAttribute('d')).toMatch(/^[MmLlHhVv\d\s.,-]+$/))
   })
 
   it('no nombra ninguna empresa ni modelo de IA', () => {
     expect(read(AI_AGENTS)).not.toMatch(
-      /openai|chatgpt|gpt|anthropic|claude|gemini|google|copilot|microsoft|meta\b|llama|mistral|deepseek|grok|perplexity/i,
+      /openai|chatgpt|gpt|anthropic|claude|gemini|google|android|copilot|microsoft|meta\b|llama|mistral|deepseek|grok|perplexity/i,
     )
   })
 
@@ -212,6 +244,7 @@ describe('icono genérico de agentes de IA', () => {
 
   it('su comentario dice que es un dibujo propio, no un logo', () => {
     expect(comment(AI_AGENTS)).toContain('Generic AI agents icon drawn for this site')
+    expect(comment(AI_AGENTS)).toContain('a robot face')
     expect(comment(AI_AGENTS)).toContain('not a brand logo')
   })
 })
