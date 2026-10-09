@@ -42,6 +42,87 @@ describe('Hero: estilos', () => {
     })
   })
 
+  describe('rol', () => {
+    it('va en el color de texto, con peso normal', () => {
+      expect(cssRule(heroCss, '.role')).toMatchObject({
+        color: 'var(--color-text)',
+        'font-weight': 'var(--font-weight-regular)',
+      })
+    })
+
+    it('el tamaño sale de su token y es mayor que el del párrafo en cualquier pantalla', () => {
+      const [, min, max] =
+        /^clamp\(([\d.]+)rem, [\d.]+vw, ([\d.]+)rem\)$/.exec(cssToken(tokensCss, '--hero-role-size')) ?? []
+
+      expect(cssRule(heroCss, '.role')).toMatchObject({ 'font-size': 'var(--hero-role-size)' })
+      expect(cssRule(heroCss, '.intro')).toMatchObject({ 'font-size': 'var(--font-size-lg)' })
+      expect(Number(min)).toBeGreaterThan(parseFloat(cssToken(tokensCss, '--font-size-lg')))
+      expect(Number(max)).toBeGreaterThan(Number(min))
+    })
+
+    describe('cursor', () => {
+      it('es una barra del color de acento, con el ancho de su token', () => {
+        expect(cssRule(heroCss, '.cursor')).toMatchObject({
+          width: 'var(--hero-cursor-width)',
+          background: 'var(--color-accent)',
+        })
+        expect(cssToken(tokensCss, '--hero-cursor-width')).toMatch(/^[\d.]+rem$/)
+      })
+
+      it('toma el alto de la línea del rol', () => {
+        expect(cssRule(heroCss, '.role')).toMatchObject({ display: 'flex' })
+        expect(cssRule(heroCss, '.cursor')).toMatchObject({ 'align-self': 'stretch' })
+      })
+
+      it('parpadea a saltos, con la duración de su token', () => {
+        expect(cssRule(heroCss, '.cursor')).toMatchObject({
+          animation: 'blink var(--duration-cursor) step-end infinite',
+        })
+        expect(cssToken(tokensCss, '--duration-cursor')).toMatch(/^[\d.]+s$/)
+      })
+
+      it('el parpadeo solo anima la opacidad', () => {
+        const frames = /@keyframes blink\s*\{([\s\S]*?\})\s*\}/.exec(heroCss)?.[1] ?? ''
+        const properties = [...frames.matchAll(/([a-z-]+)\s*:/g)].map(([, name]) => name)
+
+        expect(properties.length).toBeGreaterThan(0)
+        expect(new Set(properties)).toEqual(new Set(['opacity']))
+      })
+
+      it('con movimiento reducido queda fijo', () => {
+        const reduced = cssMedia(heroCss, '(prefers-reduced-motion: reduce)')
+
+        expect(cssRule(reduced, '.cursor')).toMatchObject({ animation: 'none' })
+      })
+    })
+
+    // El rol empuja el párrafo hacia el hombro de la figura: el texto sube lo
+    // que el rol ocupa, y el párrafo se queda donde estaba.
+    describe('no mueve el párrafo', () => {
+      it('lo que ocupa sale de su tamaño, su interlineado y su margen', () => {
+        expect(cssRule(heroCss, '.role')).toMatchObject({
+          'margin-top': 'var(--space-3)',
+          'line-height': 'var(--leading-tight)',
+        })
+        expect(cssRule(heroCss, '.hero')).toMatchObject({
+          '--hero-role-height':
+            'calc(var(--hero-role-size) * var(--leading-tight) + var(--space-3))',
+        })
+      })
+
+      it('en dos columnas el texto sube justo eso, en los dos tramos', () => {
+        const compact = cssMedia(heroCss, '(max-width: 1280px)')
+
+        expect(cssRule(heroCss, '.text').padding).toMatch(
+          /^calc\(var\(--hero-text-offset\) - var\(--hero-role-height\)\) /,
+        )
+        expect(cssRule(compact, '.text')['padding-top']).toBe(
+          'calc(var(--hero-text-offset-compact) - var(--hero-role-height))',
+        )
+      })
+    })
+  })
+
   describe('presentación', () => {
     it('limita su ancho con un token', () => {
       expect(cssRule(heroCss, '.intro')).toMatchObject({ 'max-width': `var(${MEASURE_TOKEN})` })
@@ -87,7 +168,7 @@ describe('Hero: estilos', () => {
     it('el texto empieza arriba, a una distancia que sale de un token', () => {
       expect(cssRule(heroCss, '.hero')).toMatchObject({ 'align-items': 'start' })
       expect(cssRule(heroCss, '.text')).toMatchObject({
-        padding: 'var(--hero-text-offset) 0 var(--space-7)',
+        padding: 'calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-7)',
       })
       expect(cssToken(tokensCss, '--hero-text-offset')).toBe('8rem')
     })
@@ -98,7 +179,7 @@ describe('Hero: estilos', () => {
       const compact = cssMedia(heroCss, '(max-width: 1280px)')
 
       expect(cssRule(compact, '.text')).toMatchObject({
-        'padding-top': 'var(--hero-text-offset-compact)',
+        'padding-top': 'calc(var(--hero-text-offset-compact) - var(--hero-role-height))',
       })
       expect(cssToken(tokensCss, '--hero-text-offset-compact')).toBe('6rem')
       expect(parseFloat(cssToken(tokensCss, '--hero-text-offset-compact'))).toBeLessThan(
@@ -365,9 +446,16 @@ describe('Hero: estilos', () => {
   })
 
   describe('reglas de estilos', () => {
-    it('no hay colores escritos a mano', () => {
-      expect(heroCss).not.toMatch(/#[0-9a-f]{3,8}\b|rgba?\(/i)
-    })
+    // La paleta vive en tokens.css: ni el CSS ni el componente escriben un color.
+    it.each(['src/components/sections/Hero.module.css', 'src/components/sections/Hero.tsx'])(
+      'no hay colores escritos a mano en %s',
+      (path) => {
+        const source = readFileSync(path, 'utf8')
+
+        expect(source).not.toBe('')
+        expect(source).not.toMatch(/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i)
+      },
+    )
 
     // Los breakpoints de @media van literales: CSS no admite variables ahí. Y
     // 1px, el grosor de un borde, no necesita variable (regla de estilos).

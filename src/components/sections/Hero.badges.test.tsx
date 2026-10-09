@@ -18,9 +18,10 @@ const renderHero = () => {
 }
 
 // Las pastillas son decorativas y están fuera del árbol de accesibilidad, así
-// que no se pueden buscar por rol: se buscan por su marca de decoración.
+// que no se pueden buscar por rol: se buscan por su marca de decoración. La
+// capa es un bloque; el cursor del rol, también decorativo, va en línea.
 const decoration = () => {
-  const layer = screen.getByRole('region').querySelector('[aria-hidden="true"]')
+  const layer = screen.getByRole('region').querySelector('div[aria-hidden="true"]')
   if (!layer) throw new Error('No hay capa decorativa en el Hero')
   return layer
 }

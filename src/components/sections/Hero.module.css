@@ -8,6 +8,8 @@
     calc((100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))),
     calc(var(--portrait-cap) * 5 / 4)
   );
+  /* Lo que ocupa la línea de rol, con su margen. */
+  --hero-role-height: calc(var(--hero-role-size) * var(--leading-tight) + var(--space-3));
 
   /* Referencia del retrato, que va anclado fuera del flujo. */
   position: relative;
@@ -34,7 +36,9 @@
 .text {
   position: relative;
   z-index: 1;
-  padding: var(--hero-text-offset) 0 var(--space-7);
+  /* Sube lo que ocupa el rol: así el párrafo sigue a la altura de siempre,
+     lejos del hombro. */
+  padding: calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-7);
 }
 
 .greeting {
@@ -59,6 +63,24 @@
 
 .lastName {
   color: var(--color-accent-alt);
+}
+
+/* El texto y su cursor van en línea; el cursor toma el alto de la línea. */
+.role {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  color: var(--color-text);
+  font-size: var(--hero-role-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-tight);
+}
+
+.cursor {
+  align-self: stretch;
+  width: var(--hero-cursor-width);
+  background: var(--color-accent);
+  animation: blink var(--duration-cursor) step-end infinite;
 }
 
 .intro {
@@ -208,8 +230,19 @@
   }
 }
 
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Sin movimiento, el cursor se queda fijo. */
 @media (prefers-reduced-motion: reduce) {
   .float {
+    animation: none;
+  }
+
+  .cursor {
     animation: none;
   }
 }
@@ -223,7 +256,7 @@
   }
 
   .text {
-    padding-top: var(--hero-text-offset-compact);
+    padding-top: calc(var(--hero-text-offset-compact) - var(--hero-role-height));
   }
 
   .float:nth-child(1) {

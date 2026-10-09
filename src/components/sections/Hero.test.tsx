@@ -65,6 +65,42 @@ describe('Hero', () => {
     })
   })
 
+  describe('rol', () => {
+    const role = () => screen.getByText(site.role)
+
+    // El rol es un nombre propio del oficio: no se traduce.
+    it.each(LANGS)('en %s, muestra el rol de config', (lang) => {
+      renderHero(lang)
+
+      expect(role()).toBeInTheDocument()
+    })
+
+    it('es un párrafo, no un título', () => {
+      renderHero()
+
+      expect(role().tagName).toBe('P')
+      expect(screen.getAllByRole('heading')).toHaveLength(1)
+    })
+
+    it('va entre el nombre y la presentación', () => {
+      renderHero()
+
+      expect(precedes(heading(), role())).toBe(true)
+      expect(precedes(role(), screen.getByText(dictionaries.es.hero.intro))).toBe(true)
+    })
+
+    // El cursor es un adorno: no añade texto ni lo anuncia un lector de pantalla.
+    it('lleva un cursor decorativo, oculto para lectores de pantalla y sin texto', () => {
+      renderHero()
+
+      const hidden = role().querySelectorAll('[aria-hidden="true"]')
+
+      expect(hidden).toHaveLength(1)
+      expect(hidden[0]).toBeEmptyDOMElement()
+      expect(role().textContent).toBe(site.role)
+    })
+  })
+
   describe('orden', () => {
     it('el saludo va antes del nombre y la presentación después', () => {
       renderHero()

@@ -2,6 +2,7 @@ import { useId } from 'react'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
 import { sections } from '@/config/routes'
+import { site } from '@/config/site'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
 import { useLang } from '@/hooks/useLang'
 import { splitName } from '@/lib/splitName'
@@ -28,8 +29,8 @@ const PORTRAIT_SIZES = [
 ].join(', ')
 
 /**
- * Primera sección de la home: saludo, nombre en dos colores y presentación
- * breve, con el retrato al lado. Lleva el único h1 de la página; el nombre
+ * Primera sección de la home: saludo, nombre en dos colores, rol con un
+ * cursor decorativo y presentación breve, con el retrato al lado. Lleva el único h1 de la página; el nombre
  * sale de hero.heading y se parte al renderizar, sin guardarlo dos veces.
  * El retrato es estático y sale entero de assets/hero/portrait.
  * A su alrededor flotan las pastillas de data/heroBadges, con el nombre que
@@ -48,6 +49,10 @@ export function Hero() {
         <h1 id={headingId} className={styles.name}>
           {first} <span className={styles.lastName}>{last}</span>
         </h1>
+        <p className={styles.role}>
+          {site.role}
+          <span className={styles.cursor} aria-hidden="true" />
+        </p>
         <p className={styles.intro}>{t.hero.intro}</p>
       </div>
       <div className={styles.portrait}>

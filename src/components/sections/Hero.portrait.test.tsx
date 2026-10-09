@@ -257,7 +257,7 @@ describe('Hero: retrato', () => {
       renderHero()
 
       const wrapper = image().parentElement
-      const layer = screen.getByRole('region').querySelector('[aria-hidden="true"]')
+      const layer = screen.getByRole('region').querySelector('div[aria-hidden="true"]')
 
       expect(wrapper?.children).toHaveLength(1)
       expect(wrapper).not.toHaveAttribute('aria-hidden')
