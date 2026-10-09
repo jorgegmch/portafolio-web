@@ -215,18 +215,93 @@ describe('Hero: pastillas de tecnología', () => {
         expect(cssRule(stacked, '.portrait')).toMatchObject({ position: 'relative' })
       })
 
-      // Las de la izquierda van bajo el párrafo. Con el párrafo en más
-      // líneas, tienen que bajar para no pisarlo.
-      it('desde 1280 px las pastillas de la izquierda bajan', () => {
-        const compact = placementsOf(cssMedia(heroCss, '(max-width: 1280px)'))
-        const left = placements.filter(({ body }) => valueOf(body, '--badge-left'))
+      /** Los tres tramos del diseño, del más ancho al más estrecho: cada uno hereda del anterior. */
+      const TIERS = [
+        placements,
+        placementsOf(cssMedia(heroCss, '(max-width: 1280px)')),
+        placementsOf(cssMedia(heroCss, '(max-width: 768px)')),
+      ]
+      const SIDES = ['--badge-left', '--badge-right'] as const
+      /** Valor que tiene una variable de la pastilla en un tramo, con la cascada aplicada. */
+      const effective = (index: number, tier: number, property: string) =>
+        TIERS.slice(0, tier + 1).reduce<string | undefined>(
+          (value, rules) =>
+            valueOf(rules.find((placement) => placement.index === index)?.body ?? '', property) ?? value,
+          undefined,
+        )
+      /** Lados por los que queda anclada en ese tramo: `initial` anula el heredado. */
+      const sidesAt = (index: number, tier: number) =>
+        SIDES.filter((side) => {
+          const value = effective(index, tier, side)
+          return value !== undefined && value !== 'initial'
+        })
 
-        expect(left.length).toBeGreaterThan(0)
-        left.forEach(({ index, body }) => {
-          const override = compact.find((placement) => placement.index === index)
+      // Una pastilla anclada a la vez por la izquierda y por la derecha se
+      // estira de lado a lado. Al cambiar de lado en un tramo hay que anular
+      // el que hereda del tramo anterior.
+      it.each(heroBadges.map((badge, i) => [badge.technology, i + 1] as const))(
+        '%s queda anclada por un solo lado en cada tramo',
+        (_, index) => {
+          TIERS.forEach((__, tier) => expect(sidesAt(index, tier)).toHaveLength(1))
+        },
+      )
 
-          expect(parseFloat(valueOf(override?.body ?? '', '--badge-y') ?? '')).toBeGreaterThan(
-            parseFloat(valueOf(body, '--badge-y') ?? ''),
+      // Con el párrafo en más líneas, las que siguen a la izquierda tienen
+      // que bajar para no pisarlo.
+      it('desde 1280 px las pastillas que siguen a la izquierda bajan', () => {
+        const stay = heroBadges
+          .map((_, i) => i + 1)
+          .filter((index) => sidesAt(index, 0)[0] === '--badge-left')
+          .filter((index) => sidesAt(index, 1)[0] === '--badge-left')
+
+        expect(stay.length).toBeGreaterThan(0)
+        stay.forEach((index) =>
+          expect(parseFloat(effective(index, 1, '--badge-y') ?? '')).toBeGreaterThan(
+            parseFloat(effective(index, 0, '--badge-y') ?? ''),
+          ),
+        )
+      })
+
+      // En anillo: una queda abajo, hacia el centro, sobre el pecho. Ni en una
+      // columna a un lado ni a la altura de la cara.
+      it('una pastilla queda abajo en el centro, lejos de la cara', () => {
+        const centred = placements.filter(({ body }) => {
+          const right = parseFloat(valueOf(body, '--badge-right') ?? '')
+          return right >= 25 && right <= 50
+        })
+
+        expect(centred).toHaveLength(1)
+        expect(parseFloat(valueOf(centred[0]?.body ?? '', '--badge-y') ?? '')).toBeGreaterThanOrEqual(80)
+      })
+
+      // Más abajo, la pastilla más alta se acercaría demasiado al borde
+      // inferior del Hero en el retrato más pequeño.
+      it('en dos columnas ninguna pastilla pasa del 88 % de alto', () => {
+        ;[0, 1].forEach((tier) =>
+          heroBadges.forEach((_, i) =>
+            expect(parseFloat(effective(i + 1, tier, '--badge-y') ?? '')).toBeLessThanOrEqual(88),
+          ),
+        )
+      })
+
+      // Separadas también en vertical: dos del mismo lado no comparten franja.
+      it('en dos columnas, las del mismo lado distan al menos 20 puntos de alto', () => {
+        ;[0, 1].forEach((tier) => {
+          const bySide = (side: string) =>
+            heroBadges
+              .map((_, i) => i + 1)
+              .filter((index) => sidesAt(index, tier)[0] === side)
+              .filter((index) => {
+                const x = parseFloat(effective(index, tier, side) ?? '')
+                return x < 25
+              })
+              .map((index) => parseFloat(effective(index, tier, '--badge-y') ?? ''))
+              .sort((a, b) => a - b)
+
+          SIDES.forEach((side) =>
+            bySide(side).forEach((y, i, all) => {
+              if (i > 0) expect(y - (all[i - 1] ?? 0)).toBeGreaterThanOrEqual(20)
+            }),
           )
         })
       })

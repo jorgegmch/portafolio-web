@@ -108,7 +108,10 @@
 /* Cada pastilla trae su altura (--badge-y), el lado por el que se ancla
    (--badge-left o --badge-right, en porcentaje del retrato), su desfase
    (--float-phase, fracción de la duración) y su tamaño de texto. Las de la
-   derecha se anclan por la derecha para no salirse de la página. */
+   derecha se anclan por la derecha para no salirse de la página. Solo un
+   lado a la vez: si un tramo cambia de lado, anula el otro con `initial`.
+   Van en anillo alrededor de la figura: una a la izquierda, una abajo en el
+   centro y tres a la derecha, alternando dentro y fuera. */
 .float {
   position: absolute;
   top: var(--badge-y);
@@ -119,32 +122,32 @@
 }
 
 .float:nth-child(1) {
-  --badge-left: 3%;
-  --badge-y: 66%;
+  --badge-left: 4%;
+  --badge-y: 68%;
   --float-phase: 0;
 
   font-size: var(--font-size-lg);
 }
 
 .float:nth-child(2) {
-  --badge-right: -2%;
-  --badge-y: 16%;
+  --badge-right: -3%;
+  --badge-y: 14%;
   --float-phase: -0.45;
 
   font-size: var(--font-size-base);
 }
 
 .float:nth-child(3) {
-  --badge-left: 16%;
-  --badge-y: 84%;
+  --badge-right: 26%;
+  --badge-y: 88%;
   --float-phase: -0.9;
 
   font-size: var(--font-size-base);
 }
 
 .float:nth-child(4) {
-  --badge-right: 1%;
-  --badge-y: 47%;
+  --badge-right: -5%;
+  --badge-y: 38%;
   --float-phase: -1.3;
 
   font-size: var(--font-size-md);
@@ -152,7 +155,7 @@
 
 .float:nth-child(5) {
   --badge-right: 6%;
-  --badge-y: 76%;
+  --badge-y: 63%;
   --float-phase: -1.75;
 
   font-size: var(--font-size-sm);
@@ -224,12 +227,18 @@
   }
 
   .float:nth-child(1) {
-    --badge-y: 72%;
+    --badge-left: 0%;
+    --badge-y: 80%;
   }
 
   .float:nth-child(3) {
-    --badge-left: 10%;
-    --badge-y: 87%;
+    --badge-right: 6%;
+    --badge-y: 86%;
+  }
+
+  .float:nth-child(5) {
+    --badge-right: -2%;
+    --badge-y: 62%;
   }
 }
 
@@ -276,6 +285,7 @@
   }
 
   .float:nth-child(3) {
+    --badge-right: initial;
     --badge-left: 1%;
     --badge-y: 63%;
 
