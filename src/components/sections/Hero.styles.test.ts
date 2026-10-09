@@ -131,14 +131,51 @@ describe('Hero: estilos', () => {
 
       it('las medidas salen de tokens', () => {
         expect(cssToken(tokensCss, '--portrait-max-width')).toBe('46rem')
-        expect(cssToken(tokensCss, '--portrait-share')).toBe('54vw')
+        expect(cssToken(tokensCss, '--portrait-ramp')).toBe('calc(132vw - 72.8rem)')
         expect(cssToken(tokensCss, '--portrait-share-compact')).toBe('41vw')
         expect(cssToken(tokensCss, '--portrait-head-gap')).toBe('2rem')
         expect(cssToken(tokensCss, '--portrait-head-room')).toBe('0.125')
       })
 
-      it('el tope por ancho es el menor entre el máximo y una parte de la ventana', () => {
-        expect(hero['--portrait-cap']).toBe('min(var(--portrait-max-width), var(--portrait-share))')
+      it('el tope por ancho es el menor entre el máximo y una rampa con el ancho de la ventana', () => {
+        expect(hero['--portrait-cap']).toBe('min(var(--portrait-max-width), var(--portrait-ramp))')
+      })
+
+      // Un escalón en 1280 px hacía saltar el retrato casi 170 px de un píxel
+      // de ventana al siguiente, y la figura se echaba encima del nombre.
+      describe('la rampa enlaza los dos tramos sin escalón', () => {
+        const REM = 16
+        const BREAKPOINT = 1280
+        const [, slope = '', offset = ''] =
+          /^calc\(([\d.]+)vw - ([\d.]+)rem\)$/.exec(cssToken(tokensCss, '--portrait-ramp')) ?? []
+        const ramp = (viewport: number) => (Number(slope) / 100) * viewport - Number(offset) * REM
+        const compact = (viewport: number) =>
+          (parseFloat(cssToken(tokensCss, '--portrait-share-compact')) / 100) * viewport
+        const maxWidth = parseFloat(cssToken(tokensCss, '--portrait-max-width')) * REM
+
+        it('es una recta: tantos vw menos tantos rem', () => {
+          expect(Number(slope)).toBeGreaterThan(0)
+          expect(Number(offset)).toBeGreaterThan(0)
+        })
+
+        it('en 1280 px vale lo mismo que el tope compacto', () => {
+          expect(Math.abs(ramp(BREAKPOINT) - compact(BREAKPOINT))).toBeLessThanOrEqual(1)
+        })
+
+        it('de 1280 a 1281 px el retrato no cambia más de 2 px', () => {
+          expect(Math.abs(ramp(BREAKPOINT + 1) - compact(BREAKPOINT))).toBeLessThanOrEqual(2)
+        })
+
+        // A partir de ahí manda el máximo: de 1440 px en adelante nada cambia.
+        it('llega al ancho máximo en 1440 px', () => {
+          expect(Math.abs(ramp(1440) - maxWidth)).toBeLessThanOrEqual(1)
+          expect(ramp(1439)).toBeLessThan(maxWidth)
+        })
+
+        it('crece con el ancho de la ventana', () => {
+          expect(ramp(1281)).toBeLessThan(ramp(1344))
+          expect(ramp(1344)).toBeLessThan(ramp(1440))
+        })
       })
 
       // Con el párrafo en más líneas, la figura lo alcanzaría antes.

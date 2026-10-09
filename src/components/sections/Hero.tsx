@@ -21,7 +21,7 @@ const PORTRAIT_SRC_SET = portrait.sources.map(({ src, width }) => `${src} ${widt
 const PORTRAIT_SIZES = [
   '(max-width: 768px) min(88vw, 36rem)',
   '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
-  'min(54vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+  'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
 ].join(', ')
 
 /**

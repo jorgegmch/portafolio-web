@@ -96,10 +96,12 @@
   /* Retrato del hero, apilado bajo el texto: ancho máximo (576 px). */
   --portrait-width: 36rem;
   /* En dos columnas se dimensiona por el alto de la ventana, con tope por
-     ancho: 736 px o una parte de la ventana (menor desde 1280 px, donde el
-     párrafo ocupa más líneas y la figura lo alcanzaría). */
+     ancho. Hasta 1280 px, una parte de la ventana: el párrafo ocupa más
+     líneas y la figura lo alcanzaría. Por encima, una rampa que arranca en
+     ese mismo valor (524,8 px a 1280) y llega al máximo (736 px) a 1440: sin
+     ella, el retrato saltaba de golpe al cruzar 1280 px. */
   --portrait-max-width: 46rem;
-  --portrait-share: 54vw;
+  --portrait-ramp: calc(132vw - 72.8rem);
   --portrait-share-compact: 41vw;
   /* Aire entre la barra y el pelo, y parte de la caja que queda vacía sobre
      el pelo (el lienzo de la foto deja transparente el 12,5 % de arriba). */

@@ -101,7 +101,7 @@ describe('Hero: retrato', () => {
           [
             '(max-width: 768px) min(88vw, 36rem)',
             '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
-            'min(54vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
+            'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
           ].join(', '),
         )
       })
@@ -147,7 +147,7 @@ describe('Hero: retrato', () => {
           expect(token('--portrait-head-gap')).toMatch(/^[\d.]+rem$/)
           expect(token('--portrait-max-width')).toMatch(/^[\d.]+rem$/)
           expect(token('--portrait-width')).toMatch(/^[\d.]+rem$/)
-          expect(token('--portrait-share')).toMatch(/^[\d.]+vw$/)
+          expect(token('--portrait-ramp')).toMatch(/^calc\([\d.]+vw - [\d.]+rem\)$/)
           expect(token('--portrait-share-compact')).toMatch(/^[\d.]+vw$/)
           expect(Number(token('--portrait-head-room'))).toBeGreaterThan(0)
           expect(stackedGutter).toBeGreaterThan(0)
@@ -160,7 +160,7 @@ describe('Hero: retrato', () => {
             [
               `(max-width: 768px) min(${100 - 2 * stackedGutter}vw, ${token('--portrait-width')})`,
               `(max-width: 1280px) ${twoColumns('--portrait-share-compact')}`,
-              twoColumns('--portrait-share'),
+              twoColumns('--portrait-ramp'),
             ].join(', '),
           )
         })
@@ -175,7 +175,7 @@ describe('Hero: retrato', () => {
             '(100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))',
           )
           expect(base['--portrait-height']).toContain(`var(--portrait-cap) * ${height} / ${width}`)
-          expect(base['--portrait-cap']).toBe('min(var(--portrait-max-width), var(--portrait-share))')
+          expect(base['--portrait-cap']).toBe('min(var(--portrait-max-width), var(--portrait-ramp))')
           expect(compact['--portrait-cap']).toBe(
             'min(var(--portrait-max-width), var(--portrait-share-compact))',
           )

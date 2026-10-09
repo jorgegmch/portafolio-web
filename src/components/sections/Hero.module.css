@@ -1,6 +1,6 @@
 .hero {
   /* Tope por ancho del retrato en dos columnas. */
-  --portrait-cap: min(var(--portrait-max-width), var(--portrait-share));
+  --portrait-cap: min(var(--portrait-max-width), var(--portrait-ramp));
   /* Alto del retrato: el que deja el pelo a --portrait-head-gap de la barra
      (ventana menos barra y ese aire, entre la parte de la caja que ocupa la
      figura), o el que corresponde al tope por ancho si es menor. */
