@@ -1,4 +1,5 @@
 export { certifications, type CertificationId } from '@/data/certifications'
+export { CV_VERSIONS, cvFiles, cvFilesFor, cvUrl, type CvFile, type CvVersion } from '@/data/cv'
 export {
   allProjectsUrl,
   featuredProjects,
