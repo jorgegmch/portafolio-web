@@ -9,7 +9,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 ## Decisiones (y por qué)
 - npm (único gestor instalado), react-router (ruta /certificaciones) y CSS Modules (decididos en la Fase 0).
 - Un solo tema oscuro; no hay useTheme: evita código sin uso.
-- El contacto se ensambla al interactuar y es un botón, no un enlace: un href inicial expondría el dato en el DOM antes del clic. Es ofuscación, no protección real.
+- El correo y el teléfono se muestran como texto en la sección de contacto y van en los PDFs del CV: un cliente debe poder leerlos y copiarlos sin pasos. En el Hero y el pie siguen siendo botones que ensamblan el dato en el clic. En el repo y en el bundle siguen codificados; es ofuscación del código fuente, no protección real.
 - La fecha de nacimiento va codificada con su propio desplazamiento: frena scrapers simples; es ofuscación, no protección real.
 - ?lang= no se guarda; solo la elección con el selector: un enlace compartido no cambia la preferencia de quien lo abre.
 - 5 proyectos destacados y enlace a GitHub: 16 tarjetas diluyen los mejores.

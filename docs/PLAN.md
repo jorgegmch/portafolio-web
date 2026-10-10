@@ -30,8 +30,8 @@ Es el siguiente paso: ver «Cómo retomar». El Hero tiene un encargo aprobado m
 - [ ] **Sobre mí:** bio, panel terminal que muestra la salida de `java Developer` con la edad en vivo y sin datos de contacto, 4 tarjetas de estadísticas, botón "Ver certificaciones"
 - [ ] **Tecnologías:** grupos con logos, sin niveles ni porcentajes
 - [ ] **Proyectos:** 5 destacados + botón "Ver todos en GitHub". En orden: LogiTrack IQ (protagonista), LogiTrack API, Inventory Guardian, CRM Registro Campers, n8n Daily News Agent
-- [ ] **Contacto:** email, WhatsApp, LinkedIn y GitHub; sin formulario. Los botones de email y WhatsApp usan `ContactButton`, que arma el dato al hacer clic y no al cargar
-- [ ] Repetir la verificación con grep sobre `dist/` con la sección de contacto ya montada
+- [ ] **Contacto:** email y teléfono visibles como texto, con llamado a la acción, ubicación a nivel de ciudad y tiempo de respuesta; LinkedIn y GitHub; sin formulario. Las acciones de escribir un correo y abrir WhatsApp siguen en `ContactButton`, que arma el dato al hacer clic
+- [ ] Repetir la verificación de `.claude/rules/contacto.md` con la sección de contacto ya montada: cero literales en `dist/` (sin contar los PDFs del CV) y en `src/`, y los PDFs del CV solo con el email y el teléfono de `src/config/contact.ts`
 - [ ] `examples/java/Developer.java`: el record real y compilable
 
 ### Fase 7 — Página `/certificaciones`

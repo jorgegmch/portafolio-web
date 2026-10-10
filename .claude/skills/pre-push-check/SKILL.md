@@ -50,13 +50,25 @@ remoto y entrega un veredicto. Es de solo lectura.
    oficial, así que no se informan. La excepción no cubre ningún otro
    archivo ni ningún otro tipo de dato en ese: si el archivo tiene un número
    de correos distinto de dos, o cualquier otra coincidencia, lístalo.
+   Esta búsqueda no ve dentro de binarios: los PDFs se revisan en el paso 6.
    Control positivo: confirma que el patrón de correo encuentra una dirección
    ficticia de ejemplo pasada por la entrada estándar.
    Límite: esto no comprueba valores concretos; la cédula y la fecha de
    nacimiento no están escritas en ningún sitio con el que comparar.
-6. **Contacto en el bundle.** Si la sección de contacto está montada en la
-   aplicación, recuerda que toca repetir la verificación de
-   `.claude/rules/contacto.md` sobre `dist/`. No la des por hecha.
+6. **Contacto en el bundle y en los PDFs.** Decodifica en memoria el correo
+   y el teléfono de `src/config/contact.ts`; no los imprimas ni los guardes.
+   - Bundle: repite la verificación de `.claude/rules/contacto.md` sobre
+     `dist/`, sin contar los PDFs. Cero coincidencias, con su control
+     positivo.
+   - PDFs versionados: localízalos con `git ls-files '*.pdf'`. Extrae el
+     texto y los metadatos de cada uno con una herramienta local ya
+     instalada (por ejemplo `pdftotext`), sin añadir dependencias al repo.
+     Todo correo o teléfono hallado en el texto debe ser exactamente el de
+     config; cualquier otro, y cualquier dato con forma de cédula o de fecha
+     completa, se lista como archivo, página y tipo, sin el valor. Los
+     metadatos no pueden llevar ninguno.
+   - Si no hay herramienta instalada o el PDF no tiene capa de texto, no lo
+     des por limpio: informa «no se pudo comprobar».
 7. **Tests sin trampas.**
    `git grep -nE "\.(only|skip)\(" -- '*.test.ts' '*.test.tsx'` no debe
    devolver nada. Control positivo obligatorio:

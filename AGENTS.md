@@ -33,11 +33,11 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 - Al crear una carpeta nueva bajo `src/`, añádela a su capa en `eslint.config.js`.
 - Una fuente de verdad por dato: los conteos y las listas derivadas salen de `data/`; los datos personales y las claves de storage viven solo en `src/config/`.
 
-### Contacto ofuscado
+### Contacto
 
-- No escribas el email ni el WhatsApp como texto literal en ningún archivo: viven codificados en `src/config/contact.ts`.
-- Ensámblalos con `assembleContact` solo dentro de un manejador de clic, nunca al renderizar.
-- Muéstralos únicamente mediante `ContactButton`. Detalle y verificación con grep sobre `dist/` en `.claude/rules/contacto.md`.
+- No escribas el email ni el teléfono como texto literal en ningún archivo de texto del repo: viven codificados en `src/config/contact.ts`.
+- Se publican en claro solo en dos sitios: la sección de contacto, que los decodifica al renderizar y los muestra como texto, y el contenido de los PDFs del CV.
+- En el resto de la aplicación se ensamblan con `assembleContact` solo dentro de un manejador de clic, mediante `ContactButton`. Detalle y verificación en `.claude/rules/contacto.md`.
 
 ## Reglas del proyecto
 
@@ -65,7 +65,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 - Commits separados por causa, con Conventional Commits en inglés (por ejemplo `feat(lib): add age calculation`), sin líneas de atribución ni menciones a herramientas. Los commits anteriores en español se traducen al reescribir el historial. Cada commit debe pasar lint, typecheck y tests por sí solo.
 - Antes de cada push, comprobar:
   - que ningún mensaje de commit mencione a IA: `git log --format=%B | Select-String "claude|anthropic|co-authored"` en PowerShell, o `git log --format=%B | grep -iE "claude|anthropic|co-authored"` en Bash, no debe devolver nada; una salida vacía solo vale si el comando existe en ese shell y un control positivo da resultados;
-  - que ningún archivo versionado contenga datos personales en claro (email, teléfono, número de cédula y fecha de nacimiento).
+  - que ningún archivo versionado contenga datos personales en claro (email, teléfono, número de cédula y fecha de nacimiento). Única excepción: el contenido de los PDFs del CV puede llevar el email y el teléfono, y solo los de `src/config/contact.ts`.
 - README y descripción del repo en inglés; `AGENTS.md`, `PLAN.md` y `MEMORY.md` en español.
 - Las reglas generales se editan aquí y el detalle por área en `.claude/rules/`. `CLAUDE.md` solo importa `@AGENTS.md` y no duplica su contenido.
 
@@ -86,7 +86,8 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 - ✅ Siempre: actualizar `docs/MEMORY.md` al terminar cada tarea.
 - ⚠️ Pregunta antes: añadir dependencias (con `npm audit` antes y después) y cualquier petición a terceros en runtime (Google Fonts, analítica, CDN, iframes).
 - ⚠️ Pregunta antes: editar archivos fuera del repo (memoria automática, configuración de usuario).
-- 🚫 Nunca: email, teléfono, cédula ni fecha de nacimiento en claro en ningún archivo (código, tests, docs, comentarios, metadatos de PDF o imágenes, capturas, logs) (en documentos se nombra el campo, no su valor).
+- 🚫 Nunca: cédula ni fecha de nacimiento en claro en ningún archivo ni en el sitio publicado.
+- 🚫 Nunca: email ni teléfono en claro en código, tests, docs, comentarios, logs, capturas ni metadatos de PDF o imágenes (en documentos se nombra el campo, no su valor). Solo se publican en la sección de contacto renderizada y en el contenido de los PDFs del CV; su origen es `src/config/contact.ts`, codificado.
 - 🚫 Nunca: `dangerouslySetInnerHTML`, `innerHTML`, `eval` ni `new Function`.
 - 🚫 Nunca: secretos en variables `VITE_*` (son públicas), ni tokens o claves en archivos del repo o en workflows; usar GitHub Secrets.
 - 🚫 Nunca: `git add .` ni `git add -A`; `--no-verify`; force push; push sin que se pida; commitear `.claude/settings.local.json`. `permissions.deny` en `.claude/settings.json` bloquea al agente push, `git add .`/`-A` y `--no-verify`; no cubre variantes como `git commit -nm` ni `git -c k=v push`.
