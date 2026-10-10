@@ -150,13 +150,20 @@ describe('Hero', () => {
     })
 
     // «Descargar CV» no se muestra hasta que existan los PDFs: el Hero se
-    // compone con un solo botón.
-    it('es el único enlace del Hero mientras no haya CV', () => {
+    // compone con un solo botón. Los demás enlaces y botones son los de la
+    // fila de redes.
+    it('es el único enlace de su grupo mientras no haya CV', () => {
       renderHero()
 
-      expect(screen.getAllByRole('link')).toHaveLength(1)
+      const group = link().parentElement
+      const social = screen.getByRole('list', { name: dictionaries.es.hero.socialLabel })
+      const outside = <T extends Element>(elements: T[]) =>
+        elements.filter((element) => !social.contains(element))
+
+      expect(group?.children).toHaveLength(1)
+      expect(outside(screen.getAllByRole('link'))).toEqual([link()])
+      expect(outside(screen.queryAllByRole('button'))).toEqual([])
       expect(screen.queryByText(dictionaries.es.hero.downloadCv)).not.toBeInTheDocument()
-      expect(screen.queryByRole('button')).not.toBeInTheDocument()
     })
   })
 

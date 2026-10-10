@@ -1,5 +1,6 @@
 import type { CertificationId } from '@/data/certifications'
 import type { ProjectId } from '@/data/projects'
+import type { HeroSocialId } from '@/data/social'
 import type { CertificationCategory, TechnologyGroup } from '@/data/types'
 
 export const LANGS = ['es', 'en'] as const
@@ -61,6 +62,10 @@ export interface Dictionary {
     cvDesigned: string
     cvAts: string
     photoAlt: string
+    /** Nombre accesible de la fila de redes y contacto. */
+    socialLabel: string
+    /** Nombre accesible de cada icono de la fila; los de marca no se traducen. */
+    social: Record<HeroSocialId, string>
   }
   about: {
     heading: string

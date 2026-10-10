@@ -11,7 +11,39 @@ const AVAILABILITY = {
   en: 'Available for freelance',
 } as const
 
+const SOCIAL_LABEL = { es: 'Redes y contacto', en: 'Social and contact' } as const
+
+const SOCIAL = {
+  es: {
+    github: 'GitHub',
+    linkedin: 'LinkedIn',
+    email: 'Enviar un correo',
+    whatsapp: 'Escribir por WhatsApp',
+  },
+  en: {
+    github: 'GitHub',
+    linkedin: 'LinkedIn',
+    email: 'Send an email',
+    whatsapp: 'Message on WhatsApp',
+  },
+} as const
+
 describe('textos del hero', () => {
+  it.each(LANGS)('en %s, la fila de redes se llama como está previsto', (lang) => {
+    expect(dictionaries[lang].hero.socialLabel).toBe(SOCIAL_LABEL[lang])
+  })
+
+  it.each(LANGS)('en %s, cada red tiene su nombre accesible, y ninguno de más', (lang) => {
+    expect(dictionaries[lang].hero.social).toEqual(SOCIAL[lang])
+  })
+
+  it.each(LANGS)('en %s, los nombres de la fila no llevan datos de contacto', (lang) => {
+    Object.values(dictionaries[lang].hero.social).forEach((name) => {
+      expect(name).not.toContain('@')
+      expect(name).not.toMatch(/\d/)
+    })
+  })
+
   it.each(LANGS)('en %s, el estado de disponibilidad dice el texto aprobado', (lang) => {
     expect(dictionaries[lang].hero.availability).toBe(AVAILABILITY[lang])
   })

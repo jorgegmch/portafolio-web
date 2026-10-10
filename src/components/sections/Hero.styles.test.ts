@@ -287,6 +287,103 @@ describe('Hero: estilos', () => {
     })
   })
 
+  describe('fila de redes', () => {
+    const row = cssRule(heroCss, '.social')
+    const control = cssRule(heroCss, '.socialControl')
+    const hover = cssRule(heroCss, '.socialControl:hover')
+    const focus = cssRule(heroCss, '.socialControl:focus-visible')
+    const icon = cssRule(heroCss, '.socialIcon')
+    /** Todas las reglas de la fila, con su selector. */
+    const socialRules = [...heroCss.matchAll(/([^{}]*social[^{}]*)\{([^}]*)\}/g)].map(
+      ([, selector = '', body = '']) => ({ selector: selector.trim(), body }),
+    )
+
+    it('va bajo el estado, en fila, con 12 px entre iconos y sin viñetas', () => {
+      expect(row).toMatchObject({
+        display: 'flex',
+        'flex-wrap': 'wrap',
+        gap: 'var(--space-3)',
+        'margin-top': 'var(--space-5)',
+        'list-style': 'none',
+      })
+      expect(cssToken(tokensCss, '--space-3')).toBe('0.75rem')
+    })
+
+    it('cada control es un círculo de 44 px con el icono centrado', () => {
+      expect(control).toMatchObject({
+        display: 'grid',
+        'place-items': 'center',
+        width: 'var(--touch-target)',
+        height: 'var(--touch-target)',
+        'border-radius': 'var(--radius-full)',
+      })
+      expect(cssToken(tokensCss, '--touch-target')).toBe('2.75rem')
+    })
+
+    // Solo borde: sin relleno, sin sombra y sin brillo.
+    it('solo lleva borde, de un color de la paleta, sin relleno', () => {
+      expect(control).toMatchObject({
+        border: '1px solid var(--color-text-subtle)',
+        background: 'none',
+      })
+      expect(control).not.toHaveProperty('box-shadow')
+      expect(control).not.toHaveProperty('background-color')
+    })
+
+    it('el botón y el enlace se ven igual: sin relleno propio y con cursor de enlace', () => {
+      expect(control).toMatchObject({ padding: '0', cursor: 'pointer' })
+    })
+
+    // El puntero y el foco cambian el borde del contenedor, nunca el logo.
+    it.each([
+      ['bajo el puntero', hover],
+      ['con el foco', focus],
+    ])('%s solo cambia el color del borde, al verde de acento', (_, rule) => {
+      expect(rule).toEqual({ 'border-color': 'var(--color-accent-alt)' })
+    })
+
+    // El anillo de foco es el global: aquí no se quita.
+    it('no quita el anillo de foco', () => {
+      socialRules.forEach(({ body }) => expect(body).not.toMatch(/outline/))
+    })
+
+    it('el icono mide 24 px y conserva su proporción, sin estirar ni recortar', () => {
+      expect(icon).toEqual({
+        width: 'var(--icon-size)',
+        height: 'var(--icon-size)',
+        'object-fit': 'contain',
+      })
+      expect(cssToken(tokensCss, '--icon-size')).toBe('1.5rem')
+    })
+
+    // Las marcas no dejan alterar el logo: ningún efecto, en ningún estado.
+    it('ninguna regla de la fila aplica filtros, opacidad, mezclas, sombras ni transformaciones', () => {
+      expect(socialRules.map(({ selector }) => selector).sort()).toEqual([
+        '.social',
+        '.socialControl',
+        '.socialControl:focus-visible',
+        '.socialControl:hover',
+        '.socialIcon',
+      ])
+      socialRules.forEach(({ body }) =>
+        expect(body).not.toMatch(
+          /filter|opacity|mix-blend-mode|box-shadow|mask|transform|transition|animation|color-mix/,
+        ),
+      )
+    })
+
+    // Ningún selector de fuera alcanza a los iconos por etiqueta.
+    it('ninguna regla del Hero apunta a img por etiqueta', () => {
+      expect(heroCss).not.toMatch(/(^|[\s,>+~}])img\b[^{}]*\{/)
+    })
+
+    it('no cambia en ningún tramo: cabe igual en teléfono', () => {
+      ;['1280px', '1023px', '480px', '380px'].forEach((width) =>
+        expect(cssMedia(heroCss, `(max-width: ${width})`)).not.toMatch(/social/),
+      )
+    })
+  })
+
   describe('presentación', () => {
     it('va en el tono apagado de la paleta', () => {
       expect(cssRule(heroCss, '.intro')).toMatchObject({ color: 'var(--color-text-muted)' })

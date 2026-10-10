@@ -148,6 +148,44 @@
   background: var(--color-accent-alt);
 }
 
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  list-style: none;
+}
+
+/* Círculo de solo borde, igual para el enlace y para el botón. El puntero y
+   el foco cambian el borde, de golpe: el logo de dentro no se toca. */
+.socialControl {
+  display: grid;
+  place-items: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  padding: 0;
+  border: 1px solid var(--color-text-subtle);
+  border-radius: var(--radius-full);
+  background: none;
+  cursor: pointer;
+}
+
+.socialControl:hover {
+  border-color: var(--color-accent-alt);
+}
+
+.socialControl:focus-visible {
+  border-color: var(--color-accent-alt);
+}
+
+/* Logo oficial o icono propio, cargado como imagen: conserva su proporción y
+   no lleva filtro, opacidad ni sombra. */
+.socialIcon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  object-fit: contain;
+}
+
 /* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
    imagen de 4:5 entra sin tocar el diseño. */
 .portrait {

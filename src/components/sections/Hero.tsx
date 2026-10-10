@@ -2,9 +2,11 @@ import { useId } from 'react'
 import { Link } from 'react-router-dom'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
+import { ContactButton } from '@/components/ui/ContactButton'
 import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
+import { heroSocial, heroSocialIconUrl, heroSocialUrl } from '@/data/social'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
 import { useLang } from '@/hooks/useLang'
 import { splitName } from '@/lib/splitName'
@@ -35,9 +37,11 @@ const ROLE_CURSOR = '|'
 
 /**
  * Primera sección de la home: saludo, nombre en dos colores, rol con un
- * cursor decorativo, presentación breve, un botón que lleva a los proyectos
- * y, si config/availability lo activa, el estado de disponibilidad, con el
- * retrato al lado. Lleva el
+ * cursor decorativo, presentación breve, un botón que lleva a los proyectos,
+ * si config/availability lo activa, el estado de disponibilidad, y la fila de
+ * redes de data/social, con el retrato al lado. En la fila, los perfiles son
+ * enlaces y el correo y WhatsApp salen por ContactButton, que arma el dato al
+ * hacer clic. Lleva el
  * único h1 de la página; el nombre sale de hero.heading y se parte al
  * renderizar, sin guardarlo dos veces.
  * El retrato es estático y sale entero de assets/hero/portrait.
@@ -86,6 +90,46 @@ export function Hero() {
             )}
           </p>
         )}
+        <ul className={styles.social} aria-label={t.hero.socialLabel}>
+          {heroSocial.map((entry) => {
+            // Decorativo: el nombre lo lleva el enlace o el botón.
+            const icon = (
+              <img
+                className={styles.socialIcon}
+                src={heroSocialIconUrl(entry)}
+                alt=""
+                decoding="async"
+              />
+            )
+            return (
+              <li key={entry.id}>
+                {entry.kind === 'link' ? (
+                  <a
+                    className={styles.socialControl}
+                    href={heroSocialUrl(entry.id)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${t.hero.social[entry.id]} (${t.common.opensInNewTab})`}
+                  >
+                    {icon}
+                  </a>
+                ) : (
+                  <ContactButton
+                    kind={entry.kind}
+                    label={
+                      entry.kind === 'whatsapp'
+                        ? `${t.hero.social[entry.id]} (${t.common.opensInNewTab})`
+                        : t.hero.social[entry.id]
+                    }
+                    icon={icon}
+                    className={styles.socialControl}
+                    reveal={false}
+                  />
+                )}
+              </li>
+            )
+          })}
+        </ul>
       </div>
       <div className={styles.portrait}>
         {/* El halo va en el envoltorio y la máscara en la imagen: juntos, la

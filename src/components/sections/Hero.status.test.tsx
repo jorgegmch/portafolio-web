@@ -52,7 +52,7 @@ describe('Hero: estado de disponibilidad, activado', () => {
 
     expect(status().tagName).toBe('P')
     expect(screen.getAllByRole('heading')).toHaveLength(1)
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(status().querySelector('a, button, [role], [tabindex]')).toBeNull()
   })
 
   it('va después del botón', () => {
