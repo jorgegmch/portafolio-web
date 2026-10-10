@@ -6,17 +6,21 @@ Las medidas se tomaron en Chrome contra el build, en español e inglés. No se c
 
 ## Estado
 
-- La Fase 6 sigue abierta: solo está hecho el Hero, y sin el botón «Descargar CV».
+- La Fase 6 sigue abierta: solo está hecho el Hero, ya con el botón «Descargar CV».
 - La rama `rebuild/vite-react` no se sube mientras contenga la foto provisional.
 
 ## Encargos aprobados que aún no se ejecutan
 
-- [ ] **«Descargar CV»:** commit propio de la Fase 6, cuando existan los 4 PDFs. El botón solo se renderiza si el registro de CVs tiene los archivos; ningún enlace roto. Lo que lleve el CV (teléfono, correo) queda descargable por cualquiera una vez publicado.
+- [x] **«Descargar CV»:** hecho, del commit `32ff261` al `9836e16`. Los cuatro PDFs están en `public/cv/` y su registro en `src/data/cv.ts`; el botón solo se renderiza si el registro tiene archivos del idioma activo. Lo que lleva el CV (teléfono, correo) queda descargable por cualquiera una vez publicado.
+  - **Peso añadido al repo:** 914,2 kB en los cuatro PDFs actuales, más 914,4 kB de su primera versión, que queda en el historial.
 - [ ] **Cuatro comandos manuales:** `/update-hero-intro`, `/update-hero-photo`, `/update-hero-cv` y `/update-hero-social`, con la convención de `.claude/skills/pre-push-check`. Primero la propuesta por escrito; después una prueba real de cada uno (el de la descripción con un texto de prueba que se revierte, el de la foto con la foto actual, el de los CV con PDFs de prueba sin datos reales y fuera del repo). El cierre debe documentarlos.
 - [ ] **`/update-hero-photo`:** no versiona el script de exportación; describe los pasos y las herramientas, sin añadir código ni dependencias.
 - [ ] **`pre-push-check` y los PDFs:** la skill ya revisa los PDFs versionados desde `54a289c`. Falta elegir la herramienta local con la que extrae el texto y los metadatos, sin añadir dependencias al repo; mientras no haya una, ese paso informa «no se pudo comprobar».
 - [ ] **Foto real** en lugar de la provisional, con `/update-hero-photo`, antes del push final.
-- [ ] **Limpieza ofrecida y no aprobada:** retirar el texto corto del estado y el corte de 380 px (ver «Estado de disponibilidad»).
+- [ ] **Limpieza ofrecida y no aprobada:** retirar solo la clave `hero.availabilityShort` (ver «Estado de disponibilidad»). El corte de 380 px no se retira en ninguna limpieza: lo usa el botón de CV.
+- [ ] **`docs/PLAN.md`:** dos líneas dicen «versión diseñada» o «diseñado» para el CV; la versión se llama infográfica desde `a43bf3b`. Se corrigen en `/close-phase 6`.
+- [ ] **Pendiente del autor, PDFs infográficos:** revisar a ojo los dos, porque un texto convertido a contornos no sale al extraer el texto, y decidir si LinkedIn y GitHub deben ser clicables en el PDF; hoy no lo son.
+- [ ] **Decisión del autor, «Gemini»:** lo quitó del CV a propósito, así que los PDFs actuales son correctos y no se reemplazan. El portafolio lo sigue mencionando (n8n Daily News Agent) y es veraz. Decidir en `/close-phase 6`, y sin urgencia, si se deja o se quita del sitio; si se quita, se cambia primero la descripción en GitHub y luego en `es.ts` y `en.ts`.
 - [ ] **Borrar este archivo** en el cierre de la Fase 6, tras repartir su contenido.
 
 ## Sección de contacto de la Fase 6: cambio de decisión
@@ -48,7 +52,7 @@ Las medidas se tomaron en Chrome contra el build, en español e inglés. No se c
 
 - **Interruptor:** `AVAILABLE_FOR_FREELANCE` en `src/config/availability.ts`. Con `false` el estado no se renderiza ni deja hueco. Los textos viven en `hero.availability` de los diccionarios.
 - **Oculto en teléfono:** hasta 480 px lleva `display: none`, así que tampoco entra en el árbol de accesibilidad. El autor aceptó que no se vea ahí.
-- **Texto corto sin uso:** «Freelance disponible» solo se mostraba hasta 380 px, y en ese tramo el estado ya está oculto. La clave `hero.availabilityShort`, el corte de 380 px de `tokens.css` y sus tests siguen en el repo sin efecto. El corte se midió en 374 px y se dejó en 380 por margen.
+- **Texto corto sin uso:** «Freelance disponible» solo se mostraba hasta 380 px, y en ese tramo el estado ya está oculto. La clave `hero.availabilityShort` y sus tests siguen en el repo sin efecto. El corte de 380 px sí tiene uso: hasta ahí el botón de CV muestra su texto corto. El corte se midió en 374 px y se dejó en 380 por margen.
 - **Brillo del punto:** usa `color-mix`. Su soporte en navegadores no se verificó.
 
 ### Fila de redes y contacto
@@ -119,6 +123,7 @@ Son límites del diseño aprobado, no tareas.
 - **Teléfono en horizontal:** una pastilla tapa la cara entre 7 y 11 px a 740×360, 844×390, 667×375 y 568×320. Alternativa si se quiere resolver: quitar el tope por alto del retrato.
 - **Viewport fraccionario:** no se pudo reproducir con zoom. Un ancho de 1023,6 px recibiría dos columnas, que a 1023 funcionan.
 - **Densidad 3:** a 768 y 820 px el retrato se amplía ×1,17 con el archivo mayor, de 1472 px.
+- **Lista del CV abierta:** a 1024×600 tapa 4 px de la pastilla de Python, y a 320×600 abre 35 px bajo la primera pantalla.
 
 ## Fuera del Hero
 
@@ -135,4 +140,5 @@ Son límites del diseño aprobado, no tareas.
 - **Playwright MCP:** añadido en local con `cmd /c` y `@latest`, sin versionar. `.mcp.json` y `.playwright-mcp/` están en `.git/info/exclude`. Si se versiona, con versión fijada y en un commit propio.
 - **`src/test/cssRules.ts`:** avance parcial de la deuda del helper común para los tests que leen archivos del disco.
 - **`PLAN.md`:** la línea de la Fase 2 dice «13 tecnologías»; el catálogo tiene 14 desde que JavaScript y TypeScript se separaron.
-- **Breakpoints:** se añadieron 1023 px (hasta ahí el Hero va apilado) y 380 px.
+- **Textos del CV sin test de valor:** «Versión infográfica (PDF)», «Infographic version (PDF)» y la clave `cvInfographic` no los comprueba ningún test con un valor escrito; solo el typecheck exige la clave.
+- **Breakpoints:** se añadieron 1023 px (hasta ahí el Hero va apilado) y 380 px (hasta ahí el botón de CV muestra «CV»; no se retira).
