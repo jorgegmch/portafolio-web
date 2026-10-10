@@ -1,6 +1,6 @@
 # Cierre de la Fase 6 — lista de pendientes (borrador)
 
-Archivo temporal. Reúne lo anotado durante el Hero y existe solo hasta cerrar la Fase 6, o hasta que deje de ser necesario. Al ejecutar `/close-phase 6`, su contenido vigente se reparte entre `docs/PLAN.md` y `docs/MEMORY.md` y el archivo se borra en el mismo commit `docs` de cierre. Hasta entonces nada de esto consta en esos dos archivos.
+Archivo temporal. Reúne lo anotado durante el Hero y existe solo hasta cerrar la Fase 6, o hasta que deje de ser necesario. Al ejecutar `/close-phase 6`, su contenido vigente se reparte entre `docs/PLAN.md` y `docs/MEMORY.md` y el archivo se borra en el mismo commit `docs` de cierre. Hasta entonces, de todo esto solo consta en esos dos archivos la decisión de contacto (commit `54a289c`).
 
 Las medidas se tomaron en Chrome contra el build, en español e inglés. No se comprobó Safari, Firefox ni un dispositivo físico. Los datos personales se nombran por su campo, nunca por su valor.
 
@@ -14,7 +14,7 @@ Las medidas se tomaron en Chrome contra el build, en español e inglés. No se c
 - [ ] **«Descargar CV»:** commit propio de la Fase 6, cuando existan los 4 PDFs. El botón solo se renderiza si el registro de CVs tiene los archivos; ningún enlace roto. Lo que lleve el CV (teléfono, correo) queda descargable por cualquiera una vez publicado.
 - [ ] **Cuatro comandos manuales:** `/update-hero-intro`, `/update-hero-photo`, `/update-hero-cv` y `/update-hero-social`, con la convención de `.claude/skills/pre-push-check`. Primero la propuesta por escrito; después una prueba real de cada uno (el de la descripción con un texto de prueba que se revierte, el de la foto con la foto actual, el de los CV con PDFs de prueba sin datos reales y fuera del repo). El cierre debe documentarlos.
 - [ ] **`/update-hero-photo`:** no versiona el script de exportación; describe los pasos y las herramientas, sin añadir código ni dependencias.
-- [ ] **Ampliar `pre-push-check` a los PDFs:** solo la propuesta; sus búsquedas de texto no ven dentro de binarios.
+- [ ] **`pre-push-check` y los PDFs:** la skill ya revisa los PDFs versionados desde `54a289c`. Falta elegir la herramienta local con la que extrae el texto y los metadatos, sin añadir dependencias al repo; mientras no haya una, ese paso informa «no se pudo comprobar».
 - [ ] **Foto real** en lugar de la provisional, con `/update-hero-photo`, antes del push final.
 - [ ] **Limpieza ofrecida y no aprobada:** retirar el texto corto del estado y el corte de 380 px (ver «Estado de disponibilidad»).
 - [ ] **Borrar este archivo** en el cierre de la Fase 6, tras repartir su contenido.
@@ -22,10 +22,15 @@ Las medidas se tomaron en Chrome contra el build, en español e inglés. No se c
 ## Sección de contacto de la Fase 6: cambio de decisión
 
 - **Qué cambia:** la sección de contacto mostrará el correo y el teléfono visibles, con un llamado a la acción («si tienes un proyecto en mente, hablemos»), la ubicación a nivel de ciudad y el tiempo de respuesta.
-- **Con qué choca:** con la regla «nunca al renderizar» de `AGENTS.md` y de `.claude/rules/contacto.md`, y con la decisión de `docs/MEMORY.md` de que el contacto es un botón que se ensambla al interactuar.
+- **Ya no choca con las reglas:** `AGENTS.md`, `.claude/rules/contacto.md` y la decisión de `docs/MEMORY.md` ya recogen el cambio. Lo que falta es construir la sección, con su test de literales en `src/`.
 - **También en los PDFs del CV:** el correo y el teléfono irán además dentro de los PDFs que descarga el botón «Descargar CV».
-- **A qué afecta el cambio:** a `AGENTS.md` (la línea «Nunca» de datos personales y la comprobación previa al push), a `.claude/rules/contacto.md`, a la decisión de contacto de `docs/MEMORY.md` y a la skill `pre-push-check`.
-- **Antes de empezar esa sección:** se propone por escrito qué reglas y qué tests cambian y se espera la aprobación del autor. La edición de reglas va en su propio commit. Hasta entonces no se edita ninguna regla.
+- **A qué afectó el cambio:** a `AGENTS.md` (la línea «Nunca» de datos personales y la comprobación previa al push), a `.claude/rules/contacto.md`, a la decisión de contacto de `docs/MEMORY.md` y a la skill `pre-push-check`. Los cuatro se editaron en `54a289c`.
+- **Reglas ya actualizadas:** la propuesta se aprobó y las reglas se editaron en su propio commit, `54a289c`.
+- **Decisiones del autor para la sección:**
+  - el correo y el teléfono se muestran los dos completos, como texto;
+  - van sin `href` ni otros atributos, y las acciones de escribir un correo y abrir WhatsApp siguen en `ContactButton`;
+  - la fila de redes del Hero y el pie no cambian: siguen ensamblando el contacto solo en el clic;
+  - `pre-push-check` compara contra `src/config/contact.ts`: todo correo o teléfono hallado en los PDFs debe ser exactamente el de config.
 - **Lo que se mantiene:** el dato codificado en `src/config/contact.ts` y el grep sobre `dist/` con su control positivo. No se añade ninguna protección nueva.
 - **Tiempo de respuesta:** si se publica, va como interruptor en `src/config/`.
 - **Formulario:** `PLAN.md` dice «sin formulario». El de la referencia del autor sería un cambio de decisión y una petición a terceros: se le pregunta en esa fase; no se propone por defecto.
