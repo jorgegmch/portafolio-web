@@ -1,7 +1,7 @@
 import type { Lang } from '@/i18n/types'
 
 /** Versiones del CV, en el orden en que se ofrecen. */
-export const CV_VERSIONS = ['designed', 'ats'] as const
+export const CV_VERSIONS = ['infographic', 'ats'] as const
 
 export type CvVersion = (typeof CV_VERSIONS)[number]
 
@@ -19,9 +19,9 @@ export interface CvFile {
  * diccionarios.
  */
 export const cvFiles = [
-  { lang: 'es', version: 'designed', file: 'jorge-gomez-cv-designed-es.pdf' },
+  { lang: 'es', version: 'infographic', file: 'jorge-gomez-cv-infographic-es.pdf' },
   { lang: 'es', version: 'ats', file: 'jorge-gomez-cv-ats-es.pdf' },
-  { lang: 'en', version: 'designed', file: 'jorge-gomez-cv-designed-en.pdf' },
+  { lang: 'en', version: 'infographic', file: 'jorge-gomez-cv-infographic-en.pdf' },
   { lang: 'en', version: 'ats', file: 'jorge-gomez-cv-ats-en.pdf' },
 ] as const satisfies readonly CvFile[]
 

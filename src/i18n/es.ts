@@ -34,7 +34,7 @@ export const es: Dictionary = {
     availability: 'Disponible para proyectos freelance',
     availabilityShort: 'Freelance disponible',
     downloadCv: 'Descargar CV',
-    cvDesigned: 'Versión diseñada (PDF)',
+    cvInfographic: 'Versión infográfica (PDF)',
     cvAts: 'Versión ATS (PDF)',
     photoAlt: `Foto de ${site.shortName}`,
     socialLabel: 'Redes y contacto',

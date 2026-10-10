@@ -59,7 +59,7 @@ export interface Dictionary {
      */
     availabilityShort?: string
     downloadCv: string
-    cvDesigned: string
+    cvInfographic: string
     cvAts: string
     photoAlt: string
     /** Nombre accesible de la fila de redes y contacto. */

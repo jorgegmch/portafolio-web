@@ -15,7 +15,7 @@ const PDF_SIGNATURE = [37, 80, 68, 70, 45]
 const SAMPLE: readonly CvFile[] = [
   { lang: 'en', version: 'ats', file: 'sample-ats-en.pdf' },
   { lang: 'es', version: 'ats', file: 'sample-ats-es.pdf' },
-  { lang: 'es', version: 'designed', file: 'sample-designed-es.pdf' },
+  { lang: 'es', version: 'infographic', file: 'sample-infographic-es.pdf' },
 ]
 
 describe('registro de CVs', () => {
@@ -58,8 +58,8 @@ describe('cvFilesFor', () => {
     expect(cvFilesFor('en', SAMPLE).map(({ file }) => file)).toEqual(['sample-ats-en.pdf'])
   })
 
-  it('pone la versión diseñada antes que la ATS, sin importar el orden del registro', () => {
-    expect(cvFilesFor('es', SAMPLE).map(({ version }) => version)).toEqual(['designed', 'ats'])
+  it('pone la versión infográfica antes que la ATS, sin importar el orden del registro', () => {
+    expect(cvFilesFor('es', SAMPLE).map(({ version }) => version)).toEqual(['infographic', 'ats'])
   })
 
   it('devuelve una lista vacía si el idioma no tiene archivos', () => {

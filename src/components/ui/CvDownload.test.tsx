@@ -4,10 +4,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { CvDownload } from '@/components/ui/CvDownload'
 
 const LABEL = 'Descargar CV'
-const DESIGNED = { label: 'Versión diseñada (PDF)', href: '/cv/sample-designed-es.pdf' }
+const INFOGRAPHIC = { label: 'Versión infográfica (PDF)', href: '/cv/sample-infographic-es.pdf' }
 const ATS = { label: 'Versión ATS (PDF)', href: '/cv/sample-ats-es.pdf' }
 
-const setup = (options: readonly { label: string; href: string }[] = [DESIGNED, ATS]) => {
+const setup = (options: readonly { label: string; href: string }[] = [INFOGRAPHIC, ATS]) => {
   const user = userEvent.setup()
   const view = render(
     <>
@@ -101,7 +101,7 @@ describe('CvDownload', () => {
       const names = within(screen.getByRole('list'))
         .getAllByRole('link')
         .map((item) => item.textContent)
-      expect(names).toEqual([DESIGNED.label, ATS.label])
+      expect(names).toEqual([INFOGRAPHIC.label, ATS.label])
     })
 
     it('cada enlace descarga su archivo, sin abrir otra pestaña', async () => {
@@ -109,7 +109,7 @@ describe('CvDownload', () => {
 
       await user.click(toggle())
 
-      for (const option of [DESIGNED, ATS]) {
+      for (const option of [INFOGRAPHIC, ATS]) {
         expect(link(option.label)).toHaveAttribute('href', option.href)
         expect(link(option.label)).toHaveAttribute('download')
         expect(link(option.label)).not.toHaveAttribute('target')
@@ -121,7 +121,7 @@ describe('CvDownload', () => {
       await user.click(toggle())
 
       await user.tab()
-      expect(link(DESIGNED.label)).toHaveFocus()
+      expect(link(INFOGRAPHIC.label)).toHaveFocus()
       await user.tab()
       expect(link(ATS.label)).toHaveFocus()
     })
@@ -132,7 +132,7 @@ describe('CvDownload', () => {
       const { user, toggle, link } = setup()
       await user.click(toggle())
       await user.tab()
-      expect(link(DESIGNED.label)).toHaveFocus()
+      expect(link(INFOGRAPHIC.label)).toHaveFocus()
 
       await user.keyboard('{Escape}')
 
