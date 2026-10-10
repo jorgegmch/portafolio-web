@@ -1,0 +1,76 @@
+.root {
+  position: relative;
+}
+
+/* Cápsula de contorno: acompaña a la rellena sin competir con ella. La usan
+   el botón que abre el menú y el enlace directo cuando solo hay un archivo. */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--color-accent-alt);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-accent-alt);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-normal);
+  text-decoration: none;
+  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Cambia de golpe, porque solo se animan transform y opacity. */
+.toggle:hover {
+  background-color: var(--color-accent-alt);
+  color: var(--color-bg);
+}
+
+.toggle[aria-expanded='true'] {
+  background-color: var(--color-accent-alt);
+  color: var(--color-bg);
+}
+
+/* Anclada bajo el control y alineada a su borde izquierdo. Sin display, para
+   que el atributo hidden la oculte. */
+.list {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  min-width: 100%;
+  padding: var(--space-1);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  list-style: none;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-normal);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.option:hover {
+  color: var(--color-accent);
+}
+
+/* Más estrecho, como el botón relleno, para que quepan dos en fila. */
+@media (max-width: 480px) {
+  .toggle {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+}
