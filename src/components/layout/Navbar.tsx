@@ -1,10 +1,11 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId } from 'react'
 import { Link } from 'react-router-dom'
 import styles from '@/components/layout/Navbar.module.css'
 import { LangSwitcher } from '@/components/ui/LangSwitcher'
 import { mediaQueries } from '@/config/media'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
+import { useDismissibleMenu } from '@/hooks/useDismissibleMenu'
 import { useLang } from '@/hooks/useLang'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useScrolled } from '@/hooks/useScrolled'
@@ -34,41 +35,16 @@ export function Navbar() {
   const { lang, t, setLang } = useLang()
   const scrolled = useScrolled()
   const compact = useMediaQuery(mediaQueries.compactNav)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const menuToggleRef = useRef<HTMLButtonElement>(null)
-  const menuRef = useRef<HTMLUListElement>(null)
+  const {
+    open: menuOpen,
+    setOpen: setMenuOpen,
+    toggleRef: menuToggleRef,
+    areaRef: menuRef,
+  } = useDismissibleMenu<HTMLUListElement>()
   const menuId = useId()
 
   // Si la pantalla se ensancha con el menú abierto, al volver debe estar cerrado.
   if (!compact && menuOpen) setMenuOpen(false)
-
-  // Los listeners solo existen mientras el menú está abierto.
-  useEffect(() => {
-    if (!menuOpen) return
-
-    const isOutside = (target: EventTarget | null) =>
-      target instanceof Node &&
-      !menuRef.current?.contains(target) &&
-      !menuToggleRef.current?.contains(target)
-
-    const closeIfOutside = (event: Event) => {
-      if (isOutside(event.target)) setMenuOpen(false)
-    }
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      setMenuOpen(false)
-      menuToggleRef.current?.focus()
-    }
-
-    document.addEventListener('pointerdown', closeIfOutside)
-    document.addEventListener('focusin', closeIfOutside)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('pointerdown', closeIfOutside)
-      document.removeEventListener('focusin', closeIfOutside)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [menuOpen])
 
   const closeMenu = () => setMenuOpen(false)
 

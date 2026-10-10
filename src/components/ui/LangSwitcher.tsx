@@ -1,5 +1,6 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId } from 'react'
 import styles from '@/components/ui/LangSwitcher.module.css'
+import { useDismissibleMenu } from '@/hooks/useDismissibleMenu'
 import type { Lang } from '@/i18n/types'
 
 interface LangSwitcherProps {
@@ -17,36 +18,8 @@ interface LangSwitcherProps {
  * hacer clic fuera o al salir con Tab.
  */
 export function LangSwitcher({ label, current, options, onSelect }: LangSwitcherProps) {
-  const [open, setOpen] = useState(false)
-  const rootRef = useRef<HTMLDivElement>(null)
-  const toggleRef = useRef<HTMLButtonElement>(null)
+  const { open, setOpen, toggleRef, areaRef } = useDismissibleMenu<HTMLDivElement>()
   const listId = useId()
-
-  // Los listeners solo existen mientras el menú está abierto.
-  useEffect(() => {
-    if (!open) return
-
-    const isOutside = (target: EventTarget | null) =>
-      target instanceof Node && !rootRef.current?.contains(target)
-
-    const closeIfOutside = (event: Event) => {
-      if (isOutside(event.target)) setOpen(false)
-    }
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      setOpen(false)
-      toggleRef.current?.focus()
-    }
-
-    document.addEventListener('pointerdown', closeIfOutside)
-    document.addEventListener('focusin', closeIfOutside)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('pointerdown', closeIfOutside)
-      document.removeEventListener('focusin', closeIfOutside)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [open])
 
   const select = (lang: Lang) => {
     onSelect(lang)
@@ -57,7 +30,7 @@ export function LangSwitcher({ label, current, options, onSelect }: LangSwitcher
   const currentName = options.find((option) => option.lang === current)?.name ?? current
 
   return (
-    <div ref={rootRef} className={styles.root}>
+    <div ref={areaRef} className={styles.root}>
       <button
         ref={toggleRef}
         type="button"
