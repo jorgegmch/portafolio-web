@@ -15,7 +15,7 @@ export const CONTACT_OFFSET = 7
 
 export const encodedContact = {
   email: [
-    110, 118, 116, 108, 129, 113, 118, 121, 110, 108, 53, 106, 111, 71, 110, 116, 104, 112, 115,
+    113, 118, 121, 110, 108, 110, 116, 106, 111, 53, 107, 108, 125, 71, 110, 116, 104, 112, 115,
     53, 106, 118, 116,
   ],
   /** Solo dígitos, con indicativo de país, en el formato que espera wa.me. */
