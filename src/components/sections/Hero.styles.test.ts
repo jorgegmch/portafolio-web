@@ -98,15 +98,13 @@ describe('Hero: estilos', () => {
         })
       })
 
-      it('en dos columnas el texto sube justo eso, en los dos tramos', () => {
+      it('en dos columnas el texto sube justo eso, con una sola regla', () => {
         const compact = cssMedia(heroCss, '(max-width: 1280px)')
 
         expect(cssRule(heroCss, '.text').padding).toMatch(
           /^calc\(var\(--hero-text-offset\) - var\(--hero-role-height\)\) /,
         )
-        expect(cssRule(compact, '.text')['padding-top']).toBe(
-          'calc(var(--hero-text-offset-compact) - var(--hero-role-height))',
-        )
+        expect(cssRule(compact, '.text')).toEqual({})
       })
     })
   })
@@ -119,7 +117,7 @@ describe('Hero: estilos', () => {
         display: 'flex',
         'flex-wrap': 'wrap',
         gap: 'var(--space-4)',
-        'margin-top': 'var(--space-6)',
+        'margin-top': 'var(--hero-space-actions)',
       })
     })
 
@@ -216,7 +214,24 @@ describe('Hero: estilos', () => {
         display: 'flex',
         'align-items': 'center',
         gap: 'var(--space-2)',
-        'margin-top': 'var(--space-5)',
+        'margin-top': 'var(--hero-space-meta)',
+      })
+    })
+
+    // Con el estado, la cara quedaba 45 px más abajo en la primera pantalla.
+    describe('en teléfono no se muestra', () => {
+      const phone = cssMedia(heroCss, '(max-width: 480px)')
+
+      // display: none también lo saca del árbol de accesibilidad.
+      it('hasta 480 px se oculta con display, nunca con visibility ni opacity', () => {
+        expect(cssRule(phone, '.status')).toEqual({ display: 'none' })
+      })
+
+      it('en los demás tramos se ve', () => {
+        expect(status).not.toHaveProperty('display', 'none')
+        for (const query of ['(max-width: 1280px)', '(max-width: 1023px)', '(max-width: 380px)']) {
+          expect(cssRule(cssMedia(heroCss, query), '.status')).toEqual({})
+        }
       })
     })
 
@@ -303,7 +318,7 @@ describe('Hero: estilos', () => {
         display: 'flex',
         'flex-wrap': 'wrap',
         gap: 'var(--space-3)',
-        'margin-top': 'var(--space-5)',
+        'margin-top': 'var(--hero-space-meta)',
         'list-style': 'none',
       })
       expect(cssToken(tokensCss, '--space-3')).toBe('0.75rem')
@@ -384,6 +399,62 @@ describe('Hero: estilos', () => {
     })
   })
 
+  // Separación entre los bloques del texto. Donde el texto es más alto que el
+  // retrato (dos columnas estrechas) o empuja la cara fuera de la primera
+  // pantalla (teléfono), se aprieta; en escritorio y en tablet, no.
+  describe('ritmo vertical del texto', () => {
+    const ROOMY = {
+      '--hero-space-intro': 'var(--space-5)',
+      '--hero-space-actions': 'var(--space-6)',
+      '--hero-space-meta': 'var(--space-5)',
+    }
+    const TIGHT = {
+      '--hero-space-intro': 'var(--space-4)',
+      '--hero-space-actions': 'var(--space-5)',
+      '--hero-space-meta': 'var(--space-4)',
+    }
+    const hero = (query: string) => cssRule(cssMedia(heroCss, query), '.hero')
+
+    it('cada bloque toma su margen de una variable de la sección', () => {
+      expect(cssRule(heroCss, '.intro')).toMatchObject({ 'margin-top': 'var(--hero-space-intro)' })
+      expect(cssRule(heroCss, '.actions')).toMatchObject({
+        'margin-top': 'var(--hero-space-actions)',
+      })
+      expect(cssRule(heroCss, '.status')).toMatchObject({ 'margin-top': 'var(--hero-space-meta)' })
+      expect(cssRule(heroCss, '.social')).toMatchObject({ 'margin-top': 'var(--hero-space-meta)' })
+    })
+
+    it('en escritorio: 24 px, 32 px y 24 px', () => {
+      expect(cssRule(heroCss, '.hero')).toMatchObject(ROOMY)
+    })
+
+    it('hasta 1280 px, en dos columnas estrechas: 8 px menos cada uno', () => {
+      expect(hero('(max-width: 1280px)')).toMatchObject(TIGHT)
+    })
+
+    it('hasta 1023 px, apilado en tablet: vuelve a los de escritorio', () => {
+      expect(hero('(max-width: 1023px)')).toMatchObject(ROOMY)
+    })
+
+    it('hasta 480 px, en teléfono: de nuevo 8 px menos', () => {
+      expect(hero('(max-width: 480px)')).toMatchObject(TIGHT)
+    })
+
+    it('los valores salen de la escala de espaciado', () => {
+      expect(cssToken(tokensCss, '--space-4')).toBe('1rem')
+      expect(cssToken(tokensCss, '--space-5')).toBe('1.5rem')
+      expect(cssToken(tokensCss, '--space-6')).toBe('2rem')
+    })
+
+    it('ningún bloque fija su margen por su cuenta en un tramo', () => {
+      for (const query of ['(max-width: 1280px)', '(max-width: 1023px)', '(max-width: 480px)']) {
+        for (const selector of ['.intro', '.actions', '.status', '.social']) {
+          expect(cssRule(cssMedia(heroCss, query), selector)).not.toHaveProperty('margin-top')
+        }
+      }
+    })
+  })
+
   describe('presentación', () => {
     it('va en el tono apagado de la paleta', () => {
       expect(cssRule(heroCss, '.intro')).toMatchObject({ color: 'var(--color-text-muted)' })
@@ -433,23 +504,73 @@ describe('Hero: estilos', () => {
     it('el texto empieza arriba, a una distancia que sale de un token', () => {
       expect(cssRule(heroCss, '.hero')).toMatchObject({ 'align-items': 'start' })
       expect(cssRule(heroCss, '.text')).toMatchObject({
-        padding: 'calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-7)',
+        padding: 'calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-4)',
       })
-      expect(cssToken(tokensCss, '--hero-text-offset')).toBe('8rem')
     })
 
-    // Con el retrato más pequeño hay menos alto: si el texto bajara lo mismo,
-    // se acercaría al hombro y no dejaría sitio debajo.
-    it('desde 1280 px el texto baja menos, con su propio token', () => {
-      const compact = cssMedia(heroCss, '(max-width: 1280px)')
+    // Si el texto es el más alto, el Hero crece y el pelo se aleja de la
+    // barra: debajo de la fila de redes quedan 16 px, no 48.
+    it('bajo el texto queda poco relleno', () => {
+      expect(cssToken(tokensCss, '--space-4')).toBe('1rem')
+      expect(cssRule(heroCss, '.text').padding).toMatch(/ 0 var\(--space-4\)$/)
+    })
 
-      expect(cssRule(compact, '.text')).toMatchObject({
-        'padding-top': 'calc(var(--hero-text-offset-compact) - var(--hero-role-height))',
+    // Con el retrato más pequeño hay menos alto: el texto baja menos. La
+    // distancia crece con la ventana sin escalones, para que el pelo no salte
+    // al cruzar 1280 px: 80 px a 1024, 96 px a 1280 y 128 px desde 1312.
+    describe('la distancia del texto al borde superior es fluida', () => {
+      const REM = 16
+      const FORMULA =
+        /^min\((\d+)rem, max\(calc\((\d+)rem \+ \(100vw - (\d+)rem\) \* ([\d.]+)\), calc\(100vw - (\d+)rem\)\)\)$/
+      const token = cssToken(tokensCss, '--hero-text-offset')
+      const [, top = '', base = '', from = '', slope = '', shift = ''] = FORMULA.exec(token) ?? []
+      /** La fórmula del token, en px, para un ancho de ventana. */
+      const offset = (width: number) =>
+        Math.min(
+          Number(top) * REM,
+          Math.max(
+            Number(base) * REM + (width - Number(from) * REM) * Number(slope),
+            width - Number(shift) * REM,
+          ),
+        )
+
+      it('es una sola fórmula: un tope y dos rampas', () => {
+        expect(token).toMatch(FORMULA)
+        expect(token).toBe(
+          'min(8rem, max(calc(5rem + (100vw - 64rem) * 0.0625), calc(100vw - 74rem)))',
+        )
       })
-      expect(cssToken(tokensCss, '--hero-text-offset-compact')).toBe('6rem')
-      expect(parseFloat(cssToken(tokensCss, '--hero-text-offset-compact'))).toBeLessThan(
-        parseFloat(cssToken(tokensCss, '--hero-text-offset')),
-      )
+
+      it.each([
+        [1024, 80],
+        [1152, 88],
+        [1280, 96],
+        [1296, 112],
+        [1312, 128],
+        [1440, 128],
+        [1920, 128],
+      ])('a %i px de ancho vale %i px', (width, expected) => {
+        expect(offset(width)).toBe(expected)
+      })
+
+      // Las dos rampas se cruzan justo en 1280 px: ahí no hay salto.
+      it('no salta al cruzar 1280 px', () => {
+        expect(offset(1281) - offset(1280)).toBeLessThanOrEqual(1)
+        expect(Number(base) * REM + (1280 - Number(from) * REM) * Number(slope)).toBe(
+          1280 - Number(shift) * REM,
+        )
+      })
+
+      it('nunca baja al crecer la ventana', () => {
+        for (let width = 1024; width < 1920; width += 1) {
+          expect(offset(width + 1)).toBeGreaterThanOrEqual(offset(width))
+        }
+      })
+
+      it('ya no hay un token aparte para el tramo estrecho', () => {
+        expect(tokensCss).not.toContain('--hero-text-offset-compact')
+        expect(heroCss).not.toContain('--hero-text-offset-compact')
+      })
     })
 
     // La caja del retrato invade la columna de texto por su zona transparente.
@@ -656,6 +777,14 @@ describe('Hero: estilos', () => {
       expect(cssRule(narrow, '.text')).toMatchObject({ padding: '0' })
       expect(cssToken(tokensCss, '--hero-stack-padding')).toBe('4rem')
       expect(cssToken(tokensCss, '--hero-stack-gap')).toBe('2rem')
+    })
+
+    // 24 px en vez de 32 hasta el retrato: la cara entra antes.
+    it('en teléfono el hueco hasta el retrato es menor', () => {
+      expect(cssRule(phone, '.hero')).toMatchObject({ gap: 'var(--space-5)' })
+      expect(parseFloat(cssToken(tokensCss, '--space-5'))).toBeLessThan(
+        parseFloat(cssToken(tokensCss, '--hero-stack-gap')),
+      )
     })
 
     it('en teléfono el relleno superior es aún menor', () => {

@@ -117,9 +117,9 @@
   --portrait-head-gap: 2rem;
   --portrait-head-room: 0.125;
   /* Distancia del texto al borde superior: lo deja a la altura de la cabeza.
-     Desde 1280 px baja menos, porque el retrato es más pequeño. */
-  --hero-text-offset: 8rem;
-  --hero-text-offset-compact: 6rem;
+     Crece con la ventana, como el retrato y sin escalones: 80 px a 1024,
+     96 px a 1280 y 128 px desde 1312. */
+  --hero-text-offset: min(8rem, max(calc(5rem + (100vw - 64rem) * 0.0625), calc(100vw - 74rem)));
   /* Ancho del párrafo junto al retrato: más corto que --measure, para que
      sus líneas queden lejos del hombro de la figura. */
   --hero-intro-measure: 30rem;

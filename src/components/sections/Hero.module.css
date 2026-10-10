@@ -10,6 +10,11 @@
   );
   /* Lo que ocupa la línea de rol, con su margen. */
   --hero-role-height: calc(var(--hero-role-size) * var(--leading-tight) + var(--space-3));
+  /* Separación sobre el párrafo, sobre los botones y sobre el estado y las
+     redes. Los tramos estrechos la aprietan. */
+  --hero-space-intro: var(--space-5);
+  --hero-space-actions: var(--space-6);
+  --hero-space-meta: var(--space-5);
 
   /* Referencia del retrato, que va anclado fuera del flujo. */
   position: relative;
@@ -37,8 +42,9 @@
   position: relative;
   z-index: 1;
   /* Sube lo que ocupa el rol: así el párrafo sigue a la altura de siempre,
-     lejos del hombro. */
-  padding: calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-7);
+     lejos del hombro. Abajo, poco relleno: si el texto es más alto que el
+     retrato, el Hero crece y el pelo se aleja de la barra. */
+  padding: calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-4);
 }
 
 .greeting {
@@ -81,7 +87,7 @@
 
 .intro {
   max-width: var(--hero-intro-measure);
-  margin-top: var(--space-5);
+  margin-top: var(--hero-space-intro);
   color: var(--color-text-muted);
   font-size: var(--font-size-lg);
 }
@@ -90,7 +96,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
-  margin-top: var(--space-6);
+  margin-top: var(--hero-space-actions);
 }
 
 /* Cápsula rellena. El brillo es una sombra del verde de la paleta: no ocupa
@@ -125,7 +131,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-5);
+  margin-top: var(--hero-space-meta);
   color: var(--color-text-muted);
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
@@ -152,7 +158,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin-top: var(--space-5);
+  margin-top: var(--hero-space-meta);
   list-style: none;
 }
 
@@ -333,15 +339,15 @@
 }
 
 /* Con el párrafo en más líneas, la figura lo alcanza antes: el tope por
-   ancho baja, el texto baja menos, y las pastillas de la izquierda se mueven
-   con ellos. */
+   ancho baja y las pastillas de la izquierda se mueven con él. El retrato es
+   más bajo que el texto, así que los bloques se aprietan para que el Hero no
+   crezca y el pelo siga junto a la barra. */
 @media (max-width: 1280px) {
   .hero {
     --portrait-cap: min(var(--portrait-max-width), var(--portrait-share-compact));
-  }
-
-  .text {
-    padding-top: calc(var(--hero-text-offset-compact) - var(--hero-role-height));
+    --hero-space-intro: var(--space-4);
+    --hero-space-actions: var(--space-5);
+    --hero-space-meta: var(--space-4);
   }
 
   .float:nth-child(1) {
@@ -364,6 +370,11 @@
    retrato, así que el retrato vuelve al flujo, debajo del texto. */
 @media (max-width: 1023px) {
   .hero {
+    /* Apilado no hay retrato al lado que alcanzar: vuelve el aire de escritorio. */
+    --hero-space-intro: var(--space-5);
+    --hero-space-actions: var(--space-6);
+    --hero-space-meta: var(--space-5);
+
     grid-template-columns: minmax(0, 1fr);
     gap: var(--hero-stack-gap);
     min-height: auto;
@@ -429,9 +440,21 @@
   }
 }
 
+/* En teléfono todo lo que acorta el texto sube la cara hacia la primera
+   pantalla: bloques más juntos, menos hueco hasta el retrato y sin estado. */
 @media (max-width: 480px) {
   .hero {
+    --hero-space-intro: var(--space-4);
+    --hero-space-actions: var(--space-5);
+    --hero-space-meta: var(--space-4);
+
+    gap: var(--space-5);
     padding-top: var(--hero-stack-padding-phone);
+  }
+
+  /* Con display: none tampoco existe para un lector de pantalla. */
+  .status {
+    display: none;
   }
 
   /* Más estrecho, para que quepan dos en fila; el alto táctil no cambia. */
