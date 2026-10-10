@@ -33,6 +33,7 @@ export const en: Dictionary = {
     viewProjects: 'View projects',
     availability: 'Available for freelance',
     downloadCv: 'Download CV',
+    downloadCvShort: 'CV',
     cvInfographic: 'Infographic version (PDF)',
     cvAts: 'ATS version (PDF)',
     photoAlt: `Photo of ${site.shortName}`,

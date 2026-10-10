@@ -7,6 +7,7 @@
 .toggle {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-2);
   min-height: var(--touch-target);
   padding: var(--space-3) var(--space-5);
   border: 1px solid var(--color-accent-alt);
@@ -33,6 +34,28 @@
 .toggle[aria-expanded='true'] {
   background-color: var(--color-accent-alt);
   color: var(--color-bg);
+}
+
+/* Texto corto: no existe hasta el corte de teléfono estrecho. */
+.labelShort {
+  display: none;
+}
+
+/* Sigue el tamaño y el color del texto. Su duración sale de un token que
+   tokens.css anula con prefers-reduced-motion. */
+.caret {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.toggle[aria-expanded='true'] .caret {
+  transform: rotate(180deg);
 }
 
 /* Anclada bajo el control y alineada a su borde izquierdo. Sin display, para
@@ -67,10 +90,30 @@
   color: var(--color-accent);
 }
 
-/* Más estrecho, como el botón relleno, para que quepan dos en fila. */
+/* Más estrecho, como el botón relleno, para que quepan dos en fila. El
+   control va segundo en la fila y es más estrecho que la lista: alineada a
+   su borde derecho no se sale de la pantalla. */
 @media (max-width: 480px) {
   .toggle {
     padding: var(--space-2) var(--space-4);
     font-size: var(--font-size-sm);
+  }
+
+  .list {
+    right: 0;
+    left: auto;
+  }
+}
+
+/* Con el texto largo los dos botones no caben en una fila. Con display: none
+   el texto oculto tampoco existe para un lector de pantalla; el nombre del
+   control lo lleva aria-label. */
+@media (max-width: 380px) {
+  .labelLong {
+    display: none;
+  }
+
+  .labelShort {
+    display: inline;
   }
 }

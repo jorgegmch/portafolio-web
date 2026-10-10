@@ -149,21 +149,23 @@ describe('Hero', () => {
       expect(link().closest('[aria-hidden="true"]')).toBeNull()
     })
 
-    // «Descargar CV» no se muestra hasta que existan los PDFs: el Hero se
-    // compone con un solo botón. Los demás enlaces y botones son los de la
-    // fila de redes.
-    it('es el único enlace de su grupo mientras no haya CV', () => {
+    // El Hero se compone con dos controles: este enlace y el botón de
+    // «Descargar CV», con su menú cerrado. Los demás enlaces y botones son
+    // los de la fila de redes. Sin PDFs en el registro queda solo el enlace:
+    // lo comprueba Hero.cv.empty.test.tsx.
+    it('comparte su grupo solo con la descarga del CV', () => {
       renderHero()
 
       const group = link().parentElement
       const social = screen.getByRole('list', { name: dictionaries.es.hero.socialLabel })
       const outside = <T extends Element>(elements: T[]) =>
         elements.filter((element) => !social.contains(element))
+      const download = screen.getByRole('button', { name: dictionaries.es.hero.downloadCv })
 
-      expect(group?.children).toHaveLength(1)
+      expect(group?.children).toHaveLength(2)
+      expect(group).toContainElement(download)
       expect(outside(screen.getAllByRole('link'))).toEqual([link()])
-      expect(outside(screen.queryAllByRole('button'))).toEqual([])
-      expect(screen.queryByText(dictionaries.es.hero.downloadCv)).not.toBeInTheDocument()
+      expect(outside(screen.queryAllByRole('button'))).toEqual([download])
     })
   })
 

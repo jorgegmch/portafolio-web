@@ -25,6 +25,54 @@ afterEach(() => {
 })
 
 describe('CvDownload', () => {
+  describe('con texto corto', () => {
+    const SHORT = 'CV'
+    const renderShort = (options: readonly { label: string; href: string }[]) =>
+      render(<CvDownload label={LABEL} shortLabel={SHORT} options={options} />)
+    const texts = (control: HTMLElement) =>
+      [...control.querySelectorAll('span')].map((span) => span.textContent)
+
+    // El CSS deja ver uno según el ancho; jsdom no lo aplica y ve los dos.
+    it('el botón lleva los dos textos, el largo primero', () => {
+      renderShort([INFOGRAPHIC, ATS])
+
+      expect(texts(screen.getByRole('button'))).toEqual([LABEL, SHORT])
+    })
+
+    it('el botón sigue llamándose como el texto largo', () => {
+      renderShort([INFOGRAPHIC, ATS])
+
+      expect(screen.getByRole('button')).toHaveAccessibleName(LABEL)
+      expect(screen.getByRole('button')).toHaveAttribute('aria-label', LABEL)
+    })
+
+    it('el enlace directo también lleva los dos textos y el mismo nombre', () => {
+      renderShort([ATS])
+
+      expect(texts(screen.getByRole('link'))).toEqual([LABEL, SHORT])
+      expect(screen.getByRole('link')).toHaveAccessibleName(LABEL)
+    })
+
+    it('la flecha sigue siendo una, después de los textos', () => {
+      renderShort([INFOGRAPHIC, ATS])
+
+      const button = screen.getByRole('button')
+
+      expect(button.querySelectorAll('svg')).toHaveLength(1)
+      expect(button.lastElementChild?.tagName.toLowerCase()).toBe('svg')
+    })
+  })
+
+  describe('sin texto corto', () => {
+    it('el botón lleva solo su texto, sin aria-label', () => {
+      const { toggle } = setup()
+
+      expect(toggle().querySelectorAll('span')).toHaveLength(0)
+      expect(toggle()).not.toHaveAttribute('aria-label')
+      expect(toggle()).toHaveTextContent(LABEL)
+    })
+  })
+
   describe('sin archivos', () => {
     it('no renderiza nada', () => {
       const { container } = render(<CvDownload label={LABEL} options={[]} />)
@@ -43,6 +91,13 @@ describe('CvDownload', () => {
       expect(screen.queryByRole('button', { name: LABEL })).not.toBeInTheDocument()
       expect(screen.queryByRole('list')).not.toBeInTheDocument()
     })
+
+    // La flecha anuncia un menú: sin menú, no va.
+    it('no lleva flecha', () => {
+      const { link } = setup([ATS])
+
+      expect(link(LABEL).querySelector('svg')).toBeNull()
+    })
   })
 
   describe('con varias versiones, cerrado', () => {
@@ -57,6 +112,18 @@ describe('CvDownload', () => {
       setup()
 
       expect(screen.queryByRole('link')).not.toBeInTheDocument()
+    })
+
+    it('lleva una flecha decorativa, que no entra en su nombre', () => {
+      const { toggle } = setup()
+
+      const arrows = toggle().querySelectorAll('svg')
+
+      expect(arrows).toHaveLength(1)
+      expect(arrows[0]).toHaveAttribute('aria-hidden', 'true')
+      expect(arrows[0]).not.toHaveAttribute('fill')
+      expect(arrows[0]).not.toHaveAttribute('stroke')
+      expect(toggle()).toHaveAccessibleName(LABEL)
     })
 
     it('aria-controls apunta a una lista que existe', () => {

@@ -259,11 +259,14 @@ describe('Hero: fila de redes', () => {
   })
 
   describe('teclado', () => {
+    // Antes de la fila van «Ver proyectos» y la descarga del CV, con el menú cerrado.
     it('el tabulador pasa por GitHub, LinkedIn, correo y WhatsApp, en ese orden', async () => {
       const user = userEvent.setup()
       renderHero()
 
       screen.getByRole('link', { name: dictionaries.es.hero.viewProjects }).focus()
+      await user.tab()
+      expect(screen.getByRole('button', { name: dictionaries.es.hero.downloadCv })).toHaveFocus()
       for (const control of controls()) {
         await user.tab()
         expect(control).toHaveFocus()

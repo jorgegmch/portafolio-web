@@ -59,6 +59,8 @@ export interface Dictionary {
      */
     availabilityShort?: string
     downloadCv: string
+    /** Versión corta de `downloadCv`, para los teléfonos donde no cabe junto a `viewProjects`. */
+    downloadCvShort: string
     cvInfographic: string
     cvAts: string
     photoAlt: string

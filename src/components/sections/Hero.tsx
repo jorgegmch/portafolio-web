@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
 import { ContactButton } from '@/components/ui/ContactButton'
+import { CvDownload } from '@/components/ui/CvDownload'
 import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
+import { cvFilesFor, cvUrl, type CvVersion } from '@/data/cv'
 import { heroSocial, heroSocialIconUrl, heroSocialUrl } from '@/data/social'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
 import { useLang } from '@/hooks/useLang'
+import type { Dictionary } from '@/i18n/types'
 import { splitName } from '@/lib/splitName'
 
 const [small] = portrait.sources
@@ -35,9 +38,16 @@ const PORTRAIT_SIZES = [
 /** Adorno junto al rol; es un signo, no texto traducible. */
 const ROLE_CURSOR = '|'
 
+/** Clave del diccionario con el nombre de cada versión del CV. */
+const CV_LABEL_KEYS = {
+  infographic: 'cvInfographic',
+  ats: 'cvAts',
+} as const satisfies Record<CvVersion, keyof Dictionary['hero']>
+
 /**
  * Primera sección de la home: saludo, nombre en dos colores, rol con un
  * cursor decorativo, presentación breve, un botón que lleva a los proyectos,
+ * la descarga del CV en el idioma activo si data/cv tiene sus archivos,
  * si config/availability lo activa, el estado de disponibilidad, y la fila de
  * redes de data/social, con el retrato al lado. En la fila, los perfiles son
  * enlaces y el correo y WhatsApp salen por ContactButton, que arma el dato al
@@ -50,9 +60,13 @@ const ROLE_CURSOR = '|'
  * tecnologías ya las nombra.
  */
 export function Hero() {
-  const { t } = useLang()
+  const { lang, t } = useLang()
   const headingId = useId()
   const { first, last } = splitName(t.hero.heading)
+  const cvOptions = cvFilesFor(lang).map((entry) => ({
+    label: t.hero[CV_LABEL_KEYS[entry.version]],
+    href: cvUrl(entry),
+  }))
 
   return (
     <section id={sections.hero} className={styles.hero} aria-labelledby={headingId}>
@@ -75,6 +89,11 @@ export function Hero() {
           >
             {t.hero.viewProjects}
           </Link>
+          <CvDownload
+            label={t.hero.downloadCv}
+            shortLabel={t.hero.downloadCvShort}
+            options={cvOptions}
+          />
         </div>
         {AVAILABLE_FOR_FREELANCE && (
           <p className={styles.status}>

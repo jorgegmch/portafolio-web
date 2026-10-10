@@ -8,10 +8,38 @@ describe('CvDownload: estilos', () => {
     expect(css).not.toMatch(/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i)
   })
 
-  it('solo usa el breakpoint de teléfono', () => {
+  it('solo usa los breakpoints de teléfono y de teléfono estrecho', () => {
     expect(css.match(/@media[^{]*/g)?.map((query) => query.trim())).toEqual([
       '@media (max-width: 480px)',
+      '@media (max-width: 380px)',
     ])
+  })
+
+  describe('texto corto', () => {
+    const narrow = cssMedia(css, '(max-width: 380px)')
+
+    it('por defecto se ve el largo y el corto no existe', () => {
+      expect(cssRule(css, '.labelShort')).toEqual({ display: 'none' })
+      expect(cssRule(css, '.labelLong')).toEqual({})
+    })
+
+    // Con display: none el oculto tampoco existe para un lector de pantalla.
+    it('hasta 380 px se cambian: sale el corto y el largo deja de existir', () => {
+      expect(cssRule(narrow, '.labelLong')).toEqual({ display: 'none' })
+      expect(cssRule(narrow, '.labelShort')).toEqual({ display: 'inline' })
+    })
+
+    it('el botón no cambia de tamaño de letra ni de relleno en ese corte', () => {
+      expect(cssRule(narrow, '.toggle')).toEqual({})
+    })
+  })
+
+  // Segundo en la fila y más estrecho que la lista: a la izquierda se saldría de la pantalla.
+  it('en teléfono la lista se alinea al borde derecho del control', () => {
+    expect(cssRule(cssMedia(css, '(max-width: 480px)'), '.list')).toEqual({
+      right: '0',
+      left: 'auto',
+    })
   })
 
   it('el control es una cápsula de contorno con el alto táctil', () => {
@@ -26,6 +54,44 @@ describe('CvDownload: estilos', () => {
 
   it('el texto del control no se parte', () => {
     expect(cssRule(css, '.toggle')).toMatchObject({ 'white-space': 'nowrap' })
+  })
+
+  describe('flecha del menú', () => {
+    it('se separa del texto con un espacio de la escala', () => {
+      expect(cssRule(css, '.toggle')).toMatchObject({ gap: 'var(--space-2)' })
+    })
+
+    it('sigue el tamaño y el color del texto, con el trazo de los iconos', () => {
+      expect(cssRule(css, '.caret')).toMatchObject({
+        width: '1em',
+        height: '1em',
+        fill: 'none',
+        stroke: 'currentColor',
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+        'stroke-width': 'var(--icon-stroke-width)',
+      })
+    })
+
+    // La duración sale de un token que tokens.css anula con prefers-reduced-motion.
+    it('solo anima transform, con la duración de tokens', () => {
+      expect(cssRule(css, '.caret')).toMatchObject({
+        transition: 'transform var(--duration-fast) var(--ease-standard)',
+      })
+      expect(css.match(/transition\s*:/g)).toHaveLength(1)
+    })
+
+    it('gira media vuelta con el menú abierto', () => {
+      expect(css).toMatch(
+        /\.toggle\[aria-expanded='true'\] \.caret\s*\{\s*transform:\s*rotate\(180deg\);\s*\}/,
+      )
+    })
+
+    it('la duración se anula con prefers-reduced-motion en tokens.css', () => {
+      const tokens = readCss('src/styles/tokens.css')
+
+      expect(cssMedia(tokens, '(prefers-reduced-motion: reduce)')).toMatch(/--duration-fast:\s*0\.01ms;/)
+    })
   })
 
   it('la lista flota bajo el control, sin empujar el contenido', () => {
