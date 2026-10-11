@@ -47,6 +47,8 @@ export interface Dictionary {
     heading: string
     /** Saludo sobre el nombre; las mayúsculas sostenidas las pone el CSS. */
     greeting: string
+    /** Textos del tag que rota bajo el nombre, en orden; el primero es el fijo. */
+    roles: readonly string[]
     /** Presentación breve bajo el nombre. */
     intro: string
     tagline: string

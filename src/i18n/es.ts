@@ -26,6 +26,11 @@ export const es: Dictionary = {
   hero: {
     heading: site.shortName,
     greeting: 'Hola, soy',
+    roles: [
+      'Desarrollador Full-Stack',
+      'Backend con Java y Spring Boot',
+      'Automatización con agentes de IA',
+    ],
     // Texto provisional: pendiente de la versión final del autor.
     intro:
       'Desarrollador full stack enfocado en backend con Java, Spring Boot y PostgreSQL. Me gusta entender el problema de negocio antes de escribir código y construir soluciones que hagan algo útil.',
