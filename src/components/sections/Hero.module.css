@@ -146,12 +146,15 @@
   display: none;
 }
 
+/* Brillo fijo, como un LED: una sombra más corta y más tenue que la del
+   botón principal. Sin color-mix la sombra no se aplica y queda el punto. */
 .statusDot {
   flex: none;
   width: var(--hero-status-dot);
   height: var(--hero-status-dot);
   border-radius: var(--radius-full);
   background: var(--color-accent-alt);
+  box-shadow: 0 0 var(--hero-status-glow) color-mix(in srgb, var(--color-accent-alt) 30%, transparent);
 }
 
 .social {

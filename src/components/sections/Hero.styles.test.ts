@@ -259,6 +259,38 @@ describe('Hero: estilos', () => {
       expect(dot).toMatchObject({ flex: 'none' })
     })
 
+    describe('brillo del punto', () => {
+      /** Porcentaje del verde de acento en la sombra de una regla. */
+      const glowShare = (shadow = '') => Number(/var\(--color-accent-alt\) (\d+)%/.exec(shadow)?.[1])
+
+      // Sin color-mix la declaración entera se descarta y el punto queda sin
+      // brillo: por eso el color va aquí y no en un token.
+      it('es una sombra del verde de acento, sin desplazamiento ni color literal', () => {
+        expect(dot['box-shadow']).toBe(
+          '0 0 var(--hero-status-glow) color-mix(in srgb, var(--color-accent-alt) 30%, transparent)',
+        )
+        expect(cssToken(tokensCss, '--hero-status-glow')).toMatch(/^[\d.]+rem$/)
+      })
+
+      it('es más suave que el del botón principal: como mucho la mitad de radio y menos color', () => {
+        const primary = cssRule(heroCss, '.primary')
+
+        expect(parseFloat(cssToken(tokensCss, '--hero-status-glow'))).toBeLessThanOrEqual(
+          parseFloat(cssToken(tokensCss, '--hero-cta-glow')) / 2,
+        )
+        expect(glowShare(dot['box-shadow'])).toBeLessThan(glowShare(primary['box-shadow']))
+        expect(glowShare(dot['box-shadow'])).toBeGreaterThan(0)
+      })
+
+      it('es fijo: ni animación ni transición', () => {
+        expect(Object.keys(dot).filter((name) => /^(animation|transition)/.test(name))).toEqual([])
+      })
+
+      it('no cambia con el puntero ni en ningún tramo', () => {
+        expect(heroCss.match(/\.statusDot[^{]*\{/g)).toEqual(['.statusDot {'])
+      })
+    })
+
     // El texto largo necesita 314 px de columna, que hay desde 374 px de
     // ventana; con algo de margen, hasta 380 px se muestra el corto.
     describe('texto largo y corto', () => {
