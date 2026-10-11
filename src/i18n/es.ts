@@ -31,9 +31,8 @@ export const es: Dictionary = {
       'Backend con Java y Spring Boot',
       'Automatización con agentes de IA',
     ],
-    // Texto provisional: pendiente de la versión final del autor.
     intro:
-      'Desarrollador full stack enfocado en backend con Java, Spring Boot y PostgreSQL. Me gusta entender el problema de negocio antes de escribir código y construir soluciones que hagan algo útil.',
+      'Construyo APIs con Java y Spring Boot, integro agentes de IA en automatizaciones y soy un puente comunicativo entre el negocio y el equipo. Vengo de la comunicación social: escucho, planifico, documento y comunico, activamente.',
     tagline: 'Where code meets storytelling.',
     viewProjects: 'Ver proyectos',
     availability: 'Disponible para proyectos freelance',

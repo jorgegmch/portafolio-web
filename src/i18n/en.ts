@@ -27,9 +27,8 @@ export const en: Dictionary = {
     heading: site.shortName,
     greeting: "Hello, I'm",
     roles: [site.role, 'Backend with Java and Spring Boot', 'Automation with AI agents'],
-    // Provisional text: pending the author's final version.
     intro:
-      'Full stack developer focused on backend work with Java, Spring Boot and PostgreSQL. I like to understand the business problem before writing code, and to build things that do something useful.',
+      'I build APIs with Java and Spring Boot, integrate AI agents into automations, and act as a communication bridge between the business and the team. I come from a communications background: I actively listen, plan, document and communicate.',
     tagline: 'Where code meets storytelling.',
     viewProjects: 'View projects',
     availability: 'Available for freelance',

@@ -11,6 +11,13 @@ const AVAILABILITY = {
   en: 'Available for freelance',
 } as const
 
+// Aprobado por el autor palabra por palabra: cambiarlo exige su visto bueno y
+// actualizar también estas dos constantes.
+const INTRO = {
+  es: 'Construyo APIs con Java y Spring Boot, integro agentes de IA en automatizaciones y soy un puente comunicativo entre el negocio y el equipo. Vengo de la comunicación social: escucho, planifico, documento y comunico, activamente.',
+  en: 'I build APIs with Java and Spring Boot, integrate AI agents into automations, and act as a communication bridge between the business and the team. I come from a communications background: I actively listen, plan, document and communicate.',
+} as const
+
 const SOCIAL_LABEL = { es: 'Redes y contacto', en: 'Social and contact' } as const
 
 const SOCIAL = {
@@ -89,6 +96,10 @@ describe('textos del hero', () => {
 
   it.each(LANGS)('en %s, la presentación tiene texto', (lang) => {
     expect(dictionaries[lang].hero.intro.trim()).not.toBe('')
+  })
+
+  it.each(LANGS)('en %s, la presentación es el texto aprobado por el autor', (lang) => {
+    expect(dictionaries[lang].hero.intro).toBe(INTRO[lang])
   })
 
   it('la presentación cambia con el idioma', () => {
