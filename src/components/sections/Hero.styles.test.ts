@@ -14,11 +14,84 @@ describe('Hero: estilos', () => {
       expect(cssRule(heroCss, '.greeting')).toMatchObject({ 'text-transform': 'uppercase' })
     })
 
-    it('el espaciado de letras sale de un token', () => {
+    // Token propio: la escala general no se toca por un solo texto.
+    it('el espaciado de letras sale de su token, más cerrado que el más abierto de la escala', () => {
       expect(cssRule(heroCss, '.greeting')).toMatchObject({
-        'letter-spacing': 'var(--tracking-wider)',
+        'letter-spacing': 'var(--hero-greeting-tracking)',
       })
-      expect(cssToken(tokensCss, '--tracking-wider')).not.toBe('')
+      expect(cssToken(tokensCss, '--hero-greeting-tracking')).toMatch(/^0\.\d+em$/)
+      expect(parseFloat(cssToken(tokensCss, '--hero-greeting-tracking'))).toBeLessThan(
+        parseFloat(cssToken(tokensCss, '--tracking-wider')),
+      )
+      expect(cssToken(tokensCss, '--tracking-wider')).toBe('0.2em')
+    })
+
+    it('conserva su color, su fuente y su tamaño', () => {
+      expect(cssRule(heroCss, '.greeting')).toMatchObject({
+        color: 'var(--color-text-muted)',
+        'font-family': 'var(--font-mono)',
+        'font-size': 'var(--font-size-md)',
+      })
+    })
+
+    describe('líneas a los lados', () => {
+      const both = cssRule(heroCss, '.greeting::before,\n.greeting::after')
+      const before = cssRule(heroCss, '.greeting::before')
+      const after = cssRule(heroCss, '.greeting::after')
+
+      it('el saludo las pone en fila con el texto, centradas en vertical y con el hueco de su token', () => {
+        expect(cssRule(heroCss, '.greeting')).toMatchObject({
+          display: 'flex',
+          'align-items': 'center',
+          gap: 'var(--hero-greeting-gap)',
+        })
+        expect(cssToken(tokensCss, '--hero-greeting-gap')).toMatch(/^var\(--space-\d\)$/)
+      })
+
+      // Sin texto: un pseudo-elemento vacío no existe para un lector de pantalla.
+      it('son pseudo-elementos vacíos, finos y con el largo de su token', () => {
+        expect(both).toEqual({
+          content: "''",
+          flex: 'none',
+          width: 'var(--hero-greeting-rule)',
+          height: '1px',
+        })
+        expect(cssToken(tokensCss, '--hero-greeting-rule')).toMatch(/^var\(--space-\d\)$/)
+      })
+
+      it('la izquierda va de transparente, en el borde, al verde de acento junto al texto', () => {
+        expect(before).toEqual({
+          background: 'linear-gradient(to right, transparent, var(--color-accent-alt))',
+        })
+      })
+
+      // El espaciado deja un hueco tras la última letra: la línea lo recupera
+      // para quedar tan cerca del texto como la izquierda.
+      it('la derecha es su espejo y descuenta el espaciado de la última letra', () => {
+        expect(after).toEqual({
+          'margin-left': 'calc(-1 * var(--hero-greeting-tracking))',
+          background: 'linear-gradient(to left, transparent, var(--color-accent-alt))',
+        })
+      })
+
+      it('no llevan color literal, animación ni transición', () => {
+        const rules = [both, before, after]
+
+        for (const rule of rules) {
+          expect(Object.values(rule).join(' ')).not.toMatch(/#|rgb|hsl/)
+          expect(Object.keys(rule).filter((name) => /^(animation|transition)/.test(name))).toEqual([])
+        }
+      })
+
+      it('son iguales en todos los tramos', () => {
+        expect(heroCss.match(/\.greeting[^{,]*[{,]/g)).toEqual([
+          '.greeting {',
+          '.greeting::before,',
+          '.greeting::after {',
+          '.greeting::before {',
+          '.greeting::after {',
+        ])
+      })
     })
   })
 

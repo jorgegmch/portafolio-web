@@ -126,6 +126,12 @@
   /* Línea de rol bajo el nombre: siempre mayor que el párrafo (19 px), de
      20 px en teléfono a 24 px en escritorio. */
   --hero-role-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  /* Saludo sobre el nombre: espaciado de letras propio, más cerrado que
+     --tracking-wider, largo de las líneas de los lados y hueco hasta el
+     texto. */
+  --hero-greeting-tracking: 0.12em;
+  --hero-greeting-rule: var(--space-5);
+  --hero-greeting-gap: var(--space-3);
   /* Brillo del botón principal: radio de la sombra, en reposo y bajo el
      puntero. */
   --hero-cta-glow: 1rem;

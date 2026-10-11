@@ -47,14 +47,40 @@
   padding: calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-4);
 }
 
+/* Texto entre dos líneas finas: la izquierda arranca en el borde del nombre
+   y el texto queda sangrado. */
 .greeting {
+  display: flex;
+  align-items: center;
+  gap: var(--hero-greeting-gap);
   margin-bottom: var(--space-3);
   color: var(--color-text-muted);
   font-family: var(--font-mono);
   font-size: var(--font-size-md);
-  letter-spacing: var(--tracking-wider);
+  letter-spacing: var(--hero-greeting-tracking);
   /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
   text-transform: uppercase;
+}
+
+/* Adorno: sin texto, no existe para un lector de pantalla. Verdes junto al
+   texto y transparentes en el extremo lejano. */
+.greeting::before,
+.greeting::after {
+  content: '';
+  flex: none;
+  width: var(--hero-greeting-rule);
+  height: 1px;
+}
+
+.greeting::before {
+  background: linear-gradient(to right, transparent, var(--color-accent-alt));
+}
+
+/* El espaciado deja un hueco tras la última letra: se descuenta para que
+   esta línea quede tan cerca del texto como la otra. */
+.greeting::after {
+  margin-left: calc(-1 * var(--hero-greeting-tracking));
+  background: linear-gradient(to left, transparent, var(--color-accent-alt));
 }
 
 .name {

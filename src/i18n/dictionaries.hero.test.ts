@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { dictionaries } from '@/i18n/index'
 import { LANGS } from '@/i18n/types'
 
-const GREETINGS = { es: 'Hola, yo soy', en: "Hello, I'm" } as const
+const GREETINGS = { es: 'Hola, soy', en: "Hello, I'm" } as const
 
 const VIEW_PROJECTS = { es: 'Ver proyectos', en: 'View projects' } as const
 
