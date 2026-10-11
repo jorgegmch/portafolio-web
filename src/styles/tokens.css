@@ -126,6 +126,9 @@
   /* Línea de rol bajo el nombre: siempre mayor que el párrafo (19 px), de
      20 px en teléfono a 24 px en escritorio. */
   --hero-role-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  /* Rol que rota bajo el nombre: cuánto baja el texto que espera y cuánto
+     sube el que sale. La duración del cambio es --duration-role-swap. */
+  --hero-role-shift: 0.4em;
   /* Saludo sobre el nombre: espaciado de letras propio, más cerrado que
      --tracking-wider, largo de las líneas de los lados y hueco hasta el
      texto. */
@@ -188,6 +191,9 @@
   --duration-fast: 200ms;
   --duration-base: 300ms;
   --duration-slow: 650ms;
+  /* Cambio de un texto del rol al siguiente. config/heroRoles la repite
+     para el temporizador; un test las compara. */
+  --duration-role-swap: 500ms;
   --ease-standard: ease;
 
   /* Capas */
@@ -209,5 +215,6 @@
     --duration-fast: 0.01ms;
     --duration-base: 0.01ms;
     --duration-slow: 0.01ms;
+    --duration-role-swap: 0.01ms;
   }
 }

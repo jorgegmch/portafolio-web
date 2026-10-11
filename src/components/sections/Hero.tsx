@@ -5,12 +5,15 @@ import styles from '@/components/sections/Hero.module.css'
 import { ContactButton } from '@/components/ui/ContactButton'
 import { CvDownload } from '@/components/ui/CvDownload'
 import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
+import { ROLE_ROTATION } from '@/config/heroRoles'
 import { routes, sections } from '@/config/routes'
-import { site } from '@/config/site'
 import { cvFilesFor, cvUrl, type CvVersion } from '@/data/cv'
 import { heroSocial, heroSocialIconUrl, heroSocialUrl } from '@/data/social'
 import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
+import { useIntroPlaying } from '@/hooks/useIntroPlaying'
 import { useLang } from '@/hooks/useLang'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { useRotatingIndex } from '@/hooks/useRotatingIndex'
 import type { Dictionary } from '@/i18n/types'
 import { splitName } from '@/lib/splitName'
 
@@ -38,6 +41,12 @@ const PORTRAIT_SIZES = [
 /** Adorno junto al rol; es un signo, no texto traducible. */
 const ROLE_CURSOR = '|'
 
+/** Une los textos del rol en la frase que oye un lector de pantalla. */
+const ROLE_SEPARATOR = ', '
+
+/** Cada texto del rol dura lo que se ve más lo que tarda en entrar el siguiente. */
+const ROLE_INTERVAL_MS = ROLE_ROTATION.visibleMs + ROLE_ROTATION.transitionMs
+
 /** Clave del diccionario con el nombre de cada versión del CV. */
 const CV_LABEL_KEYS = {
   infographic: 'cvInfographic',
@@ -45,8 +54,8 @@ const CV_LABEL_KEYS = {
 } as const satisfies Record<CvVersion, keyof Dictionary['hero']>
 
 /**
- * Primera sección de la home: saludo, nombre en dos colores, rol con un
- * cursor decorativo, presentación breve, un botón que lleva a los proyectos,
+ * Primera sección de la home: saludo, nombre en dos colores, rol que rota
+ * entre los textos de hero.roles, presentación breve, un botón que lleva a los proyectos,
  * la descarga del CV en el idioma activo si data/cv tiene sus archivos,
  * si config/availability lo activa, el estado de disponibilidad, y la fila de
  * redes de data/social, con el retrato al lado. En la fila, los perfiles son
@@ -58,10 +67,30 @@ const CV_LABEL_KEYS = {
  * A su alrededor flotan las pastillas de data/heroBadges, con el nombre que
  * cada tecnología tiene en el catálogo: son decorativas, porque la sección de
  * tecnologías ya las nombra.
+ *
+ * El rol muestra un texto cada vez, con su cursor decorativo. No empieza a
+ * rotar hasta que termina la animación de carga y, con movimiento reducido,
+ * se queda en el primero. Un lector de pantalla no oye los cambios: recibe
+ * los textos una sola vez, en una frase fija.
  */
 export function Hero() {
   const { lang, t } = useLang()
   const headingId = useId()
+  const { roles } = t.hero
+  const reducedMotion = useReducedMotion()
+  const introPlaying = useIntroPlaying()
+  const rotatingRole = useRotatingIndex(roles.length, {
+    intervalMs: ROLE_INTERVAL_MS,
+    paused: introPlaying || reducedMotion,
+  })
+  // Con movimiento reducido el texto es el primero, aunque ya hubiera rotado.
+  const currentRole = reducedMotion ? 0 : rotatingRole
+  const leavingRole = (currentRole + roles.length - 1) % roles.length
+  const roleClass = (index: number) => {
+    if (index === currentRole) return `${styles.roleItem} ${styles.roleCurrent}`
+    if (index === leavingRole) return `${styles.roleItem} ${styles.roleLeaving}`
+    return styles.roleItem
+  }
   const { first, last } = splitName(t.hero.heading)
   const cvOptions = cvFilesFor(lang).map((entry) => ({
     label: t.hero[CV_LABEL_KEYS[entry.version]],
@@ -76,9 +105,16 @@ export function Hero() {
           {first} <span className={styles.lastName}>{last}</span>
         </h1>
         <p className={styles.role}>
-          {site.role}
-          <span className={styles.cursor} aria-hidden="true">
-            {ROLE_CURSOR}
+          <span className={styles.visuallyHidden}>{roles.join(ROLE_SEPARATOR)}</span>
+          {/* Los textos van apilados en la misma celda: mide lo que el mayor
+              y la línea no cambia de alto al rotar. */}
+          <span className={styles.roleStack} aria-hidden="true">
+            {roles.map((role, index) => (
+              <span key={role} className={roleClass(index)}>
+                {role}
+                <span className={styles.cursor}>{ROLE_CURSOR}</span>
+              </span>
+            ))}
           </span>
         </p>
         <p className={styles.intro}>{t.hero.intro}</p>

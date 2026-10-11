@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Hero } from '@/components/sections/Hero'
+import styles from '@/components/sections/Hero.module.css'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { dictionaries } from '@/i18n/index'
@@ -69,13 +70,34 @@ describe('Hero', () => {
   })
 
   describe('rol', () => {
-    const role = () => screen.getByText(site.role)
+    const CURSOR = styles.cursor ?? ''
+    if (!CURSOR) throw new Error('Hero.module.css no define la clase .cursor')
 
-    // El rol es un nombre propio del oficio: no se traduce.
-    it.each(LANGS)('en %s, muestra el rol de config', (lang) => {
+    /** Frase fija con los tres textos: lo único del rol que no es adorno. */
+    const phrase = (lang: keyof typeof BROWSER_LANGS = 'es') =>
+      screen.getByText(dictionaries[lang].hero.roles.join(', '))
+    const role = (lang: keyof typeof BROWSER_LANGS = 'es') => {
+      const paragraph = phrase(lang).parentElement
+      if (!paragraph) throw new Error('La frase del rol no tiene párrafo')
+      return paragraph
+    }
+    /** Capa animada: los textos apilados, cada uno con su cursor. */
+    const stack = (lang: keyof typeof BROWSER_LANGS = 'es') => {
+      const layer = role(lang).querySelector('[aria-hidden="true"]')
+      if (!layer) throw new Error('El rol no tiene capa decorativa')
+      return layer
+    }
+
+    // El primero es el que se ve al llegar. En inglés es el rol de config, el
+    // mismo del título: ese no se traduce.
+    it.each(LANGS)('en %s, muestra primero el primer texto del diccionario', (lang) => {
       renderHero(lang)
 
-      expect(role()).toBeInTheDocument()
+      const [first] = dictionaries[lang].hero.roles
+
+      expect(role(lang)).toBeInTheDocument()
+      expect(stack(lang).firstElementChild?.firstChild?.textContent).toBe(first)
+      expect(dictionaries.en.hero.roles.at(0)).toBe(site.role)
     })
 
     it('es un párrafo, no un título', () => {
@@ -93,23 +115,42 @@ describe('Hero', () => {
     })
 
     // El cursor es un adorno: una barra vertical que un lector de pantalla no
-    // anuncia. Fuera de ella, el párrafo solo lleva el rol.
-    it('lleva un cursor decorativo, oculto para lectores de pantalla', () => {
-      renderHero()
+    // anuncia. Cada texto lleva el suyo, y todos van dentro de la única capa
+    // oculta; fuera de ella, el párrafo solo lleva la frase con los textos.
+    it.each(LANGS)(
+      'en %s, lleva un cursor decorativo por texto, oculto para lectores de pantalla',
+      (lang) => {
+        renderHero(lang)
 
-      const hidden = role().querySelectorAll('[aria-hidden="true"]')
+        const { roles } = dictionaries[lang].hero
+        const hidden = role(lang).querySelectorAll('[aria-hidden="true"]')
+        const cursors = role(lang).querySelectorAll(`.${CURSOR}`)
 
-      expect(hidden).toHaveLength(1)
-      expect(hidden[0]?.textContent).toBe('|')
-      expect(role().children).toHaveLength(1)
-      expect(role().textContent).toBe(`${site.role}|`)
-    })
+        expect(hidden).toHaveLength(1)
+        expect(cursors).toHaveLength(roles.length)
+        for (const cursor of cursors) {
+          expect(cursor.textContent).toBe('|')
+          expect(stack(lang).contains(cursor)).toBe(true)
+        }
+        expect(role(lang).children).toHaveLength(2)
+        expect(stack(lang).textContent).toBe(roles.map((text) => `${text}|`).join(''))
+        expect(phrase(lang).textContent).not.toContain('|')
+        expect(role(lang).textContent).toBe(`${roles.join(', ')}${stack(lang).textContent}`)
+      },
+    )
 
-    it('el cursor va pegado al rol, sin espacio en el texto', () => {
-      renderHero()
+    it.each(LANGS)('en %s, cada cursor va pegado a su texto, sin espacio en el texto', (lang) => {
+      renderHero(lang)
 
-      expect(role().lastChild).toBe(role().querySelector('[aria-hidden="true"]'))
-      expect(role().firstChild?.textContent).toBe(site.role)
+      const { roles } = dictionaries[lang].hero
+      const items = [...stack(lang).children]
+
+      expect(items).toHaveLength(roles.length)
+      items.forEach((item, index) => {
+        expect(item.children).toHaveLength(1)
+        expect(item.lastChild).toBe(item.querySelector(`.${CURSOR}`))
+        expect(item.firstChild?.textContent).toBe(roles[index])
+      })
     })
   })
 
