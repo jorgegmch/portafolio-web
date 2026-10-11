@@ -31,6 +31,8 @@
   );
   /* Sin relleno arriba ni abajo: el alto lo marca el retrato. */
   padding: 0 var(--container-padding);
+  /* A la izquierda, el borde que comparte con la barra y el pie. */
+  padding-left: var(--container-padding-start);
   /* La barra es fija: al llegar por el ancla, el inicio no queda debajo. */
   scroll-margin-top: var(--nav-height);
 }

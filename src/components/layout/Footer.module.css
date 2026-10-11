@@ -5,6 +5,7 @@
   justify-content: space-between;
   gap: var(--space-4) var(--space-6);
   padding: var(--space-5) var(--container-padding);
+  padding-left: var(--container-padding-start);
   border-top: 1px solid var(--color-border);
   color: var(--color-text-subtle);
   font-family: var(--font-mono);

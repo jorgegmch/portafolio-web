@@ -91,6 +91,14 @@
     var(--container-gutter),
     calc((100% - var(--container-max)) / 2)
   );
+  /* Borde izquierdo en dos columnas: el contenido se acerca a ese lado hasta
+     --container-shift. Crece con la ventana, de cero a 1024 px al total a
+     1152, para que nada salte al dejar el apilado. El derecho sigue en
+     --container-padding. */
+  --container-shift: 2rem;
+  --container-padding-start: calc(
+    var(--container-padding) - clamp(0rem, calc((100vw - 64rem) * 0.25), var(--container-shift))
+  );
 
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
@@ -205,6 +213,13 @@
   --z-nav: 100; /* origen */
   --z-skip-link: 200;
   --z-intro: 300;
+}
+
+/* Apilado no hay retrato al lado: los dos lados vuelven a ser iguales. */
+@media (max-width: 1023px) {
+  :root {
+    --container-padding-start: var(--container-padding);
+  }
 }
 
 @media (max-width: 768px) {

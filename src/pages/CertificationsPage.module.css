@@ -1,5 +1,6 @@
 .page {
   padding: var(--space-9) var(--container-padding);
+  padding-left: var(--container-padding-start);
 }
 
 .title {

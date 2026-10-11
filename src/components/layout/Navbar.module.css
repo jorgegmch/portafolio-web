@@ -31,6 +31,7 @@
   gap: var(--space-4) var(--space-6);
   min-height: var(--nav-height);
   padding: var(--space-3) var(--container-padding);
+  padding-left: var(--container-padding-start);
 }
 
 .brand,
