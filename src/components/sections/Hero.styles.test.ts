@@ -684,11 +684,14 @@ describe('Hero: estilos', () => {
     })
 
     // Donde el retrato es más alto que el texto, el bloque baja hasta quedar
-    // centrado con la figura. Donde no sobra alto, se queda arriba, a la
-    // distancia de siempre: el relleno superior no cambia.
+    // algo por encima del centro de la figura: arriba queda una parte menor
+    // de lo que sobra. Donde no sobra alto, se queda arriba, a la distancia
+    // de siempre: el relleno superior no cambia.
     describe('centrado vertical con la figura', () => {
+      const SHARE = '--hero-text-top-share'
       const both = cssRule(heroCss, '.text::before,\n.text::after')
       const before = cssRule(heroCss, '.text::before')
+      const after = cssRule(heroCss, '.text::after')
       const stacked = cssMedia(heroCss, '(max-width: 1023px)')
       const DROP = 'var(--hero-text-drop)'
       /** Una fórmula partida en varias líneas, en una sola. */
@@ -710,12 +713,28 @@ describe('Hero: estilos', () => {
         expect(both).toEqual({ content: "''", flex: '1 1 0' })
       })
 
+      // Con 0,5 quedaría centrado; menos, y el bloque sube.
+      it('la parte de arriba sale de un token: el 40 % de lo que sobra', () => {
+        expect(cssToken(tokensCss, SHARE)).toBe('0.4')
+        expect(Number(cssToken(tokensCss, SHARE))).toBeGreaterThan(0)
+        expect(Number(cssToken(tokensCss, SHARE))).toBeLessThan(0.5)
+        expect(tokensCss.match(new RegExp(`${SHARE}:`, 'g'))).toHaveLength(1)
+        expect(heroCss).not.toMatch(new RegExp(`${SHARE}:`))
+      })
+
+      // El de arriba crece esa parte y el de abajo el resto: entre los dos,
+      // todo lo que sobra.
+      it('los huecos se reparten lo que sobra en esa proporción', () => {
+        expect(before['flex-grow']).toBe(`var(${SHARE})`)
+        expect(after).toEqual({ 'flex-grow': `calc(1 - var(${SHARE}))` })
+      })
+
       // La figura va del pelo al borde inferior, y el texto ya empieza más
       // abajo que el pelo y deja un relleno al final: esa diferencia es lo
-      // que hay que descontar para que el centro del bloque sea el de la figura.
+      // que hay que descontar. El relleno final pesa según la proporción.
       it('la diferencia entre el texto y la figura sale de los mismos tokens', () => {
         expect(oneLine(cssRule(heroCss, '.hero')['--hero-text-drop'])).toBe(
-          'calc(var(--hero-text-offset) - var(--hero-role-height) - var(--space-4) - var(--portrait-head-gap))',
+          `calc(var(--hero-text-offset) - var(--hero-role-height) - var(--portrait-head-gap) - var(--space-4) * var(${SHARE}) / (1 - var(${SHARE})))`,
         )
       })
 
@@ -724,10 +743,33 @@ describe('Hero: estilos', () => {
       // Hero ni baja el texto donde no sobra sitio.
       it('el hueco de arriba descuenta esa diferencia sin añadir alto', () => {
         expect(before).toEqual({
+          'flex-grow': `var(${SHARE})`,
           'min-height': DROP,
           'margin-top': `min(0%, calc(-1 * ${DROP}))`,
         })
-        expect(cssRule(heroCss, '.text::after')).toEqual({})
+      })
+
+      // La cuenta de esa fórmula, con medidas de ejemplo: el bloque empieza
+      // bajo el pelo justo en la proporción del token, y nunca por encima de
+      // su sitio de siempre.
+      it.each([
+        [828, 511, 89.6],
+        [837, 511, 89.6],
+        [606, 478, 58],
+        [516, 457, 43.2],
+      ])('con un Hero de %f px y un bloque de %f, queda arriba esa parte de lo que sobra', (hero, block, top) => {
+        const share = Number(cssToken(tokensCss, SHARE))
+        const padding = parseFloat(cssToken(tokensCss, '--space-4')) * 16
+        const headGap = parseFloat(cssToken(tokensCss, '--portrait-head-gap')) * 16
+        const drop = top - headGap - (padding * share) / (1 - share)
+        /** Alto libre del texto y lo que crece el hueco de arriba, con su mínimo. */
+        const free = hero - padding - top - block + Math.max(0, drop)
+        const lead = Math.max(Math.max(0, drop), share * free)
+        const start = top + lead - Math.max(0, drop)
+        const spare = hero - headGap - block
+
+        expect(start).toBeGreaterThanOrEqual(top)
+        if (start > top) expect(start - headGap).toBeCloseTo(share * spare, 6)
       })
 
       it('el bloque nunca sube: el relleno superior es el de siempre', () => {
@@ -737,7 +779,7 @@ describe('Hero: estilos', () => {
       })
 
       it('los huecos no llevan color, animación ni transición', () => {
-        for (const rule of [both, before]) {
+        for (const rule of [both, before, after]) {
           expect(Object.keys(rule).filter((name) => /^(background|animation|transition)/.test(name))).toEqual([])
         }
       })
@@ -755,6 +797,7 @@ describe('Hero: estilos', () => {
           '.text::before,',
           '.text::after {',
           '.text::before {',
+          '.text::after {',
           '.text {',
           '.text::before,',
           '.text::after {',

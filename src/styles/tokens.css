@@ -128,6 +128,9 @@
      Crece con la ventana, como el retrato y sin escalones: 80 px a 1024,
      96 px a 1280 y 128 px desde 1312. */
   --hero-text-offset: min(8rem, max(calc(5rem + (100vw - 64rem) * 0.0625), calc(100vw - 74rem)));
+  /* Parte del alto sobrante que queda sobre el texto cuando el retrato es
+     más alto que él: con 0,5 quedaría centrado; menos, y sube. */
+  --hero-text-top-share: 0.4;
   /* Ancho del párrafo junto al retrato: más corto que --measure, para que
      sus líneas queden lejos del hombro de la figura. */
   --hero-intro-measure: 30rem;
