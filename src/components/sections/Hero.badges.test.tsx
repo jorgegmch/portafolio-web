@@ -504,13 +504,74 @@ describe('Hero: pastillas de tecnología', () => {
 
         expect(icon).toBeLessThan(plate)
         expect(cssRule(heroCss, '.badgeIcon')).toMatchObject({
-          width: 'var(--badge-icon-size)',
-          height: 'var(--badge-icon-size)',
+          width: 'calc(var(--badge-icon-size) * var(--badge-icon-scale, 1))',
+          height: 'calc(var(--badge-icon-size) * var(--badge-icon-scale, 1))',
           'object-fit': 'contain',
         })
         expect(cssRule(heroCss, '.plate')).toMatchObject({
           width: 'var(--badge-plate-size)',
           height: 'var(--badge-plate-size)',
+        })
+      })
+
+      // Un dibujo que deja aire dentro de su cuadro se ve menor que el de
+      // TypeScript, que lo llena: su caja crece, sin tocar el archivo.
+      describe('compensación por icono', () => {
+        const TIER_FONTS = [
+          ['dos columnas', '--font-size-base', 16],
+          ['apilado', '--font-size-md', 14],
+          ['teléfono', '--font-size-sm', 13],
+        ] as const
+        const scaleTokens: Record<string, string> = {
+          postgresql: '--badge-icon-scale-postgresql',
+          'ai-agents': '--badge-icon-scale-ai-agents',
+        }
+        const declared = (index: number) =>
+          valueOf(placements.find((placement) => placement.index === index)?.body ?? '', '--badge-icon-scale')
+        /** Factor de una pastilla: el de su token, o 1 si no declara ninguno. */
+        const scaleOf = (index: number) => {
+          const token = /^var\((--[\w-]+)\)$/.exec(declared(index) ?? '')?.[1]
+          return token ? Number(cssToken(tokensCss, token)) : 1
+        }
+
+        it('PostgreSQL y AI Agents toman su factor de un token; las demás no declaran ninguno', () => {
+          heroBadges.forEach((badge, i) => {
+            const token = scaleTokens[badge.technology]
+
+            expect(declared(i + 1), badge.technology).toBe(token ? `var(${token})` : undefined)
+          })
+        })
+
+        it('los factores son 1,16 y 1,25', () => {
+          expect(cssToken(tokensCss, '--badge-icon-scale-postgresql')).toBe('1.16')
+          expect(cssToken(tokensCss, '--badge-icon-scale-ai-agents')).toBe('1.25')
+        })
+
+        // El factor acompaña al icono, no al tramo: ninguno lo redefine.
+        it('ningún tramo cambia el factor de una pastilla', () => {
+          const tiers = ['(max-width: 1280px)', '(max-width: 1023px)', '(max-width: 480px)']
+
+          tiers.forEach((tier) =>
+            placementsOf(cssMedia(heroCss, tier)).forEach(({ body }) =>
+              expect(valueOf(body, '--badge-icon-scale')).toBeUndefined(),
+            ),
+          )
+          expect(heroCss.match(/--badge-icon-scale:/g)).toHaveLength(Object.keys(scaleTokens).length)
+        })
+
+        // Sin tolerancia: la caja del icono, ya multiplicada, mide menos que
+        // la placa. Se comprueba en px con la letra de cada tramo.
+        it.each(TIER_FONTS)('en %s, ningún factor saca la caja de la placa', (_, fontToken, px) => {
+          const icon = parseFloat(cssToken(tokensCss, '--badge-icon-size'))
+          const plate = parseFloat(cssToken(tokensCss, '--badge-plate-size'))
+
+          expect(parseFloat(cssToken(tokensCss, fontToken)) * 16).toBe(px)
+          heroBadges.forEach((badge, i) => {
+            const box = icon * scaleOf(i + 1) * px
+
+            expect(scaleOf(i + 1), badge.technology).toBeGreaterThanOrEqual(1)
+            expect(box, `${badge.technology}: caja de ${box} px`).toBeLessThan(plate * px)
+          })
         })
       })
 

@@ -159,6 +159,10 @@
   --badge-plate-size: 2.1em;
   --badge-plate-radius: 0.45em;
   --badge-icon-size: 1.65em;
+  /* Cuánto crece la caja de un icono cuyo dibujo no llena su cuadro, para
+     igualarlo al de TypeScript. El tope es 1,27: más, y se sale de la placa. */
+  --badge-icon-scale-postgresql: 1.16;
+  --badge-icon-scale-ai-agents: 1.25;
   /* Fondo translúcido (--color-surface al 72 %) y borde de la pastilla. */
   --color-badge-bg: rgba(14, 14, 28, 0.72);
   --color-badge-border: rgba(238, 238, 242, 0.14);
