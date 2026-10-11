@@ -3,14 +3,14 @@ const GITHUB_USER = 'jorgegmch'
 export const BIRTH_DATE_OFFSET = 11
 
 export const site = {
-  /** Nombre legal, tal como aparece en la cédula (sin tilde en Gomez). */
-  legalName: 'Jorge Alberto Gomez Chaparro',
-  shortName: 'Jorge Gomez',
+  /** Nombre completo y nombre corto, con tilde. Archivos y URLs van en ASCII. */
+  legalName: 'Jorge Alberto Gómez Chaparro',
+  shortName: 'Jorge Gómez',
   /** Alias público, el del logo. Es el mismo usuario de GitHub. */
   handle: GITHUB_USER,
   role: 'Full-Stack Developer',
   /** Título del documento. index.html lo repite a mano; un test los compara. */
-  title: 'Jorge Gomez | Full-Stack Developer',
+  title: 'Jorge Gómez | Full-Stack Developer',
   /** Año de primera publicación del sitio; es el del aviso de derechos. */
   publishedYear: 2026,
   location: 'Piedecuesta, Santander, Colombia',
