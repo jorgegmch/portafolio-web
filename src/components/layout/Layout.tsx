@@ -6,6 +6,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { ParticleBackground } from '@/components/layout/ParticleBackground'
 import { SkipLink } from '@/components/ui/SkipLink'
 import { MAIN_CONTENT_ID } from '@/config/routes'
+import { IntroPlayingContext } from '@/hooks/IntroPlayingContext'
 import { useIntroGate } from '@/hooks/useIntroGate'
 import { useLang } from '@/hooks/useLang'
 import { useScrollToHash } from '@/hooks/useScrollToHash'
@@ -13,6 +14,8 @@ import { useScrollToHash } from '@/hooks/useScrollToHash'
 /**
  * Armazón común a todas las páginas: animación de carga, skip link, fondo,
  * barra, contenido principal y pie. La página de cada ruta llega como children.
+ * Publica si la animación de carga sigue encima, para que la página no
+ * empiece debajo de ella lo que todavía no se ve.
  */
 export function Layout({ children }: { children: ReactNode }) {
   const { t } = useLang()
@@ -20,7 +23,7 @@ export function Layout({ children }: { children: ReactNode }) {
   useScrollToHash()
 
   return (
-    <>
+    <IntroPlayingContext value={introPlaying}>
       {introPlaying && <LoadingIntro onDone={finishIntro} />}
       {/* inert: mientras la intro tapa la página, nada de debajo recibe foco ni clics. */}
       <div inert={introPlaying}>
@@ -33,6 +36,6 @@ export function Layout({ children }: { children: ReactNode }) {
         </main>
         <Footer />
       </div>
-    </>
+    </IntroPlayingContext>
   )
 }
