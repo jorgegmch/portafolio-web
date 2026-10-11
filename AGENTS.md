@@ -52,7 +52,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 @.claude/rules/accesibilidad.md
 
 - **Texto aprobado:** la bio en `es.ts` y su traducción en `en.ts` están aprobadas palabra por palabra. No las edites sin aprobación explícita.
-- **Nombre legal:** "Jorge Alberto Gomez Chaparro", sin tilde en Gomez. Se define una vez en `config/site.ts`.
+- **Nombre:** completo «Jorge Alberto Gómez Chaparro» y corto «Jorge Gómez», con tilde en todo texto visible. Se definen una vez en `config/site.ts`. Los nombres de archivo, slugs y URLs van en ASCII, sin tilde.
 - **Sin inventar datos:** las etiquetas de stack salen de la descripción de cada repo en GitHub; tecnologías sin niveles ni porcentajes.
 - **DRY con regla de tres:** no extraigas una abstracción hasta la tercera repetición real.
 
