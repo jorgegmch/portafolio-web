@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
+import { useEffect } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { storageKeys } from '@/config/storage'
 import { useLang } from '@/hooks/useLang'
@@ -113,6 +114,44 @@ describe('useLang', () => {
 
       expect(result.current.lang).toBe('en')
       expect(document.documentElement.lang).toBe('en')
+    })
+  })
+
+  // El idioma del documento se fija antes del primer pintado: cuando corren
+  // los efectos de quien está dentro del proveedor, <html lang> ya es el
+  // definitivo. Si el proveedor lo pusiera en un efecto normal, llegaría un
+  // paso tarde y lo que depende de él (el tamaño del párrafo del Hero) se
+  // vería un fotograma con el idioma anterior.
+  describe('<html lang> antes del primer pintado', () => {
+    /** Anota el idioma del documento cada vez que corre un efecto de dentro. */
+    const renderRecorder = () => {
+      const seen: string[] = []
+      const view = renderHook(
+        () => {
+          const { lang, setLang } = useLang()
+          useEffect(() => {
+            seen.push(document.documentElement.lang)
+          }, [lang])
+          return { setLang }
+        },
+        { wrapper: LangProvider },
+      )
+      return { seen, ...view }
+    }
+
+    it('al montar, los efectos de dentro ya lo encuentran puesto', () => {
+      setBrowserLangs(['en-US'])
+      const { seen } = renderRecorder()
+
+      expect(seen).toEqual(['en'])
+    })
+
+    it('al cambiar de idioma, también', () => {
+      const { seen, result } = renderRecorder()
+
+      act(() => result.current.setLang('en'))
+
+      expect(seen).toEqual(['es', 'en'])
     })
   })
 

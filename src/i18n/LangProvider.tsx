@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useState, type ReactNode } from 'react'
 import { storageKeys } from '@/config/storage'
 import { detectLang, LANG_PARAM } from '@/i18n/detectLang'
 import { dictionaries } from '@/i18n/index'
@@ -24,7 +24,9 @@ const removeLangParam = () => {
 export function LangProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(readInitialLang)
 
-  useEffect(() => {
+  // De layout y no un efecto normal: así <html lang> cambia antes de que el
+  // navegador pinte, y nada que dependa de él se ve con el idioma anterior.
+  useLayoutEffect(() => {
     document.documentElement.lang = lang
   }, [lang])
 
