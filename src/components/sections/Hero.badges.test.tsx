@@ -203,14 +203,6 @@ describe('Hero: pastillas de tecnología', () => {
         expect(new Set(phases).size).toBe(placements.length)
       })
 
-      it('hay pastillas a los dos lados del retrato', () => {
-        const left = placements.filter(({ body }) => valueOf(body, '--badge-left'))
-        const right = placements.filter(({ body }) => valueOf(body, '--badge-right'))
-
-        expect(left.length).toBeGreaterThan(0)
-        expect(right.length).toBeGreaterThan(0)
-      })
-
       // Posicionado en los dos diseños: anclado en dos columnas, en el flujo apilado.
       it('el retrato es la referencia de las posiciones', () => {
         const stacked = cssMedia(heroCss, '(max-width: 1023px)')
@@ -251,6 +243,92 @@ describe('Hero: pastillas de tecnología', () => {
         },
       )
 
+      /** Lado de la figura en el que se ve: una anclada por la derecha a más de medio retrato queda a la izquierda. */
+      const visualSideAt = (index: number, tier: number) => {
+        const [side] = sidesAt(index, tier)
+        const x = parseFloat(effective(index, tier, side ?? '') ?? '')
+        return (side === '--badge-left') === x < 50 ? 'izquierda' : 'derecha'
+      }
+      const visualSides = (tier: number) =>
+        Object.fromEntries(heroBadges.map((badge, i) => [badge.technology, visualSideAt(i + 1, tier)]))
+
+      // Desde 1281 px, entre el final del nombre y la cabeza cabe una pastilla.
+      it('desde 1281 px hay dos a la izquierda de la figura y tres a la derecha', () => {
+        expect(visualSides(0)).toEqual({
+          python: 'izquierda',
+          java: 'izquierda',
+          typescript: 'derecha',
+          postgresql: 'derecha',
+          'ai-agents': 'derecha',
+        })
+      })
+
+      // Hasta 1280 px ese hueco no tiene sitio: Java vuelve a la derecha.
+      it('hasta 1280 px solo queda una a la izquierda', () => {
+        expect(visualSides(1)).toEqual({
+          python: 'izquierda',
+          java: 'derecha',
+          typescript: 'derecha',
+          postgresql: 'derecha',
+          'ai-agents': 'derecha',
+        })
+        expect(visualSides(2)).toEqual(visualSides(1))
+      })
+
+      describe('Java', () => {
+        const JAVA = heroBadges.findIndex((badge) => badge.technology === 'java') + 1
+        const at = (tier: number) => ({
+          right: effective(JAVA, tier, '--badge-right'),
+          y: effective(JAVA, tier, '--badge-y'),
+        })
+
+        it('es una de las pastillas', () => {
+          expect(JAVA).toBeGreaterThan(0)
+        })
+
+        it('desde 1281 px va a la izquierda de la cabeza, a la altura del nombre', () => {
+          expect(at(0)).toEqual({ right: '75%', y: '31%' })
+        })
+
+        // Es la única a la altura de la cara (del 14 % al 45 %), y por eso va
+        // fuera de la figura: la cabeza empieza hacia el 71 % desde la derecha.
+        it('queda a la altura de la cara, pero fuera de la figura', () => {
+          const y = parseFloat(at(0).y ?? '')
+
+          expect(y).toBeGreaterThan(14)
+          expect(y).toBeLessThan(45)
+          expect(parseFloat(at(0).right ?? '')).toBeGreaterThanOrEqual(74)
+          heroBadges.forEach((_, i) => {
+            if (i + 1 === JAVA) return
+            const other = parseFloat(effective(i + 1, 0, '--badge-y') ?? '')
+
+            expect(other <= 14 || other >= 38, `pastilla ${i + 1} al ${other} %`).toBe(true)
+          })
+        })
+
+        it('hasta 1280 px vuelve arriba a la derecha, donde estaba', () => {
+          const compact = TIERS[1]?.find(({ index }) => index === JAVA)?.body ?? ''
+
+          expect(valueOf(compact, '--badge-right')).toBe('-3%')
+          expect(valueOf(compact, '--badge-y')).toBe('14%')
+          expect(at(1)).toEqual({ right: '-3%', y: '14%' })
+        })
+
+        it('apilado y en teléfono no cambia', () => {
+          expect(at(2)).toEqual({ right: '0%', y: '10%' })
+          expect(at(3)).toEqual({ right: '0%', y: '9%' })
+        })
+
+        // Anclada por la derecha, su borde derecho guarda la distancia a la
+        // cabeza sea cual sea su ancho, y ningún tramo tiene que anular un lado.
+        it('se ancla por la derecha en todos los tramos', () => {
+          TIERS.forEach((rules, tier) => {
+            expect(sidesAt(JAVA, tier)).toEqual(['--badge-right'])
+            expect(valueOf(rules.find(({ index }) => index === JAVA)?.body ?? '', '--badge-left')).toBeUndefined()
+          })
+        })
+      })
+
       // Con el párrafo en más líneas, las que siguen a la izquierda tienen
       // que bajar para no pisarlo.
       it('desde 1280 px las pastillas que siguen a la izquierda bajan', () => {
@@ -290,22 +368,26 @@ describe('Hero: pastillas de tecnología', () => {
       })
 
       // Separadas también en vertical: dos del mismo lado no comparten franja.
+      // Cuenta el lado en que se ven, no el del ancla: la que va abajo hacia el
+      // centro (entre el 25 % y el 50 %) queda fuera, como siempre.
       it('en todos los tramos, las del mismo lado distan al menos 20 puntos de alto', () => {
         ;[0, 1, 2, 3].forEach((tier) => {
-          const bySide = (side: string) =>
+          const bySide = (visual: string) =>
             heroBadges
               .map((_, i) => i + 1)
-              .filter((index) => sidesAt(index, tier)[0] === side)
+              .filter((index) => visualSideAt(index, tier) === visual)
               .filter((index) => {
-                const x = parseFloat(effective(index, tier, side) ?? '')
-                return x < 25
+                const x = parseFloat(effective(index, tier, sidesAt(index, tier)[0] ?? '') ?? '')
+                return x < 25 || x > 50
               })
               .map((index) => parseFloat(effective(index, tier, '--badge-y') ?? ''))
               .sort((a, b) => a - b)
 
-          SIDES.forEach((side) =>
-            bySide(side).forEach((y, i, all) => {
-              if (i > 0) expect(y - (all[i - 1] ?? 0)).toBeGreaterThanOrEqual(20)
+          // Solo el tramo ancho deja una fuera, la de abajo hacia el centro.
+          expect(bySide('izquierda').length + bySide('derecha').length).toBe(tier === 0 ? 4 : 5)
+          ;['izquierda', 'derecha'].forEach((visual) =>
+            bySide(visual).forEach((y, i, all) => {
+              if (i > 0) expect(y - (all[i - 1] ?? 0), `${visual}, tramo ${tier}`).toBeGreaterThanOrEqual(20)
             }),
           )
         })
@@ -469,7 +551,8 @@ describe('Hero: pastillas de tecnología', () => {
         it('ninguna otra regla cambia la letra de una pastilla', () => {
           expect(cssRule(heroCss, '.float')).not.toHaveProperty('font-size')
           expect(cssRule(heroCss, '.badge')).not.toHaveProperty('font-size')
-          expect(heroCss.match(/\.float:nth-child\(\d+\)\s*\{/g)).toHaveLength(heroBadges.length * 3 + 3)
+          // Tres tramos completos y las cuatro que recoloca el de 1280 px.
+          expect(heroCss.match(/\.float:nth-child\(\d+\)\s*\{/g)).toHaveLength(heroBadges.length * 3 + 4)
         })
 
         it('los tres tamaños son 16, 14 y 13 px', () => {

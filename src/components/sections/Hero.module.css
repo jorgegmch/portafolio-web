@@ -338,8 +338,9 @@
    mismo para las cinco en cada tramo: así solo cambia el ancho. Las de la
    derecha se anclan por la derecha para no salirse de la página. Solo un
    lado a la vez: si un tramo cambia de lado, anula el otro con `initial`.
-   Van en anillo alrededor de la figura: una a la izquierda, una abajo en el
-   centro y tres a la derecha, alternando dentro y fuera. */
+   Van en anillo alrededor de la figura: dos a la izquierda (una junto a la
+   cabeza, tras el nombre, y otra abajo), una abajo hacia el centro y dos a
+   la derecha. */
 .float {
   position: absolute;
   top: var(--badge-y);
@@ -357,9 +358,11 @@
   font-size: var(--font-size-base);
 }
 
+/* A la izquierda de la cabeza, en el hueco que deja el nombre. Se ancla por
+   la derecha: así su borde guarda la distancia a la figura. */
 .float:nth-child(2) {
-  --badge-right: -3%;
-  --badge-y: 14%;
+  --badge-right: 75%;
+  --badge-y: 31%;
   --float-phase: -0.45;
 
   font-size: var(--font-size-base);
@@ -448,7 +451,8 @@
 }
 
 /* Con el párrafo en más líneas, la figura lo alcanza antes: el tope por
-   ancho baja y las pastillas de la izquierda se mueven con él. El retrato es
+   ancho baja, la pastilla de la izquierda se mueve con él y la que iba junto
+   a la cabeza pasa a la derecha. El retrato es
    más bajo que el texto, así que los bloques se aprietan para que el Hero no
    crezca y el pelo siga junto a la barra. */
 @media (max-width: 1280px) {
@@ -462,6 +466,12 @@
   .float:nth-child(1) {
     --badge-left: 0%;
     --badge-y: 80%;
+  }
+
+  /* Entre el nombre y la cabeza ya no cabe: vuelve arriba a la derecha. */
+  .float:nth-child(2) {
+    --badge-right: -3%;
+    --badge-y: 14%;
   }
 
   .float:nth-child(3) {
