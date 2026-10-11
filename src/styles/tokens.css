@@ -174,6 +174,10 @@
      igualarlo al de TypeScript. El tope es 1,27: más, y se sale de la placa. */
   --badge-icon-scale-postgresql: 1.16;
   --badge-icon-scale-ai-agents: 1.25;
+  /* Java, a la izquierda de la cabeza: distancia al borde derecho del
+     retrato. A 1024 px el hueco entre el nombre y la figura es estrecho y
+     va pegada a ella; se separa según crece la ventana, hasta su tope. */
+  --hero-java-right: clamp(70.5%, calc(70.5% + (100vw - 64rem) * 0.23), 75%);
   /* Fondo translúcido (--color-surface al 72 %) y borde de la pastilla. */
   --color-badge-bg: rgba(14, 14, 28, 0.72);
   --color-badge-border: rgba(238, 238, 242, 0.14);

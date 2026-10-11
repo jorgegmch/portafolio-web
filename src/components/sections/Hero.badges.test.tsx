@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -186,12 +187,17 @@ describe('Hero: pastillas de tecnología', () => {
         expect(placements.map(({ index }) => index)).toEqual(heroBadges.map((_, i) => i + 1))
       })
 
-      it.each(placements)('la pastilla $index define su altura, un lado y su desfase', ({ body }) => {
+      // El lado es un porcentaje del retrato. Solo Java, en dos columnas,
+      // lo toma de un token, porque su distancia a la cabeza es fluida.
+      it.each(placements)('la pastilla $index define su altura, un lado y su desfase', ({ index, body }) => {
         const sides = ['--badge-left', '--badge-right'].filter((side) => valueOf(body, side))
+        const isJava = heroBadges[index - 1]?.technology === 'java'
 
         expect(valueOf(body, '--badge-y')).toMatch(/^-?[\d.]+%$/)
         expect(sides).toHaveLength(1)
-        expect(valueOf(body, sides[0] ?? '')).toMatch(/^-?[\d.]+%$/)
+        expect(valueOf(body, sides[0] ?? '')).toMatch(
+          isJava ? /^var\(--hero-java-right\)$/ : /^-?[\d.]+%$/,
+        )
         expect(valueOf(body, '--float-phase')).toMatch(/^-?[\d.]+$/)
       })
 
@@ -243,61 +249,133 @@ describe('Hero: pastillas de tecnología', () => {
         },
       )
 
+      const JAVA_RIGHT = '--hero-java-right'
+      const JAVA_RIGHT_FORMULA =
+        /^clamp\(([\d.]+)%, calc\(([\d.]+)% \+ \(100vw - (\d+)rem\) \* ([\d.]+)\), ([\d.]+)%\)$/
+      const [, javaStart = '', javaBase = '', javaFrom = '', javaSlope = '', javaEnd = ''] =
+        JAVA_RIGHT_FORMULA.exec(cssToken(tokensCss, JAVA_RIGHT)) ?? []
+      /** Extremos de un lado, en % del retrato: un porcentaje fijo, o los del token fluido de Java. */
+      const rangeOf = (value = '') =>
+        value === `var(${JAVA_RIGHT})`
+          ? ([Number(javaStart), Number(javaEnd)] as const)
+          : ([parseFloat(value), parseFloat(value)] as const)
       /** Lado de la figura en el que se ve: una anclada por la derecha a más de medio retrato queda a la izquierda. */
       const visualSideAt = (index: number, tier: number) => {
         const [side] = sidesAt(index, tier)
-        const x = parseFloat(effective(index, tier, side ?? '') ?? '')
-        return (side === '--badge-left') === x < 50 ? 'izquierda' : 'derecha'
+        const [min, max] = rangeOf(effective(index, tier, side ?? ''))
+        if (side === '--badge-left') return max < 50 ? 'izquierda' : 'derecha'
+        return min > 50 ? 'izquierda' : 'derecha'
       }
       const visualSides = (tier: number) =>
         Object.fromEntries(heroBadges.map((badge, i) => [badge.technology, visualSideAt(i + 1, tier)]))
 
-      // Desde 1281 px, entre el final del nombre y la cabeza cabe una pastilla.
-      it('desde 1281 px hay dos a la izquierda de la figura y tres a la derecha', () => {
-        expect(visualSides(0)).toEqual({
+      // Python y Java van a la izquierda de la figura en todos los anchos:
+      // ya no hay cambio de lado al cruzar 1280 px.
+      it('en dos columnas y apilado hay dos a la izquierda de la figura y tres a la derecha', () => {
+        const expected = {
           python: 'izquierda',
           java: 'izquierda',
           typescript: 'derecha',
           postgresql: 'derecha',
           'ai-agents': 'derecha',
-        })
+        }
+
+        expect(visualSides(0)).toEqual(expected)
+        expect(visualSides(1)).toEqual(expected)
+        expect(visualSides(2)).toEqual(expected)
       })
 
-      // Hasta 1280 px ese hueco no tiene sitio: Java vuelve a la derecha.
-      it('hasta 1280 px solo queda una a la izquierda', () => {
-        expect(visualSides(1)).toEqual({
+      it('en teléfono hay tres a la izquierda y dos a la derecha', () => {
+        expect(visualSides(3)).toEqual({
           python: 'izquierda',
-          java: 'derecha',
-          typescript: 'derecha',
+          java: 'izquierda',
+          typescript: 'izquierda',
           postgresql: 'derecha',
           'ai-agents': 'derecha',
         })
-        expect(visualSides(2)).toEqual(visualSides(1))
       })
 
       describe('Java', () => {
         const JAVA = heroBadges.findIndex((badge) => badge.technology === 'java') + 1
         const at = (tier: number) => ({
+          left: effective(JAVA, tier, '--badge-left'),
           right: effective(JAVA, tier, '--badge-right'),
           y: effective(JAVA, tier, '--badge-y'),
         })
+        /**
+         * Borde izquierdo de la silueta, en % del ancho del retrato, en la
+         * franja de alto que puede ocupar Java. Medido en el navegador sobre
+         * el canal alfa de la foto: aquí no hay con qué decodificarla, así
+         * que se fija el archivo medido.
+         */
+        const SILHOUETTE = {
+          from: 27,
+          to: 43,
+          left: 30.73,
+          file: 'src/assets/hero/portrait-576.webp',
+          sha256: '12fe2e1da1e8c30425b17ad56457dd423967d746aa75a70a118e58287d9f687c',
+        }
+        /** Lo que ocupa la pastilla y lo que sube al flotar, en % del alto del retrato más bajo (unos 400 px). */
+        const CAPSULE_SPAN = 12
+        const FLOAT_SPAN = 2
 
         it('es una de las pastillas', () => {
           expect(JAVA).toBeGreaterThan(0)
         })
 
-        it('desde 1281 px va a la izquierda de la cabeza, a la altura del nombre', () => {
-          expect(at(0)).toEqual({ right: '75%', y: '31%' })
+        it('en dos columnas va a la izquierda de la cabeza, a la altura del nombre', () => {
+          expect(at(0)).toEqual({ left: undefined, right: `var(${JAVA_RIGHT})`, y: '31%' })
+        })
+
+        it('el tramo de 1280 px no la recoloca: ni cambia de lado ni salta', () => {
+          expect(TIERS[1]?.some(({ index }) => index === JAVA)).toBe(false)
+          expect(at(1)).toEqual(at(0))
+        })
+
+        // A 1024 px el hueco entre el nombre y la cabeza es estrecho: ahí se
+        // pega a la figura, y se separa de ella según crece la ventana.
+        describe('distancia a la cabeza', () => {
+          it('es una sola fórmula: del 70,5 % al 75 % del retrato', () => {
+            expect(cssToken(tokensCss, JAVA_RIGHT)).toBe(
+              'clamp(70.5%, calc(70.5% + (100vw - 64rem) * 0.23), 75%)',
+            )
+          })
+
+          it('arranca donde empiezan las dos columnas y solo crece', () => {
+            expect(Number(javaFrom) * 16).toBe(1024)
+            expect(javaBase).toBe(javaStart)
+            expect(Number(javaSlope)).toBeGreaterThan(0)
+            expect(Number(javaEnd)).toBeGreaterThan(Number(javaStart))
+          })
+
+          it('ningún tramo la redefine y el componente no repite la fórmula', () => {
+            expect(tokensCss.match(new RegExp(`${JAVA_RIGHT}:`, 'g'))).toHaveLength(1)
+            expect(heroCss.match(new RegExp(`var\\(${JAVA_RIGHT}\\)`, 'g'))).toHaveLength(1)
+            expect(heroCss).not.toContain('100vw')
+          })
+        })
+
+        it('la silueta medida es la de la foto actual', async () => {
+          const digest = await crypto.subtle.digest('SHA-256', Uint8Array.from(readFileSync(SILHOUETTE.file)))
+          const hex = [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+
+          expect(hex).toBe(SILHOUETTE.sha256)
         })
 
         // Es la única a la altura de la cara (del 14 % al 45 %), y por eso va
-        // fuera de la figura: la cabeza empieza hacia el 71 % desde la derecha.
-        it('queda a la altura de la cara, pero fuera de la figura', () => {
+        // fuera de la figura: en los dos extremos de la fórmula, su borde
+        // derecho queda a la izquierda del punto más saliente de la silueta
+        // en toda la franja que ocupa, flotación incluida.
+        it('queda a la altura de la cara, pero fuera de la silueta', () => {
           const y = parseFloat(at(0).y ?? '')
 
           expect(y).toBeGreaterThan(14)
           expect(y).toBeLessThan(45)
-          expect(parseFloat(at(0).right ?? '')).toBeGreaterThanOrEqual(74)
+          expect(y - FLOAT_SPAN).toBeGreaterThanOrEqual(SILHOUETTE.from)
+          expect(y + CAPSULE_SPAN).toBeLessThanOrEqual(SILHOUETTE.to)
+          ;[Number(javaStart), Number(javaEnd)].forEach((right) =>
+            expect(100 - right, `borde derecho con right ${right} %`).toBeLessThan(SILHOUETTE.left),
+          )
           heroBadges.forEach((_, i) => {
             if (i + 1 === JAVA) return
             const other = parseFloat(effective(i + 1, 0, '--badge-y') ?? '')
@@ -306,26 +384,31 @@ describe('Hero: pastillas de tecnología', () => {
           })
         })
 
-        it('hasta 1280 px vuelve arriba a la derecha, donde estaba', () => {
-          const compact = TIERS[1]?.find(({ index }) => index === JAVA)?.body ?? ''
-
-          expect(valueOf(compact, '--badge-right')).toBe('-3%')
-          expect(valueOf(compact, '--badge-y')).toBe('14%')
-          expect(at(1)).toEqual({ right: '-3%', y: '14%' })
+        // Sobre el pelo, pegada al borde izquierdo del retrato: más abajo
+        // tocaría la cabeza en un teléfono en horizontal.
+        it('apilado va arriba a la izquierda, por encima del pelo', () => {
+          expect(at(2)).toEqual({ left: '0%', right: 'initial', y: '2%' })
         })
 
-        it('apilado y en teléfono no cambia', () => {
-          expect(at(2)).toEqual({ right: '0%', y: '10%' })
-          expect(at(3)).toEqual({ right: '0%', y: '9%' })
+        it('en teléfono va algo más baja, lejos del texto', () => {
+          const phone = TIERS[3]?.find(({ index }) => index === JAVA)?.body ?? ''
+
+          expect(valueOf(phone, '--badge-left')).toBe('0%')
+          expect(valueOf(phone, '--badge-y')).toBe('4%')
+          expect(at(3)).toEqual({ left: '0%', right: 'initial', y: '4%' })
         })
 
-        // Anclada por la derecha, su borde derecho guarda la distancia a la
-        // cabeza sea cual sea su ancho, y ningún tramo tiene que anular un lado.
-        it('se ancla por la derecha en todos los tramos', () => {
-          TIERS.forEach((rules, tier) => {
-            expect(sidesAt(JAVA, tier)).toEqual(['--badge-right'])
-            expect(valueOf(rules.find(({ index }) => index === JAVA)?.body ?? '', '--badge-left')).toBeUndefined()
-          })
+        // En dos columnas, anclada por la derecha, su borde guarda la
+        // distancia a la cabeza. Apilada se ancla al borde izquierdo del
+        // retrato, y anula el lado que hereda.
+        it('se ancla por la derecha en dos columnas y por la izquierda al apilarse', () => {
+          expect(sidesAt(JAVA, 0)).toEqual(['--badge-right'])
+          expect(sidesAt(JAVA, 1)).toEqual(['--badge-right'])
+          expect(sidesAt(JAVA, 2)).toEqual(['--badge-left'])
+          expect(sidesAt(JAVA, 3)).toEqual(['--badge-left'])
+          expect(valueOf(TIERS[2]?.find(({ index }) => index === JAVA)?.body ?? '', '--badge-right')).toBe(
+            'initial',
+          )
         })
       })
 
@@ -377,8 +460,8 @@ describe('Hero: pastillas de tecnología', () => {
               .map((_, i) => i + 1)
               .filter((index) => visualSideAt(index, tier) === visual)
               .filter((index) => {
-                const x = parseFloat(effective(index, tier, sidesAt(index, tier)[0] ?? '') ?? '')
-                return x < 25 || x > 50
+                const [min, max] = rangeOf(effective(index, tier, sidesAt(index, tier)[0] ?? ''))
+                return max < 25 || min > 50
               })
               .map((index) => parseFloat(effective(index, tier, '--badge-y') ?? ''))
               .sort((a, b) => a - b)
@@ -551,8 +634,8 @@ describe('Hero: pastillas de tecnología', () => {
         it('ninguna otra regla cambia la letra de una pastilla', () => {
           expect(cssRule(heroCss, '.float')).not.toHaveProperty('font-size')
           expect(cssRule(heroCss, '.badge')).not.toHaveProperty('font-size')
-          // Tres tramos completos y las cuatro que recoloca el de 1280 px.
-          expect(heroCss.match(/\.float:nth-child\(\d+\)\s*\{/g)).toHaveLength(heroBadges.length * 3 + 4)
+          // Tres tramos completos y las tres que recoloca el de 1280 px.
+          expect(heroCss.match(/\.float:nth-child\(\d+\)\s*\{/g)).toHaveLength(heroBadges.length * 3 + 3)
         })
 
         it('los tres tamaños son 16, 14 y 13 px', () => {

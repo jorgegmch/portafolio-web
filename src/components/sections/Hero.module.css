@@ -346,9 +346,9 @@
    mismo para las cinco en cada tramo: así solo cambia el ancho. Las de la
    derecha se anclan por la derecha para no salirse de la página. Solo un
    lado a la vez: si un tramo cambia de lado, anula el otro con `initial`.
-   Van en anillo alrededor de la figura: dos a la izquierda (una junto a la
-   cabeza, tras el nombre, y otra abajo), una abajo hacia el centro y dos a
-   la derecha. */
+   Van en anillo alrededor de la figura: dos a la izquierda en todos los
+   anchos (una junto a la cabeza, tras el nombre, y otra abajo), una abajo
+   hacia el centro y dos a la derecha. */
 .float {
   position: absolute;
   top: var(--badge-y);
@@ -367,9 +367,10 @@
 }
 
 /* A la izquierda de la cabeza, en el hueco que deja el nombre. Se ancla por
-   la derecha: así su borde guarda la distancia a la figura. */
+   la derecha, a una distancia fluida: así su borde se separa de la figura
+   según el hueco crece con la ventana. */
 .float:nth-child(2) {
-  --badge-right: 75%;
+  --badge-right: var(--hero-java-right);
   --badge-y: 31%;
   --float-phase: -0.45;
 
@@ -459,10 +460,9 @@
 }
 
 /* Con el párrafo en más líneas, la figura lo alcanza antes: el tope por
-   ancho baja, la pastilla de la izquierda se mueve con él y la que iba junto
-   a la cabeza pasa a la derecha. El retrato es
-   más bajo que el texto, así que los bloques se aprietan para que el Hero no
-   crezca y el pelo siga junto a la barra. */
+   ancho baja y la pastilla de abajo a la izquierda se mueve con él. El
+   retrato es más bajo que el texto, así que los bloques se aprietan para que
+   el Hero no crezca y el pelo siga junto a la barra. */
 @media (max-width: 1280px) {
   .hero {
     --portrait-cap: min(var(--portrait-max-width), var(--portrait-share-compact));
@@ -474,12 +474,6 @@
   .float:nth-child(1) {
     --badge-left: 0%;
     --badge-y: 80%;
-  }
-
-  /* Entre el nombre y la cabeza ya no cabe: vuelve arriba a la derecha. */
-  .float:nth-child(2) {
-    --badge-right: -3%;
-    --badge-y: 14%;
   }
 
   .float:nth-child(3) {
@@ -536,8 +530,8 @@
     justify-self: center;
   }
 
-  /* En anillo, como en escritorio: una a la izquierda, una abajo hacia el
-     centro y tres a la derecha, todas dentro del retrato. */
+  /* En anillo, como en escritorio: dos a la izquierda (una arriba, sobre el
+     pelo, y otra abajo), una abajo hacia el centro y dos a la derecha. */
   .float:nth-child(1) {
     --badge-left: 0%;
     --badge-y: 58%;
@@ -546,8 +540,9 @@
   }
 
   .float:nth-child(2) {
-    --badge-right: 0%;
-    --badge-y: 10%;
+    --badge-right: initial;
+    --badge-left: 0%;
+    --badge-y: 2%;
 
     font-size: var(--font-size-md);
   }
@@ -599,8 +594,8 @@
 
   /* El retrato mide menos de 410 px: con los tamaños de tablet las cinco no
      caben sin tapar la cara. Todas llevan el texto más pequeño; una va
-     arriba, junto al pelo y pegada al borde, y el resto por debajo de la
-     cara, dos a la izquierda y dos a la derecha. */
+     arriba a la izquierda, sobre el pelo y pegada al borde, y el resto por
+     debajo de la cara, dos a la izquierda y dos a la derecha. */
   .float:nth-child(1) {
     --badge-left: 0%;
     --badge-y: 58%;
@@ -609,8 +604,8 @@
   }
 
   .float:nth-child(2) {
-    --badge-right: 0%;
-    --badge-y: 9%;
+    --badge-left: 0%;
+    --badge-y: 4%;
 
     font-size: var(--font-size-sm);
   }
