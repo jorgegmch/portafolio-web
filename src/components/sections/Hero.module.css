@@ -10,6 +10,11 @@
   );
   /* Lo que ocupa la línea de rol, con su margen. */
   --hero-role-height: calc(var(--hero-role-size) * var(--leading-tight) + var(--space-3));
+  /* Lo que el texto empieza por debajo del pelo, menos su relleno final: lo
+     que se descuenta para centrarlo con la figura. */
+  --hero-text-drop: calc(
+    var(--hero-text-offset) - var(--hero-role-height) - var(--space-4) - var(--portrait-head-gap)
+  );
   /* Separación sobre el párrafo, sobre los botones y sobre el estado y las
      redes. Los tramos estrechos la aprietan. */
   --hero-space-intro: var(--space-5);
@@ -47,6 +52,29 @@
      lejos del hombro. Abajo, poco relleno: si el texto es más alto que el
      retrato, el Hero crece y el pelo se aleja de la barra. */
   padding: calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-4);
+  /* Ocupa todo el alto del Hero, en columna: lo que sobra se lo reparten los
+     dos huecos de abajo. */
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+
+/* Centrado con la figura: donde el retrato es más alto que el texto, un hueco
+   arriba y otro abajo se reparten lo que sobra. Donde no sobra, encogen hasta
+   cero y el texto se queda arriba, a la distancia de siempre. */
+.text::before,
+.text::after {
+  content: '';
+  flex: 1 1 0;
+}
+
+/* La figura va del pelo al borde inferior, y el texto empieza más abajo. El
+   hueco de arriba mide como mínimo esa diferencia y la sube con un margen
+   negativo: las dos se anulan, así que no añade alto, y el centro del bloque
+   coincide con el de la figura. Si la diferencia es negativa no hace nada. */
+.text::before {
+  min-height: var(--hero-text-drop);
+  margin-top: min(0%, calc(-1 * var(--hero-text-drop)));
 }
 
 /* Texto entre dos líneas finas: la izquierda arranca en el borde del nombre
@@ -462,9 +490,16 @@
     padding: var(--hero-stack-padding) var(--container-padding) 0;
   }
 
-  /* La separación de la rejilla ya da el hueco hasta el retrato. */
+  /* La separación de la rejilla ya da el hueco hasta el retrato. Sin figura
+     al lado no hay nada que centrar: vuelve a ser un bloque normal. */
   .text {
+    display: block;
     padding: 0;
+  }
+
+  .text::before,
+  .text::after {
+    content: none;
   }
 
   /* Sin retrato al lado, el párrafo recupera su ancho normal. */

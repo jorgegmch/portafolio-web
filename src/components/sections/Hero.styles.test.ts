@@ -682,6 +682,86 @@ describe('Hero: estilos', () => {
     it('el texto queda por encima de la caja del retrato', () => {
       expect(cssRule(heroCss, '.text')).toMatchObject({ position: 'relative', 'z-index': '1' })
     })
+
+    // Donde el retrato es más alto que el texto, el bloque baja hasta quedar
+    // centrado con la figura. Donde no sobra alto, se queda arriba, a la
+    // distancia de siempre: el relleno superior no cambia.
+    describe('centrado vertical con la figura', () => {
+      const both = cssRule(heroCss, '.text::before,\n.text::after')
+      const before = cssRule(heroCss, '.text::before')
+      const stacked = cssMedia(heroCss, '(max-width: 1023px)')
+      const DROP = 'var(--hero-text-drop)'
+      /** Una fórmula partida en varias líneas, en una sola. */
+      const oneLine = (value = '') =>
+        value.replace(/\s+/g, ' ').replace(/\( /g, '(').replace(/ \)/g, ')')
+
+      it('el texto ocupa todo el alto del Hero, en columna', () => {
+        expect(cssRule(heroCss, '.text')).toMatchObject({
+          display: 'flex',
+          'flex-direction': 'column',
+          'align-self': 'stretch',
+        })
+        expect(cssRule(heroCss, '.text')).not.toHaveProperty('justify-content')
+      })
+
+      // Dos huecos vacíos, uno arriba y otro abajo, se reparten lo que sobra.
+      // Pueden encoger hasta cero: nunca hacen crecer el Hero.
+      it('lo que sobra se reparte entre un hueco arriba y otro abajo', () => {
+        expect(both).toEqual({ content: "''", flex: '1 1 0' })
+      })
+
+      // La figura va del pelo al borde inferior, y el texto ya empieza más
+      // abajo que el pelo y deja un relleno al final: esa diferencia es lo
+      // que hay que descontar para que el centro del bloque sea el de la figura.
+      it('la diferencia entre el texto y la figura sale de los mismos tokens', () => {
+        expect(oneLine(cssRule(heroCss, '.hero')['--hero-text-drop'])).toBe(
+          'calc(var(--hero-text-offset) - var(--hero-role-height) - var(--space-4) - var(--portrait-head-gap))',
+        )
+      })
+
+      // El hueco de arriba mide como mínimo esa diferencia y sube lo mismo
+      // con un margen negativo: las dos se anulan, así que no añade alto al
+      // Hero ni baja el texto donde no sobra sitio.
+      it('el hueco de arriba descuenta esa diferencia sin añadir alto', () => {
+        expect(before).toEqual({
+          'min-height': DROP,
+          'margin-top': `min(0%, calc(-1 * ${DROP}))`,
+        })
+        expect(cssRule(heroCss, '.text::after')).toEqual({})
+      })
+
+      it('el bloque nunca sube: el relleno superior es el de siempre', () => {
+        expect(cssRule(heroCss, '.text').padding).toBe(
+          'calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-4)',
+        )
+      })
+
+      it('los huecos no llevan color, animación ni transición', () => {
+        for (const rule of [both, before]) {
+          expect(Object.keys(rule).filter((name) => /^(background|animation|transition)/.test(name))).toEqual([])
+        }
+      })
+
+      // Apilado no hay figura al lado: el texto vuelve a ser un bloque normal
+      // y los huecos dejan de ocupar sitio.
+      it('apilado, el texto vuelve a ser un bloque sin huecos', () => {
+        expect(cssRule(stacked, '.text')).toEqual({ display: 'block', padding: '0' })
+        expect(cssRule(stacked, '.text::before,\n  .text::after')).toEqual({ content: 'none' })
+      })
+
+      it('solo cambia en el tramo apilado', () => {
+        expect(heroCss.match(/\.text[^{,]*[{,]/g)).toEqual([
+          '.text {',
+          '.text::before,',
+          '.text::after {',
+          '.text::before {',
+          '.text {',
+          '.text::before,',
+          '.text::after {',
+        ])
+        expect(heroCss.match(/--hero-text-drop:/g)).toHaveLength(1)
+      })
+    })
   })
 
   describe('retrato', () => {
