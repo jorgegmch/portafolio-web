@@ -401,13 +401,25 @@ describe('Hero: pastillas de tecnología', () => {
         )
       })
 
-      it('hasta 1023 px cada pastilla tiene su posición y su tamaño propios', () => {
+      // Como en teléfono: la cara ocupa del 14 % al 45 % del alto, y una
+      // pastilla va arriba, junto al pelo, o por debajo.
+      it('apilado, ninguna arranca a la altura de la cara', () => {
+        const STACKED = 2
+
+        heroBadges.forEach((_, i) => {
+          const y = parseFloat(effective(i + 1, STACKED, '--badge-y') ?? '')
+
+          expect(y <= 10 || y >= 46, `pastilla ${i + 1} al ${y} %`).toBe(true)
+        })
+      })
+
+      it('hasta 1023 px cada pastilla tiene su posición propia y la letra del tramo', () => {
         const stacked = placementsOf(cssMedia(heroCss, '(max-width: 1023px)'))
 
         expect(stacked.map(({ index }) => index)).toEqual(heroBadges.map((_, i) => i + 1))
         stacked.forEach(({ body }) => {
           expect(valueOf(body, '--badge-y')).toMatch(/^-?[\d.]+%$/)
-          expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(sm|md|base)\)$/)
+          expect(valueOf(body, 'font-size')).toBe('var(--font-size-md)')
         })
       })
 
@@ -424,10 +436,47 @@ describe('Hero: pastillas de tecnología', () => {
         expect(valueOf(body, 'font-size')).toMatch(/^var\(--font-size-(sm|md|base|lg)\)$/)
       })
 
-      it('no todas miden lo mismo', () => {
-        const sizes = placements.map(({ body }) => valueOf(body, 'font-size'))
+      // La referencia es TypeScript. Todas las medidas de la pastilla van en
+      // em, así que con la misma letra solo cambia el ancho, por el nombre.
+      describe('todas miden lo mismo que TypeScript', () => {
+        const reference = heroBadges.findIndex((badge) => badge.technology === 'typescript') + 1
+        const sizesOf = (css: string) =>
+          placementsOf(css).map(({ index, body }) => [index, valueOf(body, 'font-size')] as const)
+        const everyBadge = (size: string) => heroBadges.map((_, i) => [i + 1, size] as const)
 
-        expect(new Set(sizes).size).toBeGreaterThan(1)
+        it('TypeScript es una de las pastillas', () => {
+          expect(reference).toBeGreaterThan(0)
+        })
+
+        it.each([
+          ['en dos columnas', placements, 'var(--font-size-base)'],
+          ['apilado, hasta 1023 px', placementsOf(cssMedia(heroCss, '(max-width: 1023px)')), 'var(--font-size-md)'],
+          ['en teléfono, hasta 480 px', placementsOf(cssMedia(heroCss, '(max-width: 480px)')), 'var(--font-size-sm)'],
+        ] as const)('%s, las cinco declaran la letra de TypeScript', (_, tier, size) => {
+          const sizes = tier.map(({ index, body }) => [index, valueOf(body, 'font-size')] as const)
+
+          expect(sizes.find(([index]) => index === reference)?.[1]).toBe(size)
+          expect(sizes).toEqual(everyBadge(size))
+        })
+
+        // Un tramo que cambiara la letra de una sola la dejaría distinta.
+        it('el tramo de 1280 px no cambia la letra de ninguna', () => {
+          const compact = sizesOf(cssMedia(heroCss, '(max-width: 1280px)'))
+
+          compact.forEach(([, size]) => expect(size).toBeUndefined())
+        })
+
+        it('ninguna otra regla cambia la letra de una pastilla', () => {
+          expect(cssRule(heroCss, '.float')).not.toHaveProperty('font-size')
+          expect(cssRule(heroCss, '.badge')).not.toHaveProperty('font-size')
+          expect(heroCss.match(/\.float:nth-child\(\d+\)\s*\{/g)).toHaveLength(heroBadges.length * 3 + 3)
+        })
+
+        it('los tres tamaños son 16, 14 y 13 px', () => {
+          expect(cssToken(tokensCss, '--font-size-base')).toBe('1rem')
+          expect(cssToken(tokensCss, '--font-size-md')).toBe('0.875rem')
+          expect(cssToken(tokensCss, '--font-size-sm')).toBe('0.8125rem')
+        })
       })
 
       // Las medidas de la pastilla van en em: crecen con su tamaño de texto.
