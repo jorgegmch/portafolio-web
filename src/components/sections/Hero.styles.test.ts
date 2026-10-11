@@ -7,6 +7,10 @@ const heroCss = readCss('src/components/sections/Hero.module.css')
 const tokensCss = readCss('src/styles/tokens.css')
 
 const MEASURE_TOKEN = '--hero-intro-measure'
+const INTRO_SIZE = '--hero-intro-size'
+const INTRO_SIZE_MAX = '--hero-intro-size-max'
+const INTRO_SIZE_FORMULA =
+  /^clamp\(([\d.]+)rem, calc\(([\d.]+)rem \+ \(100vw - (\d+)rem\) \* \(var\(--hero-intro-size-max\) - 1\) \/ (\d+)\), calc\(var\(--hero-intro-size-max\) \* 1rem\)\)$/
 
 describe('Hero: estilos', () => {
   describe('saludo', () => {
@@ -128,9 +132,103 @@ describe('Hero: estilos', () => {
         /^clamp\(([\d.]+)rem, [\d.]+vw, ([\d.]+)rem\)$/.exec(cssToken(tokensCss, '--hero-role-size')) ?? []
 
       expect(cssRule(heroCss, '.role')).toMatchObject({ 'font-size': 'var(--hero-role-size)' })
-      expect(cssRule(heroCss, '.intro')).toMatchObject({ 'font-size': 'var(--font-size-lg)' })
-      expect(Number(min)).toBeGreaterThan(parseFloat(cssToken(tokensCss, '--font-size-lg')))
+      const introMax = Number(cssToken(tokensCss, INTRO_SIZE_MAX))
+
+      expect(cssRule(heroCss, '.intro')).toMatchObject({ 'font-size': `var(${INTRO_SIZE})` })
+      expect(cssToken(tokensCss, INTRO_SIZE)).toMatch(INTRO_SIZE_FORMULA)
+      expect(introMax).toBeGreaterThan(1)
+      expect(Number(min)).toBeGreaterThan(introMax)
       expect(Number(max)).toBeGreaterThan(Number(min))
+    })
+
+    // Con 19 px el párrafo ocupaba cinco líneas junto al retrato. Con 16 cabe
+    // en cuatro en todos los anchos; donde hay más sitio crece, hasta un
+    // máximo que depende del idioma: el texto inglés es más largo.
+    describe('tamaño fluido del párrafo', () => {
+      const REM = 16
+      const LANG_RULE = /:root:lang\(en\)\s*\{([^}]*)\}/
+      const maxEs = Number(cssToken(tokensCss, INTRO_SIZE_MAX))
+      const maxEn = Number(/--hero-intro-size-max:\s*([\d.]+);/.exec(LANG_RULE.exec(tokensCss)?.[1] ?? '')?.[1])
+      const [, min = '', base = '', from = '', span = ''] =
+        INTRO_SIZE_FORMULA.exec(cssToken(tokensCss, INTRO_SIZE)) ?? []
+      /** La fórmula del token, en px, para un ancho de ventana y un máximo en rem. */
+      const size = (width: number, max: number) =>
+        Math.min(
+          max * REM,
+          Math.max(
+            Number(min) * REM,
+            Number(base) * REM + ((width - Number(from) * REM) * (max - 1)) / Number(span),
+          ),
+        )
+
+      it('es una sola fórmula, que toma su máximo de un token', () => {
+        expect(cssToken(tokensCss, INTRO_SIZE)).toBe(
+          `clamp(1rem, calc(1rem + (100vw - 68rem) * (var(${INTRO_SIZE_MAX}) - 1) / 4), calc(var(${INTRO_SIZE_MAX}) * 1rem))`,
+        )
+        expect(Number(min) * REM).toBe(16)
+        expect(base).toBe(min)
+      })
+
+      // El tamaño base de la página no se toca: el mínimo coincide con él.
+      it('su mínimo es el tamaño base, que sigue en 16 px', () => {
+        expect(cssToken(tokensCss, '--font-size-base')).toBe('1rem')
+        expect(`${min}rem`).toBe(cssToken(tokensCss, '--font-size-base'))
+      })
+
+      // El máximo va en rem, sin unidad: de él salen el tope y la pendiente.
+      it('el máximo es de 18 px, y de 17 px con la página en inglés', () => {
+        expect(cssToken(tokensCss, INTRO_SIZE_MAX)).toBe('1.125')
+        expect(maxEs * REM).toBe(18)
+        expect(maxEn * REM).toBe(17)
+      })
+
+      it('el inglés solo cambia el máximo', () => {
+        const body = LANG_RULE.exec(tokensCss)?.[1] ?? ''
+
+        expect(body.trim()).toBe(`${INTRO_SIZE_MAX}: 1.0625;`)
+        expect(tokensCss.match(/:lang\(/g)).toHaveLength(1)
+        expect(tokensCss.indexOf(':root:lang(en)')).toBeGreaterThan(tokensCss.indexOf(`${INTRO_SIZE}:`))
+      })
+
+      describe.each([
+        ['español', maxEs, 18, 17],
+        ['inglés', maxEn, 17, 16.5],
+      ])('en %s', (_, max, top, middle) => {
+        it.each([320, 360, 768, 1023, 1024, 1040, 1072, 1088])('a %i px de ventana mide 16 px', (width) => {
+          expect(size(width, max)).toBe(16)
+        })
+
+        it.each([1152, 1280, 1440, 1920])(`a %i px de ventana mide ${top} px`, (width) => {
+          expect(size(width, max)).toBe(top)
+        })
+
+        it('crece de 1088 a 1152 px, sin escalones', () => {
+          expect(Number(from) * REM).toBe(1088)
+          expect(Number(from) * REM + Number(span) * REM).toBe(1152)
+          expect(size(1120, max)).toBe(middle)
+          for (let width = 1024; width < 1920; width += 1) {
+            const step = size(width + 1, max) - size(width, max)
+
+            expect(step).toBeGreaterThanOrEqual(0)
+            expect(step).toBeLessThanOrEqual((top - 16) / 64)
+          }
+        })
+      })
+
+      it('ningún tramo ni componente redefine el tamaño ni su máximo', () => {
+        expect(tokensCss.match(new RegExp(`${INTRO_SIZE}:`, 'g'))).toHaveLength(1)
+        expect(tokensCss.match(new RegExp(`${INTRO_SIZE_MAX}:`, 'g'))).toHaveLength(2)
+        expect(heroCss.match(new RegExp(`var\\(${INTRO_SIZE}\\)`, 'g'))).toHaveLength(1)
+        expect(heroCss).not.toContain(INTRO_SIZE_MAX)
+        expect(heroCss).not.toMatch(new RegExp(`${INTRO_SIZE}:`))
+        expect(heroCss).not.toContain(':lang(')
+      })
+    })
+
+    // Con 19 px el párrafo nuevo ocupaba cinco líneas junto al retrato.
+    it('el párrafo no cambia de tamaño en ningún tramo', () => {
+      expect(heroCss.match(/\.intro\s*\{[^}]*font-size:/g)).toHaveLength(1)
+      expect(heroCss).not.toContain('var(--font-size-lg)')
     })
 
     describe('cursor', () => {
@@ -583,6 +681,43 @@ describe('Hero: estilos', () => {
       const stacked = cssMedia(heroCss, '(max-width: 1023px)')
 
       expect(cssRule(stacked, '.intro')).toMatchObject({ 'max-width': 'var(--measure)' })
+    })
+
+    // Con las líneas igualadas ninguna se alarga hacia el hombro de la
+    // figura. Un navegador que no lo admita lo ignora y parte las líneas
+    // como siempre.
+    describe('líneas equilibradas', () => {
+      const stacked = cssMedia(heroCss, '(max-width: 1023px)')
+      const OTHER_SHEETS = [
+        'src/styles/global.css',
+        'src/styles/tokens.css',
+        'src/components/layout/Footer.module.css',
+        'src/components/layout/Layout.module.css',
+        'src/components/layout/LoadingIntro.module.css',
+        'src/components/layout/Navbar.module.css',
+        'src/components/ui/CvDownload.module.css',
+        'src/components/ui/LangSwitcher.module.css',
+        'src/components/ui/SkipLink.module.css',
+        'src/pages/CertificationsPage.module.css',
+      ]
+
+      it('en dos columnas el párrafo iguala el largo de sus líneas', () => {
+        expect(cssRule(heroCss, '.intro')).toMatchObject({ 'text-wrap': 'balance' })
+      })
+
+      // Sin figura al lado no hay nada que esquivar, y el párrafo se vería
+      // más estrecho sin motivo.
+      it('apilado y en teléfono las parte como siempre', () => {
+        expect(cssRule(stacked, '.intro')).toEqual({ 'max-width': 'var(--measure)', 'text-wrap': 'wrap' })
+        expect(cssMedia(heroCss, '(max-width: 480px)')).not.toMatch(/\.intro\b/)
+        expect(cssMedia(heroCss, '(max-width: 1280px)')).not.toMatch(/\.intro\b/)
+      })
+
+      it('solo el párrafo lo usa', () => {
+        expect(heroCss.match(/text-wrap:/g)).toHaveLength(2)
+        expect(heroCss.match(/\.intro\s*\{[^}]*text-wrap:/g)).toHaveLength(2)
+        OTHER_SHEETS.forEach((path) => expect(readCss(path), path).not.toContain('text-wrap'))
+      })
     })
   })
 

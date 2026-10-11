@@ -197,7 +197,10 @@
   max-width: var(--hero-intro-measure);
   margin-top: var(--hero-space-intro);
   color: var(--color-text-muted);
-  font-size: var(--font-size-lg);
+  font-size: var(--hero-intro-size);
+  /* Líneas de largo parecido: ninguna se alarga hacia el hombro de la
+     figura. Donde no se admite, se parten como siempre. */
+  text-wrap: balance;
 }
 
 .actions {
@@ -514,9 +517,11 @@
     content: none;
   }
 
-  /* Sin retrato al lado, el párrafo recupera su ancho normal. */
+  /* Sin retrato al lado, el párrafo recupera su ancho normal y parte las
+     líneas como siempre. */
   .intro {
     max-width: var(--measure);
+    text-wrap: wrap;
   }
 
   .portrait {

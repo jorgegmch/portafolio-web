@@ -134,7 +134,15 @@
   /* Ancho del párrafo junto al retrato: más corto que --measure, para que
      sus líneas queden lejos del hombro de la figura. */
   --hero-intro-measure: 30rem;
-  /* Línea de rol bajo el nombre: siempre mayor que el párrafo (19 px), de
+  /* Tamaño del párrafo. Con más de 16 px el texto no cabe en cuatro líneas
+     junto al retrato hasta los 1088 px de ventana; de ahí crece hasta su
+     máximo a 1152, donde ya hay sitio. Apilado y en teléfono vale 16 px.
+     El máximo va en rem y sin unidad, porque de él salen el tope y la
+     pendiente: 18 px. En inglés baja a 17 (más abajo): el texto aprobado es
+     más largo y a 18 px pasa a cinco líneas desde 1126 px. */
+  --hero-intro-size-max: 1.125;
+  --hero-intro-size: clamp(1rem, calc(1rem + (100vw - 68rem) * (var(--hero-intro-size-max) - 1) / 4), calc(var(--hero-intro-size-max) * 1rem));
+  /* Línea de rol bajo el nombre: siempre mayor que el párrafo (16 a 17 px), de
      20 px en teléfono a 24 px en escritorio. */
   --hero-role-size: clamp(1.25rem, 2.2vw, 1.5rem);
   /* Rol que rota bajo el nombre: cuánto baja el texto que espera y cuánto
@@ -220,6 +228,11 @@
   --z-nav: 100; /* origen */
   --z-skip-link: 200;
   --z-intro: 300;
+}
+
+/* El párrafo del Hero en inglés es más largo: su tamaño máximo es 17 px. */
+:root:lang(en) {
+  --hero-intro-size-max: 1.0625;
 }
 
 /* Apilado no hay retrato al lado: los dos lados vuelven a ser iguales. */
