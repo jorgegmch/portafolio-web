@@ -144,6 +144,30 @@ describe('icono genérico de base de datos', () => {
 })
 
 describe('icono genérico de agentes de IA', () => {
+  // https://github.com/primefaces/primeicons -> raw-svg/microchip-ai.svg, en
+  // la versión 7.0.0. SHA-256 del archivo oficial, que ya trae finales de
+  // línea LF. Aquí solo se le añade delante el comentario con su licencia.
+  const OFFICIAL_SHA256 = '6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1'
+
+  // El aviso de la licencia MIT, como está en el LICENSE de esa versión.
+  const COPYRIGHT_NOTICE = 'Copyright (c) 2018-2021 PrimeTek'
+  const PERMISSION_NOTICE = [
+    'Permission is hereby granted, free of charge, to any person obtaining a copy',
+    'of this software and associated documentation files (the "Software"), to deal',
+    'in the Software without restriction, including without limitation the rights',
+    'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
+    'copies of the Software, and to permit persons to whom the Software is',
+    'furnished to do so, subject to the following conditions:',
+    '',
+    'The above copyright notice and this permission notice shall be included in all',
+    'copies or substantial portions of the Software.',
+  ]
+
+  const root = () => parseSvg(read(AI_AGENTS)).documentElement
+  const all = (name: string) => [...root().querySelectorAll(name)]
+  /** Líneas del comentario, sin su sangría. */
+  const commentLines = () => comment(AI_AGENTS).split('\n').map((line) => line.trim())
+
   it('existe en public/icons, fuera de la carpeta de logos de marca', () => {
     expect(existsSync(AI_AGENTS)).toBe(true)
     expect(AI_AGENTS).not.toContain('/tech/')
@@ -154,67 +178,29 @@ describe('icono genérico de agentes de IA', () => {
   })
 
   it('es cuadrado', () => {
-    expect(parseSvg(read(AI_AGENTS)).documentElement.getAttribute('viewBox')).toBe('0 0 24 24')
+    expect(root().getAttribute('viewBox')).toBe('0 0 24 24')
   })
 
-  const root = () => parseSvg(read(AI_AGENTS)).documentElement
-  const all = (name: string) => [...root().querySelectorAll(name)]
-  const number = (element: Element, attribute: string) => Number(element.getAttribute(attribute))
+  // Sin alterar: el dibujo es el del archivo oficial, byte a byte.
+  it('coincide con el archivo oficial', async () => {
+    const text = read(AI_AGENTS)
 
-  // Una cara de robot: una cabeza, círculos y trazos. Nada de texto ni de
-  // formas que puedan parecer el logo de una empresa o de un modelo de IA.
-  it('se dibuja solo con un rectángulo, círculos y trazos', () => {
-    const shapes = all('*').map((element) => element.localName)
-
-    expect(shapes.length).toBeGreaterThan(0)
-    shapes.forEach((shape) => expect(['rect', 'circle', 'path']).toContain(shape))
+    expect(text).toMatch(LEADING_COMMENT)
+    expect(await sha256(text.replace(LEADING_COMMENT, ''))).toBe(OFFICIAL_SHA256)
   })
 
-  // Si crece, deja de leerse a 21 px y empieza a parecerse a un personaje.
-  it('no pasa de seis formas', () => {
-    expect(all('*').length).toBeLessThanOrEqual(6)
+  // Un chip con las letras «AI» en una sola forma. Las letras son trazado,
+  // no texto: no dependen de ninguna fuente.
+  it('se dibuja con un solo trazado, sin texto', () => {
+    expect(all('*').map((element) => element.localName)).toEqual(['path'])
   })
 
-  // Cabeza rectangular de esquinas redondeadas: no una cúpula ni un semicírculo.
-  it('la cabeza es un único rectángulo de esquinas redondeadas, centrado', () => {
-    const [head, ...rest] = all('rect')
-
-    expect(head).toBeDefined()
-    expect(rest).toHaveLength(0)
-    expect(number(head as Element, 'rx')).toBeGreaterThan(0)
-    expect(number(head as Element, 'x') * 2 + number(head as Element, 'width')).toBe(24)
-  })
-
-  // Dos ojos separados, no un visor continuo.
-  it('tiene dos ojos iguales, dentro de la cabeza y simétricos', () => {
-    const head = all('rect')[0] as Element
-    const top = number(head, 'y')
-    const eyes = all('circle').filter((circle) => number(circle, 'cy') > top)
-    const [left, right] = eyes.sort((a, b) => number(a, 'cx') - number(b, 'cx'))
-
-    expect(eyes).toHaveLength(2)
-    expect(number(left as Element, 'r')).toBe(number(right as Element, 'r'))
-    expect(number(left as Element, 'cy')).toBe(number(right as Element, 'cy'))
-    expect(number(left as Element, 'cx') + number(right as Element, 'cx')).toBe(24)
-    expect(number(left as Element, 'cy')).toBeLessThan(top + number(head, 'height'))
-  })
-
-  // Una sola antena, con su bolita: no dos.
-  it('tiene una sola antena con una bolita, centrada sobre la cabeza', () => {
-    const top = number(all('rect')[0] as Element, 'y')
-    const balls = all('circle').filter((circle) => number(circle, 'cy') < top)
-
-    expect(balls).toHaveLength(1)
-    expect(number(balls[0] as Element, 'cx')).toBe(12)
-  })
-
-  // Los trazos (antena y boca) son segmentos rectos: sin curvas no hay
-  // cúpulas, sonrisas de mascota ni espirales.
-  it('los trazos son solo segmentos rectos', () => {
-    const paths = all('path')
-
-    expect(paths.length).toBeGreaterThan(0)
-    paths.forEach((path) => expect(path.getAttribute('d')).toMatch(/^[MmLlHhVv\d\s.,-]+$/))
+  // Se carga con <img>, donde currentColor no hereda el color de la página:
+  // el color va fijo en el archivo. Negro, sobre la placa clara de la pastilla.
+  it('su color es fijo: no depende de currentColor', () => {
+    expect(read(AI_AGENTS)).not.toMatch(/currentColor/i)
+    expect(all('path')[0]?.getAttribute('fill')).toBe('black')
+    expect(root().hasAttribute('stroke')).toBe(false)
   })
 
   it('no nombra ninguna empresa ni modelo de IA', () => {
@@ -223,28 +209,39 @@ describe('icono genérico de agentes de IA', () => {
     )
   })
 
-  // Va sobre la placa clara de la pastilla: trazo oscuro, del color de un token.
-  it('su trazo es el color de superficie de la paleta, sin relleno', () => {
-    const root = parseSvg(read(AI_AGENTS)).documentElement
+  describe('comentario de atribución', () => {
+    it('dice de dónde sale: repositorio, ruta y versión', () => {
+      expect(comment(AI_AGENTS)).toContain('https://github.com/primefaces/primeicons')
+      expect(comment(AI_AGENTS)).toContain('raw-svg/microchip-ai.svg')
+      expect(comment(AI_AGENTS)).toContain('version 7.0.0')
+    })
 
-    expect(root.getAttribute('stroke')).toBe(cssToken(tokensCss, '--color-surface'))
-    expect(root.getAttribute('fill')).toBe('none')
-  })
+    it('declara que el dibujo va sin modificar', () => {
+      expect(comment(AI_AGENTS)).toContain('The drawing is unmodified')
+    })
 
-  // Los dos iconos propios van juntos en las pastillas: mismo grosor y mismos remates.
-  it('usa el mismo trazo que el icono de base de datos', () => {
-    const own = parseSvg(read(AI_AGENTS)).documentElement
-    const database = parseSvg(read(DATABASE)).documentElement
+    // La licencia MIT pide conservar estos dos avisos en toda copia.
+    it('conserva el aviso de copyright de la licencia MIT', () => {
+      expect(commentLines()).toContain('MIT License')
+      expect(commentLines()).toContain(COPYRIGHT_NOTICE)
+    })
 
-    ;['stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'viewBox'].forEach((attribute) =>
-      expect(own.getAttribute(attribute)).toBe(database.getAttribute(attribute)),
-    )
-    expect(own.getAttribute('stroke-width')).not.toBeNull()
-  })
+    it('conserva el aviso de permiso, palabra por palabra', () => {
+      expect(commentLines().join('\n')).toContain(PERMISSION_NOTICE.join('\n'))
+    })
 
-  it('su comentario dice que es un dibujo propio, no un logo', () => {
-    expect(comment(AI_AGENTS)).toContain('Generic AI agents icon drawn for this site')
-    expect(comment(AI_AGENTS)).toContain('a robot face')
-    expect(comment(AI_AGENTS)).toContain('not a brand logo')
+    it('conserva la renuncia de garantía hasta su última línea', () => {
+      expect(commentLines().join('\n')).toContain('THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND')
+      expect(commentLines().join('\n')).toContain('OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.')
+    })
+
+    // Un aviso de licencia de terceros puede traer correos: este no trae.
+    it('no lleva ninguna dirección de correo', () => {
+      expect(read(AI_AGENTS)).not.toContain('@')
+    })
+
+    it('ya no se presenta como dibujo propio', () => {
+      expect(comment(AI_AGENTS)).not.toMatch(/drawn for this site|own work|robot/i)
+    })
   })
 })

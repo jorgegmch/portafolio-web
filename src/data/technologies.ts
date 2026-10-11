@@ -41,8 +41,9 @@ export const techLogoUrl = (file: string) => `${import.meta.env.BASE_URL}tech/${
 /**
  * Pastillas que flotan junto al retrato del Hero, en orden. El nombre visible
  * es el de la tecnología en el catálogo. `brand` distingue el logo de marca,
- * que va sin alterar, del icono propio que se usa cuando la marca no deja
- * mostrar el suyo.
+ * que va sin alterar, del icono genérico que se usa cuando no hay logo que
+ * mostrar: propio (base de datos) o de un conjunto de licencia abierta (el
+ * chip de AI Agents, de PrimeIcons).
  */
 export const heroBadges = [
   { technology: 'python', icon: 'python.svg', brand: true },

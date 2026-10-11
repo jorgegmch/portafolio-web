@@ -73,7 +73,7 @@ describe('pastillas del Hero', () => {
       expect(genericBadges.length).toBeGreaterThan(0)
     })
 
-    // Solo se usa un icono propio cuando la marca no deja mostrar su logo.
+    // Solo se usa un icono genérico cuando no hay logo de marca que mostrar.
     it.each(genericBadges)('$technology no tiene logo en el catálogo', (badge) => {
       expect(technology(badge.technology)?.logos).toEqual([])
     })
