@@ -10,9 +10,7 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 | `/update-hero-social` | La fila de redes y contacto |
 | `/update-hero-badge` | Una de las cinco pastillas |
 
-> **Estado:** los comandos todavía no existen. Se crean uno a uno, cada cual en su commit; hasta entonces este documento describe lo que harán. Esta nota se borra al terminar el último.
->
-> La invocación real de las cinco skills (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) se prueba una sola vez al final, tras crear las cinco y reiniciar Claude Code. Lo que falle se arregla en un commit `fix` aparte.
+> **Estado:** los cinco comandos existen. Su invocación real (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) está pendiente de probar, tras reiniciar Claude Code; lo que falle se arregla en un commit `fix` aparte. Esta nota se borra cuando esa prueba esté hecha.
 >
 > Lección de las pruebas: cada escenario de prueba se ejecuta con su propio permiso de copia, y los escenarios de parada nunca copian. Una prueba que copia a `public/cv/` o a `src/assets/hero/` se restaura desde la copia de seguridad, y se comprueban los SHA-256 antes de seguir.
 

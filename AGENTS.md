@@ -55,6 +55,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 - **Nombre:** completo «Jorge Alberto Gómez Chaparro» y corto «Jorge Gómez», con tilde en todo texto visible. Se definen una vez en `config/site.ts`. Los nombres de archivo, slugs y URLs van en ASCII, sin tilde.
 - **Sin inventar datos:** las etiquetas de stack salen de la descripción de cada repo en GitHub; tecnologías sin niveles ni porcentajes.
 - **DRY con regla de tres:** no extraigas una abstracción hasta la tercera repetición real.
+- **Datos del Hero:** para cambiar el CV, la foto, el párrafo, las redes o una pastilla del Hero se usa `/update-hero-cv`, `/update-hero-photo`, `/update-hero-intro`, `/update-hero-social` o `/update-hero-badge` (detalle en `docs/COMANDOS-HERO.md`); no edites esos datos a mano. Son comandos manuales: los invoca el autor; si te piden uno de esos cambios, pídele que lo invoque.
 
 ## Flujo de trabajo
 
