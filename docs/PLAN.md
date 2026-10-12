@@ -184,7 +184,10 @@ Tres encargos del autor, aprobados y sin ejecutar. Van después de la Fase 5 y e
 - **`useReducedMotion` duplica `useMediaQuery`.**
 - **Utilidades de test duplicadas** entre los dos archivos del hook de partículas.
 - **El dibujo estático** del fondo, con movimiento reducido, es una foto del momento del cambio.
-- **Tests que leen archivos de disco** (ya son seis: `ParticleBackground`, `Navbar.styles`, `site.title`, `site.icons`, `LoadingIntro.styles` e `introFrames.duration`): repiten el patrón y dependen de que Vitest se lance desde la raíz del repo; extraer un helper común.
+- **Tests que leen archivos de disco** (eran seis al anotarlo: `ParticleBackground`, `Navbar.styles`, `site.title`, `site.icons`, `LoadingIntro.styles` e `introFrames.duration`): repiten el patrón y dependen de que Vitest se lance desde la raíz del repo; extraer un helper común.
+  - Recuento del 11 de octubre de 2026, con `git grep`: 18 archivos de test importan `node:fs`, contando el nuevo `src/data/logoRecord.test.ts`, y otros 6 leen de disco solo a través de `src/test/cssRules.ts`. En total, 24.
+  - `logoRecord.test.ts` lee `docs/LOGOS.md` y los archivos de `public/`, y es el primero que lista una carpeta: lo hace con `import.meta.glob`, porque el proyecto solo declara de Node leer un archivo y saber si existe.
+  - La función que calcula el SHA-256 de un archivo está repetida en cinco tests (`Hero.badges`, `badgeIcons`, `brandLogos`, `socialLogos` y `logoRecord`): entra en el mismo helper.
 - **Respaldo de la intro duplicado entre JS y CSS:** los 1000 ms de `exitFallbackMs` deben superar los 650 ms de `--duration-slow`; hoy solo los une un test.
 - **Secuencias compuestas en la intro:** `buildIntroFrames` separa con `Array.from`, que partiría un emoji con ZWJ o una tilde descompuesta; si una frase las incluye, usar `Intl.Segmenter`.
 - **Desbordamiento de la intro sin test:** que la frase quepa en 360 px solo lo vigila la medición manual en Chrome, no la suite; una frase más larga no haría fallar nada.
