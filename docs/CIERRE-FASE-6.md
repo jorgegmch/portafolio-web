@@ -14,7 +14,7 @@ Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en
 
 - [x] **«Descargar CV»:** hecho, del commit `32ff261` al `9836e16`. Los cuatro PDFs están en `public/cv/` y su registro en `src/data/cv.ts`; el botón solo se renderiza si el registro tiene archivos del idioma activo. Lo que lleva el CV (teléfono, correo) queda descargable por cualquiera una vez publicado.
   - **Peso añadido al repo:** 914,2 kB en los cuatro PDFs actuales, más 914,4 kB de su primera versión, que queda en el historial.
-- [ ] **Cuatro comandos manuales:** `/update-hero-intro`, `/update-hero-photo`, `/update-hero-cv` y `/update-hero-social`, con la convención de `.claude/skills/pre-push-check`. Primero la propuesta por escrito; después una prueba real de cada uno (el de la descripción con un texto de prueba que se revierte, el de la foto con la foto actual, el de los CV con PDFs de prueba sin datos reales y fuera del repo). El cierre debe documentarlos. Sus requisitos están en «Requisitos fijados para los comandos».
+- [ ] **Crear los cinco comandos manuales:** `/update-hero-cv`, `/update-hero-photo`, `/update-hero-intro`, `/update-hero-social` y `/update-hero-badge`. Qué hace cada uno, su convención, sus requisitos y su prueba real están en `docs/COMANDOS-HERO.md`. La propuesta por escrito ya está aprobada; falta crearlos y hacer la prueba real de cada uno. El cierre debe documentarlos. Lo que se fijó durante el Hero sigue en «Requisitos fijados para los comandos».
 - [ ] **`/update-hero-photo`:** no versiona el script de exportación; describe los pasos y las herramientas, sin añadir código ni dependencias.
 - [ ] **`pre-push-check` y los PDFs:** la skill ya revisa los PDFs versionados desde `54a289c`. Falta elegir la herramienta local con la que extrae el texto y los metadatos, sin añadir dependencias al repo; mientras no haya una, ese paso informa «no se pudo comprobar».
 - [ ] **Foto real** en lugar de la provisional, con `/update-hero-photo`.
@@ -123,9 +123,7 @@ Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en
 
 ### Comportamiento esperado en la verificación del contacto
 
-- **`wa.me` y `mailto:` aparecen una vez en el JS de `dist/`.** Es lo que exige el control positivo de `.claude/rules/contacto.md`; no es una fuga. Buscar esos prefijos esperando cero da un falso fallo.
-- **`public/tech/javascript.svg` contiene correos de terceros** dentro de su aviso de licencia MIT. `pre-push-check` los admite por nombre de archivo; no son datos del autor.
-- **El correo de contacto cambió** en `src/config/contact.ts` (commit `c35c60b`), con el mismo codificado. Ningún test fijaba el valor.
+- Qué es normal encontrar al verificar el contacto (`wa.me` y `mailto:` en el JS, los correos de terceros de `javascript.svg` y que ningún test fije el correo): en `docs/COMANDOS-HERO.md`.
 
 ### Pastillas, logos y atribuciones
 

@@ -31,6 +31,7 @@ Leídas por el autor el 7 y el 8 de octubre de 2026.
 
 - Logos de CSS, GitHub en el catálogo de tecnologías y Spring Security.
 - Si la atribución va también visible en el sitio.
+- **Pendiente, Python y TypeScript:** sus políticas de marca no constan aquí; se leen en su fuente oficial antes de tocar esos logos.
 
 ### Dónde irán los que hoy no se muestran
 
