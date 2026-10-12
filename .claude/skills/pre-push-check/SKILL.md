@@ -59,7 +59,8 @@ remoto y entrega un veredicto. Es de solo lectura.
    y el teléfono de `src/config/contact.ts`; no los imprimas ni los guardes.
    - Bundle: repite la verificación de `.claude/rules/contacto.md` sobre
      `dist/`, sin contar los PDFs. Cero coincidencias, con su control
-     positivo.
+     positivo y con la única excepción que esa regla nombra: el dominio
+     del correo en `dist/tech/javascript.svg`.
    - PDFs versionados: localízalos con `git ls-files '*.pdf'`, sin dar por
      hecha ninguna carpeta, y aplícales la «Revisión de PDFs» de abajo.
 7. **Tests sin trampas.**

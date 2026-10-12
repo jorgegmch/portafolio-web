@@ -31,6 +31,9 @@ Repítela cada vez que toques esta parte:
 1. Construye con el contacto montado en la aplicación.
 2. Control positivo: confirma que el código del contacto sí está en `dist/` (los códigos, `wa.me`, `mailto:`). Sin esto, la búsqueda pasa sin probar nada.
 3. Busca el correo completo, su parte local, su dominio y el número con y sin indicativo, con guiones y con espacios. Debe haber cero coincidencias en `dist/`, sin contar los PDFs del CV, y cero con `git grep -I` en los archivos versionados. El dato se decodifica en el navegador, así que el bundle sigue sin tenerlo; si algún día se prerenderiza el HTML, esta regla se revisa antes.
+   - Única excepción, solo por nombre de archivo: el dominio del correo coincide una vez en `public/tech/javascript.svg` y una vez en su copia, `dist/tech/javascript.svg`. Uno de los correos de terceros del aviso de la licencia MIT de ese logo usa el mismo proveedor de correo. Esas dos coincidencias no cuentan.
+   - La excepción cubre solo el dominio y solo esos dos archivos. El correo completo, su parte local y el número deben dar cero también ahí. El dominio en cualquier otro archivo, o más de una vez en esos dos, es un fallo.
+   - El control positivo del paso 2 sigue siendo obligatorio: sin él, un cero no prueba nada.
 4. Pasa las cadenas por línea de comandos; no las guardes en ningún archivo.
 5. Si montaste algo solo para la prueba, confirma con `git status` que quedó revertido.
 6. PDFs del CV: extrae su texto y comprueba que todo correo o teléfono que contengan es el de `src/config/contact.ts`, y que no llevan cédula ni fecha de nacimiento, tampoco en los metadatos. Un PDF sin capa de texto no se da por limpio.
