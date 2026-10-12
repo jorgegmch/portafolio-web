@@ -94,19 +94,22 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 
 ### `/update-hero-social`
 
-- **Para qué sirve:** añadir una red a la fila o reemplazar una.
+- **Para qué sirve:** añadir una red a la fila, reemplazar una o cambiar su icono.
 - **Qué recibe:** nada; pregunta.
-- **Qué pregunta:** si se añade o se reemplaza (quitar, solo si el autor lo pide), qué red y qué enlace.
+- **Qué pregunta:** si se añade o se reemplaza (quitar, solo si el autor lo pide); si es reemplazar, cuál y si entera o solo el icono; el nombre de la red y el enlace de su perfil. El pie de página se pregunta cada vez, antes de tocarlo.
+- **Cómo es el registro** (`src/data/social.ts`): cada entrada tiene cuatro campos, `id`, `kind`, `icon` y `brand`, y ninguna guarda una URL ni un dato de contacto. Las de enlace toman su URL de `site.social`, en `src/config/site.ts`, la misma del pie; un test exige que toda red con enlace del Hero esté también en el pie. El tope es `HERO_SOCIAL_LIMIT`.
 - **Qué comprueba:**
-  - busca el icono en la fuente oficial de la marca; si no puede descargarlo, da el enlace y espera a que el autor lo traiga;
-  - lee la política de marca vigente; si no permite el uso, propone un icono genérico;
-  - tope de cinco y orden fijo;
-  - el comprobador de SVG y los tests de logos;
+  - primero la política de marca vigente, leída ese día en su fuente oficial; no se fía de `docs/LOGOS.md`. Si no permite el uso, propone un icono genérico, propio o de licencia CC0, MIT o ISC, con candidatos y capturas;
+  - si la política se leyó con una herramienta que devuelve un resumen y no el texto literal, lo dice, cita solo lo que vio palabra por palabra y no da por seguro que la marca permite el logo. Antes de usar un logo de marca, el autor abre el enlace y lo confirma;
+  - después busca el logo en esa fuente. Avisa de la URL exacta antes de descargar y lo guarda fuera del repo; si no puede, da el enlace y espera a que el autor lo traiga;
+  - el tope y el orden: los enlaces primero, después el correo y WhatsApp, y la red nueva al final de los enlaces; pregunta si el autor quiere otro orden;
+  - el comprobador de SVG antes de copiar el archivo. Si lo bloquea, lo dice y no relaja el comprobador sin preguntar;
   - la verificación de `.claude/rules/contacto.md`, con su control positivo;
-  - el protocolo de medición, en la parte que afecta a la fila.
-- **Qué cambia:** `src/data/social.ts`, los textos en `es.ts` y `en.ts`, el archivo en `public/social/` o `public/icons/`, y su fila en `docs/LOGOS.md`.
-- **Qué tests toca:** `src/data/social.test.ts`, `src/data/socialLogos.test.ts` y `src/components/sections/Hero.social.test.tsx`.
-- **Qué no hace, y es su garantía:** nunca pide ni acepta un correo o un teléfono. El correo y WhatsApp son entradas de un tipo (`kind`), sin valor: van por `ContactButton` y salen de `src/config/contact.ts`. Si el autor pega uno, el comando se niega a escribirlo y a repetirlo.
+  - el protocolo de medición, en la parte que afecta a la fila, con 320 px de ancho incluido: es donde antes se parte.
+- **Dato medido, 11 de octubre de 2026:** con cinco controles la fila mide 268 px, y a 320 px de ancho caben 267, así que se parte en dos filas: el Hero pasa de 863 a 919 px y la cara cortada, de 112 a 168 px, en español. El tope se queda en 5; el comando mide a 320 px y avisa con cifras, sin decidir.
+- **Qué cambia:** `src/data/social.ts`; la URL en `site.social` y, con confirmación, la lista del pie (`src/config/site.ts`); los nombres accesibles en `es.ts` y `en.ts`; el archivo en `public/social/` o `public/icons/`, y su fila en `docs/LOGOS.md`, con la fecha de lectura de la política. Antes guarda fuera del repo una copia de todo lo que toca, con sus SHA-256.
+- **Qué tests toca:** `src/data/social.test.ts`, `src/components/sections/Hero.social.test.tsx` y la constante `SOCIAL` de `src/i18n/dictionaries.hero.test.ts`; `src/data/socialLogos.test.ts` solo si entra o sale un logo de marca. `src/data/logoRecord.test.ts` no se toca y debe seguir pasando. Los lista antes de tocarlos y no debilita ninguno.
+- **Qué no hace, y es su garantía:** nunca pide ni acepta un correo o un teléfono. El correo y WhatsApp son entradas cuyo `kind` dice que salen por `ContactButton`; su valor no está en el registro, sino codificado en `src/config/contact.ts`, que el comando no toca. De esas dos entradas solo se puede cambiar el icono. Si el autor pide cambiar el correo o el número, se detiene; si pega uno, se niega a escribirlo y a repetirlo.
 - **Prueba real:** añadir una red de prueba y revertirla desde la copia.
 
 ### `/update-hero-badge`
@@ -189,4 +192,5 @@ Al repetir la verificación de `.claude/rules/contacto.md`, esto es normal y no 
 
 - **`wa.me` y `mailto:` aparecen una vez en el JS de `dist/`.** Es lo que exige el control positivo. Buscar esos prefijos esperando cero da un falso fallo.
 - **`public/tech/javascript.svg` contiene correos de terceros** dentro de su aviso de licencia MIT. `pre-push-check` los admite por nombre de archivo; no son datos del autor.
+- **La búsqueda del dominio del correo da una coincidencia,** en `public/tech/javascript.svg` y en su copia de `dist/`: uno de esos correos de terceros usa el mismo proveedor de correo que el autor. El correo completo, su parte local y el número siguen dando cero.
 - **Ningún test fija el correo de contacto** de `src/config/contact.ts`: los tests comprueban la forma, nunca el valor. El correo cambió en el commit `c35c60b`, con el mismo codificado, y no hubo que tocar ninguno.
