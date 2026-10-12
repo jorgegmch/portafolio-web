@@ -118,17 +118,8 @@ Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en
 - **Textos aprobados:** grupo «Redes y contacto» / «Social and contact»; «GitHub»; «LinkedIn»; «Enviar un correo» / «Send an email»; «Escribir por WhatsApp» / «Message on WhatsApp». Los enlaces y WhatsApp añaden el aviso de que abren en una pestaña nueva.
 - **Correo y WhatsApp** van por `ContactButton` y se ensamblan en el clic, sin mostrar texto.
 - **Contenedor:** círculo de 44 px con borde de 1 px en `--color-text-subtle` y logo de 24 px. El borde usa un token de texto por decisión del autor; al pasar el puntero o recibir el foco cambia a `--color-accent-alt`.
-- **Interpretación del autor, no una cita:** rodear los logos de WhatsApp y LinkedIn con un círculo es la lectura que el autor hace de sus políticas de marca. Ninguna de las tres marcas publica por escrito un espacio libre ni un tamaño mínimo; GitHub solo distribuye una variante con espacio libre.
+- **Logos de GitHub, LinkedIn y WhatsApp:** oficiales y sin modificar. Su procedencia, sus SHA-256, la excepción del comprobador de SVG para el de WhatsApp y la lectura del autor sobre el círculo están en `docs/LOGOS.md`.
 - **Sobre es un icono propio,** genérico, en `public/icons/envelope.svg`, trazado en `--color-text`. No es un logo de marca.
-- **Logos oficiales sin modificar,** cargados con `<img>` y sin filtros ni opacidad, descargados por el autor de los paquetes oficiales tras aceptar él sus términos:
-
-| Archivo | Origen | SHA-256 |
-|---|---|---|
-| `public/social/github.svg` | Invertocat blanco del paquete de GitHub | `ccd84c89b1056345608fc3489357f8acc7397e49a3cdc2d418b6c8016911d47b` |
-| `public/social/linkedin.png` | `InBug-White.png`, 840×779 px | `ed22a5ab46c171e3449708ff34923de7298da00ac204c7f85444db05bf888791` |
-| `public/social/whatsapp.svg` | `Digital_Glyph_White_RGB_2026.svg` | `7fb054c0f4bea644b4a4a014d6d8581aad7e6dcb639049d17a578dc44f8e6fd4` |
-
-- **Excepción del comprobador de SVG:** el de WhatsApp trae un elemento `style`. Se admite solo en ese archivo y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
 
 ### Comportamiento esperado en la verificación del contacto
 
@@ -141,12 +132,8 @@ Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en
 - **Pastillas del Hero:** Python, Java (Duke), TypeScript, PostgreSQL y «AI Agents». PostgreSQL lleva un icono genérico propio (`database.svg`); «AI Agents», un icono genérico de terceros.
 - **Icono de «AI Agents»** (commit `1c8c1af`): el chip `microchip-ai` de PrimeIcons, sin modificar; solo se le añadió el comentario de procedencia y la licencia. No es un logo de marca.
 
-| Archivo | Origen | Licencia | SHA-256 del original |
-|---|---|---|---|
-| `public/icons/ai-agents.svg` | `raw-svg/microchip-ai.svg` de `github.com/primefaces/primeicons`, versión 7.0.0 | MIT, © 2018-2021 PrimeTek | `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1` |
-
   - El chip va relleno, en negro puro; ya no hace juego con el sobre y la base de datos, que son de trazo. El test que vigilaba ese parecido se retiró.
-  - El repositorio de PrimeIcons está archivado. Las versiones publicadas bajo MIT siguen siendo MIT.
+  - Su procedencia, su licencia (MIT, PrimeTek) y sus SHA-256 están en `docs/LOGOS.md`.
 - **«AI Agents»** se sostiene en dos proyectos: «n8n Daily News Agent» y «LogiTrack IQ». Cuando se construya la sección de proyectos, la tarjeta de LogiTrack IQ debe nombrar el agente de IA en su descripción visible.
 - **Tamaño:** las cinco llevan la misma letra en cada tramo (16 px en dos columnas, 14 apilado, 13 en teléfono), así que solo cambia el ancho (commit `4b6a6a8`).
 - **Compensación del icono** (commit `b5a40b2`): la caja del icono de PostgreSQL crece ×1,16 y la de «AI Agents» ×1,25, porque su dibujo no llena el cuadro. El tope es ×1,27: más, y se sale de la placa.
@@ -157,12 +144,7 @@ Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en
   - apilado va arriba a la izquierda, sobre el pelo (izquierda 0 %, altura 2 %); en teléfono, algo más baja (4 %);
   - un test comprueba que, a su altura, queda fuera de la silueta. El borde de la silueta (30,73 % del ancho, entre el 27 % y el 43 % del alto) se midió en el navegador sobre `portrait-576.webp`, y otro test fija el hash de ese archivo.
 - **PostgreSQL apilado:** al 46 % de alto (48 % en teléfono).
-- **Logos que solo pueden ir como texto,** según las políticas leídas el 7 y el 8 de octubre de 2026: la taza de Java (exige licencia comercial escrita), MySQL (exige que el logo sea un enlace), n8n (sin permiso expreso publicado), React (permiso escrito de Meta), Docker (exige autorización), Spring Boot (el autor no ha leído sus condiciones) y PostgreSQL.
-- **Sin decidir:** logos de CSS, GitHub en el catálogo y Spring Security.
-- **Sección de servicios:** listará todas las tecnologías del catálogo, con logo donde la marca lo permita y solo texto donde no. Ahí van Duke y n8n.
-- **Archivo de créditos en `docs/`, por escribir:** Git (Jason Long, CC BY 3.0), JavaScript (aviso MIT), HTML5 (W3C, CC BY 3.0), PrimeIcons (MIT, PrimeTek) y Duke. Para Duke, citar las dos páginas de Oracle (dev.java/duke y el PDF de marca de Java) y dejar claro que su repositorio no incluye texto de licencia.
-- **Deuda de Duke:** reintentar la wiki del proyecto y el repositorio Mercurial antiguo para fijar el texto BSD exacto.
-- **Sin decidir:** si la atribución va también visible en el sitio.
+- **Política de marcas, logos sin decidir, sección de servicios, créditos pendientes y deuda de Duke:** en `docs/LOGOS.md`.
 
 ### Posición del bloque de texto
 
