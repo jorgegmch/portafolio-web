@@ -33,7 +33,8 @@ describe('fila de redes del Hero', () => {
     ])
   })
 
-  // Seis ya no caben en una fila en un teléfono de 320 px.
+  // Cinco controles miden 268 px: a 360 px de ancho caben en una fila;
+  // a 320 px la caja mide 267 y pasan a dos filas.
   it('el tope es de cinco y no se supera', () => {
     expect(HERO_SOCIAL_LIMIT).toBe(5)
     expect(heroSocial.length).toBeGreaterThan(0)
