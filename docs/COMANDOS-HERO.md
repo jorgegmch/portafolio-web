@@ -116,19 +116,23 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 
 - **Para qué sirve:** reemplazar una de las cinco pastillas por otra tecnología.
 - **Qué recibe:** nada; pregunta.
-- **Qué pregunta:** cuál se reemplaza, por qué tecnología y de dónde sale la etiqueta. Toda etiqueta de stack nueva se justifica citando de dónde sale (`.claude/rules/contenido-veraz.md`), y sale de la descripción de un repo en GitHub (`AGENTS.md`). Una certificación solo cuenta si el autor lo dice. Antes de renombrar cualquier cosa ligada a una posición, pregunta.
+- **Qué pregunta:** cuál se reemplaza, por qué tecnología y de dónde sale la etiqueta. Toda etiqueta de stack nueva se justifica citando de dónde sale (`.claude/rules/contenido-veraz.md`), y sale de la descripción de un repo en GitHub (`AGENTS.md`). Una certificación solo cuenta si el autor lo dice. Antes de renombrar cualquier cosa ligada a un puesto, pregunta.
+- **Cómo son las pastillas:** `heroBadges`, en `src/data/technologies.ts`, da el orden y, de cada una, `technology`, `icon` y `brand`. La posición no va ahí: va en una regla por puesto, `.float:nth-child(n)`, en `Hero.module.css`. El puesto es el lugar de la pastilla en la lista.
 - **Qué comprueba:**
   - si la tecnología no está en `src/data/technologies.ts`, propone la entrada;
-  - el icono, por este orden: el oficial si la marca lo permite; si hay que descargarlo a mano, el enlace para el autor; si no se permite, candidatos genéricos de licencia CC0, MIT o ISC, con capturas a tamaño real y ampliadas;
-  - mide la tinta del icono y propone un factor de compensación, con tope ×1,27 y su test;
-  - el comprobador de SVG;
+  - primero la política de marca vigente, leída ese día en su fuente oficial; las de Python y TypeScript no constan en `docs/LOGOS.md` y se leen si entran en juego;
+  - si la política se leyó con una herramienta que devuelve un resumen y no el texto literal, lo dice, cita solo lo que vio palabra por palabra y no da por seguro que la marca permite el logo. Antes de usar un logo de marca, el autor abre el enlace y lo confirma;
+  - el icono, por este orden: el oficial si la marca lo permite, avisando de la URL exacta y guardándolo fuera del repo; si no puede descargarlo, el enlace para el autor; si no se permite o no se consigue, tres o cuatro candidatos genéricos de licencia CC0, MIT o ISC, verificada en el `LICENSE` del repositorio oficial, con capturas a tamaño real y ampliadas;
+  - mide la tinta del icono y propone el menor factor de compensación que la iguala, con su test y con capturas a factor 1 y al propuesto. Da el margen de la caja a la placa en los tres tramos de letra y avisa si solo cabe con el tope ×1,27, donde el margen es de menos de 0,1 px;
+  - el comprobador de SVG, antes de copiar el archivo; si lo bloquea, no lo relaja;
   - el protocolo de medición completo, antes y después.
-- **Qué cambia:** el registro de pastillas, el icono, su token de compensación si lo necesita y su fila en `docs/LOGOS.md`. La pastilla nueva conserva la posición y el lado de la que sustituye.
-- **Qué tests toca:** `src/data/badgeIcons.test.ts` y los de `Hero.badges.test.tsx` que nombran la pastilla. Los lista antes de tocarlos.
-- **Qué pertenece a la posición y qué al icono:**
-  - **a la posición,** y lo hereda la pastilla nueva: `--hero-java-right`, el test de la silueta y el hash de la foto (junto a la cabeza), y la altura del 46 % y el lado de la que hoy ocupa PostgreSQL. El comando pregunta si esos nombres pasan a ser neutros; el hash no se toca;
-  - **al icono,** y se vuelve a medir: los factores de compensación. Si el token antiguo queda sin uso, pregunta si se retira.
-- **Qué no hace:** nunca añade una sexta pastilla; no cambia posiciones; no decide si un límite que empeora es aceptable.
+- **Qué cambia:** el registro de pastillas, el icono, su token de compensación si lo necesita y su fila en `docs/LOGOS.md`, con la fecha de lectura de la política. La pastilla nueva conserva el puesto y el lado de la que sustituye. Antes guarda fuera del repo una copia de todo lo que toca, con sus SHA-256.
+- **Qué tests toca:** `src/data/heroBadges.test.ts`, `src/data/badgeIcons.test.ts` o `src/data/brandLogos.test.ts`, y los de `Hero.badges.test.tsx` que nombran la pastilla. Los lista antes de tocarlos. `src/data/logoRecord.test.ts` no se toca y debe seguir pasando.
+- **Qué pertenece al puesto y qué a la tecnología:**
+  - **al puesto,** y lo hereda la pastilla nueva: el lado, la altura y la posición en todos los tramos; en el que va junto a la cabeza, `--hero-java-right`, el test de la silueta y el hash de la foto; y los tests de reparto, como el de los 20 puntos. El hash y `SILHOUETTE` no se tocan;
+  - **a la tecnología,** y sale con ella: el icono, su entrada del catálogo, su factor de compensación, su fila de `docs/LOGOS.md` y los tests del propio archivo;
+  - **nombres que mezclan las dos cosas:** `--hero-java-right` y el bloque de tests «Java» son del puesto; los factores `--badge-icon-scale-…` son del icono; y el bloque «todas miden lo mismo que TypeScript» usa esa pastilla como referencia de tamaño: si TypeScript sale, ese test deja de compilar y el build falla hasta elegir otra referencia. El comando pregunta si esos nombres pasan a ser neutros, dice cuántos archivos y tests cambian, y espera.
+- **Qué no hace:** nunca añade una sexta pastilla; no cambia posiciones; no renombra nada en silencio; no borra el icono ni los tests de la tecnología que sale sin que el autor apruebe la lista exacta; no decide si un límite que empeora es aceptable.
 - **Prueba real:** reemplazar una pastilla por una de prueba, medir y revertir desde la copia.
 
 ## Protocolo de medición
