@@ -61,8 +61,8 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 | `git.svg` | Git Logo, de Jason Long, CC BY 3.0. Fuente: git-scm.com/community/logos. | `61b00a713efa52e230f7c139f792e2f0b57947e56af9c7e6e38cc49d1da9a4df` |
 | `html.svg` | HTML5 Logo, del W3C, CC BY 3.0. Fuente: w3.org/html/logo. | `15fee19d76890dfc5deac7e3180e45ab51efa94e5908b235af4a27165fe46815` |
 | `javascript.svg` | Lleva dentro su aviso de licencia MIT, con los correos de sus autores. | `a70a3d8d36ea6b0e614a04ec30d5a4fb2bf36d515492cb84050ded2b84d14393` |
-| `python.svg` | Sin comentario de procedencia en el archivo; su nombre interno es `python-logo-only.svg`. **Procedencia por anotar.** | `baec8662a1461c2cacc326b54d2727cb2f1ce07ba02d00f5b826d035104f649f` |
-| `typescript.svg` | Sin comentario de procedencia en el archivo. **Procedencia por anotar.** | `139ae451b37a00251fe24358191699efa665f63f1c8369cb9dad833159e159e2` |
+| `python.svg` | `python-logo-only.svg`, de python.org/community/logos. Idéntico byte a byte al oficial, según `src/data/brandLogos.test.ts`; el archivo no lleva comentario de procedencia. Licencia: no consta. | `baec8662a1461c2cacc326b54d2727cb2f1ce07ba02d00f5b826d035104f649f` |
+| `typescript.svg` | `ts-logo-512.svg`, de typescriptlang.org/branding. Idéntico byte a byte al oficial, según `src/data/brandLogos.test.ts`; el archivo no lleva comentario de procedencia. Licencia: no consta. | `139ae451b37a00251fe24358191699efa665f63f1c8369cb9dad833159e159e2` |
 
 ### Iconos genéricos (`public/icons/`)
 

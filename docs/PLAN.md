@@ -224,6 +224,7 @@ Cada pieza nueva exige su excepción en el `.gitignore` del repo, en el mismo co
 - **«Full-Stack» en el título frente a «Full Stack» en `site.role`:** decidirlo cuando el hero muestre el rol.
 - **`alt` de la foto y meta description:** si usan `shortName` o `legalName` (hoy usan `legalName`).
 - **Trazo superior de la G** en la variante simplificada del favicon: posible retoque si en la pestaña real molesta.
+- **Favicon sin hash registrado:** `apple-touch-icon.png`, `favicon.svg` y `favicon.ico`, en la raíz de `public/`, no tienen su SHA-256 anotado en ningún documento; `docs/LOGOS.md` y su test solo cubren las carpetas.
 
 ## Riesgos conocidos
 
