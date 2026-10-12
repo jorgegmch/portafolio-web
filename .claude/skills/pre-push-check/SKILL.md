@@ -60,15 +60,8 @@ remoto y entrega un veredicto. Es de solo lectura.
    - Bundle: repite la verificación de `.claude/rules/contacto.md` sobre
      `dist/`, sin contar los PDFs. Cero coincidencias, con su control
      positivo.
-   - PDFs versionados: localízalos con `git ls-files '*.pdf'`. Extrae el
-     texto y los metadatos de cada uno con una herramienta local ya
-     instalada (por ejemplo `pdftotext`), sin añadir dependencias al repo.
-     Todo correo o teléfono hallado en el texto debe ser exactamente el de
-     config; cualquier otro, y cualquier dato con forma de cédula o de fecha
-     completa, se lista como archivo, página y tipo, sin el valor. Los
-     metadatos no pueden llevar ninguno.
-   - Si no hay herramienta instalada o el PDF no tiene capa de texto, no lo
-     des por limpio: informa «no se pudo comprobar».
+   - PDFs versionados: localízalos con `git ls-files '*.pdf'`, sin dar por
+     hecha ninguna carpeta, y aplícales la «Revisión de PDFs» de abajo.
 7. **Tests sin trampas.**
    `git grep -nE "\.(only|skip)\(" -- '*.test.ts' '*.test.tsx'` no debe
    devolver nada. Control positivo obligatorio:
@@ -78,6 +71,67 @@ remoto y entrega un veredicto. Es de solo lectura.
 8. **Calidad.** `npm run lint`, `npm run typecheck`, `npm test` y
    `npm run build`. Informa el resultado de cada uno con sus cifras.
 
+## Revisión de PDFs
+
+Procedimiento con nombre propio: lo usa el paso 6 y lo puede usar cualquier
+otra skill que reciba PDFs. Su entrada es una lista de rutas de PDF; no
+copia, no mueve y no modifica ninguno.
+
+1. **Herramientas.** `pdftotext` para el texto y Python estándar para los
+   metadatos. Las dos son de esta máquina, no del repo: no instales nada.
+   Si `pdftotext -v` no responde, informa «no se pudo comprobar» para todos
+   los PDFs; nunca los des por limpios.
+2. **Cabecera.** Cada archivo empieza por `%PDF-`. Si no, falla y no se
+   sigue con él.
+3. **Texto.** `pdftotext -enc UTF-8 <archivo> -`. El `-enc UTF-8` es
+   obligatorio: sin él el texto sale en Latin-1 y las tildes llegan rotas.
+   Las páginas vienen separadas por un salto de página; cuéntalas.
+   - Si ninguna página trae texto, el PDF no tiene capa de texto: «no se
+     pudo comprobar».
+   - Si una página no trae texto, «no se pudo comprobar» esa página.
+   - Límite: un texto convertido a contornos no sale al extraer y no se
+     puede detectar. En un PDF de diseño, dilo.
+4. **Metadatos.** Léelos con Python estándar, sin imprimirlos:
+   - el diccionario Info al que apunta `/Info`, con sus cadenas literales o
+     hexadecimales (las que empiezan por `FEFF` van en UTF-16);
+   - el paquete XMP (`<x:xmpmeta>`);
+   - si el PDF guarda sus objetos en flujos comprimidos, descomprímelos con
+     `zlib` antes de buscar.
+   Un PDF cifrado, o un flujo que no se pueda descomprimir: «no se pudo
+   comprobar». Informa qué campos existen por su nombre, nunca su valor.
+5. **Qué se busca,** en el texto de cada página y en los metadatos:
+   - **Correo:** todo texto con forma de correo se compara con el de
+     config. Informa solo «coincide» o «no coincide».
+   - **Teléfono:** toda secuencia de siete o más dígitos, seguidos o
+     separados por espacios, puntos, guiones o paréntesis. Quita los
+     separadores y compárala con el de config, con y sin indicativo.
+     Informa solo «coincide» o «no coincide».
+   - **Números largos:** cualquier otra secuencia de siete o más dígitos se
+     lista; puede ser una cédula.
+   - **Fecha completa** (día, mes y año), con cifras o con el mes escrito,
+     en español o en inglés.
+   - **Palabras de cédula** (cédula, C.C., identificación, documento de
+     identidad, pasaporte), **de nacimiento** (nacimiento, nacido, born,
+     birth), **de dirección** (dirección, address, calle, carrera, avenida,
+     torre, apartamento, barrio) y **de estado civil** (estado civil,
+     marital, soltero, casado, single, married).
+   - **Nombre sin tilde:** «Gomez» es un AVISO, no un fallo. Lístalo por
+     archivo. Los cuatro PDFs del repo lo llevan hasta que se regeneren.
+6. **Cómo se informa.** Cada hallazgo como archivo, página (o «metadatos»)
+   y tipo, sin el valor. En el texto, un correo o un teléfono que coincide
+   pasa; en los metadatos no puede haber ninguno, coincida o no. Todo lo
+   demás se lista para que el autor decida.
+7. **Descartes conocidos.** No son datos personales; anótalos como
+   descartados, con su motivo:
+   - dos años seguidos, como el periodo de un trabajo, suman ocho dígitos;
+   - `CreationDate` y `ModDate` son la fecha y la hora en que se generó el
+     archivo, no una fecha de nacimiento;
+   - «Identificación de las necesidades del cliente» sale por la palabra
+     «identificación»;
+   - «Torre de control de inventario» sale por la palabra «torre».
+   Un descarte vale solo para esa frase o ese campo. Si la misma palabra
+   aparece en otro sitio, se lista.
+
 ## Informe
 
 Una tabla con una fila por paso: qué se comprobó, resultado (pasa, falla o
@@ -86,3 +140,5 @@ no se pudo comprobar) y la evidencia. Después:
 - Si todo pasa: di que está listo y muestra el comando de push para que lo
   ejecute el autor. No lo ejecutes.
 - Si algo falla o no se pudo comprobar: di que no está listo y qué falta.
+- Los avisos (por ejemplo, «Gomez» sin tilde en un PDF) van en una lista
+  aparte y no cambian el veredicto.
