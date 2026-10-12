@@ -13,6 +13,8 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 > **Estado:** los comandos todavía no existen. Se crean uno a uno, cada cual en su commit; hasta entonces este documento describe lo que harán. Esta nota se borra al terminar el último.
 >
 > La invocación real de las cinco skills (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) se prueba una sola vez al final, tras crear las cinco y reiniciar Claude Code. Lo que falle se arregla en un commit `fix` aparte.
+>
+> Lección de las pruebas: cada escenario de prueba se ejecuta con su propio permiso de copia, y los escenarios de parada nunca copian. Una prueba que copia a `public/cv/` o a `src/assets/hero/` se restaura desde la copia de seguridad, y se comprueban los SHA-256 antes de seguir.
 
 ## Lo que comparten
 
@@ -57,16 +59,20 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 
 - **Para qué sirve:** cambiar el retrato por una fotografía real y dejar al día todo lo que se midió sobre el anterior.
 - **Qué recibe:** la ruta de un PNG fuera del repo. Es una fotografía real: el comando no pregunta por ello, y `hero.photoAlt` describe una fotografía.
-- **Qué pregunta:** nada, salvo que una comprobación falle o una medida empeore.
+- **Qué pregunta:** cómo recortar si la proporción no es 4:5 (no recorta por su cuenta); si seguir cuando el PNG mide menos de 1472 px de ancho, porque el archivo grande sería un reescalado hacia arriba; y qué hacer con un perfil de color que no sea sRGB. Espera además la aprobación de la comparación de pesos antes de reemplazar.
 - **Qué comprueba:**
   - trabaja sobre una copia y confirma al final que el hash del original no cambió;
-  - dimensiones, proporción 4:5, canal alfa y cómo se ve sobre el fondo oscuro;
-  - que los WebP salen sin EXIF, sin XMP y sin perfil ICC (Pillow conserva el perfil del PNG si no se vacía a propósito);
+  - dimensiones, proporción 4:5 y canal alfa; qué metadatos trae el PNG (por ejemplo, un EXIF con la ubicación), sin imprimir su valor;
+  - que el fondo es de verdad transparente, sin franja clara en el borde, con capturas sobre el fondo oscuro;
+  - los parámetros de exportación no se dan por sabidos: lee los cuatro WebP actuales y propone la calidad que da un peso comparable;
+  - que los WebP salen sin EXIF, sin XMP y sin perfil ICC, leyendo sus fragmentos RIFF. La exportación vacía los metadatos a propósito;
   - el protocolo de medición completo, antes y después.
-- **Qué cambia:** los cuatro archivos de `src/assets/hero/` (576, 800, 1152 y 1472 px de ancho).
-- **Qué tests toca:** `src/components/sections/Hero.badges.test.tsx`: vuelve a medir la silueta y actualiza la constante `SILHOUETTE` y el hash de `portrait-576.webp`. Ese test falla a propósito en cuanto cambia el archivo. `src/assets/hero/portrait.test.ts` ya comprueba las dimensiones, la proporción, la transparencia y que ningún archivo lleva EXIF, XMP ni perfil de color: no se toca, se ejecuta.
-- **Qué no hace:** no recorta, no retoca ni quita el fondo; no versiona un script de exportación.
-- **Avisa** de que el historial conserva la foto anterior si la rama ya se subió.
+- **Qué cambia:** los cuatro archivos de `src/assets/hero/` (576, 800, 1152 y 1472 px de ancho), tras guardar fuera del repo una copia de los actuales con sus SHA-256.
+- **Qué tests toca:** `src/components/sections/Hero.badges.test.tsx`: vuelve a medir la silueta y actualiza solo `left` y `sha256` de la constante `SILHOUETTE`. Ese test falla a propósito en cuanto cambia el archivo. `src/assets/hero/portrait.test.ts` ya comprueba las dimensiones, la proporción, la transparencia y que ningún archivo lleva EXIF, XMP ni perfil de color: no se toca, se ejecuta.
+- **Qué depende de la foto, además de la silueta:** la franja de la cara (del 14 % al 45 % del alto, que los tests dan por hecha) y los porcentajes de las pastillas. El comando mide dónde quedan sobre la foto nueva; si una pastilla pasa a tapar la cara, a tocar la silueta o a incumplir los 20 puntos, no la mueve: da las cifras y ofrece opciones.
+- **Margen de Java:** informa, antes y después, de los puntos porcentuales que hay entre el borde derecho de la pastilla de Java y la silueta; si es negativo, Java queda dentro de la silueta. No es lo mismo que el hueco horizontal a la figura, que va en píxeles: cada cifra dice cuál de las dos es.
+- **Qué no hace:** no recorta, no retoca ni quita el fondo; no mueve pastillas; no cambia `hero.photoAlt`; no versiona un script de exportación.
+- **Avisa** de que el historial conserva la foto anterior si la rama ya se subió, y de que la rama se sube con la foto provisional.
 - **Prueba real:** un PNG derivado del WebP actual, fuera del repo. Se anota cuánto cambia la silueta y se confirma que el test del hash falla; después se restaura desde la copia y se comprueba que los hashes vuelven a ser los de antes.
 
 ### `/update-hero-intro`
