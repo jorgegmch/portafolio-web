@@ -11,6 +11,8 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 | `/update-hero-badge` | Una de las cinco pastillas |
 
 > **Estado:** los comandos todavía no existen. Se crean uno a uno, cada cual en su commit; hasta entonces este documento describe lo que harán. Esta nota se borra al terminar el último.
+>
+> La invocación real de las cinco skills (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) se prueba una sola vez al final, tras crear las cinco y reiniciar Claude Code. Lo que falle se arregla en un commit `fix` aparte.
 
 ## Lo que comparten
 
@@ -36,15 +38,16 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 
 - **Para qué sirve:** sustituir los cuatro PDFs de `public/cv/` por una versión nueva, sin publicar por error un dato que no deba ir.
 - **Qué recibe:** una sola ruta de carpeta, fuera del repo.
-- **Qué pregunta:** solo si falta un PDF o si un patrón encuentra más de uno.
+- **Qué pregunta:** si falta un PDF o un patrón encuentra más de uno; si un PDF trae «Gomez» sin tilde, o un hallazgo que no es un descarte conocido, pregunta si seguir o detenerse y recomienda detenerse.
 - **Qué comprueba:**
-  - localiza los cuatro PDFs por patrón de nombre (ATS e Infograph\*, en español e inglés); ignora los `.docx` y dice cuáles ignoró;
+  - localiza los cuatro PDFs por las palabras de su nombre, cortado por guion bajo, guion, punto, espacio y paréntesis, sin distinguir mayúsculas: una que empiece por «Infogra» para el infográfico (cubre «Infografico» e «Infographic»), «ATS» para el plano, y «ES» o «EN» para el idioma. Son palabras enteras, no subcadenas; si un nombre lleva las dos versiones, pregunta;
+  - ignora los `.docx` y cualquier otro archivo, y dice cuáles ignoró;
   - de cada uno: que empieza por `%PDF-`, su tamaño y su número de páginas;
-  - extrae el texto con `pdftotext -enc UTF-8` y aplica el procedimiento de PDFs de `pre-push-check`, sin duplicarlo: todo correo o teléfono debe ser el de `src/config/contact.ts`;
+  - aplica la sección «Revisión de PDFs» de `pre-push-check`, sin duplicarla, con el texto extraído con `pdftotext -enc UTF-8`: todo correo o teléfono debe ser el de `src/config/contact.ts`;
   - busca cédula, fecha de nacimiento, dirección, estado civil y números largos, y revisa los metadatos;
-  - que el nombre va con tilde, «Gómez»; avisa si encuentra «Gomez»;
+  - que el nombre va con tilde, «Gómez», en el texto y en los metadatos;
   - un PDF sin capa de texto no se da por limpio: «no se pudo comprobar».
-- **Qué cambia:** copia los PDFs a `public/cv/` con los nombres en kebab-case del registro (`src/data/cv.ts`) y compara el SHA-256 de origen y de destino.
+- **Qué cambia:** guarda fuera del repo una copia de los PDFs actuales, con sus SHA-256; copia los nuevos a `public/cv/` con los nombres en kebab-case del registro (`src/data/cv.ts`) y compara el SHA-256 de origen y de destino. No copia nada antes de terminar la revisión y de que el autor responda.
 - **Qué tests toca:** ninguno. Ejecuta los del registro (`src/data/cv.test.ts`) y los del botón.
 - **Qué no hace:** no convierte `.docx`, no edita los PDFs ni sus metadatos, no cambia el registro.
 - **Recuerda al autor** que los PDFs quedan descargables por cualquiera una vez publicados, y que la versión anterior sigue en el historial.

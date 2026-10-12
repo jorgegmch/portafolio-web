@@ -38,7 +38,7 @@ Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en
   - vuelve a medir la silueta y actualiza la constante `SILHOUETTE` y el hash del test de Java en `src/components/sections/Hero.badges.test.tsx`; ese test falla a propósito en cuanto cambia `portrait-576.webp`;
   - quita los metadatos EXIF de los archivos.
 - **`/update-hero-cv`:**
-  - recibe una sola ruta de carpeta y localiza los cuatro PDFs por patrón de nombre (ATS e Infograph\*, en español e inglés), ignorando los `.docx`;
+  - recibe una sola ruta de carpeta y localiza los cuatro PDFs por patrón de nombre (ATS e Infogra\*, con el idioma en `_ES` o `_EN`), ignorando los `.docx`;
   - los PDFs deben venir regenerados con «Gómez».
 
 ## Sección de contacto de la Fase 6: cambio de decisión
