@@ -78,15 +78,18 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 ### `/update-hero-intro`
 
 - **Para qué sirve:** cambiar el párrafo de presentación en los dos idiomas.
-- **Qué recibe:** solo el texto en español.
-- **Qué pregunta:** propone un inglés natural, con una o dos líneas sobre las libertades que se tomó, y **espera la aprobación explícita del inglés** antes de escribir nada.
+- **Qué recibe:** solo el texto en español. Invocar el comando aprueba ese español; el inglés lo aprueba el autor aparte.
+- **Qué pregunta:** propone un inglés nativo y natural, no literal, con una o dos líneas sobre las libertades que se tomó, y **espera la aprobación explícita del inglés** antes de escribir nada. Si el autor no lo aprueba, no escribe ninguna versión por su cuenta. Pregunta también de dónde sale lo que no tenga respaldo.
 - **Qué comprueba:**
-  - `.claude/rules/contenido-veraz.md`: nada de años de experiencia, clientes, métricas ni producción real;
-  - que el texto no lleva datos personales;
-  - antes y después, en español e inglés: las líneas que ocupa el párrafo, su tamaño por idioma y el equilibrado. Avisa si pasa de cuatro líneas o si algo empeora.
-- **Qué cambia:** `hero.intro` en `src/i18n/es.ts` y `src/i18n/en.ts`.
+  - quién usa hoy la clave `hero.intro`; si la usa alguien más que el Hero y sus tests, no cambia ese uso sin preguntar;
+  - `.claude/rules/contenido-veraz.md`: nada de años de experiencia, clientes, métricas ni producción real, y cada tecnología nombrada debe estar en `src/data/technologies.ts` o en la descripción de un repo. Lo que no tiene respaldo no lo corrige: lo señala;
+  - que el texto no lleva datos personales; si los lleva, se detiene sin imprimirlos;
+  - tras escribir, desde disco: sin «Ã», sin CR, sin caracteres de control, y con las tildes, la «ñ» y las comillas intactas;
+  - antes y después, en español e inglés: las líneas que ocupa el párrafo, su tamaño por idioma, el equilibrado, el alto del Hero, el pelo a la barra, figura–párrafo, Python al texto, las distancias de Java y la cara cortada. Avisa con cifras si pasa de cuatro líneas en algún ancho o si algo empeora, y ofrece opciones sin decidir: acortar, ancho o tamaño;
+  - si la descripción del documento dejó de coincidir con el párrafo. La informa; no la toca.
+- **Qué cambia:** `hero.intro` en `src/i18n/es.ts` y `src/i18n/en.ts`, con la herramienta de edición, tras guardar fuera del repo una copia de los tres archivos con sus SHA-256.
 - **Qué tests toca:** la constante `INTRO` de `src/i18n/dictionaries.hero.test.ts`, que fija el texto palabra por palabra.
-- **Qué no hace:** no toca la meta description, el rol ni el tamaño del párrafo. Si el texto nuevo pide otro tamaño, lo dice y ofrece opciones.
+- **Qué no hace:** no toca la descripción del documento, el rol ni los tokens de tamaño; no retoca el español recibido. Si el texto nuevo pide otro tamaño, lo dice con cifras y ofrece opciones.
 - **Prueba real:** un texto de prueba, medido y revertido desde la copia.
 
 ### `/update-hero-social`
