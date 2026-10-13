@@ -3,7 +3,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 
 ## Estado actual
 - Fases 1 a 5 cerradas en rebuild/vite-react y subidas a origin, sin merge.
-- Siguen tres encargos ya aprobados, en este orden: Hero (Fase 6), transición de idioma y cursor glitch; están en PLAN.md y ninguno se ejecuta sin que el autor lo pida.
+- Siguen tres encargos ya aprobados: Hero (Fase 6), transición de idioma (movida a la Fase 7) y cursor glitch; están en PLAN.md y ninguno se ejecuta sin que el autor lo pida.
 - Las descripciones de proyectos están sincronizadas con GitHub.
 
 ## Decisiones (y por qué)

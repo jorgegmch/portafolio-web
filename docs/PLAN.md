@@ -9,7 +9,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 
 1. Leer este archivo, `docs/MEMORY.md` y `AGENTS.md`, y contrastar con git (`git status -sb`, `git branch -vv`, `git log --oneline -3`).
 2. **Siguiente paso: el encargo 1 de «Trabajo pendiente aprobado», el Hero (Fase 6).** El propio encargo dice qué proponer por escrito antes de escribir código; se espera la respuesta del autor. No se ejecuta sin que el autor lo pida.
-3. Después vienen, en este orden, los encargos 2 y 3: la transición de idioma y el cursor glitch. Tampoco se ejecutan sin que el autor lo pida.
+3. La transición de idioma (encargo 2) pasó a la Fase 7 y no se implementa antes. El cursor glitch (encargo 3) sigue como trabajo aparte. Ninguno de los dos se ejecuta sin que el autor lo pida.
 4. Antes de cada push: `/pre-push-check`. Al cerrar una fase: `/close-phase <fase>`.
 
 ## Fases
@@ -39,6 +39,7 @@ Es el siguiente paso: ver «Cómo retomar». El Hero tiene un encargo aprobado m
 - [ ] Ruta con `react-router-dom` (adelantado en la Fase 4: la ruta y una página mínima con su título ya existen; falta el contenido)
 - [ ] Timeline vertical por fecha, con color, etiqueta e icono por categoría (Formación formal, Habilidades blandas, Técnico)
 - [ ] Solo texto: sin imágenes de los documentos ni enlaces a los PDFs originales
+- [ ] Transición de idioma: el encargo 2 de «Trabajo pendiente aprobado»
 
 ### Fase 8 — SEO, accesibilidad y rendimiento
 
@@ -166,7 +167,7 @@ Tres encargos del autor, aprobados y sin ejecutar. Van después de la Fase 5 y e
 
 ### Encargo 2 — Transición de idioma
 
-(en PLAN.md no corresponde a ninguna fase: trabajo aparte, después del Hero)
+(en PLAN.md corresponde a la Fase 7)
 
 > Commit propio: feat(i18n): add language switch transition. Al cambiar de idioma, Navbar, main y Footer se apagan (opacidad a 0) y vuelven, en 1 s en total: unos 450 ms de salida, el cambio de idioma exactamente en el punto oscuro (el atributo lang de html se actualiza ahí), y unos 450 ms de entrada. El canvas de partículas y el skip link quedan fuera del efecto. Duraciones como constantes nombradas o tokens, sin números sueltos. Con prefers-reduced-motion el cambio es instantáneo, sin animación. Un solo ciclo, sin parpadeos. El foco debe quedarse en el botón del selector. Si el usuario elige otro idioma durante la transición, dime qué harías antes de implementar y espera mi respuesta. Los tests del LangSwitcher y LangProvider que asuman cambio síncrono tendrán que actualizarse: lista cuáles y por qué antes de tocarlos. Tests con temporizadores falsos, rojo real y mutación de control en el momento del cambio de idioma. Confirma sin Ã ni CR desde disco. Después: git show --stat HEAD y espera mi aprobación. Sin push.
 
