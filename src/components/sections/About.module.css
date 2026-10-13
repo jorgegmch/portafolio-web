@@ -33,10 +33,12 @@
   color: var(--color-accent-alt);
 }
 
-/* La descripción a la izquierda; la otra columna queda reservada. */
+/* La descripción a la izquierda y la terminal a la derecha, a la altura del
+   primer párrafo: sin align-items, la rejilla la estiraría hasta el último. */
 .columns {
   display: grid;
   grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
+  align-items: start;
   gap: var(--space-8);
   margin-top: var(--space-7);
 }
@@ -47,6 +49,11 @@
   gap: var(--space-4);
   max-width: var(--measure);
   color: var(--color-text-muted);
+}
+
+/* Celda de la terminal: no deja que el panel la ensanche. */
+.terminal {
+  min-width: 0;
 }
 
 /* Cápsula de contorno. Cambia de golpe bajo el puntero, porque solo se

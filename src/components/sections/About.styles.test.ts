@@ -82,6 +82,17 @@ describe('About: estilos', () => {
     })
   })
 
+  describe('terminal', () => {
+    // Sin esto la rejilla la estiraría al alto de la descripción.
+    it('se alinea con la parte superior de la descripción', () => {
+      expect(cssRule(css, '.columns')).toMatchObject({ 'align-items': 'start' })
+    })
+
+    it('su celda no deja que el panel la ensanche', () => {
+      expect(cssRule(css, '.terminal')).toEqual({ 'min-width': '0' })
+    })
+  })
+
   describe('enlace a certificaciones', () => {
     it('es una cápsula de contorno con el alto táctil', () => {
       expect(cssRule(css, '.cta')).toMatchObject({
