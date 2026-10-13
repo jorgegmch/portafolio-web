@@ -19,6 +19,7 @@ const flat = (value = '') => value.replace(/\s+/g, ' ').replace(/\( /g, '(').rep
 const CONSUMERS = [
   ['la barra', 'src/components/layout/Navbar.module.css', '.nav', 'var(--space-3)'],
   ['el Hero', 'src/components/sections/Hero.module.css', '.hero', '0'],
+  ['Sobre mí', 'src/components/sections/About.module.css', '.about', 'var(--space-9)'],
   ['el pie', 'src/components/layout/Footer.module.css', '.footer', 'var(--space-5)'],
   ['Certificaciones', 'src/pages/CertificationsPage.module.css', '.page', 'var(--space-9)'],
 ] as const

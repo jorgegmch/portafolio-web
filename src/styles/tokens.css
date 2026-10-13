@@ -60,6 +60,8 @@
   /* Tamaños fluidos (origen): tagline y título de sección. */
   --font-size-lead: clamp(0.875rem, 1.9vw, 1.3125rem);
   --font-size-title: clamp(1.625rem, 3.5vw, 2.875rem);
+  /* Frase grande de «Sobre mí»: de 28 px en teléfono a 52 px en escritorio. */
+  --font-size-phrase: clamp(1.75rem, 4vw, 3.25rem);
   /* Nombre del hero: de 40 px en teléfono a 90 px en escritorio. */
   --font-size-display: clamp(2.5rem, 7vw, 5.625rem);
   /* Línea de la animación de carga: de 16 px en teléfono a 24 px en escritorio. */

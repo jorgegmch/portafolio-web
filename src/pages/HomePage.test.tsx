@@ -63,6 +63,17 @@ describe('HomePage', () => {
     expect(screen.getByRole('banner')).not.toContainElement(mainHeadings().at(0) ?? null)
   })
 
+  it.each(['es', 'en'] as const)('en %s, «Sobre mí» va después del Hero', (lang) => {
+    setBrowserLang(lang)
+
+    renderHome()
+
+    const hero = screen.getByRole('region', { name: dictionaries[lang].hero.heading })
+    const about = screen.getByRole('region', { name: dictionaries[lang].about.heading })
+
+    expect(hero.compareDocumentPosition(about) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   // El <main> lo pone el layout: si la página trajera otro, habría dos.
   it('no trae su propio landmark main', () => {
     setBrowserLang('es')

@@ -1,0 +1,82 @@
+.about {
+  padding: var(--space-9) var(--container-padding);
+  /* A la izquierda, el borde que comparte con la barra, el Hero y el pie. */
+  padding-left: var(--container-padding-start);
+  /* La barra es fija: al llegar por el ancla, el título no queda debajo. */
+  scroll-margin-top: var(--nav-height);
+}
+
+/* Título pequeño, como una etiqueta sobre la frase grande. */
+.heading {
+  color: var(--color-accent-alt);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lead);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-wide);
+  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
+  text-transform: uppercase;
+}
+
+/* A todo el ancho. Líneas de largo parecido; donde no se admite, se parten
+   como siempre. */
+.phrase {
+  margin-top: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-phrase);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+/* Solo se aplica si config/about enciende el resalte. */
+.highlight {
+  color: var(--color-accent-alt);
+}
+
+/* La descripción a la izquierda; la otra columna queda reservada. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
+  gap: var(--space-8);
+  margin-top: var(--space-7);
+}
+
+.bio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+}
+
+/* Cápsula de contorno. Cambia de golpe bajo el puntero, porque solo se
+   animan transform y opacity. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  margin-top: var(--space-7);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--color-accent-alt);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-accent-alt);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-normal);
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cta:hover {
+  background-color: var(--color-accent-alt);
+  color: var(--color-bg);
+}
+
+@media (max-width: 1023px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
