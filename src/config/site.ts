@@ -1,3 +1,5 @@
+import type { YearMonth } from '@/data/types'
+
 const GITHUB_USER = 'jorgegmch'
 
 export const BIRTH_DATE_OFFSET = 11
@@ -14,6 +16,10 @@ export const site = {
   /** Año de primera publicación del sitio; es el del aviso de derechos. */
   publishedYear: 2026,
   location: 'Piedecuesta, Santander, Colombia',
+  /** Ciudad y código del país, para la terminal de «Sobre mí»; no se traduce. */
+  locationShort: 'Piedecuesta, CO',
+  /** Mes en que empezó a programar; de él sale el tiempo programando. */
+  codingSince: '2025-08' satisfies YearMonth,
   /**
    * Fecha de nacimiento (AAAA-MM-DD) como códigos de carácter desplazados;
    * la reconstruye lib/birthDate. Es ofuscación contra scrapers simples, no
