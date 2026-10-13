@@ -47,18 +47,23 @@ export const en: Dictionary = {
   },
   about: {
     heading: 'About me',
+    phrase: { lead: 'From business to code, and from code to ', highlight: 'plain language' },
     // Translation of the approved Spanish bio: do not edit without approval.
     bio: [
-      "I like code that does something, not code that just compiles. I work mostly on the backend — Java, Spring Boot, PostgreSQL — and reach for Python or TypeScript when the problem calls for it. LogiTrack IQ started out as a simple API for tracking inventory and ended up with an AI agent that warns you, all on its own, when a product is about to run out. That 'and ended up' is basically how I work.",
-      'Before I wrote code, I spent years on the other end of the phone, sorting out what a customer said they wanted and what they actually needed — the two are almost never the same. That habit never left. Today it shows in how I listen before writing a single line.',
-      "I studied Social Communication before I studied programming, so when someone walks me through a business problem, I don't need a translator. I can be the translator.",
+      "I'm a junior Full-Stack developer with a Java and Spring Boot foundation. I design REST APIs with JWT authentication and role-based access on PostgreSQL, and I document them with OpenAPI so anyone can understand and use them.",
+      'I code with AI agents, but with method: specs, rules and skills (AGENTS.md, SDD), so the agent follows a clear cycle and the judgment stays mine. I brought that same discipline to LogiTrack IQ, where I integrated n8n and an MCP server: an agent detects products below their reorder point and drafts purchase orders for an administrator to approve.',
+      "I come from a communications background: I learned to listen before I speak and to explain complex ideas to different audiences. In software, that means turning what a client needs into clear technical requirements and explaining the team's decisions without unnecessary jargon.",
+      "I work with Scrum, learn fast and document what I build. If your team is looking for someone who can code, understands the business and can explain it, let's talk.",
     ],
     viewCertifications: 'View certifications',
+    terminalLabel: 'Output of java Developer',
     stats: {
-      repos: { label: 'Projects' },
-      certifications: { label: 'Certifications' },
-      stack: { label: 'Main stack' },
-      languages: { label: 'Spoken languages', value: 'Native Spanish · English B1' },
+      codingTime: {
+        months: (count) => (count === 1 ? 'Month of coding' : 'Months of coding'),
+        years: (count) => (count === 1 ? 'Year of coding' : 'Years of coding'),
+      },
+      projects: (count) => (count === 1 ? 'Published project' : 'Published projects'),
+      technologies: (count) => (count === 1 ? 'Technology' : 'Technologies'),
     },
   },
   technologies: {

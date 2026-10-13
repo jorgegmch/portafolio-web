@@ -52,18 +52,23 @@ export const es: Dictionary = {
   },
   about: {
     heading: 'Sobre mí',
+    phrase: { lead: 'Del negocio al código, y del código a ', highlight: 'palabras claras' },
     // Texto aprobado palabra por palabra: no editar sin aprobación.
     bio: [
-      "Me gusta que el código haga algo, no solo que compile. Trabajo principalmente en backend — Java, Spring Boot, PostgreSQL — y uso Python o TypeScript cuando el problema lo pide. LogiTrack IQ nació como una simple API para controlar inventario y terminó con un agente de IA que avisa solo cuándo un producto está a punto de agotarse. Ese 'y terminó' es básicamente mi forma de trabajar.",
-      'Antes de programar pasé años al otro lado del teléfono, resolviendo lo que un cliente decía que quería y lo que en realidad necesitaba — casi nunca son lo mismo. Esa costumbre no se fue a ningún lado. Hoy se nota en cómo escucho antes de escribir una sola línea.',
-      'Estudié Comunicación Social antes que programación, así que cuando alguien me explica un problema de negocio, no necesito traductor. Puedo ser el traductor.',
+      'Soy desarrollador Full-Stack junior con base en Java y Spring Boot. Diseño APIs REST con autenticación JWT y roles sobre PostgreSQL, y las documento con OpenAPI para que cualquiera pueda entenderlas y usarlas.',
+      'Programo apoyado en agentes de IA, pero con método: especificaciones, reglas y skills (AGENTS.md, SDD) para que el agente siga un ciclo claro y yo mantenga el criterio. Esa misma disciplina la llevé a LogiTrack IQ, donde integré n8n y un servidor MCP: un agente detecta productos bajo el punto de reorden y genera órdenes de compra en borrador que un administrador aprueba.',
+      'Vengo de la Comunicación Social: aprendí a escuchar antes de hablar y a explicar ideas complejas a públicos distintos. En software, eso significa convertir lo que necesita un cliente en requerimientos técnicos claros y explicar las decisiones del equipo sin tecnicismos innecesarios.',
+      'Trabajo con Scrum, aprendo rápido y documento lo que construyo. Si tu equipo busca a alguien que programe, entienda el negocio y sepa explicarlo, hablemos.',
     ],
     viewCertifications: 'Ver certificaciones',
+    terminalLabel: 'Salida de java Developer',
     stats: {
-      repos: { label: 'Proyectos' },
-      certifications: { label: 'Certificaciones' },
-      stack: { label: 'Stack principal' },
-      languages: { label: 'Idiomas', value: 'Español nativo · Inglés B1' },
+      codingTime: {
+        months: (count) => (count === 1 ? 'Mes programando' : 'Meses programando'),
+        years: (count) => (count === 1 ? 'Año programando' : 'Años programando'),
+      },
+      projects: (count) => (count === 1 ? 'Proyecto publicado' : 'Proyectos publicados'),
+      technologies: (count) => (count === 1 ? 'Tecnología' : 'Tecnologías'),
     },
   },
   technologies: {

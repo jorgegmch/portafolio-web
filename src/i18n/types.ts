@@ -2,6 +2,7 @@ import type { CertificationId } from '@/data/certifications'
 import type { ProjectId } from '@/data/projects'
 import type { HeroSocialId } from '@/data/social'
 import type { CertificationCategory, TechnologyGroup } from '@/data/types'
+import type { CodingTime } from '@/lib/codingTime'
 
 export const LANGS = ['es', 'en'] as const
 export type Lang = (typeof LANGS)[number]
@@ -73,14 +74,18 @@ export interface Dictionary {
   }
   about: {
     heading: string
+    /** Frase grande, en dos tramos: el segundo es el que puede ir resaltado. */
+    phrase: { lead: string; highlight: string }
     /** Un elemento por párrafo. */
     bio: readonly string[]
     viewCertifications: string
+    /** Nombre accesible del panel de la terminal. */
+    terminalLabel: string
+    /** Etiqueta de cada tarjeta según su cifra, que la tarjeta muestra aparte. */
     stats: {
-      repos: { label: string }
-      certifications: { label: string }
-      stack: { label: string }
-      languages: { label: string; value: string }
+      codingTime: Record<CodingTime['unit'], (count: number) => string>
+      projects: (count: number) => string
+      technologies: (count: number) => string
     }
   }
   technologies: {
