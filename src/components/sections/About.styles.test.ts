@@ -103,6 +103,21 @@ describe('About: estilos', () => {
     it('su celda no deja que el panel la ensanche', () => {
       expect(cssRule(css, '.terminal')).toEqual({ 'min-width': '0' })
     })
+
+    // Apilada, la celda (terminal y mapa juntos) no pasa del ancho de la
+    // descripción: los tres bloques comparten ancho y el mapa no domina.
+    it('apilada, su celda no pasa del ancho de lectura', () => {
+      expect(cssRule(cssMedia(css, STACKED), '.terminal')).toEqual({ 'max-width': 'var(--measure)' })
+    })
+
+    // En dos columnas la celda ocupa lo que le deja la rejilla.
+    it('el tope solo existe en el apilado', () => {
+      const terminalRules = [...css.matchAll(/\.terminal\s*\{([^}]*)\}/g)].map(([, body = '']) => body)
+      const capped = terminalRules.filter((body) => /max-width\s*:/.test(body))
+
+      expect(capped).toHaveLength(1)
+      expect(cssMedia(css, STACKED)).toContain(capped[0] ?? 'sin tope')
+    })
   })
 
   describe('mapa', () => {

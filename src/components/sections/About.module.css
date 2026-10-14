@@ -141,6 +141,11 @@
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  /* Apilada, la terminal y el mapa no pasan del ancho de la descripción. */
+  .terminal {
+    max-width: var(--measure);
+  }
 }
 
 /* En teléfono no caben tres en fila: van una bajo otra, con la cifra y su
