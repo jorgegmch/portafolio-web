@@ -37,7 +37,7 @@
    primer párrafo: sin align-items, la rejilla la estiraría hasta el último. */
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr);
+  grid-template-columns: minmax(0, var(--about-text-width)) minmax(0, 1fr);
   align-items: start;
   gap: var(--space-8);
   margin-top: var(--space-7);

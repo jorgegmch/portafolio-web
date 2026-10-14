@@ -83,7 +83,62 @@ describe('About: estilos', () => {
     it('desde 1024 px va a la izquierda, con la otra columna reservada', () => {
       expect(cssRule(css, '.columns')).toMatchObject({
         display: 'grid',
-        'grid-template-columns': 'minmax(0, var(--measure)) minmax(0, 1fr)',
+        'grid-template-columns': 'minmax(0, var(--about-text-width)) minmax(0, 1fr)',
+      })
+    })
+
+    // Entre 1024 y 1280 px la columna de texto crece con la ventana: a 1024
+    // deja a la terminal sitio para el nombre en dos líneas como mucho, y en
+    // 1280 llega al ancho de lectura sin saltos al cruzar ningún ancho.
+    describe('ancho de la columna de texto', () => {
+      const PX_PER_REM = 16
+      const formula = cssToken(tokensCss, '--about-text-width')
+      const ramp =
+        /^min\(var\(--measure\), calc\(([\d.]+)rem \+ \(100vw - ([\d.]+)rem\) \* ([\d.]+)\)\)$/.exec(formula)
+      const measurePx = parseFloat(cssToken(tokensCss, '--measure')) * PX_PER_REM
+      /** Ancho de la columna, en px, con la ventana de ese ancho. */
+      const widthAt = (viewport: number) => {
+        const [, base = 'NaN', start = 'NaN', slope = 'NaN'] = ramp ?? []
+        const rampPx = Number(base) * PX_PER_REM + (viewport - Number(start) * PX_PER_REM) * Number(slope)
+        return Math.min(measurePx, rampPx)
+      }
+
+      // min(var(--measure), calc(<base>rem + (100vw - <inicio>rem) * <pendiente>))
+      it('es una rampa con tope en el ancho de lectura', () => {
+        expect(ramp).not.toBeNull()
+      })
+
+      it('empieza donde acaba el apilado: en 1024 px', () => {
+        expect(Number(ramp?.[2]) * PX_PER_REM).toBe(1024)
+      })
+
+      it('a 1024 px mide 30rem (480 px)', () => {
+        expect(widthAt(1024)).toBeCloseTo(30 * PX_PER_REM, 6)
+      })
+
+      it('a 1280 px llega a --measure (576 px), y no antes', () => {
+        expect(measurePx).toBe(576)
+        expect(widthAt(1280)).toBeCloseTo(measurePx, 6)
+        expect(widthAt(1279)).toBeLessThan(measurePx)
+      })
+
+      it('por encima de 1280 px no pasa de --measure', () => {
+        expect(widthAt(1281)).toBe(measurePx)
+        expect(widthAt(1920)).toBe(measurePx)
+        expect(formula.startsWith('min(var(--measure),')).toBe(true)
+      })
+
+      // Lo mismo por cada píxel de ventana: de 480 a 576 px en 256 px.
+      it('crece sin escalones entre 1024 y 1280 px', () => {
+        const step = (measurePx - 30 * PX_PER_REM) / (1280 - 1024)
+        for (let viewport = 1024; viewport < 1280; viewport++) {
+          expect(widthAt(viewport + 1) - widthAt(viewport)).toBeCloseTo(step, 6)
+        }
+      })
+
+      // Apilado hay una sola columna: la rampa no se usa.
+      it('no se aplica en el apilado', () => {
+        expect(cssMedia(css, STACKED)).not.toContain('--about-text-width')
       })
     })
 

@@ -104,6 +104,11 @@
 
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
+  /* Columna de texto de «Sobre mí» en dos columnas. Crece con la ventana, de
+     30rem (480 px) a 1024 px a --measure (576 px) a 1280, y ahí se queda: a
+     1024 deja a la terminal sitio para el nombre en dos líneas, y no salta
+     al cruzar ningún ancho. */
+  --about-text-width: min(var(--measure), calc(30rem + (100vw - 64rem) * 0.375));
 
   /* Retrato del hero, apilado bajo el texto: ancho máximo (576 px) y alto
      máximo, que solo manda en un teléfono en horizontal. */
