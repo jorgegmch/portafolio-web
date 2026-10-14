@@ -121,4 +121,8 @@ describe('codingTime', () => {
   it.each(['2024-00', '2024-13'] as const)('rechaza el mes inválido de %s', (invalid) => {
     expect(() => codingTime(invalid, { year: 2026, month: 1, day: 1 })).toThrow(RangeError)
   })
+
+  it('rechaza el año inválido de 0000-05', () => {
+    expect(() => codingTime('0000-05', { year: 2026, month: 1, day: 1 })).toThrow(RangeError)
+  })
 })
