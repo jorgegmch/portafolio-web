@@ -76,4 +76,11 @@ export default tseslint.config(
     files: ['vite.config.ts', 'playwright.config.ts', 'e2e/**'],
     languageOptions: { globals: globals.node },
   },
+  // Los scripts corren con Node, que no entiende el alias @/: importan de
+  // src/ por ruta relativa. Están fuera de las capas.
+  {
+    files: ['scripts/**'],
+    languageOptions: { globals: globals.node },
+    rules: { 'no-restricted-imports': 'off' },
+  },
 )
