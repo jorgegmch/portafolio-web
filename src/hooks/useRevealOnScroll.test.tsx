@@ -1,5 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { IntroPlayingContext } from '@/hooks/IntroPlayingContext'
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll'
 import { mockIntersectionObserver } from '@/test/mockIntersectionObserver'
 import { mockMatchMedia } from '@/test/mockMatchMedia'
@@ -174,6 +175,76 @@ describe('useRevealOnScroll', () => {
 
       expect(reloaded.useRevealOnScroll).not.toBe(useRevealOnScroll)
       expect(screen.getByTestId('probe')).toHaveTextContent('oculto')
+    })
+  })
+
+  // Lo que está bajo la animación de carga no se ve: el revelado espera a
+  // que termine, como la rotación de roles del Hero.
+  describe('con la animación de carga encima', () => {
+    const withIntro = (playing: boolean) => (
+      <IntroPlayingContext value={playing}>
+        <Probe />
+      </IntroPlayingContext>
+    )
+
+    it('no observa ni revela mientras la intro está encima', () => {
+      render(withIntro(true))
+
+      expect(io.instances).toHaveLength(0)
+      expect(screen.getByTestId('probe')).toHaveTextContent('oculto')
+    })
+
+    it('aunque esté en pantalla durante la intro, sigue oculto', () => {
+      render(withIntro(true))
+
+      act(() => {
+        trigger(true)
+      })
+
+      expect(screen.getByTestId('probe')).toHaveTextContent('oculto')
+    })
+
+    it('al terminar la intro empieza a observar, y revela al entrar en pantalla', () => {
+      const { rerender } = render(withIntro(true))
+
+      rerender(withIntro(false))
+
+      expect(lastObserver().observed).toEqual([screen.getByTestId('probe')])
+      expect(screen.getByTestId('probe')).toHaveTextContent('oculto')
+
+      act(() => {
+        trigger(true)
+      })
+
+      expect(screen.getByTestId('probe')).toHaveTextContent('visible')
+    })
+
+    it('mientras espera no marca el registro: si se desmonta, vuelve oculto', () => {
+      const { unmount } = render(withIntro(true))
+      act(() => {
+        trigger(true)
+      })
+      unmount()
+
+      render(withIntro(false))
+
+      expect(screen.getByTestId('probe')).toHaveTextContent('oculto')
+      expect(lastObserver().observed).toEqual([screen.getByTestId('probe')])
+    })
+
+    it('con movimiento reducido se ve aunque la intro siga encima', () => {
+      mockMatchMedia(true)
+      render(withIntro(true))
+
+      expect(screen.getByTestId('probe')).toHaveTextContent('visible')
+      expect(io.instances).toHaveLength(0)
+    })
+
+    it('sin IntersectionObserver se ve aunque la intro siga encima', () => {
+      vi.stubGlobal('IntersectionObserver', undefined)
+      render(withIntro(true))
+
+      expect(screen.getByTestId('probe')).toHaveTextContent('visible')
     })
   })
 })
