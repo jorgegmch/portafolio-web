@@ -56,10 +56,15 @@
   color: var(--color-text-muted);
 }
 
-/* Celda de la terminal: no deja que el panel la ensanche. El hueco que queda
-   debajo, junto a la columna de texto, se deja libre. */
+/* Celda de la terminal: no deja que el panel la ensanche. Debajo del panel
+   va el mapa. */
 .terminal {
   min-width: 0;
+}
+
+/* Al ancho de la celda, con su proporción: apilado, queda bajo la terminal. */
+.map {
+  margin-top: var(--space-6);
 }
 
 /* Tres tarjetas en fila, a partes iguales. */

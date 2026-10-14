@@ -216,11 +216,14 @@ describe('About: terminal del desarrollador', () => {
       expect(cells[1]).toContainElement(panel())
     })
 
-    // Bajo la terminal queda hueco libre: ni el enlace ni las tarjetas van ahí.
-    it('va sola en su celda', () => {
+    // Bajo la terminal va el mapa, y nada más: ni el enlace ni las tarjetas.
+    it('en su celda van la terminal y, debajo, el mapa; nada más', () => {
       const { panel } = renderAbout()
+      const cell = [...(panel().parentElement?.children ?? [])]
 
-      expect(panel().parentElement?.children).toHaveLength(1)
+      expect(cell).toHaveLength(2)
+      expect(cell[0]).toBe(panel())
+      expect(cell[1]?.tagName.toLowerCase()).toBe('svg')
     })
 
     it('es el único panel de la sección', () => {

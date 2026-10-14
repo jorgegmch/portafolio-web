@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import styles from '@/components/sections/About.module.css'
 import { StatIcon } from '@/components/ui/StatIcon'
 import { TerminalPanel } from '@/components/ui/TerminalPanel'
+import { WorldMap } from '@/components/ui/WorldMap'
 import { HIGHLIGHT_PHRASE } from '@/config/about'
 import { developer } from '@/config/developer'
 import { routes, sections } from '@/config/routes'
@@ -19,11 +20,12 @@ import { roundedCount } from '@/lib/roundedCount'
 /**
  * Sección «Sobre mí»: título, una frase grande, la descripción en cuatro
  * párrafos con el enlace a las certificaciones debajo, la terminal del
- * desarrollador y tres tarjetas con cifras.
+ * desarrollador con el mapa debajo y tres tarjetas con cifras.
  * La frase es un párrafo, no un título; su tramo final va en un span que
  * config/about puede resaltar. Desde 1024 px la descripción y el enlace
- * ocupan la columna izquierda y la terminal la derecha; por debajo, todo va
- * apilado. Las tarjetas van después, a todo el ancho.
+ * ocupan la columna izquierda, y la terminal y el mapa la derecha; por
+ * debajo, todo va apilado. Las tarjetas van después, a todo el ancho. El
+ * mapa es decorativo: no añade nada al texto de la sección.
  *
  * La terminal muestra los campos de config/developer. La edad es en vivo: al
  * DOM solo llega el número, nunca la fecha de nacimiento.
@@ -93,6 +95,7 @@ export function About() {
             command={developer.command}
             lines={terminalLines}
           />
+          <WorldMap className={styles.map} />
         </div>
       </div>
       <ul className={styles.stats}>

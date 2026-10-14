@@ -105,6 +105,21 @@ describe('About: estilos', () => {
     })
   })
 
+  describe('mapa', () => {
+    it('se separa de la terminal con un espacio de la escala', () => {
+      expect(cssRule(css, '.map')).toEqual({ 'margin-top': 'var(--space-6)' })
+    })
+
+    // El ancho y el alto los pone WorldMap: la sección no los cambia en ningún
+    // tamaño, así que el mapa conserva su proporción y no se recorta.
+    it('la sección no le cambia el tamaño ni lo recorta', () => {
+      const mapRules = [...css.matchAll(/\.map\s*\{([^}]*)\}/g)].map(([, body]) => body)
+
+      expect(mapRules).toHaveLength(1)
+      expect(mapRules[0]).not.toMatch(/\b(?:width|height|max-width|max-height|overflow|object-fit|aspect-ratio)\s*:/)
+    })
+  })
+
   describe('tarjetas', () => {
     const BACKGROUND = '--color-surface'
     const VALUE = '--color-accent-alt'
