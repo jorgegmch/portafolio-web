@@ -40,12 +40,16 @@ describe('About: mapa', () => {
   })
 
   describe('lugar', () => {
-    // Celda derecha: la terminal arriba y el mapa debajo.
+    // Celda derecha: la terminal arriba y el mapa debajo. Cada uno va en el
+    // envoltorio que lo hace aparecer, y los dos envoltorios son hermanos.
     it('va en la celda de la terminal, justo después de ella', () => {
       const { panel, map } = renderAbout()
+      const panelWrapper = panel.parentElement
+      const mapWrapper = map?.parentElement
 
-      expect(map?.parentElement).toBe(panel.parentElement)
-      expect(panel.nextElementSibling).toBe(map)
+      expect(mapWrapper?.parentElement).toBe(panelWrapper?.parentElement)
+      expect(panelWrapper?.nextElementSibling).toBe(mapWrapper)
+      expect(mapWrapper?.children).toHaveLength(1)
     })
 
     it('no está en la columna de texto', () => {

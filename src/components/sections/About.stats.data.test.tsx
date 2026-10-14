@@ -52,9 +52,16 @@ const setTechnologies = (count: number) => {
 
 const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
 
+/** La caja de una tarjeta: el único hijo de su <li>, que es el que aparece. */
+const boxOf = (item: Element) => {
+  const [box, ...rest] = item.children
+  if (!box || rest.length > 0) throw new Error('Cada tarjeta lleva una sola caja')
+  return box
+}
+
 /** Lo que se lee de una tarjeta, en orden; lo decorativo (aria-hidden) no cuenta. */
 const readable = (item: Element) =>
-  [...item.children].filter((child) => child.getAttribute('aria-hidden') !== 'true')
+  [...boxOf(item).children].filter((child) => child.getAttribute('aria-hidden') !== 'true')
 
 const renderCards = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(BROWSER_LANGS[lang])

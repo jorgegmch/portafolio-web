@@ -82,9 +82,18 @@
   list-style: none;
 }
 
-/* El mismo fondo y borde que la terminal. La cifra y el icono comparten la
-   primera fila; la etiqueta baja a la segunda. Las filas van juntas arriba
-   aunque la rejilla estire la tarjeta al alto de sus vecinas. */
+/* El <li> es el que aparece al entrar en pantalla; la caja va dentro. La
+   rejilla de las tarjetas lo estira al alto de sus vecinos, y como rejilla de
+   una sola celda estira a su vez la caja: miden lo mismo que el <li>. */
+.statItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* La caja de la tarjeta: el mismo fondo y borde que la terminal. La cifra y
+   el icono comparten la primera fila; la etiqueta baja a la segunda. Las
+   filas van juntas arriba aunque la rejilla estire la caja al alto de sus
+   vecinas. */
 .stat {
   display: flex;
   flex-wrap: wrap;

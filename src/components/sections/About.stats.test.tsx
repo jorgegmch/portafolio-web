@@ -20,9 +20,16 @@ const [START_YEAR = 0, START_MONTH = 0] = site.codingSince.split('-').map(Number
 const setMonthsSinceStart = (months: number) =>
   vi.setSystemTime(new Date(START_YEAR, START_MONTH - 1 + months, 10, 12, 0))
 
+/** La caja de una tarjeta: el único hijo de su <li>, que es el que aparece. */
+const boxOf = (item: Element) => {
+  const [box, ...rest] = item.children
+  if (!box || rest.length > 0) throw new Error('Cada tarjeta lleva una sola caja')
+  return box
+}
+
 /** Lo que se lee de una tarjeta, en orden; lo decorativo (aria-hidden) no cuenta. */
 const readable = (item: Element) =>
-  [...item.children].filter((child) => child.getAttribute('aria-hidden') !== 'true')
+  [...boxOf(item).children].filter((child) => child.getAttribute('aria-hidden') !== 'true')
 
 const renderAbout = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(BROWSER_LANGS[lang])

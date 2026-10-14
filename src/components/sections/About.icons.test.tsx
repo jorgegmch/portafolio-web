@@ -11,6 +11,14 @@ vi.mock('@/lib/birthDate', () => ({ getBirthDate: () => ({ year: 2000, month: 3,
 
 const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
 
+/** La caja de una tarjeta: el único hijo de su <li>, que es el que aparece. */
+const boxOf = (item: Element) => {
+  const [box, ...rest] = item.children
+  if (!box || rest.length > 0) throw new Error('Cada tarjeta lleva una sola caja')
+  return box
+}
+
+/** Las cajas de las tres tarjetas, en orden. */
 const renderCards = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(BROWSER_LANGS[lang])
   render(
@@ -21,7 +29,7 @@ const renderCards = (lang: keyof typeof BROWSER_LANGS = 'es') => {
     </MemoryRouter>,
   )
   const region = screen.getByRole('region', { name: dictionaries[lang].about.heading })
-  return within(region).getAllByRole('listitem')
+  return within(region).getAllByRole('listitem').map(boxOf)
 }
 
 afterEach(() => {

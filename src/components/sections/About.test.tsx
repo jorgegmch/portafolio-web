@@ -178,14 +178,15 @@ describe('About', () => {
       expect(precedes(link, within(region).getByRole('figure'))).toBe(true)
     })
 
+    // Debajo de la descripción va el envoltorio que hace aparecer el enlace, y
+    // dentro de él, solo el enlace.
     it('comparte columna con la descripción, justo debajo de ella', () => {
       const { region } = renderAbout()
       const bio = within(region).getByText(dictionaries.es.about.bio[0] ?? '').parentElement
+      const link = within(region).getByRole('link')
 
-      expect([...(bio?.parentElement?.children ?? [])]).toEqual([
-        bio,
-        within(region).getByRole('link'),
-      ])
+      expect([...(bio?.parentElement?.children ?? [])]).toEqual([bio, link.parentElement])
+      expect([...(link.parentElement?.children ?? [])]).toEqual([link])
     })
   })
 

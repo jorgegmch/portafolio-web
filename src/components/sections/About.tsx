@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from '@/components/sections/About.module.css'
+import { Reveal, type RevealOrder } from '@/components/ui/Reveal'
 import { StatIcon } from '@/components/ui/StatIcon'
 import { TerminalPanel } from '@/components/ui/TerminalPanel'
 import { WorldMap } from '@/components/ui/WorldMap'
@@ -17,6 +18,9 @@ import { codingTime } from '@/lib/codingTime'
 import { formatCount } from '@/lib/formatCount'
 import { roundedCount } from '@/lib/roundedCount'
 
+/** Escalonado de las tarjetas, que suelen entrar en pantalla a la vez. */
+const STAT_ORDERS: readonly RevealOrder[] = [0, 1, 2]
+
 /**
  * Sección «Sobre mí»: título, una frase grande, la descripción en cuatro
  * párrafos con el enlace a las certificaciones debajo, la terminal del
@@ -26,6 +30,12 @@ import { roundedCount } from '@/lib/roundedCount'
  * ocupan la columna izquierda, y la terminal y el mapa la derecha; por
  * debajo, todo va apilado. Las tarjetas van después, a todo el ancho. El
  * mapa es decorativo: no añade nada al texto de la sección.
+ *
+ * Al entrar en pantalla aparecen, escalonados, el título, la frase, la
+ * terminal, el enlace, el mapa y las tarjetas, cada uno una sola vez por
+ * carga de la página; la descripción no. Lo que escala bajo el puntero (la
+ * terminal y la caja de cada tarjeta) va dentro de lo que aparece, nunca es
+ * lo mismo: en las tarjetas, el <li> aparece y la caja va dentro.
  *
  * La terminal muestra los campos de config/developer. La edad es en vivo: al
  * DOM solo llega el número, nunca la fecha de nacimiento.
@@ -71,13 +81,17 @@ export function About() {
 
   return (
     <section id={sections.about} className={styles.about} aria-labelledby={headingId}>
-      <h2 id={headingId} className={styles.heading}>
-        {t.about.heading}
-      </h2>
-      <p className={styles.phrase}>
-        {lead}
-        <span className={HIGHLIGHT_PHRASE ? styles.highlight : undefined}>{highlight}</span>
-      </p>
+      <Reveal revealKey="about-heading" order={0}>
+        <h2 id={headingId} className={styles.heading}>
+          {t.about.heading}
+        </h2>
+      </Reveal>
+      <Reveal revealKey="about-phrase" order={1}>
+        <p className={styles.phrase}>
+          {lead}
+          <span className={HIGHLIGHT_PHRASE ? styles.highlight : undefined}>{highlight}</span>
+        </p>
+      </Reveal>
       <div className={styles.columns}>
         <div className={styles.text}>
           <div className={styles.bio}>
@@ -85,29 +99,43 @@ export function About() {
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-          <Link className={styles.cta} to={routes.certifications}>
-            {t.about.viewCertifications}
-          </Link>
+          <Reveal revealKey="about-cta" order={2}>
+            <Link className={styles.cta} to={routes.certifications}>
+              {t.about.viewCertifications}
+            </Link>
+          </Reveal>
         </div>
         <div className={styles.terminal}>
-          <TerminalPanel
-            className={styles.panel}
-            label={t.about.terminalLabel}
-            command={developer.command}
-            lines={terminalLines}
-          />
-          <WorldMap className={styles.map} />
+          <Reveal revealKey="about-terminal" order={2}>
+            <TerminalPanel
+              className={styles.panel}
+              label={t.about.terminalLabel}
+              command={developer.command}
+              lines={terminalLines}
+            />
+          </Reveal>
+          <Reveal revealKey="about-map" order={3}>
+            <WorldMap className={styles.map} />
+          </Reveal>
         </div>
       </div>
       <ul className={styles.stats}>
-        {stats.map(({ id, icon, count, label }) => (
-          <li key={id} className={styles.stat}>
-            <span className={styles.statValue}>
-              {formatCount(count, t.about.stats.plusPosition)}
-            </span>
-            <StatIcon name={icon} className={styles.statIcon} />
-            <span className={styles.statLabel}>{label(count.value)}</span>
-          </li>
+        {stats.map(({ id, icon, count, label }, index) => (
+          <Reveal
+            key={id}
+            as="li"
+            revealKey={`about-stat-${id}`}
+            order={STAT_ORDERS[index]}
+            className={styles.statItem}
+          >
+            <div className={styles.stat}>
+              <span className={styles.statValue}>
+                {formatCount(count, t.about.stats.plusPosition)}
+              </span>
+              <StatIcon name={icon} className={styles.statIcon} />
+              <span className={styles.statLabel}>{label(count.value)}</span>
+            </div>
+          </Reveal>
         ))}
       </ul>
     </section>

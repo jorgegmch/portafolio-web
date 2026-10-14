@@ -262,6 +262,17 @@ describe('About: estilos', () => {
       expect(cssRule(css, '.stat')['border-radius']).toBe(panel['border-radius'])
     })
 
+    // El <li> es el que aparece al entrar en pantalla; la caja va dentro y lo
+    // llena, así que las tres cajas miden lo mismo, como cuando la caja era
+    // el <li>. El <li> no escala: eso lo hace la caja.
+    it('el <li> es una rejilla de una celda que estira la caja, y nada más', () => {
+      expect(cssRule(css, '.statItem')).toEqual({
+        display: 'grid',
+        'grid-template-columns': 'minmax(0, 1fr)',
+      })
+      expect(css).not.toMatch(/\.statItem\b[^{]*:hover/)
+    })
+
     it('la cifra va en el verde de la paleta, con el tamaño de título', () => {
       expect(cssRule(css, '.statValue')).toMatchObject({
         color: `var(${VALUE})`,

@@ -218,20 +218,23 @@ describe('About: terminal del desarrollador', () => {
     })
 
     // Bajo la terminal va el mapa, y nada más: ni el enlace ni las tarjetas.
+    // Cada uno va solo dentro del envoltorio que lo hace aparecer.
     it('en su celda van la terminal y, debajo, el mapa; nada más', () => {
       const { panel } = renderAbout()
-      const cell = [...(panel().parentElement?.children ?? [])]
+      const cell = [...(panel().parentElement?.parentElement?.children ?? [])]
 
       expect(cell).toHaveLength(2)
-      expect(cell[0]).toBe(panel())
-      expect(cell[1]?.tagName.toLowerCase()).toBe('svg')
+      expect([...(cell[0]?.children ?? [])]).toEqual([panel()])
+      expect(cell[1]?.children).toHaveLength(1)
+      expect(cell[1]?.firstElementChild?.tagName.toLowerCase()).toBe('svg')
     })
 
     // La elevación la decide la sección: la clase va al panel, no al mapa.
     it('el panel lleva la clase de elevación de la sección, y el mapa no', () => {
       const { panel } = renderAbout()
-      const map = panel().nextElementSibling
+      const map = panel().parentElement?.nextElementSibling?.firstElementChild
 
+      expect(map?.tagName.toLowerCase()).toBe('svg')
       expect(panel()).toHaveClass(aboutStyles.panel ?? 'sin clase')
       expect(map).not.toHaveClass(aboutStyles.panel ?? 'sin clase')
     })
