@@ -4,6 +4,7 @@
  * src/config/developer.ts.
  *
  * La edad es un literal: aquí no se actualiza sola, como en la web.
+ * Cómo compilarlo y ejecutarlo: docs/EJEMPLO-JAVA.md.
  */
 public record Developer(String fullName, int age, String location, String role, String passion) {
 
