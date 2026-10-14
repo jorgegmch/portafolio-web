@@ -28,6 +28,7 @@ Es el siguiente paso: ver «Cómo retomar». El Hero tiene un encargo aprobado m
 
 - [ ] **Hero:** foto, nombre, tagline, "Ver proyectos", "Descargar CV" con dropdown (versión diseñada y versión ATS, según idioma), iconos del stack principal
 - [ ] **Sobre mí:** bio, panel terminal que muestra la salida de `java Developer` con la edad en vivo y sin datos de contacto, 4 tarjetas de estadísticas, botón "Ver certificaciones"
+  - Condición para el revelado al hacer scroll (commits 3.x): Reveal no anima el elemento que escala; las tarjetas separan el `<li>` (caja y objetivo del hover) del elemento que revela.
 - [ ] **Tecnologías:** grupos con logos, sin niveles ni porcentajes
 - [ ] **Proyectos:** 5 destacados + botón "Ver todos en GitHub". En orden: LogiTrack IQ (protagonista), LogiTrack API, Portafolio Web, Inventory Guardian, RebelWear
 - [ ] **Contacto:** email y teléfono visibles como texto, con llamado a la acción, ubicación a nivel de ciudad y tiempo de respuesta; LinkedIn y GitHub; sin formulario. Las acciones de escribir un correo y abrir WhatsApp siguen en `ContactButton`, que arma el dato al hacer clic
