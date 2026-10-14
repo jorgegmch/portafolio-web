@@ -12,8 +12,8 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - El correo y el teléfono se muestran como texto en la sección de contacto y van en los PDFs del CV: un cliente debe poder leerlos y copiarlos sin pasos. En el Hero y el pie siguen siendo botones que ensamblan el dato en el clic. En el repo y en el bundle siguen codificados; es ofuscación del código fuente, no protección real.
 - La fecha de nacimiento va codificada con su propio desplazamiento: frena scrapers simples; es ofuscación, no protección real.
 - ?lang= no se guarda; solo la elección con el selector: un enlace compartido no cambia la preferencia de quien lo abre.
-- 5 proyectos destacados y enlace a GitHub: 16 tarjetas diluyen los mejores.
-- La tarjeta cuenta los 16 proyectos curados; el fork, el monorepo de práctica y portafolio-web no cuentan (reconsiderar portafolio-web en la Fase 10).
+- 5 proyectos destacados y enlace a GitHub: 17 tarjetas diluyen los mejores.
+- La tarjeta cuenta los 14 proyectos con `built: true`, portafolio-web incluido; no cuentan el fork (FastCat), learning-path-fundamentals ni los 3 repos de scripts de BD. La cifra sale de `builtProjects.length`.
 - El CRM se presenta con la descripción de su repo (módulo de un MVP hecho en equipo); su README aclara que el CRM completo es privado y que corre solo con JSON Server.
 - Certificaciones solo como texto en /certificaciones: los PDFs originales llevan la cédula.
 - Fuentes con @fontsource y animaciones con canvas propio: sin peticiones a terceros ni librerías extra.

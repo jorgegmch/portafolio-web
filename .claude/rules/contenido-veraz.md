@@ -18,6 +18,7 @@
 - La tarjeta «Proyectos construidos» cuenta solo los marcados con `built: true` en `data/projects.ts`. La cifra sale de `builtProjects.length`; nunca se escribe a mano.
 - `built` significa proyecto de desarrollo completo y funcional. Excluye ejercicios de aprendizaje, repos de scripts de BD y forks.
 - Solo cuentan repos públicos.
+- Un proyecto hecho en equipo cuenta si cumple el criterio. Su descripción debe decir que es de equipo y, si se sabe, cuál fue la parte del autor, sin presentarlo nunca como trabajo individual.
 - Marcar o desmarcar un proyecto lo decide el autor.
 
 ## Certificaciones
