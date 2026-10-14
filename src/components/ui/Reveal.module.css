@@ -1,0 +1,33 @@
+/* Envoltorio que hace aparecer lo que contiene al entrar en pantalla. No toca
+   el layout: sin margen, relleno, display propio ni overflow. Solo se animan
+   opacity y transform. */
+.reveal {
+  transition:
+    opacity var(--duration-reveal) var(--ease-standard),
+    transform var(--duration-reveal) var(--ease-standard);
+}
+
+/* Antes de entrar en pantalla: transparente y un poco más abajo. Sigue
+   ocupando su sitio y sigue al alcance del lector de pantalla y del teclado. */
+.hidden {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+}
+
+/* Escalonado de los bloques que entran a la vez. Van después de .reveal: su
+   transition reinicia el retraso, y estas reglas lo vuelven a poner. */
+.order0 {
+  transition-delay: calc(var(--reveal-stagger) * 0);
+}
+
+.order1 {
+  transition-delay: calc(var(--reveal-stagger) * 1);
+}
+
+.order2 {
+  transition-delay: calc(var(--reveal-stagger) * 2);
+}
+
+.order3 {
+  transition-delay: calc(var(--reveal-stagger) * 3);
+}

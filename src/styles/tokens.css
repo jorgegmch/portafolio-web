@@ -243,6 +243,12 @@
   /* Cambio de un texto del rol al siguiente. config/heroRoles la repite
      para el temporizador; un test las compara. */
   --duration-role-swap: 500ms;
+  /* Aparición de un bloque al entrar en pantalla: cuánto dura, cuánto sube
+     y cuánto espera cada uno tras el anterior cuando entran a la vez. El
+     escalonado es criterio propio, ajustable aquí. */
+  --duration-reveal: 300ms;
+  --reveal-distance: 1.875rem;
+  --reveal-stagger: 80ms;
   --ease-standard: ease;
 
   /* Capas */
@@ -285,5 +291,8 @@
     --duration-base: 0.01ms;
     --duration-slow: 0.01ms;
     --duration-role-swap: 0.01ms;
+    --duration-reveal: 0.01ms;
+    --reveal-distance: 0;
+    --reveal-stagger: 0ms;
   }
 }
