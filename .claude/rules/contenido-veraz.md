@@ -13,6 +13,13 @@
 - `crm-registro-campers` se presenta como módulo de un MVP hecho en equipo, nunca como el CRM completo; no sugerir backend propio (usa JSON Server local).
 - Destacados: los marcados con `featured` en `data/projects.ts`, en el orden de ese archivo. El resto se ve desde "Ver todos en GitHub".
 
+## Proyectos construidos
+
+- La tarjeta «Proyectos construidos» cuenta solo los marcados con `built: true` en `data/projects.ts`. La cifra sale de `builtProjects.length`; nunca se escribe a mano.
+- `built` significa proyecto de desarrollo completo y funcional. Excluye ejercicios de aprendizaje, repos de scripts de BD y forks.
+- Solo cuentan repos públicos.
+- Marcar o desmarcar un proyecto lo decide el autor.
+
 ## Certificaciones
 
 - Solo texto: sin imágenes ni enlaces a los documentos.

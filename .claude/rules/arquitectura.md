@@ -19,7 +19,7 @@ Un módulo solo importa de su propia capa o de las inferiores:
 
 ## Una fuente de verdad por dato
 
-- Los conteos y las listas derivadas salen de `data/` (`projects.length`, `featuredProjects`, `primaryStack`); nunca se escriben a mano.
+- Los conteos y las listas derivadas salen de `data/` (`projects.length`, `builtProjects`, `featuredProjects`, `primaryStack`); nunca se escriben a mano.
 - Los datos personales y las claves de storage viven solo en `src/config/`.
 
 | Qué cambia | Dónde |
