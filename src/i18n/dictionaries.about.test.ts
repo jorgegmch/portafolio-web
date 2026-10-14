@@ -41,18 +41,21 @@ const STATS = {
   es: {
     months: ['Meses programando', 'Mes programando', 'Meses programando'],
     years: ['Años programando', 'Año programando', 'Años programando'],
-    projects: ['Proyectos publicados', 'Proyecto publicado', 'Proyectos publicados'],
+    projects: ['Proyectos construidos', 'Proyecto construido', 'Proyectos construidos'],
     technologies: ['Tecnologías', 'Tecnología', 'Tecnologías'],
   },
   en: {
     months: ['Months of coding', 'Month of coding', 'Months of coding'],
     years: ['Years of coding', 'Year of coding', 'Years of coding'],
-    projects: ['Published projects', 'Published project', 'Published projects'],
+    projects: ['Projects built', 'Project built', 'Projects built'],
     technologies: ['Technologies', 'Technology', 'Technologies'],
   },
 } as const
 
 const COUNTS = [0, 1, 14] as const
+
+/** Dónde va el «+» de una cifra aproximada: «+20» en español, «20+» en inglés. */
+const PLUS_POSITION = { es: 'prefix', en: 'suffix' } as const
 
 describe('textos de «Sobre mí»', () => {
   it.each(LANGS)('en %s, el título y el botón son los previstos', (lang) => {
@@ -140,20 +143,48 @@ describe('textos de «Sobre mí»', () => {
       )
     })
 
-    // El número lo pone la tarjeta, en otro color: la etiqueta no lo repite.
-    it.each(LANGS)('en %s, ninguna etiqueta lleva el número', (lang) => {
+    // El número y su «+» los pone la tarjeta, en otro color: la etiqueta no los repite.
+    it.each(LANGS)('en %s, ninguna etiqueta lleva el número ni el «+»', (lang) => {
       const { codingTime, projects, technologies } = dictionaries[lang].about.stats
 
       const labels = [codingTime.months, codingTime.years, projects, technologies]
-      labels.forEach((label) => expect(label(14)).not.toMatch(/\d/))
+      labels.forEach((label) => {
+        COUNTS.forEach((count) => expect(label(count)).not.toMatch(/[\d+]/))
+      })
     })
 
-    it.each(LANGS)('en %s, hay tres tarjetas y ninguna de las anteriores', (lang) => {
+    it.each(LANGS)('en %s, la etiqueta de proyectos ya no dice «publicados»', (lang) => {
+      COUNTS.forEach((count) => {
+        expect(dictionaries[lang].about.stats.projects(count)).not.toMatch(/publi/i)
+      })
+    })
+
+    it.each(LANGS)('en %s, hay tres tarjetas, la posición del «+» y nada más', (lang) => {
       expect(Object.keys(dictionaries[lang].about.stats).sort()).toEqual([
         'codingTime',
+        'plusPosition',
         'projects',
         'technologies',
       ])
+    })
+  })
+
+  // El carácter y el redondeo son de la tarjeta; el diccionario solo dice dónde va.
+  describe('posición del «+»', () => {
+    it.each(LANGS)('en %s, es la prevista', (lang) => {
+      expect(dictionaries[lang].about.stats.plusPosition).toBe(PLUS_POSITION[lang])
+    })
+
+    it('en español va delante y en inglés detrás', () => {
+      expect(dictionaries.es.about.stats.plusPosition).toBe('prefix')
+      expect(dictionaries.en.about.stats.plusPosition).toBe('suffix')
+    })
+
+    it.each(LANGS)('en %s, es una posición, no el carácter', (lang) => {
+      const position: string = dictionaries[lang].about.stats.plusPosition
+
+      expect(['prefix', 'suffix']).toContain(position)
+      expect(position).not.toContain('+')
     })
   })
 })

@@ -14,6 +14,9 @@ export const LANG_NAMES: Record<Lang, string> = {
   en: 'English',
 }
 
+/** Lado de la cifra en el que cada idioma pone el «+»: «+20» o «20+». */
+export type PlusPosition = 'prefix' | 'suffix'
+
 /**
  * Forma única de los textos del sitio. Cada idioma debe cumplirla completa:
  * si falta una clave, un proyecto o una certificación, TypeScript falla.
@@ -86,6 +89,8 @@ export interface Dictionary {
       codingTime: Record<CodingTime['unit'], (count: number) => string>
       projects: (count: number) => string
       technologies: (count: number) => string
+      /** Dónde va el «+» de una cifra aproximada; el carácter lo pone la tarjeta. */
+      plusPosition: PlusPosition
     }
   }
   technologies: {

@@ -62,8 +62,9 @@ export const en: Dictionary = {
         months: (count) => (count === 1 ? 'Month of coding' : 'Months of coding'),
         years: (count) => (count === 1 ? 'Year of coding' : 'Years of coding'),
       },
-      projects: (count) => (count === 1 ? 'Published project' : 'Published projects'),
+      projects: (count) => (count === 1 ? 'Project built' : 'Projects built'),
       technologies: (count) => (count === 1 ? 'Technology' : 'Technologies'),
+      plusPosition: 'suffix',
     },
   },
   technologies: {
