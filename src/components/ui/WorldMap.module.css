@@ -1,0 +1,18 @@
+/* Ancho del contenedor; el alto sale de la proporción del viewBox. */
+.map {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.land {
+  fill: var(--color-map-land);
+}
+
+/* Brillo fijo, como el punto de estado del Hero. En SVG no hay box-shadow:
+   va como drop-shadow, con el mismo verde al 30 %. Sin color-mix la sombra
+   no se aplica y queda el punto. */
+.city {
+  fill: var(--color-accent-alt);
+  filter: drop-shadow(0 0 var(--map-city-glow) color-mix(in srgb, var(--color-accent-alt) 30%, transparent));
+}
