@@ -18,6 +18,12 @@ export const site = {
   location: 'Piedecuesta, Santander, Colombia',
   /** Ciudad y código del país, para la terminal de «Sobre mí»; no se traduce. */
   locationShort: 'Piedecuesta, CO',
+  /**
+   * Punto de la ciudad en el mapa de «Sobre mí», con un decimal como máximo:
+   * nivel de ciudad. Es la cabecera municipal de Piedecuesta en DIVIPOLA del
+   * DANE (código 68547000), redondeada.
+   */
+  coordinates: { lat: 7.0, lon: -73.1 },
   /** Mes en que empezó a programar; de él sale el tiempo programando. */
   codingSince: '2025-08' satisfies YearMonth,
   /**
