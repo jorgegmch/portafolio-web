@@ -99,6 +99,10 @@ export const es: Dictionary = {
         description:
           'Aplicación de escritorio para gestión de inventario hecha con Python, ttkbootstrap y SQLite. Incluye CRUD completo de productos, un panel en vivo con 5 métricas, alertas de stock bajo, búsqueda por nombre, ordenamiento por varias columnas y un selector de tema oscuro/claro. Funciona completamente sin conexión, sin necesidad de servidor ni servicios externos.',
       },
+      'portafolio-web': {
+        description:
+          'Portafolio personal hecho con HTML, CSS y JavaScript puro. Estética tecnológica oscura, animaciones de scroll suaves y diseño responsive. Muestra los proyectos, las habilidades y la trayectoria de un desarrollador de software y comunicador social. | jorge.dev',
+      },
       'crm-registro-campers': {
         description:
           'Módulo de registro de campers de un MVP de CRM hecho en equipo para Campuslands. React, TypeScript y JSON Server, con asignación de asesores comerciales basada en roles, carga de fotos y validación. Funciona de forma independiente con datos ficticios.',

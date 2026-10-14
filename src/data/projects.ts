@@ -24,6 +24,12 @@ const projectList = [
     featured: true,
   },
   {
+    id: 'portafolio-web',
+    title: 'Portafolio Web',
+    stack: ['HTML', 'CSS', 'JavaScript'],
+    featured: true,
+  },
+  {
     id: 'crm-registro-campers',
     title: 'CRM Registro Campers',
     stack: ['React', 'TypeScript', 'JSON Server'],

@@ -95,6 +95,10 @@ export const en: Dictionary = {
         description:
           'Desktop inventory management app built with Python, ttkbootstrap, and SQLite. Includes full CRUD for products, a live 5-metric dashboard, low-stock alerts, name search, multi-column sorting, and a dark/light theme toggle. Runs fully offline, with no server or external services required.',
       },
+      'portafolio-web': {
+        description:
+          'Personal portfolio built with HTML, CSS & Vanilla JS. Dark tech aesthetic, smooth scroll animations and responsive design. Showcases projects, skills and background of a Software Developer & Social Communicator. | jorge.dev',
+      },
       'crm-registro-campers': {
         description:
           'Camper registration module of a team-built CRM MVP for Campuslands. React, TypeScript and JSON Server, with role-based sales rep assignment, photo upload and validation. Runs standalone with fictional data.',
