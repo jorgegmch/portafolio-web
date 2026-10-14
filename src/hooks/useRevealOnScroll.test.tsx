@@ -1,43 +1,15 @@
 import { act, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useRevealOnScroll } from '@/hooks/useRevealOnScroll'
+import { mockIntersectionObserver } from '@/test/mockIntersectionObserver'
 import { mockMatchMedia } from '@/test/mockMatchMedia'
 
-// jsdom no implementa IntersectionObserver: este doble guarda el callback
-// para que el test decida cuándo el elemento "entra en pantalla".
-class FakeIntersectionObserver {
-  static instances: FakeIntersectionObserver[] = []
-  observed: Element[] = []
-  disconnected = false
-  private callback: IntersectionObserverCallback
+let io: ReturnType<typeof mockIntersectionObserver>
 
-  constructor(callback: IntersectionObserverCallback) {
-    this.callback = callback
-    FakeIntersectionObserver.instances.push(this)
-  }
+const lastObserver = () => io.last()
 
-  observe(element: Element) {
-    this.observed.push(element)
-  }
-
-  disconnect() {
-    this.disconnected = true
-  }
-
-  trigger(isIntersecting: boolean) {
-    const entries = this.observed.map((target) => ({ target, isIntersecting }))
-    this.callback(
-      entries as IntersectionObserverEntry[],
-      this as unknown as IntersectionObserver,
-    )
-  }
-}
-
-const lastObserver = () => {
-  const observer = FakeIntersectionObserver.instances.at(-1)
-  if (!observer) throw new Error('No se creó ningún IntersectionObserver')
-  return observer
-}
+/** El elemento del hook entra en pantalla (true) o sigue fuera (false). */
+const trigger = (isIntersecting: boolean) => io.trigger(screen.getByTestId('probe'), isIntersecting)
 
 function Probe() {
   const { ref, visible } = useRevealOnScroll<HTMLDivElement>()
@@ -49,8 +21,7 @@ function Probe() {
 }
 
 beforeEach(() => {
-  FakeIntersectionObserver.instances = []
-  vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver)
+  io = mockIntersectionObserver()
   mockMatchMedia(false)
 })
 
@@ -69,7 +40,9 @@ describe('useRevealOnScroll', () => {
   it('sigue oculto mientras el elemento no entra en pantalla', () => {
     render(<Probe />)
 
-    act(() => lastObserver().trigger(false))
+    act(() => {
+      trigger(false)
+    })
 
     expect(screen.getByTestId('probe')).toHaveTextContent('oculto')
   })
@@ -78,11 +51,13 @@ describe('useRevealOnScroll', () => {
     render(<Probe />)
     const observer = lastObserver()
 
-    act(() => observer.trigger(true))
+    act(() => {
+      trigger(true)
+    })
 
     expect(screen.getByTestId('probe')).toHaveTextContent('visible')
     expect(observer.disconnected).toBe(true)
-    expect(FakeIntersectionObserver.instances).toHaveLength(1)
+    expect(io.instances).toHaveLength(1)
   })
 
   it('deja de observar al desmontar', () => {
@@ -99,7 +74,7 @@ describe('useRevealOnScroll', () => {
     render(<Probe />)
 
     expect(screen.getByTestId('probe')).toHaveTextContent('visible')
-    expect(FakeIntersectionObserver.instances).toHaveLength(0)
+    expect(io.instances).toHaveLength(0)
   })
 
   it('sin IntersectionObserver es visible desde el inicio', () => {

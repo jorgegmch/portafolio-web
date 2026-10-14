@@ -3,7 +3,7 @@
 ## Entorno
 
 - Todos los tests corren en jsdom. `src/test/setup.ts` limpia el DOM y el Web Storage después de cada uno, así que ningún archivo puede declararse con entorno `node`.
-- jsdom no trae `matchMedia` ni `IntersectionObserver`: usa `src/test/mockMatchMedia.ts` y el doble definido en `useRevealOnScroll.test.tsx`.
+- jsdom no trae `matchMedia` ni `IntersectionObserver`: usa `src/test/mockMatchMedia.ts` y `src/test/mockIntersectionObserver.ts`.
 - Los mocks compartidos viven en `src/test/`.
 - Los timers falsos se restauran al terminar.
 - `user-event` no se usa con timers falsos: se cuelga. Esos casos usan el reloj real o `fireEvent`.
