@@ -77,6 +77,12 @@ Ninguno es un logo de marca.
 - **SHA-256 del original de PrimeIcons,** antes de añadirle el comentario: `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1`. Un test compara el dibujo con ese original.
 - **El repositorio de PrimeIcons está archivado.** Las versiones publicadas bajo MIT siguen siendo MIT.
 
+### Iconos en línea
+
+Van dibujados dentro del código, no como archivos de `public/`, así que no llevan SHA-256.
+
+- `src/components/ui/StatIcon.tsx`: el reloj, la carpeta y las capas de las tarjetas de «Sobre mí». Obra propia, de trazo.
+
 ## Créditos pendientes
 
 Falta escribir un archivo de créditos en `docs/` con:

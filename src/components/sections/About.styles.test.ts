@@ -168,6 +168,50 @@ describe('About: estilos', () => {
       })
     })
 
+    // Decorativo, pero con contraste de sobra sobre la tarjeta.
+    it('el icono va en el verde de las cifras', () => {
+      expect(cssRule(css, '.statIcon')).toMatchObject({ color: `var(${VALUE})` })
+      expect(contrast(VALUE, BACKGROUND)).toBeCloseTo(14.26, 1)
+    })
+
+    // La geometría real se mide en el navegador: aquí se fija la intención.
+    describe('posición del icono', () => {
+      it('desde 481 px, la tarjeta va en filas que se parten: cifra e icono en la primera', () => {
+        expect(cssRule(css, '.stat')).toMatchObject({
+          display: 'flex',
+          'flex-wrap': 'wrap',
+          'align-items': 'center',
+        })
+        expect(cssRule(css, '.stat')).not.toHaveProperty('flex-direction')
+      })
+
+      // Las tres tarjetas se estiran al alto de la más alta: sin esto, la que
+      // tiene la etiqueta en una línea reparte el sobrante entre sus filas.
+      it('las filas se juntan arriba aunque la tarjeta sea más alta', () => {
+        expect(cssRule(css, '.stat')).toMatchObject({ 'align-content': 'flex-start' })
+      })
+
+      it('la etiqueta ocupa su propia fila', () => {
+        expect(cssRule(css, '.statLabel')).toMatchObject({ 'flex-basis': '100%' })
+      })
+
+      it('va al borde derecho, centrado con la cifra, y en ningún caso a la izquierda', () => {
+        expect(cssRule(css, '.statIcon')).toEqual({
+          color: `var(${VALUE})`,
+          'align-self': 'center',
+          'margin-left': 'auto',
+        })
+      })
+
+      it('en teléfono, cifra y etiqueta en una línea a la izquierda y el icono al final', () => {
+        const phone = cssMedia(css, PHONE)
+
+        expect(cssRule(phone, '.stat')).toMatchObject({ 'flex-wrap': 'nowrap' })
+        expect(cssRule(phone, '.statLabel')).toEqual({ 'flex-basis': 'auto' })
+        expect(cssRule(phone, '.statIcon')).toEqual({ order: '1' })
+      })
+    })
+
     it('en el apilado de tablet siguen en fila', () => {
       expect(cssRule(cssMedia(css, STACKED), '.stats')).toEqual({})
     })

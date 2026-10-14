@@ -213,6 +213,10 @@
 
   --icon-size: 1.5rem;
   --icon-stroke-width: 0.125rem;
+  /* Iconos de las tarjetas de «Sobre mí»: el tamaño de letra de la cifra.
+     El dibujo ocupa 18 de las 24 unidades del cuadro, así que queda a la
+     altura de los dígitos; el trazo crece con él. */
+  --stat-icon-size: var(--font-size-title);
 
   --blur-nav: 1.5rem; /* origen: 24px */
 
@@ -247,6 +251,14 @@
 @media (max-width: 768px) {
   :root {
     --container-gutter: 6vw; /* origen */
+  }
+}
+
+/* Tarjeta de una sola línea: el icono, por debajo de la cifra (26 px), para
+   no alargarla. */
+@media (max-width: 480px) {
+  :root {
+    --stat-icon-size: 1.5rem;
   }
 }
 

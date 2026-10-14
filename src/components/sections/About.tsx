@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from '@/components/sections/About.module.css'
+import { StatIcon } from '@/components/ui/StatIcon'
 import { TerminalPanel } from '@/components/ui/TerminalPanel'
 import { HIGHLIGHT_PHRASE } from '@/config/about'
 import { developer } from '@/config/developer'
@@ -32,7 +33,7 @@ import { roundedCount } from '@/lib/roundedCount'
  * se calcula con la fecha del día en que se monta la sección: solo cambia al
  * empezar un mes, así que no lleva temporizador. Una cifra aproximada lleva
  * un «+» dentro de su propio span, del lado que pide el idioma; la de
- * tecnologías es siempre exacta.
+ * tecnologías es siempre exacta. El icono de cada tarjeta es decorativo.
  */
 export function About() {
   const { t } = useLang()
@@ -46,18 +47,25 @@ export function About() {
   const [today] = useState(() => toDateParts(new Date()))
   const time = codingTime(site.codingSince, today)
   const stats = [
-    { id: 'codingTime', count: time, label: t.about.stats.codingTime[time.unit] },
+    {
+      id: 'codingTime',
+      icon: 'clock',
+      count: time,
+      label: t.about.stats.codingTime[time.unit],
+    },
     {
       id: 'projects',
+      icon: 'folder',
       count: roundedCount(builtProjects.length),
       label: t.about.stats.projects,
     },
     {
       id: 'technologies',
+      icon: 'layers',
       count: { value: technologies.length, approximate: false },
       label: t.about.stats.technologies,
     },
-  ]
+  ] as const
 
   return (
     <section id={sections.about} className={styles.about} aria-labelledby={headingId}>
@@ -88,11 +96,12 @@ export function About() {
         </div>
       </div>
       <ul className={styles.stats}>
-        {stats.map(({ id, count, label }) => (
+        {stats.map(({ id, icon, count, label }) => (
           <li key={id} className={styles.stat}>
             <span className={styles.statValue}>
               {formatCount(count, t.about.stats.plusPosition)}
             </span>
+            <StatIcon name={icon} className={styles.statIcon} />
             <span className={styles.statLabel}>{label(count.value)}</span>
           </li>
         ))}

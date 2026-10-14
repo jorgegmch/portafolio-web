@@ -71,15 +71,26 @@
   list-style: none;
 }
 
-/* El mismo fondo y borde que la terminal. La cifra va sobre su etiqueta. */
+/* El mismo fondo y borde que la terminal. La cifra y el icono comparten la
+   primera fila; la etiqueta baja a la segunda. Las filas van juntas arriba
+   aunque la rejilla estire la tarjeta al alto de sus vecinas. */
 .stat {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
   padding: var(--space-5);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
+}
+
+/* Decorativo, en el verde de la cifra: al borde derecho, centrado con ella. */
+.statIcon {
+  color: var(--color-accent-alt);
+  align-self: center;
+  margin-left: auto;
 }
 
 .statValue {
@@ -90,6 +101,7 @@
 }
 
 .statLabel {
+  flex-basis: 100%;
   color: var(--color-text);
   font-size: var(--font-size-md);
 }
@@ -127,7 +139,8 @@
 }
 
 /* En teléfono no caben tres en fila: van una bajo otra, con la cifra y su
-   etiqueta en la misma línea para no alargar la sección. */
+   etiqueta en la misma línea para no alargar la sección, y el icono al final,
+   en el borde derecho. */
 @media (max-width: 480px) {
   .stats {
     grid-template-columns: minmax(0, 1fr);
@@ -135,8 +148,17 @@
 
   .stat {
     flex-direction: row;
+    flex-wrap: nowrap;
     align-items: baseline;
     gap: var(--space-3);
     padding: var(--space-4);
+  }
+
+  .statIcon {
+    order: 1;
+  }
+
+  .statLabel {
+    flex-basis: auto;
   }
 }
