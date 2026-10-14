@@ -48,4 +48,6 @@ export interface Project<Id extends string = string> {
   stack: readonly string[]
   /** Tiene tarjeta en la sección de proyectos, en el orden de data/projects.ts. */
   featured: boolean
+  /** Cuenta en la tarjeta «Proyectos construidos»; el criterio está en contenido-veraz.md. */
+  built: boolean
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { site } from '@/config/site'
-import { featuredProjects, projects, projectUrl } from '@/data/projects'
+import { builtProjects, featuredProjects, projects, projectUrl } from '@/data/projects'
 import { dictionaries } from '@/i18n/index'
 import { LANGS } from '@/i18n/types'
 
@@ -53,6 +53,73 @@ describe('proyectos', () => {
         expect(byId(id)[0]?.featured).toBe(false)
       },
     )
+  })
+
+  // Criterio en contenido-veraz.md: proyecto de desarrollo completo y funcional.
+  // Marcar o desmarcar uno lo decide el autor, y obliga a actualizar esta lista.
+  describe('construidos', () => {
+    const BUILT = [
+      'logitrack-iq',
+      'logitrack-api',
+      'inventory-guardian',
+      'portafolio-web',
+      'rebelwear-ui',
+      'n8n-daily-news-agent',
+      'n8n-telegram-helpdesk-bot',
+    ]
+
+    const NOT_BUILT = [
+      'crm-registro-campers',
+      'cultuvivo-events-system',
+      'campuslands-erp-cli',
+      'tecnostore-pos',
+      'pocketflow-code-validator',
+      'patitas-felices-web',
+      'colombia-population-stats',
+      'medisistema-hospital-db',
+      'gaseosas-del-valle-db',
+      'vehicle-dealership-db',
+    ]
+
+    const ids = (list: readonly { id: string }[]) => list.map((project) => project.id).sort()
+
+    it('cada proyecto dice si cuenta o no', () => {
+      projects.forEach((project) => {
+        expect(typeof project.built, project.id).toBe('boolean')
+      })
+    })
+
+    it('son exactamente estos siete', () => {
+      expect(ids(builtProjects)).toEqual([...BUILT].sort())
+    })
+
+    it.each(NOT_BUILT)('%s sigue en data/, pero no cuenta', (id) => {
+      expect(byId(id)).toHaveLength(1)
+      expect(byId(id)[0]?.built).toBe(false)
+    })
+
+    it('entre los que cuentan y los que no están todos los proyectos', () => {
+      expect([...BUILT, ...NOT_BUILT].sort()).toEqual(ids(projects))
+    })
+
+    it('la lista sale de la marca de cada proyecto, en el orden del archivo', () => {
+      expect(builtProjects).toEqual(projects.filter((project) => project.built))
+    })
+
+    // Si las tres listas midieran lo mismo, confundir una con otra pasaría por buena.
+    it('no coincide en tamaño ni con todos los proyectos ni con los destacados', () => {
+      expect(builtProjects.length).not.toBe(projects.length)
+      expect(builtProjects.length).not.toBe(featuredProjects.length)
+    })
+
+    it('todo proyecto destacado está construido', () => {
+      const built = ids(builtProjects)
+
+      expect(featuredProjects.length).toBeGreaterThan(0)
+      featuredProjects.forEach((project) => {
+        expect(built, project.id).toContain(project.id)
+      })
+    })
   })
 
   describe('este portafolio', () => {
