@@ -51,7 +51,7 @@ export const en: Dictionary = {
     // Translation of the approved Spanish bio: do not edit without approval.
     bio: [
       "I'm a junior Full-Stack developer with a Java and Spring Boot foundation. I design REST APIs with JWT authentication and role-based access on PostgreSQL, and I document them with OpenAPI so anyone can understand and use them.",
-      'I code with AI agents, but with method: specs, rules and skills (AGENTS.md, SDD), so the agent follows a clear cycle and the judgment stays mine. I brought that same discipline to LogiTrack IQ, where I integrated n8n and an MCP server: an agent detects products below their reorder point and drafts purchase orders for an administrator to approve.',
+      'I code with the support of AI agents, but with method: specifications, rules and skills (AGENTS.md, SDD), so the agent follows a clear structure and the judgment stays mine. That is how I built this very portfolio, with a well-orchestrated agentic workflow. I also integrate agents into the software itself: in LogiTrack IQ I connected n8n and an MCP server so that an agent detects products below their reorder point and drafts purchase orders for an administrator to approve.',
       "I come from a communications background: I learned to listen before I speak and to explain complex ideas to different audiences. In software, that means turning what a client needs into clear technical requirements and explaining the team's decisions without unnecessary jargon.",
       "I work with Scrum, learn fast and document what I build. If your team is looking for someone who can code, understands the business and can explain it, let's talk.",
     ],

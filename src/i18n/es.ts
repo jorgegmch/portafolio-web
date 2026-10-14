@@ -56,7 +56,7 @@ export const es: Dictionary = {
     // Texto aprobado palabra por palabra: no editar sin aprobación.
     bio: [
       'Soy desarrollador Full-Stack junior con base en Java y Spring Boot. Diseño APIs REST con autenticación JWT y roles sobre PostgreSQL, y las documento con OpenAPI para que cualquiera pueda entenderlas y usarlas.',
-      'Programo apoyado en agentes de IA, pero con método: especificaciones, reglas y skills (AGENTS.md, SDD) para que el agente siga un ciclo claro y yo mantenga el criterio. Esa misma disciplina la llevé a LogiTrack IQ, donde integré n8n y un servidor MCP: un agente detecta productos bajo el punto de reorden y genera órdenes de compra en borrador que un administrador aprueba.',
+      'Programo apoyado en agentes de IA, pero con método: especificaciones, reglas y skills (AGENTS.md, SDD) para que el agente siga una estructura clara y yo mantenga el criterio. Así construí este mismo portafolio, con un ciclo agéntico bien orquestado. También integro agentes dentro del software: en LogiTrack IQ conecté n8n y un servidor MCP para que un agente detecte productos bajo el punto de reorden y genere órdenes de compra en borrador que un administrador aprueba.',
       'Vengo de la Comunicación Social: aprendí a escuchar antes de hablar y a explicar ideas complejas a públicos distintos. En software, eso significa convertir lo que necesita un cliente en requerimientos técnicos claros y explicar las decisiones del equipo sin tecnicismos innecesarios.',
       'Trabajo con Scrum, aprendo rápido y documento lo que construyo. Si tu equipo busca a alguien que programe, entienda el negocio y sepa explicarlo, hablemos.',
     ],
