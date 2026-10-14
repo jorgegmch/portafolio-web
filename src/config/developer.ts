@@ -10,10 +10,18 @@ import { site } from '@/config/site'
  */
 export const developer = {
   command: 'java Developer',
-  /** Campos en el orden en que salen. */
-  fields: ['name', 'age', 'location', 'role', 'passion'],
+  /** Campos en el orden en que salen: los componentes del record de Java. */
+  fields: ['fullName', 'age', 'location', 'role', 'passion'],
+  /** Lo que imprime el programa antes de cada valor. */
+  labels: {
+    fullName: 'full name',
+    age: 'age',
+    location: 'location',
+    role: 'role',
+    passion: 'passion',
+  },
   values: {
-    name: site.legalName,
+    fullName: site.legalName,
     location: site.locationShort,
     role: site.role,
     passion: 'Coding the future',

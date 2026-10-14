@@ -41,7 +41,7 @@ export function About() {
   const { lead, highlight } = t.about.phrase
   const age = useAge()
   const terminalLines = developer.fields.map((field) => ({
-    name: field,
+    name: developer.labels[field],
     value: field === 'age' ? String(age) : developer.values[field],
   }))
   const [today] = useState(() => toDateParts(new Date()))

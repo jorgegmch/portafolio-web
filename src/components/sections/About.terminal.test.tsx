@@ -67,20 +67,31 @@ describe('About: terminal del desarrollador', () => {
     expect(within(panel()).getByText(developer.command)).toBeInTheDocument()
   })
 
-  it('muestra los campos de config, en su orden', () => {
+  it('muestra las etiquetas de config, en el orden de los campos', () => {
     const { panel } = renderAbout()
+    const terms = within(panel())
+      .getAllByRole('term')
+      .map((term) => term.textContent)
 
-    expect(
-      within(panel())
-        .getAllByRole('term')
-        .map((term) => term.textContent),
-    ).toEqual([...developer.fields])
+    expect(terms).toEqual(developer.fields.map((field) => developer.labels[field]))
+    expect(terms).toEqual(['full name', 'age', 'location', 'role', 'passion'])
+  })
+
+  // La clave es interna: en pantalla solo sale lo que imprime el programa.
+  it('pinta la etiqueta, no la clave del campo', () => {
+    const { panel } = renderAbout()
+    const terms = within(panel())
+      .getAllByRole('term')
+      .map((term) => term.textContent)
+
+    expect(terms).not.toContain('fullName')
+    expect(terms).not.toContain('name')
   })
 
   it('el nombre, la ubicación, el rol y la pasión son los de config', () => {
     const { valueOf } = renderAbout()
 
-    expect(valueOf('name')).toBe(site.legalName)
+    expect(valueOf('full name')).toBe(site.legalName)
     expect(valueOf('location')).toBe(site.locationShort)
     expect(valueOf('role')).toBe(site.role)
     expect(valueOf('passion')).toBe(developer.values.passion)

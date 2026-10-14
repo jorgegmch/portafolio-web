@@ -16,7 +16,39 @@ describe('terminal del desarrollador', () => {
   })
 
   it('los campos salen en este orden', () => {
-    expect(developer.fields).toEqual(['name', 'age', 'location', 'role', 'passion'])
+    expect(developer.fields).toEqual(['fullName', 'age', 'location', 'role', 'passion'])
+  })
+
+  // La clave es un identificador, como el componente del record de Java; la
+  // etiqueta es lo que imprime el programa, y puede llevar espacios.
+  describe('etiquetas', () => {
+    it('cada campo tiene la etiqueta que imprime el programa', () => {
+      expect(developer.labels).toEqual({
+        fullName: 'full name',
+        age: 'age',
+        location: 'location',
+        role: 'role',
+        passion: 'passion',
+      })
+    })
+
+    it('en el orden de los campos, son las líneas de la salida', () => {
+      expect(developer.fields.map((field) => developer.labels[field])).toEqual([
+        'full name',
+        'age',
+        'location',
+        'role',
+        'passion',
+      ])
+    })
+
+    it('hay una por campo, y ninguna de más', () => {
+      expect(Object.keys(developer.labels)).toEqual([...developer.fields])
+    })
+
+    it('las claves no llevan espacios', () => {
+      developer.fields.forEach((field) => expect(field).toMatch(/^[a-z][a-zA-Z]*$/))
+    })
   })
 
   it('la pasión es la aprobada', () => {
@@ -25,7 +57,7 @@ describe('terminal del desarrollador', () => {
 
   describe('una sola fuente', () => {
     it('el nombre, la ubicación y el rol son los de site', () => {
-      expect(developer.values.name).toBe(site.legalName)
+      expect(developer.values.fullName).toBe(site.legalName)
       expect(developer.values.location).toBe(site.locationShort)
       expect(developer.values.role).toBe(site.role)
     })
