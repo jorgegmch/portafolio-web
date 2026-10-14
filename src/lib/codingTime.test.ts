@@ -1,60 +1,63 @@
 import { describe, expect, it } from 'vitest'
 import type { YearMonth } from '@/data/types'
+import type { DateParts } from '@/lib/calculateAge'
 import { codingTime } from '@/lib/codingTime'
 
 // Inicio ficticio: los tests no dependen del de config/ ni del reloj.
 const start: YearMonth = '2024-03'
 
+/** El día 10 del mes que queda a `months` meses del inicio. */
+const after = (months: number): DateParts => {
+  const index = 2 + months
+  return { year: 2024 + Math.floor(index / 12), month: (index % 12) + 1, day: 10 }
+}
+
 describe('codingTime', () => {
-  describe('en meses, hasta los 23', () => {
-    it('el mismo mes del inicio son 0 meses', () => {
-      expect(codingTime(start, { year: 2024, month: 3, day: 20 })).toEqual({
-        value: 0,
-        unit: 'months',
-      })
-    })
+  it('la ayuda del test sitúa bien los meses', () => {
+    expect(after(0)).toEqual({ year: 2024, month: 3, day: 10 })
+    expect(after(9)).toEqual({ year: 2024, month: 12, day: 10 })
+    expect(after(10)).toEqual({ year: 2025, month: 1, day: 10 })
+    expect(after(25)).toEqual({ year: 2026, month: 4, day: 10 })
+  })
 
-    it('el mes siguiente es 1 mes', () => {
-      expect(codingTime(start, { year: 2024, month: 4, day: 1 })).toEqual({
-        value: 1,
+  describe('en meses, hasta los 11', () => {
+    it.each([
+      ['el mismo mes del inicio son 0 meses', 0],
+      ['el mes siguiente es 1 mes', 1],
+      ['a los 11 meses sigue en meses', 11],
+    ])('%s', (_, months) => {
+      expect(codingTime(start, after(months))).toEqual({
+        value: months,
         unit: 'months',
-      })
-    })
-
-    it('a los 14 meses sigue en meses', () => {
-      expect(codingTime(start, { year: 2025, month: 5, day: 13 })).toEqual({
-        value: 14,
-        unit: 'months',
-      })
-    })
-
-    it('a los 23 meses sigue en meses', () => {
-      expect(codingTime(start, { year: 2026, month: 2, day: 28 })).toEqual({
-        value: 23,
-        unit: 'months',
+        approximate: false,
       })
     })
   })
 
-  describe('en años completos, desde los 24 meses', () => {
-    it('a los 24 meses son 2 años', () => {
-      expect(codingTime(start, { year: 2026, month: 3, day: 1 })).toEqual({
-        value: 2,
+  describe('en años completos, desde los 12 meses', () => {
+    it.each([
+      ['a los 12 meses es 1 año justo', 12, 1],
+      ['a los 24 meses son 2 años justos', 24, 2],
+      ['a los 36 meses son 3 años justos', 36, 3],
+    ])('%s', (_, months, years) => {
+      expect(codingTime(start, after(months))).toEqual({
+        value: years,
         unit: 'years',
+        approximate: false,
       })
     })
 
-    it('a los 35 meses siguen siendo 2 años', () => {
-      expect(codingTime(start, { year: 2027, month: 2, day: 28 })).toEqual({
-        value: 2,
+    // Con meses de sobra la cifra es «más de»: quien la muestra añade el «+».
+    it.each([
+      ['a los 13 meses es más de 1 año', 13, 1],
+      ['a los 23 meses sigue siendo más de 1 año', 23, 1],
+      ['a los 25 meses son más de 2 años', 25, 2],
+      ['a los 35 meses siguen siendo más de 2 años', 35, 2],
+    ])('%s', (_, months, years) => {
+      expect(codingTime(start, after(months))).toEqual({
+        value: years,
         unit: 'years',
-      })
-    })
-
-    it('a los 36 meses son 3 años', () => {
-      expect(codingTime(start, { year: 2027, month: 3, day: 1 })).toEqual({
-        value: 3,
-        unit: 'years',
+        approximate: true,
       })
     })
   })
@@ -63,18 +66,38 @@ describe('codingTime', () => {
     expect(codingTime('2025-12', { year: 2025, month: 12, day: 31 })).toEqual({
       value: 0,
       unit: 'months',
+      approximate: false,
     })
     expect(codingTime('2025-12', { year: 2026, month: 1, day: 1 })).toEqual({
       value: 1,
       unit: 'months',
+      approximate: false,
     })
   })
 
   // El inicio no registra el día: cuenta el mes entero.
-  it('el día del mes no cambia el resultado', () => {
-    expect(codingTime(start, { year: 2025, month: 5, day: 1 })).toEqual(
-      codingTime(start, { year: 2025, month: 5, day: 31 }),
-    )
+  describe('el día del mes no cambia el resultado', () => {
+    it('en meses', () => {
+      expect(codingTime(start, { year: 2024, month: 8, day: 1 })).toEqual(
+        codingTime(start, { year: 2024, month: 8, day: 31 }),
+      )
+    })
+
+    it('el primer día del mes 12 ya es 1 año justo', () => {
+      expect(codingTime(start, { year: 2025, month: 3, day: 1 })).toEqual({
+        value: 1,
+        unit: 'years',
+        approximate: false,
+      })
+    })
+
+    it('el último día del mes 11 todavía son 11 meses', () => {
+      expect(codingTime(start, { year: 2025, month: 2, day: 28 })).toEqual({
+        value: 11,
+        unit: 'months',
+        approximate: false,
+      })
+    })
   })
 
   describe('con un inicio posterior a hoy', () => {
@@ -82,6 +105,7 @@ describe('codingTime', () => {
       expect(codingTime(start, { year: 2024, month: 2, day: 29 })).toEqual({
         value: 0,
         unit: 'months',
+        approximate: false,
       })
     })
 
@@ -89,6 +113,7 @@ describe('codingTime', () => {
       expect(codingTime(start, { year: 2020, month: 1, day: 1 })).toEqual({
         value: 0,
         unit: 'months',
+        approximate: false,
       })
     })
   })
