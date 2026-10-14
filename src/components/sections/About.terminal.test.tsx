@@ -2,6 +2,7 @@ import { act, cleanup, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { About } from '@/components/sections/About'
+import aboutStyles from '@/components/sections/About.module.css'
 import { developer } from '@/config/developer'
 import { site } from '@/config/site'
 import { dictionaries } from '@/i18n/index'
@@ -224,6 +225,15 @@ describe('About: terminal del desarrollador', () => {
       expect(cell).toHaveLength(2)
       expect(cell[0]).toBe(panel())
       expect(cell[1]?.tagName.toLowerCase()).toBe('svg')
+    })
+
+    // La elevación la decide la sección: la clase va al panel, no al mapa.
+    it('el panel lleva la clase de elevación de la sección, y el mapa no', () => {
+      const { panel } = renderAbout()
+      const map = panel().nextElementSibling
+
+      expect(panel()).toHaveClass(aboutStyles.panel ?? 'sin clase')
+      expect(map).not.toHaveClass(aboutStyles.panel ?? 'sin clase')
     })
 
     it('es el único panel de la sección', () => {

@@ -102,6 +102,23 @@ describe('TerminalPanel', () => {
     })
   })
 
+  // Quien lo usa puede añadirle efectos propios sin tocar los del panel.
+  describe('clase', () => {
+    it('suma la clase que recibe a la suya', () => {
+      render(<TerminalPanel label={LABEL} command={COMMAND} lines={LINES} className="extra" />)
+      const classes = screen.getByRole('figure', { name: LABEL }).getAttribute('class')?.split(' ')
+
+      expect(classes).toHaveLength(2)
+      expect(classes).toContain('extra')
+    })
+
+    it('sin clase, lleva solo la suya', () => {
+      const { panel } = setup()
+
+      expect(panel.getAttribute('class')?.split(' ')).toHaveLength(1)
+    })
+  })
+
   it('con otros datos muestra esos datos: nada viene escrito dentro', () => {
     const { panel } = setup([{ name: 'role', value: 'Tester' }])
 

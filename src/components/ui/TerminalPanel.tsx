@@ -7,6 +7,8 @@ interface TerminalPanelProps {
   command: string
   /** Salida: una línea por campo, en orden. */
   lines: readonly { name: string; value: string }[]
+  /** Clase de quien lo usa, para sus propios efectos. */
+  className?: string
 }
 
 /**
@@ -15,9 +17,9 @@ interface TerminalPanelProps {
  * cada valor junto a su campo. La barra, el «$» y los dos puntos son
  * decorativos: los pinta el CSS y no forman parte del texto.
  */
-export function TerminalPanel({ label, command, lines }: TerminalPanelProps) {
+export function TerminalPanel({ label, command, lines, className }: TerminalPanelProps) {
   return (
-    <figure className={styles.panel} aria-label={label}>
+    <figure className={className ? `${styles.panel} ${className}` : styles.panel} aria-label={label}>
       <div className={styles.bar} aria-hidden="true">
         <span className={styles.dot} />
         <span className={styles.dot} />

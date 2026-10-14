@@ -177,6 +177,10 @@
   --float-distance: 0.5rem;
   --duration-float: 3s;
   --hero-badge-scale: 1.06;
+  /* Elevación de las tarjetas y la terminal de «Sobre mí» bajo el puntero.
+     Menor que la de las pastillas: sobre una tarjeta de 400 px, el 6 % deja
+     3 px entre vecinas a 1920; el 3 %, 10 px. */
+  --lift-scale: 1.03;
   /* Sus medidas van en em: cada pastilla crece con su tamaño de texto. */
   --badge-padding: 0.4em;
   --badge-padding-end: 0.85em;

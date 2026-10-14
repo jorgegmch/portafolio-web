@@ -91,6 +91,7 @@ export function About() {
         </div>
         <div className={styles.terminal}>
           <TerminalPanel
+            className={styles.panel}
             label={t.about.terminalLabel}
             command={developer.command}
             lines={terminalLines}

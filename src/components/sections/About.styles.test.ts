@@ -9,6 +9,8 @@ const tokensCss = readCss('src/styles/tokens.css')
 const STACKED = '(max-width: 1023px)'
 /** Hasta aquí las tarjetas van una bajo otra; por encima, las tres en fila. */
 const PHONE = '(max-width: 480px)'
+/** Dispositivos con puntero que puede quedarse encima: ratón o trackpad. */
+const HOVER = '(hover: hover)'
 
 const AA_TEXT = 4.5
 
@@ -21,11 +23,55 @@ describe('About: estilos', () => {
     expect(css).not.toMatch(/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i)
   })
 
-  it('solo usa los breakpoints del apilado y de teléfono', () => {
+  // (hover: hover) no es un breakpoint: dice si hay puntero de verdad.
+  it('solo usa los breakpoints del apilado y de teléfono, y el media de puntero', () => {
     expect(css.match(/@media[^{]*/g)?.map((query) => query.trim())).toEqual([
       `@media ${STACKED}`,
       `@media ${PHONE}`,
+      `@media ${HOVER}`,
     ])
+  })
+
+  // Las tarjetas y la terminal se elevan bajo el puntero, como las pastillas
+  // del Hero: solo transform, con la duración de los tokens.
+  describe('elevación bajo el puntero', () => {
+    const LIFTED = ['.stat', '.panel']
+    /** El CSS sin el bloque de (hover: hover). */
+    const outsideHover = css.replace(/@media \(hover: hover\)\s*\{(?:[^{}]*\{[^}]*\})*\s*\}/, '')
+
+    it.each(LIFTED)('%s se eleva escalando con --lift-scale, solo donde hay puntero', (selector) => {
+      expect(cssRule(cssMedia(css, HOVER), `${selector}:hover`)).toEqual({
+        transform: 'scale(var(--lift-scale))',
+      })
+    })
+
+    // La duración sale del token: con movimiento reducido pasa a 0,01 ms.
+    it.each(LIFTED)('%s anima solo transform, con la duración y el easing de los tokens', (selector) => {
+      expect(cssRule(css, selector)).toMatchObject({
+        transition: 'transform var(--duration-fast) var(--ease-standard)',
+      })
+    })
+
+    // En táctil, :hover se queda pegado tras tocar.
+    it('fuera de (hover: hover) no se eleva nada', () => {
+      expect(outsideHover).not.toMatch(/\.(?:stat|panel|terminal|map)\b[^{]*:hover/)
+      expect(cssMedia(css, HOVER).match(/[^{}]+\{/g)?.map((selector) => selector.trim())).toEqual([
+        '.stat:hover {',
+        '.panel:hover {',
+      ])
+    })
+
+    it('ni el mapa ni su celda se elevan', () => {
+      expect(css).not.toMatch(/\.(?:map|terminal)\b[^{]*:hover/)
+    })
+
+    it('el factor es un token propio, menor que el de las pastillas del Hero', () => {
+      const lift = Number(cssToken(tokensCss, '--lift-scale'))
+
+      expect(lift).toBe(1.03)
+      expect(lift).toBeGreaterThan(1)
+      expect(lift).toBeLessThan(Number(cssToken(tokensCss, '--hero-badge-scale')))
+    })
   })
 
   describe('sección', () => {
@@ -236,11 +282,23 @@ describe('About: estilos', () => {
     })
 
     // Sin conteo ascendente ni otra animación: solo aparecen.
-    it.each(['.stats', '.stat', '.statValue', '.statLabel'])('%s no anima nada', (selector) => {
+    it.each(['.stats', '.stat', '.statValue', '.statLabel'])('%s no lleva animaciones', (selector) => {
       const properties = Object.keys(cssRule(css, selector))
 
       expect(properties.length).toBeGreaterThan(0)
-      expect(properties.filter((property) => /^(?:transition|animation)/.test(property))).toEqual([])
+      expect(properties.filter((property) => /^animation/.test(property))).toEqual([])
+    })
+
+    it.each(['.stats', '.statValue', '.statLabel'])('%s no lleva transiciones', (selector) => {
+      expect(Object.keys(cssRule(css, selector)).filter((property) => /^transition/.test(property))).toEqual([])
+    })
+
+    // La única transición de la tarjeta es la de la elevación bajo el puntero.
+    it('la tarjeta solo lleva la transición de la elevación', () => {
+      const rule = cssRule(css, '.stat')
+
+      expect(Object.keys(rule).filter((property) => /^transition/.test(property))).toEqual(['transition'])
+      expect(rule.transition).toBe('transform var(--duration-fast) var(--ease-standard)')
     })
 
     it('en teléfono van una bajo otra, con la cifra y la etiqueta en la misma línea', () => {
