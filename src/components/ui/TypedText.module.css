@@ -1,0 +1,43 @@
+/* Antes de entrar en pantalla: el texto ya está, pero no se ve. Sigue al
+   alcance del lector de pantalla. */
+.waiting {
+  opacity: 0;
+}
+
+/* Cada palabra aparece con un fundido corto; cuándo empieza lo dice su
+   retraso, en línea. `both` la deja transparente hasta entonces. */
+.word {
+  animation: word-in var(--duration-fast) var(--ease-standard) both;
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Absoluto y sin desplazamientos: se queda donde acaba el texto, sin ocupar
+   sitio ni mover nada. */
+.cursor {
+  position: absolute;
+  color: var(--color-accent);
+  animation: blink calc(var(--duration-slow) * 2) step-end infinite;
+}
+
+/* El «|» es decorativo: lo pinta el CSS y el span va oculto al lector. */
+.cursor::before {
+  content: '|';
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Las duraciones de los tokens casi llegan a cero: parpadearía sin parar. */
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
