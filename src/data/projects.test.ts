@@ -23,6 +23,38 @@ describe('proyectos', () => {
     })
   })
 
+  // El orden es el de la sección: el primero es el protagonista. Cambiar el
+  // conjunto o el orden exige el visto bueno del autor y actualizar esta lista.
+  describe('destacados', () => {
+    const FEATURED = [
+      'logitrack-iq',
+      'logitrack-api',
+      'inventory-guardian',
+      'portafolio-web',
+      'rebelwear-ui',
+    ]
+
+    it('son exactamente estos cinco, en este orden', () => {
+      expect(featuredProjects.map((project) => project.id)).toEqual(FEATURED)
+    })
+
+    it('el protagonista es LogiTrack IQ', () => {
+      expect(featuredProjects[0]?.id).toBe('logitrack-iq')
+    })
+
+    it('la lista sale de la marca de cada proyecto, en el orden del archivo', () => {
+      expect(featuredProjects).toEqual(projects.filter((project) => project.featured))
+    })
+
+    it.each(['crm-registro-campers', 'n8n-daily-news-agent'])(
+      '%s sigue en data/, pero ya no es destacado',
+      (id) => {
+        expect(byId(id)).toHaveLength(1)
+        expect(byId(id)[0]?.featured).toBe(false)
+      },
+    )
+  })
+
   describe('este portafolio', () => {
     const ID = 'portafolio-web'
 

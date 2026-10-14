@@ -46,6 +46,6 @@ export interface Project<Id extends string = string> {
   title: string
   /** Etiquetas de stack en texto libre, tomadas de la descripción del repo. */
   stack: readonly string[]
-  /** Se muestra en el sitio; los no destacados solo se ven en GitHub. */
+  /** Tiene tarjeta en la sección de proyectos, en el orden de data/projects.ts. */
   featured: boolean
 }

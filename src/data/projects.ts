@@ -3,7 +3,7 @@ import type { Project } from '@/data/types'
 
 // Las descripciones (traducibles) viven en i18n/, indexadas por id.
 // El sitio muestra solo los destacados, en el orden en que aparecen aquí;
-// el primero es el protagonista. El resto se ve desde el enlace a GitHub.
+// el primero es el protagonista.
 const projectList = [
   {
     id: 'logitrack-iq',
@@ -33,13 +33,13 @@ const projectList = [
     id: 'crm-registro-campers',
     title: 'CRM Registro Campers',
     stack: ['React', 'TypeScript', 'JSON Server'],
-    featured: true,
+    featured: false,
   },
   {
     id: 'n8n-daily-news-agent',
     title: 'n8n Daily News Agent',
     stack: ['n8n', 'Gemini', 'Google Sheets'],
-    featured: true,
+    featured: false,
   },
   {
     id: 'campuslands-erp-cli',
@@ -57,7 +57,7 @@ const projectList = [
     id: 'rebelwear-ui',
     title: 'RebelWear',
     stack: ['HTML', 'CSS', 'JavaScript', 'FakeStore API', 'localStorage'],
-    featured: false,
+    featured: true,
   },
   {
     id: 'colombia-population-stats',
