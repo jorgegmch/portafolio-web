@@ -29,8 +29,8 @@ describe('proyectos', () => {
     const FEATURED = [
       'logitrack-iq',
       'logitrack-api',
-      'inventory-guardian',
       'portafolio-web',
+      'inventory-guardian',
       'rebelwear-ui',
     ]
 
