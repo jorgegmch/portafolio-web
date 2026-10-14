@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { contrastRatio } from '@/test/contrast'
 import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
 
 const css = readCss('src/components/sections/About.module.css')
@@ -6,14 +7,25 @@ const tokensCss = readCss('src/styles/tokens.css')
 
 /** Hasta aquí la sección va apilada; desde 1024 px, en dos columnas. */
 const STACKED = '(max-width: 1023px)'
+/** Hasta aquí las tarjetas van una bajo otra; por encima, las tres en fila. */
+const PHONE = '(max-width: 480px)'
+
+const AA_TEXT = 4.5
+
+/** Contraste WCAG entre dos tokens de color de tokens.css. */
+const contrast = (foreground: string, background: string) =>
+  contrastRatio(cssToken(tokensCss, foreground), cssToken(tokensCss, background))
 
 describe('About: estilos', () => {
   it('no lleva colores literales: todos salen de tokens', () => {
     expect(css).not.toMatch(/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i)
   })
 
-  it('solo usa el breakpoint del apilado', () => {
-    expect(css.match(/@media[^{]*/g)?.map((query) => query.trim())).toEqual([`@media ${STACKED}`])
+  it('solo usa los breakpoints del apilado y de teléfono', () => {
+    expect(css.match(/@media[^{]*/g)?.map((query) => query.trim())).toEqual([
+      `@media ${STACKED}`,
+      `@media ${PHONE}`,
+    ])
   })
 
   describe('sección', () => {
@@ -93,6 +105,74 @@ describe('About: estilos', () => {
     })
   })
 
+  describe('tarjetas', () => {
+    const BACKGROUND = '--color-surface'
+    const VALUE = '--color-accent-alt'
+    const LABEL = '--color-text'
+
+    it('van las tres en una fila, a partes iguales', () => {
+      expect(cssRule(css, '.stats')).toMatchObject({
+        display: 'grid',
+        'grid-template-columns': 'repeat(3, minmax(0, 1fr))',
+        'list-style': 'none',
+      })
+    })
+
+    it('llevan el fondo y el borde de la terminal', () => {
+      const panel = cssRule(readCss('src/components/ui/TerminalPanel.module.css'), '.panel')
+
+      expect(cssRule(css, '.stat')).toMatchObject({
+        'background-color': `var(${BACKGROUND})`,
+        border: '1px solid var(--color-border-strong)',
+        'border-radius': 'var(--radius-md)',
+      })
+      expect(cssRule(css, '.stat')['background-color']).toBe(panel['background-color'])
+      expect(cssRule(css, '.stat').border).toBe(panel.border)
+      expect(cssRule(css, '.stat')['border-radius']).toBe(panel['border-radius'])
+    })
+
+    it('la cifra va en el verde de la paleta, con el tamaño de título', () => {
+      expect(cssRule(css, '.statValue')).toMatchObject({
+        color: `var(${VALUE})`,
+        'font-size': 'var(--font-size-title)',
+      })
+    })
+
+    it('la etiqueta va en el color de texto', () => {
+      expect(cssRule(css, '.statLabel')).toMatchObject({ color: `var(${LABEL})` })
+    })
+
+    it.each([
+      ['la cifra', VALUE, 14.26],
+      ['la etiqueta', LABEL, 16.52],
+    ])('%s cumple AA sobre el fondo de la tarjeta', (_, token, expected) => {
+      expect(contrast(token, BACKGROUND)).toBeGreaterThanOrEqual(AA_TEXT)
+      expect(contrast(token, BACKGROUND)).toBeCloseTo(expected, 1)
+    })
+
+    // Sin conteo ascendente ni otra animación: solo aparecen.
+    it.each(['.stats', '.stat', '.statValue', '.statLabel'])('%s no anima nada', (selector) => {
+      const properties = Object.keys(cssRule(css, selector))
+
+      expect(properties.length).toBeGreaterThan(0)
+      expect(properties.filter((property) => /^(?:transition|animation)/.test(property))).toEqual([])
+    })
+
+    it('en teléfono van una bajo otra, con la cifra y la etiqueta en la misma línea', () => {
+      const phone = cssMedia(css, PHONE)
+
+      expect(cssRule(phone, '.stats')).toEqual({ 'grid-template-columns': 'minmax(0, 1fr)' })
+      expect(cssRule(phone, '.stat')).toMatchObject({
+        'flex-direction': 'row',
+        'align-items': 'baseline',
+      })
+    })
+
+    it('en el apilado de tablet siguen en fila', () => {
+      expect(cssRule(cssMedia(css, STACKED), '.stats')).toEqual({})
+    })
+  })
+
   describe('enlace a certificaciones', () => {
     it('es una cápsula de contorno con el alto táctil', () => {
       expect(cssRule(css, '.cta')).toMatchObject({
@@ -102,6 +182,11 @@ describe('About: estilos', () => {
         'background-color': 'transparent',
         color: 'var(--color-accent-alt)',
       })
+    })
+
+    it('se separa de la descripción con un espaciado de tokens', () => {
+      expect(cssRule(css, '.cta')).toMatchObject({ 'margin-top': 'var(--space-6)' })
+      expect(cssToken(tokensCss, '--space-6')).toBe('2rem')
     })
 
     it('no quita el anillo de foco', () => {

@@ -168,13 +168,24 @@ describe('About', () => {
       expect(within(region).getByRole('link')).not.toHaveAttribute('target')
     })
 
-    it('va al final, después de la descripción', () => {
+    // Cierra la columna de texto: va tras la descripción y antes de la terminal.
+    it('va justo después de la descripción y antes de la terminal', () => {
       const { region } = renderAbout()
       const lastParagraph = dictionaries.es.about.bio.at(-1) ?? ''
+      const link = within(region).getByRole('link')
 
-      expect(
-        precedes(within(region).getByText(lastParagraph), within(region).getByRole('link')),
-      ).toBe(true)
+      expect(precedes(within(region).getByText(lastParagraph), link)).toBe(true)
+      expect(precedes(link, within(region).getByRole('figure'))).toBe(true)
+    })
+
+    it('comparte columna con la descripción, justo debajo de ella', () => {
+      const { region } = renderAbout()
+      const bio = within(region).getByText(dictionaries.es.about.bio[0] ?? '').parentElement
+
+      expect([...(bio?.parentElement?.children ?? [])]).toEqual([
+        bio,
+        within(region).getByRole('link'),
+      ])
     })
   })
 

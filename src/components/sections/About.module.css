@@ -43,6 +43,11 @@
   margin-top: var(--space-7);
 }
 
+/* Columna de texto: la descripción y, debajo, el enlace a certificaciones. */
+.text {
+  min-width: 0;
+}
+
 .bio {
   display: flex;
   flex-direction: column;
@@ -51,9 +56,42 @@
   color: var(--color-text-muted);
 }
 
-/* Celda de la terminal: no deja que el panel la ensanche. */
+/* Celda de la terminal: no deja que el panel la ensanche. El hueco que queda
+   debajo, junto a la columna de texto, se deja libre. */
 .terminal {
   min-width: 0;
+}
+
+/* Tres tarjetas en fila, a partes iguales. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  list-style: none;
+}
+
+/* El mismo fondo y borde que la terminal. La cifra va sobre su etiqueta. */
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.statValue {
+  color: var(--color-accent-alt);
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--leading-tight);
+}
+
+.statLabel {
+  color: var(--color-text);
+  font-size: var(--font-size-md);
 }
 
 /* Cápsula de contorno. Cambia de golpe bajo el puntero, porque solo se
@@ -62,7 +100,7 @@
   display: inline-flex;
   align-items: center;
   min-height: var(--touch-target);
-  margin-top: var(--space-7);
+  margin-top: var(--space-6);
   padding: var(--space-3) var(--space-5);
   border: 1px solid var(--color-accent-alt);
   border-radius: var(--radius-pill);
@@ -85,5 +123,20 @@
 @media (max-width: 1023px) {
   .columns {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* En teléfono no caben tres en fila: van una bajo otra, con la cifra y su
+   etiqueta en la misma línea para no alargar la sección. */
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stat {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-4);
   }
 }

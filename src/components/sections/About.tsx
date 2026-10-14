@@ -1,22 +1,38 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styles from '@/components/sections/About.module.css'
 import { TerminalPanel } from '@/components/ui/TerminalPanel'
 import { HIGHLIGHT_PHRASE } from '@/config/about'
 import { developer } from '@/config/developer'
 import { routes, sections } from '@/config/routes'
+import { site } from '@/config/site'
+import { builtProjects } from '@/data/projects'
+import { technologies } from '@/data/technologies'
 import { useAge } from '@/hooks/useAge'
 import { useLang } from '@/hooks/useLang'
+import { toDateParts } from '@/lib/calculateAge'
+import { codingTime } from '@/lib/codingTime'
+import { formatCount } from '@/lib/formatCount'
+import { roundedCount } from '@/lib/roundedCount'
 
 /**
  * Sección «Sobre mí»: título, una frase grande, la descripción en cuatro
- * párrafos, la terminal del desarrollador y el enlace a las certificaciones.
+ * párrafos con el enlace a las certificaciones debajo, la terminal del
+ * desarrollador y tres tarjetas con cifras.
  * La frase es un párrafo, no un título; su tramo final va en un span que
- * config/about puede resaltar. Desde 1024 px la descripción ocupa la columna
- * izquierda y la terminal la derecha; por debajo, todo va apilado.
+ * config/about puede resaltar. Desde 1024 px la descripción y el enlace
+ * ocupan la columna izquierda y la terminal la derecha; por debajo, todo va
+ * apilado. Las tarjetas van después, a todo el ancho.
  *
  * La terminal muestra los campos de config/developer. La edad es en vivo: al
  * DOM solo llega el número, nunca la fecha de nacimiento.
+ *
+ * Las cifras de las tarjetas salen de config y de data/, nunca escritas a
+ * mano, y aparecen ya con su valor final, sin conteo. El tiempo programando
+ * se calcula con la fecha del día en que se monta la sección: solo cambia al
+ * empezar un mes, así que no lleva temporizador. Una cifra aproximada lleva
+ * un «+» dentro de su propio span, del lado que pide el idioma; la de
+ * tecnologías es siempre exacta.
  */
 export function About() {
   const { t } = useLang()
@@ -27,6 +43,21 @@ export function About() {
     name: field,
     value: field === 'age' ? String(age) : developer.values[field],
   }))
+  const [today] = useState(() => toDateParts(new Date()))
+  const time = codingTime(site.codingSince, today)
+  const stats = [
+    { id: 'codingTime', count: time, label: t.about.stats.codingTime[time.unit] },
+    {
+      id: 'projects',
+      count: roundedCount(builtProjects.length),
+      label: t.about.stats.projects,
+    },
+    {
+      id: 'technologies',
+      count: { value: technologies.length, approximate: false },
+      label: t.about.stats.technologies,
+    },
+  ]
 
   return (
     <section id={sections.about} className={styles.about} aria-labelledby={headingId}>
@@ -38,10 +69,15 @@ export function About() {
         <span className={HIGHLIGHT_PHRASE ? styles.highlight : undefined}>{highlight}</span>
       </p>
       <div className={styles.columns}>
-        <div className={styles.bio}>
-          {t.about.bio.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+        <div className={styles.text}>
+          <div className={styles.bio}>
+            {t.about.bio.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+          <Link className={styles.cta} to={routes.certifications}>
+            {t.about.viewCertifications}
+          </Link>
         </div>
         <div className={styles.terminal}>
           <TerminalPanel
@@ -51,9 +87,16 @@ export function About() {
           />
         </div>
       </div>
-      <Link className={styles.cta} to={routes.certifications}>
-        {t.about.viewCertifications}
-      </Link>
+      <ul className={styles.stats}>
+        {stats.map(({ id, count, label }) => (
+          <li key={id} className={styles.stat}>
+            <span className={styles.statValue}>
+              {formatCount(count, t.about.stats.plusPosition)}
+            </span>
+            <span className={styles.statLabel}>{label(count.value)}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }
