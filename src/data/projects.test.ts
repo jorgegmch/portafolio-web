@@ -59,27 +59,24 @@ describe('proyectos', () => {
   // Marcar o desmarcar uno lo decide el autor, y obliga a actualizar esta lista.
   describe('construidos', () => {
     const BUILT = [
+      'portafolio-web',
+      'colombia-population-stats',
+      'rebelwear-ui',
       'logitrack-iq',
       'logitrack-api',
-      'inventory-guardian',
-      'portafolio-web',
-      'rebelwear-ui',
+      'tecnostore-pos',
       'n8n-daily-news-agent',
       'n8n-telegram-helpdesk-bot',
-    ]
-
-    const NOT_BUILT = [
       'crm-registro-campers',
       'cultuvivo-events-system',
-      'campuslands-erp-cli',
-      'tecnostore-pos',
+      'inventory-guardian',
       'pocketflow-code-validator',
       'patitas-felices-web',
-      'colombia-population-stats',
-      'medisistema-hospital-db',
-      'gaseosas-del-valle-db',
-      'vehicle-dealership-db',
+      'campuslands-erp-cli',
     ]
+
+    // Repos de solo scripts de base de datos: el criterio los excluye.
+    const DATABASE_SCRIPTS = ['medisistema-hospital-db', 'gaseosas-del-valle-db', 'vehicle-dealership-db']
 
     const ids = (list: readonly { id: string }[]) => list.map((project) => project.id).sort()
 
@@ -89,17 +86,27 @@ describe('proyectos', () => {
       })
     })
 
-    it('son exactamente estos siete', () => {
+    it('son exactamente estos catorce', () => {
+      expect(BUILT).toHaveLength(14)
       expect(ids(builtProjects)).toEqual([...BUILT].sort())
     })
 
-    it.each(NOT_BUILT)('%s sigue en data/, pero no cuenta', (id) => {
+    it.each(DATABASE_SCRIPTS)('%s es de scripts de BD: sigue en data/, pero no cuenta', (id) => {
       expect(byId(id)).toHaveLength(1)
       expect(byId(id)[0]?.built).toBe(false)
     })
 
-    it('entre los que cuentan y los que no están todos los proyectos', () => {
-      expect([...BUILT, ...NOT_BUILT].sort()).toEqual(ids(projects))
+    it('solo quedan fuera los tres repos de scripts de BD', () => {
+      expect(ids(projects.filter((project) => !project.built))).toEqual([...DATABASE_SCRIPTS].sort())
+    })
+
+    it('entre los que cuentan y los de BD están todos los proyectos', () => {
+      expect([...BUILT, ...DATABASE_SCRIPTS].sort()).toEqual(ids(projects))
+    })
+
+    // El fork y el ejercicio de aprendizaje no cuentan: ni siquiera están en data/.
+    it('ni FastCat ni learning-path-fundamentals están en data/', () => {
+      expect(projects.filter((project) => /fastcat|learning-path/i.test(project.id))).toEqual([])
     })
 
     it('la lista sale de la marca de cada proyecto, en el orden del archivo', () => {

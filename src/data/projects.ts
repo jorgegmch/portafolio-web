@@ -38,7 +38,7 @@ const projectList = [
     title: 'CRM Registro Campers',
     stack: ['React', 'TypeScript', 'JSON Server'],
     featured: false,
-    built: false,
+    built: true,
   },
   {
     id: 'n8n-daily-news-agent',
@@ -52,14 +52,14 @@ const projectList = [
     title: 'Campuslands ERP CLI',
     stack: ['Python', 'JSON', 'CLI'],
     featured: false,
-    built: false,
+    built: true,
   },
   {
     id: 'patitas-felices-web',
     title: 'Patitas Felices',
     stack: ['HTML5', 'CSS3'],
     featured: false,
-    built: false,
+    built: true,
   },
   {
     id: 'rebelwear-ui',
@@ -73,21 +73,21 @@ const projectList = [
     title: 'Colombia Population Stats',
     stack: ['HTML5', 'CSS3', 'JavaScript', 'API Colombia'],
     featured: false,
-    built: false,
+    built: true,
   },
   {
     id: 'pocketflow-code-validator',
     title: 'PocketFlow Code Validator',
     stack: ['Python', 'PocketFlow-style', 'Gemini API'],
     featured: false,
-    built: false,
+    built: true,
   },
   {
     id: 'cultuvivo-events-system',
     title: 'CultuVivo Events System',
     stack: ['Python', 'JSON', 'Scrum'],
     featured: false,
-    built: false,
+    built: true,
   },
   {
     id: 'n8n-telegram-helpdesk-bot',
@@ -122,7 +122,7 @@ const projectList = [
     title: 'TecnoStore POS',
     stack: ['Java', 'JDBC', 'MySQL'],
     featured: false,
-    built: false,
+    built: true,
   },
 ] as const satisfies readonly Project[]
 
