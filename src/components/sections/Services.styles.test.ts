@@ -85,23 +85,22 @@ describe('Services: estilos', () => {
   })
 
   describe('hover y foco', () => {
-    // En táctil, :hover se queda pegado tras tocar.
-    it('las tarjetas y las fichas escalan solo con puntero de verdad', () => {
-      const hover = cssMedia(css, HOVER)
+    // En táctil, :hover se queda pegado tras tocar. Las tarjetas de servicios
+    // ya no escalan (giran, en ServiceCard); las fichas, sí.
+    it('las fichas escalan solo con puntero de verdad', () => {
+      expect(rule(cssMedia(css, HOVER), '.chip:hover')).toEqual({ transform: LIFT })
+    })
 
-      expect(rule(hover, '.card:hover')).toEqual({ transform: LIFT })
-      expect(rule(hover, '.chip:hover')).toEqual({ transform: LIFT })
+    // Los estilos de la tarjeta viven en ServiceCard.module.css.
+    it('las tarjetas de servicios no tienen estilos aquí, ni escalan', () => {
+      expect(css).not.toMatch(/\.card\b/)
+      expect(css).not.toMatch(/scale\([^)]*\)[^}]*\}[^.]*\.card/)
     })
 
     it('fuera de (hover: hover) no hay ningún :hover', () => {
       expect(outsideMedia()).not.toMatch(/:hover/)
       expect(cssMedia(css, TABLET)).not.toMatch(/:hover/)
       expect(cssMedia(css, PHONE)).not.toMatch(/:hover/)
-    })
-
-    // Con teclado, la misma respuesta que con el puntero, en cualquier pantalla.
-    it('las tarjetas con enlace escalan igual al recibir el foco de teclado', () => {
-      expect(rule(css, '.card:focus-visible')).toEqual({ transform: LIFT })
     })
 
     it('solo se transiciona transform, nunca all', () => {

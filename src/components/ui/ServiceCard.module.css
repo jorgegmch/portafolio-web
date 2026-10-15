@@ -1,0 +1,156 @@
+/* La tarjeta da la perspectiva; lo que gira es .inner. */
+.card {
+  display: grid;
+  perspective: var(--flip-perspective);
+}
+
+/* Rejilla de una sola celda: las dos caras se apilan en ella y la tarjeta
+   mide lo que la más alta, sin alturas fijas. */
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  transform-style: preserve-3d;
+  transition: transform var(--duration-slow) var(--ease-standard);
+}
+
+.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+/* Cada cara, con el fondo y el borde de las tarjetas de «Sobre mí». */
+.front,
+.back {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* Las dos en la misma celda. Ninguna enseña su reverso al girar; Safari
+   necesita el prefijo. */
+.front {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* El dorso empieza vuelto: al girar la tarjeta, queda de frente. */
+.back {
+  grid-area: 1 / 1;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+
+.icon {
+  color: var(--color-accent-alt);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+/* El botón del frente es el título: hereda su letra. Su ::after cubre la
+   cara, así que se gira tocando en cualquier punto de ella. */
+.flip {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.flip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.text {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-base);
+}
+
+/* Al pie, en una sola línea, con el objetivo táctil de alto (WCAG 2.5.8 pide
+   24 px como mínimo). Por encima del botón de volver: tocarlo abre el repo. */
+.link {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  margin-top: auto;
+  color: var(--color-accent-alt);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.arrow {
+  flex-shrink: 0;
+  width: var(--font-size-sm);
+  height: var(--font-size-sm);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* El botón de volver cubre el dorso por debajo del enlace: tocar fuera del
+   enlace devuelve la tarjeta. Su nombre es el del título. */
+.flipBack {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  cursor: pointer;
+}
+
+/* En tarjetas estrechas, menos relleno: el enlace cabe en una línea. */
+@media (max-width: 768px) {
+  .front,
+  .back {
+    padding: var(--space-4);
+  }
+}
+
+/* Sin giro: la cara que no se ve se desvanece y la otra aparece, sin rotar.
+   Con movimiento reducido, la duración de los tokens casi llega a cero. */
+@media (prefers-reduced-motion: reduce) {
+  .inner {
+    transform: none;
+  }
+
+  .flipped .inner {
+    transform: none;
+  }
+
+  .back {
+    transform: none;
+    opacity: 0;
+  }
+
+  .flipped .front {
+    opacity: 0;
+  }
+
+  .flipped .back {
+    opacity: 1;
+  }
+}

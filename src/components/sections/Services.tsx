@@ -1,7 +1,7 @@
 import { useId } from 'react'
 import styles from '@/components/sections/Services.module.css'
 import { Reveal, type RevealOrder } from '@/components/ui/Reveal'
-import { ServiceIcon } from '@/components/ui/ServiceIcon'
+import { ServiceCard } from '@/components/ui/ServiceCard'
 import { sections } from '@/config/routes'
 import { projectUrl } from '@/data/projects'
 import { services } from '@/data/services'
@@ -31,18 +31,18 @@ const LOGO_SIZE = 48
  * su etiqueta, su frase y una ficha por tecnología del catálogo, con el logo
  * y el nombre, sin enlaces, niveles ni porcentajes.
  *
- * Todo aparece al entrar en pantalla, una vez por carga de la página. Lo que
- * escala bajo el puntero (y, en las tarjetas con enlace, con el foco de
- * teclado) es la caja de dentro, nunca el <li> que aparece.
+ * Todo aparece al entrar en pantalla, una vez por carga de la página. Cada
+ * tarjeta gira (ServiceCard): el frente lleva el icono y el título, y el
+ * dorso la descripción y el enlace. Lo que gira, y lo que escala en las
+ * fichas, va dentro del <li> que aparece, nunca es el <li>.
  *
  * El nombre accesible de cada enlace es su título, «Ver proyecto relacionado»
- * y el aviso de pestaña nueva; la descripción va como descripción. El logo
- * de cada ficha lleva alt vacío: el nombre ya va escrito al lado.
+ * y el aviso de pestaña nueva. El logo de cada ficha lleva alt vacío: el
+ * nombre ya va escrito al lado.
  */
 export function Services() {
   const { t } = useLang()
   const headingId = useId()
-  const cardId = useId()
   const { services: text } = t
 
   return (
@@ -58,16 +58,6 @@ export function Services() {
       <ul className={styles.cards}>
         {services.map(({ id, icon, project }, index) => {
           const { title, description } = text.items[id]
-          const descriptionId = `${cardId}-${id}`
-          const body = (
-            <>
-              <ServiceIcon name={icon} className={styles.cardIcon} />
-              <h3 className={styles.cardTitle}>{title}</h3>
-              <p id={descriptionId} className={styles.cardText}>
-                {description}
-              </p>
-            </>
-          )
           return (
             <Reveal
               key={id}
@@ -76,26 +66,20 @@ export function Services() {
               order={CARD_ORDERS[index]}
               className={styles.cardItem}
             >
-              {project ? (
-                <a
-                  className={styles.card}
-                  href={projectUrl(project)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${title}: ${text.relatedProject} (${t.common.opensInNewTab})`}
-                  aria-describedby={descriptionId}
-                >
-                  {body}
-                  <span className={styles.cardLink}>
-                    {text.relatedProject}
-                    <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                      <path d="M5 12h14M13 6l6 6-6 6" />
-                    </svg>
-                  </span>
-                </a>
-              ) : (
-                <div className={styles.card}>{body}</div>
-              )}
+              <ServiceCard
+                icon={icon}
+                title={title}
+                description={description}
+                link={
+                  project
+                    ? {
+                        href: projectUrl(project),
+                        text: text.relatedProject,
+                        label: `${title}: ${text.relatedProject} (${t.common.opensInNewTab})`,
+                      }
+                    : undefined
+                }
+              />
             </Reveal>
           )
         })}

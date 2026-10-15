@@ -39,70 +39,11 @@
   list-style: none;
 }
 
-/* El <li> es el que aparece al entrar en pantalla; la caja va dentro. Como
-   rejilla de una sola celda, la estira a su alto. */
+/* El <li> es el que aparece al entrar en pantalla; la tarjeta que gira va
+   dentro (ServiceCard). Como rejilla de una sola celda, la estira a su alto. */
 .cardItem {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-}
-
-/* La caja: el mismo fondo y borde que las tarjetas de «Sobre mí». El texto
-   del enlace baja al pie aunque la rejilla estire la caja. */
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-5);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  text-decoration: none;
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-.cardIcon {
-  color: var(--color-accent-alt);
-}
-
-.cardTitle {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-tight);
-}
-
-.cardText {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-base);
-  line-height: var(--leading-base);
-}
-
-/* Pequeño, al pie, con una flecha: no compite con el título. */
-.cardLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-2);
-  color: var(--color-accent-alt);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-}
-
-.arrow {
-  width: var(--font-size-sm);
-  height: var(--font-size-sm);
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--icon-stroke-width);
-}
-
-/* Con teclado, la misma respuesta que con el puntero, en cualquier pantalla. */
-.card:focus-visible {
-  transform: scale(var(--lift-scale));
 }
 
 .stack {
@@ -191,24 +132,17 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .card {
-    padding: var(--space-4);
-  }
-
   .techItem {
     flex: 0 0 calc((100% - 1 * var(--space-4)) / 2);
   }
 }
 
-/* Las tarjetas y las fichas se elevan bajo el puntero, como las de «Sobre
-   mí», pero solo donde hay puntero de verdad: en táctil, :hover se queda
-   pegado tras tocar. Con movimiento reducido el cambio es instantáneo,
-   porque la duración es la de --duration-fast. */
+/* Las fichas se elevan bajo el puntero, como las tarjetas de «Sobre mí»,
+   pero solo donde hay puntero de verdad: en táctil, :hover se queda pegado
+   tras tocar. Con movimiento reducido el cambio es instantáneo, porque la
+   duración es la de --duration-fast. Las tarjetas de servicios no escalan:
+   giran. */
 @media (hover: hover) {
-  .card:hover {
-    transform: scale(var(--lift-scale));
-  }
-
   .chip:hover {
     transform: scale(var(--lift-scale));
   }

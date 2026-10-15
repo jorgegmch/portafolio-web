@@ -234,6 +234,8 @@
      El dibujo ocupa 18 de las 24 unidades del cuadro, así que queda a la
      altura de los dígitos; el trazo crece con él. */
   --stat-icon-size: var(--font-size-title);
+  /* Distancia de la perspectiva del giro de las tarjetas de «Servicios». */
+  --flip-perspective: 62.5rem; /* 1000px */
   /* Logo de las fichas de «Mi stack tecnológico». */
   --stack-logo-size: 3rem; /* 48px; LOGO_SIZE de Services.tsx lo repite */
 

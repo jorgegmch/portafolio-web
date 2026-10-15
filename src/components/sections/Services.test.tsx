@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Services } from '@/components/sections/Services'
 import styles from '@/components/sections/Services.module.css'
 import revealStyles from '@/components/ui/Reveal.module.css'
+import cardStyles from '@/components/ui/ServiceCard.module.css'
 import { sections } from '@/config/routes'
 import { projectUrl } from '@/data/projects'
 import { services } from '@/data/services'
@@ -23,7 +24,7 @@ const classOf = (module: CSSModuleClasses, name: string) => {
 }
 
 const REVEAL = classOf(revealStyles, 'reveal')
-const CARD = classOf(styles, 'card')
+const CARD = classOf(cardStyles, 'card')
 const CHIP = classOf(styles, 'chip')
 
 const renderServices = (lang: keyof typeof BROWSER_LANGS = 'es') => {
@@ -99,7 +100,8 @@ describe('Services', () => {
         const id = services[index]?.id ?? 'backend'
 
         expect(within(card).getByRole('heading', { level: 3 })).toHaveTextContent(text.items[id].title)
-        expect(within(card).getByText(text.items[id].description).tagName).toBe('P')
+        // La visible, en el dorso; la del frente es la copia oculta.
+        expect(within(within(card).getByRole('group')).getByText(text.items[id].description).tagName).toBe('P')
       })
     })
 
@@ -116,7 +118,6 @@ describe('Services', () => {
           expect(link).toHaveAccessibleName(
             `${text.items[id].title}: ${text.relatedProject} (${common.opensInNewTab})`,
           )
-          expect(link).toHaveAccessibleDescription(text.items[id].description)
           expect(link).toHaveAttribute('href', project ? projectUrl(project) : '')
           expect(link).toHaveAttribute('target', '_blank')
           expect(link).toHaveAttribute('rel', 'noopener noreferrer')
@@ -142,20 +143,36 @@ describe('Services', () => {
       expect(within(unlinked).queryByText(text.relatedProject)).not.toBeInTheDocument()
     })
 
-    // La respalda un certificado, no un repo.
-    it('la sexta, la de comunicación, no es un enlace ni se puede enfocar', () => {
+    // La respalda un certificado, no un repo: gira, pero su dorso no enlaza.
+    it('la sexta, la de comunicación, no lleva enlace: solo sus dos botones de girar', () => {
       const { unlinked, text } = renderServices()
 
       expect(within(unlinked).getByRole('heading', { level: 3 })).toHaveTextContent(
         text.items.communication.title,
       )
       expect(within(unlinked).queryByRole('link')).not.toBeInTheDocument()
-      expect(unlinked.querySelectorAll('a, button, [tabindex]')).toHaveLength(0)
-      expect(unlinked.querySelector(`.${CARD}`)?.tagName).toBe('DIV')
+      expect(unlinked.querySelectorAll('a')).toHaveLength(0)
+      expect(unlinked.querySelectorAll('button')).toHaveLength(2)
     })
 
-    // Condición de PLAN.md: lo que escala va dentro de lo que aparece.
-    it('el <li> es el que aparece; la caja que escala va dentro y no aparece', () => {
+    // Cada tarjeta gira: el botón de su título lo dice y, sin girar, ya
+    // ofrece la descripción al lector de pantalla.
+    it.each(LANGS)('en %s, cada título es un botón plegado con la descripción', (lang) => {
+      const { cards, text } = renderServices(lang)
+
+      cards.forEach((card, index) => {
+        const id = services[index]?.id ?? 'backend'
+        const button = within(within(card).getByRole('heading', { level: 3 })).getByRole('button')
+
+        expect(button).toHaveTextContent(text.items[id].title)
+        expect(button).toHaveAttribute('aria-expanded', 'false')
+        expect(button).toHaveAccessibleDescription(text.items[id].description)
+      })
+    })
+
+    // Condición de PLAN.md: lo que aparece no es lo que se mueve. El <li>
+    // aparece; la tarjeta que gira va dentro.
+    it('el <li> es el que aparece; la tarjeta que gira va dentro y no aparece', () => {
       const { cards } = renderServices()
 
       cards.forEach((card) => {
@@ -163,6 +180,7 @@ describe('Services', () => {
         expect(card.children).toHaveLength(1)
         expect(card.firstElementChild).toHaveClass(CARD)
         expect(card.firstElementChild).not.toHaveClass(REVEAL)
+        expect(card.firstElementChild?.querySelector(`.${REVEAL}`)).toBeNull()
       })
     })
 
