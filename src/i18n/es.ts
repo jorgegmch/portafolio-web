@@ -89,6 +89,11 @@ export const es: Dictionary = {
         description:
           'Interfaces responsivas con HTML, CSS, JavaScript y TypeScript, y React, con apoyo de agentes de IA.',
       },
+      fullstack: {
+        title: 'Desarrollo Full-Stack',
+        description:
+          'Construyo aplicaciones completas: API en Java y Spring Boot, base de datos en PostgreSQL e interfaz web con HTML, CSS y JavaScript, de la idea a un sistema que funciona.',
+      },
       databases: {
         title: 'Bases de datos',
         description:

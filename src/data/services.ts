@@ -12,6 +12,7 @@ import type { Service } from '@/data/types'
 const serviceList = [
   { id: 'backend', icon: 'server', project: 'logitrack-api' },
   { id: 'frontend', icon: 'window', project: 'portafolio-web' },
+  { id: 'fullstack', icon: 'layers', project: 'logitrack-iq' },
   { id: 'databases', icon: 'database', project: 'gaseosas-del-valle-db' },
   { id: 'automation', icon: 'agent', project: 'n8n-daily-news-agent' },
   { id: 'communication', icon: 'chat', project: null },

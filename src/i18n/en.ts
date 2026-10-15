@@ -84,6 +84,11 @@ export const en: Dictionary = {
         description:
           'Responsive interfaces with HTML, CSS, JavaScript and TypeScript, and React, with AI agent support.',
       },
+      fullstack: {
+        title: 'Full-Stack Development',
+        description:
+          'I build complete applications: a Java and Spring Boot API, a PostgreSQL database and a web interface with HTML, CSS and JavaScript, from the idea to a working system.',
+      },
       databases: {
         title: 'Databases',
         description:

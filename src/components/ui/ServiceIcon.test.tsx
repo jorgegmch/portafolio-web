@@ -3,7 +3,14 @@ import { describe, expect, it } from 'vitest'
 import { ServiceIcon } from '@/components/ui/ServiceIcon'
 import type { ServiceIconName } from '@/data/types'
 
-const NAMES = ['server', 'window', 'database', 'agent', 'chat'] as const satisfies readonly ServiceIconName[]
+const NAMES = [
+  'server',
+  'window',
+  'layers',
+  'database',
+  'agent',
+  'chat',
+] as const satisfies readonly ServiceIconName[]
 
 const renderIcon = (name: ServiceIconName, className?: string) => {
   const { container } = render(<ServiceIcon name={name} className={className} />)
@@ -51,7 +58,7 @@ describe('ServiceIcon', () => {
     expect(svg?.querySelectorAll('path').length).toBeGreaterThan(0)
   })
 
-  it('los cinco dibujos son distintos', () => {
+  it('los seis dibujos son distintos', () => {
     const drawings = NAMES.map((name) => renderIcon(name).querySelector('svg')?.innerHTML)
 
     expect(drawings.every((drawing) => drawing)).toBe(true)

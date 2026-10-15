@@ -30,32 +30,25 @@ describe('Services: estilos', () => {
     expect(rule(css, '.services')).toMatchObject({ 'scroll-margin-top': 'var(--nav-height)' })
   })
 
+  // Seis tarjetas: filas completas en los tres tramos, sin nada que centrar.
   describe('rejilla de tarjetas', () => {
-    // Desde 1024 px: seis columnas, tres tarjetas arriba y dos abajo,
-    // centradas y del mismo ancho.
-    it('en escritorio, 3 + 2 con las dos de abajo centradas', () => {
-      expect(rule(css, '.cards')).toMatchObject({ 'grid-template-columns': 'repeat(6, minmax(0, 1fr))' })
-      expect(rule(css, '.cardItem')).toMatchObject({ 'grid-column': 'span 2' })
-      // Inicio y ancho a la vez: solo el inicio dejaría el final en auto y la
-      // tarjeta ocuparía una columna.
-      expect(rule(css, '.cardItem:nth-child(4)')).toEqual({ 'grid-column': '2 / span 2' })
-      expect(rule(css, '.cardItem:nth-child(5)')).toEqual({ 'grid-column': '4 / span 2' })
+    it('desde 1024 px, tres columnas (3 + 3)', () => {
+      expect(rule(css, '.cards')).toMatchObject({ 'grid-template-columns': 'repeat(3, minmax(0, 1fr))' })
     })
 
-    // De 481 a 1023 px: 2 + 2 + 1, con la última centrada y del mismo ancho.
-    it('en tablet, 2 + 2 + 1 con la última centrada', () => {
-      const tablet = cssMedia(css, TABLET)
-
-      expect(rule(tablet, '.cards')).toMatchObject({ 'grid-template-columns': 'repeat(4, minmax(0, 1fr))' })
-      expect(rule(tablet, '.cardItem:nth-child(4)')).toEqual({ 'grid-column': 'span 2' })
-      expect(rule(tablet, '.cardItem:nth-child(5)')).toEqual({ 'grid-column': '2 / span 2' })
+    it('de 481 a 1023 px, dos columnas (2 + 2 + 2)', () => {
+      expect(rule(cssMedia(css, TABLET), '.cards')).toMatchObject({
+        'grid-template-columns': 'repeat(2, minmax(0, 1fr))',
+      })
     })
 
     it('en teléfono, una columna', () => {
-      const phone = cssMedia(css, PHONE)
+      expect(rule(cssMedia(css, PHONE), '.cards')).toMatchObject({ 'grid-template-columns': 'minmax(0, 1fr)' })
+    })
 
-      expect(rule(phone, '.cards')).toMatchObject({ 'grid-template-columns': 'minmax(0, 1fr)' })
-      expect(rule(phone, '.cardItem:nth-child(n)')).toEqual({ 'grid-column': 'auto' })
+    it('sin :nth-child ni span en las tarjetas', () => {
+      expect(css).not.toMatch(/\.cardItem:nth-child/)
+      expect(css).not.toMatch(/grid-column\s*:[^;]*span/)
     })
   })
 

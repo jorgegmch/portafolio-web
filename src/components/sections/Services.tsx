@@ -8,8 +8,8 @@ import { services } from '@/data/services'
 import { stackIconUrl, technologies, technologyName } from '@/data/technologies'
 import { useLang } from '@/hooks/useLang'
 
-/** Escalonado de las tarjetas: las de cada fila entran una tras otra. */
-const CARD_ORDERS: readonly RevealOrder[] = [0, 1, 2, 0, 1]
+/** Escalonado de las tarjetas: en escritorio, las de cada fila de tres entran una tras otra. */
+const CARD_ORDERS: readonly RevealOrder[] = [0, 1, 2, 0, 1, 2]
 
 /** Escalonado de las fichas, en tandas de cuatro. */
 const techOrder = (index: number): RevealOrder => {
@@ -25,7 +25,7 @@ const LOGO_SIZE = 48
 
 /**
  * Sección «Servicios», en dos bloques. Arriba, la etiqueta (el h2), una frase
- * grande y cinco tarjetas de servicios: las cuatro primeras enlazan al repo
+ * grande y seis tarjetas de servicios: las cinco primeras enlazan al repo
  * que respalda cada servicio, en una pestaña nueva; la de comunicación no
  * enlaza, porque la respalda un certificado. Abajo, «Mi stack tecnológico»:
  * su etiqueta, su frase y una ficha por tecnología del catálogo, con el logo

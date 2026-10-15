@@ -53,7 +53,7 @@ export interface Project<Id extends string = string> {
 }
 
 /** Dibujo de la tarjeta de un servicio: obra propia, de trazo. */
-export type ServiceIconName = 'server' | 'window' | 'database' | 'agent' | 'chat'
+export type ServiceIconName = 'server' | 'window' | 'layers' | 'database' | 'agent' | 'chat'
 
 export interface Service<Id extends string = string, ProjectIdT extends string = string> {
   id: Id

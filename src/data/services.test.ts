@@ -5,10 +5,11 @@ import { services } from '@/data/services'
 const byId = (id: string) => services.find((service) => service.id === id)
 
 describe('servicios', () => {
-  it('son estos cinco, en este orden', () => {
+  it('son estos seis, en este orden', () => {
     expect(services.map((service) => service.id)).toEqual([
       'backend',
       'frontend',
+      'fullstack',
       'databases',
       'automation',
       'communication',
@@ -24,7 +25,7 @@ describe('servicios', () => {
   it('cada uno lleva su propio dibujo', () => {
     const icons = services.map((service) => service.icon)
 
-    expect(icons).toEqual(['server', 'window', 'database', 'agent', 'chat'])
+    expect(icons).toEqual(['server', 'window', 'layers', 'database', 'agent', 'chat'])
     expect(new Set(icons).size).toBe(icons.length)
   })
 
@@ -40,12 +41,13 @@ describe('servicios', () => {
 
     // El id del proyecto es el nombre exacto del repo en GitHub (comprobado
     // con la API de GitHub el 2026-10-15): de él sale la URL.
-    it('las cuatro URL son exactamente estas', () => {
+    it('las cinco URL son exactamente estas', () => {
       expect(
         services.flatMap(({ project }) => (project ? [projectUrl(project)] : [])),
       ).toEqual([
         'https://github.com/jorgegmch/logitrack-api',
         'https://github.com/jorgegmch/portafolio-web',
+        'https://github.com/jorgegmch/logitrack-iq',
         'https://github.com/jorgegmch/gaseosas-del-valle-db',
         'https://github.com/jorgegmch/n8n-daily-news-agent',
       ])

@@ -29,11 +29,11 @@
   text-wrap: balance;
 }
 
-/* Desde 1024 px: seis columnas. Tres tarjetas arriba y dos abajo, del mismo
-   ancho y centradas. */
+/* Seis tarjetas, en filas completas: tres columnas desde 1024 px (3 + 3),
+   dos hasta 1023 (2 + 2 + 2) y una en teléfono. */
 .cards {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
   margin-top: var(--space-7);
   list-style: none;
@@ -43,18 +43,7 @@
    rejilla de una sola celda, la estira a su alto. */
 .cardItem {
   display: grid;
-  grid-column: span 2;
   grid-template-columns: minmax(0, 1fr);
-}
-
-/* Inicio y ancho a la vez: con solo el inicio, el final quedaría en auto y
-   la tarjeta ocuparía una sola columna. */
-.cardItem:nth-child(4) {
-  grid-column: 2 / span 2;
-}
-
-.cardItem:nth-child(5) {
-  grid-column: 4 / span 2;
 }
 
 /* La caja: el mismo fondo y borde que las tarjetas de «Sobre mí». El texto
@@ -177,19 +166,11 @@
   }
 }
 
-/* De 481 a 1023 px: 2 + 2 + 1, con la última centrada y del mismo ancho.
-   Fichas: cuatro por fila (4 + 4 + 4 + 3). */
+/* De 481 a 1023 px: dos tarjetas por fila (2 + 2 + 2). Fichas: cuatro por
+   fila (4 + 4 + 4 + 3). */
 @media (max-width: 1023px) {
   .cards {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .cardItem:nth-child(4) {
-    grid-column: span 2;
-  }
-
-  .cardItem:nth-child(5) {
-    grid-column: 2 / span 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .techItem {
@@ -208,10 +189,6 @@
 @media (max-width: 480px) {
   .cards {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .cardItem:nth-child(n) {
-    grid-column: auto;
   }
 
   .card {

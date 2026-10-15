@@ -38,9 +38,10 @@ const renderServices = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   const [cardList, techList] = within(region).getAllByRole('list')
   if (!cardList || !techList) throw new Error('Faltan las dos listas')
   const cards = within(cardList).getAllByRole('listitem')
-  const fifth = cards[4]
-  if (!fifth) throw new Error('Falta la quinta tarjeta')
-  return { region, cardList, techList, cards, fifth, text, common }
+  // La tarjeta sin enlace, la de comunicación: la sexta.
+  const unlinked = cards[5]
+  if (!unlinked) throw new Error('Falta la sexta tarjeta')
+  return { region, cardList, techList, cards, unlinked, text, common }
 }
 
 afterEach(() => {
@@ -90,10 +91,10 @@ describe('Services', () => {
   })
 
   describe('tarjetas', () => {
-    it.each(LANGS)('en %s, son las cinco de data/, en orden, con su título y su descripción', (lang) => {
+    it.each(LANGS)('en %s, son las seis de data/, en orden, con su título y su descripción', (lang) => {
       const { cards, text } = renderServices(lang)
 
-      expect(cards).toHaveLength(5)
+      expect(cards).toHaveLength(6)
       cards.forEach((card, index) => {
         const id = services[index]?.id ?? 'backend'
 
@@ -102,11 +103,11 @@ describe('Services', () => {
       })
     })
 
-    it.each(LANGS)('en %s, las cuatro con enlace abren su repo en una pestaña nueva, y lo avisan', (lang) => {
+    it.each(LANGS)('en %s, las cinco con enlace abren su repo en una pestaña nueva, y lo avisan', (lang) => {
       const { cardList, text, common } = renderServices(lang)
       const links = within(cardList).getAllByRole('link')
 
-      expect(links).toHaveLength(4)
+      expect(links).toHaveLength(5)
       services
         .filter(({ project }) => project)
         .forEach(({ id, project }, index) => {
@@ -122,31 +123,35 @@ describe('Services', () => {
         })
     })
 
-    it('las URL son exactamente las de los cuatro repos', () => {
+    it('las URL son exactamente las de los cinco repos', () => {
       const { cardList } = renderServices()
 
       expect(within(cardList).getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual([
         'https://github.com/jorgegmch/logitrack-api',
         'https://github.com/jorgegmch/portafolio-web',
+        'https://github.com/jorgegmch/logitrack-iq',
         'https://github.com/jorgegmch/gaseosas-del-valle-db',
         'https://github.com/jorgegmch/n8n-daily-news-agent',
       ])
     })
 
-    it('cada una con enlace lleva el texto «Ver proyecto relacionado», y la quinta no', () => {
-      const { cards, fifth, text } = renderServices()
+    it('cada una con enlace lleva el texto «Ver proyecto relacionado», y la sexta no', () => {
+      const { cards, unlinked, text } = renderServices()
 
-      cards.slice(0, 4).forEach((card) => expect(within(card).getByText(text.relatedProject)).toBeVisible())
-      expect(within(fifth).queryByText(text.relatedProject)).not.toBeInTheDocument()
+      cards.slice(0, 5).forEach((card) => expect(within(card).getByText(text.relatedProject)).toBeVisible())
+      expect(within(unlinked).queryByText(text.relatedProject)).not.toBeInTheDocument()
     })
 
     // La respalda un certificado, no un repo.
-    it('la quinta no es un enlace ni se puede enfocar', () => {
-      const { fifth } = renderServices()
+    it('la sexta, la de comunicación, no es un enlace ni se puede enfocar', () => {
+      const { unlinked, text } = renderServices()
 
-      expect(within(fifth).queryByRole('link')).not.toBeInTheDocument()
-      expect(fifth.querySelectorAll('a, button, [tabindex]')).toHaveLength(0)
-      expect(fifth.querySelector(`.${CARD}`)?.tagName).toBe('DIV')
+      expect(within(unlinked).getByRole('heading', { level: 3 })).toHaveTextContent(
+        text.items.communication.title,
+      )
+      expect(within(unlinked).queryByRole('link')).not.toBeInTheDocument()
+      expect(unlinked.querySelectorAll('a, button, [tabindex]')).toHaveLength(0)
+      expect(unlinked.querySelector(`.${CARD}`)?.tagName).toBe('DIV')
     })
 
     // Condición de PLAN.md: lo que escala va dentro de lo que aparece.
@@ -159,6 +164,16 @@ describe('Services', () => {
         expect(card.firstElementChild).toHaveClass(CARD)
         expect(card.firstElementChild).not.toHaveClass(REVEAL)
       })
+    })
+
+    // Dos filas de tres en escritorio: cada fila entra en escalonado 0, 1, 2.
+    it('cada tarjeta lleva su puesto en el escalonado, y ninguna se queda sin él', () => {
+      const { cards } = renderServices()
+      const orders = cards.map((card) =>
+        [0, 1, 2, 3].find((order) => card.classList.contains(classOf(revealStyles, `order${order}`))),
+      )
+
+      expect(orders).toEqual([0, 1, 2, 0, 1, 2])
     })
 
     it('el icono de cada tarjeta es decorativo', () => {

@@ -37,6 +37,11 @@ const ITEMS = {
       description:
         'Interfaces responsivas con HTML, CSS, JavaScript y TypeScript, y React, con apoyo de agentes de IA.',
     },
+    fullstack: {
+      title: 'Desarrollo Full-Stack',
+      description:
+        'Construyo aplicaciones completas: API en Java y Spring Boot, base de datos en PostgreSQL e interfaz web con HTML, CSS y JavaScript, de la idea a un sistema que funciona.',
+    },
     databases: {
       title: 'Bases de datos',
       // Respaldo: claves foráneas y CHECK en gaseosas-del-valle-db,
@@ -65,6 +70,11 @@ const ITEMS = {
       title: 'Frontend Development',
       description:
         'Responsive interfaces with HTML, CSS, JavaScript and TypeScript, and React, with AI agent support.',
+    },
+    fullstack: {
+      title: 'Full-Stack Development',
+      description:
+        'I build complete applications: a Java and Spring Boot API, a PostgreSQL database and a web interface with HTML, CSS and JavaScript, from the idea to a working system.',
     },
     databases: {
       title: 'Databases',

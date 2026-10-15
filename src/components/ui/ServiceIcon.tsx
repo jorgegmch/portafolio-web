@@ -7,6 +7,8 @@ const PATHS: Record<ServiceIconName, string> = {
   server: 'M4 4h16v6H4ZM4 14h16v6H4ZM8 7h.01M8 17h.01M12 7h4M12 17h4',
   // Una ventana con «< >» dentro.
   window: 'M3 5h18v14H3ZM3 9h18M10 12l-2 2.5 2 2.5M14 12l2 2.5-2 2.5',
+  // Tres capas apiladas: interfaz, API y datos.
+  layers: 'M12 3l8 4.5-8 4.5-8-4.5ZM4 12l8 4.5 8-4.5M4 16.5l8 4.5 8-4.5',
   // Un cilindro de tres niveles.
   database:
     'M4 6c0-1.66 3.58-3 8-3s8 1.34 8 3-3.58 3-8 3-8-1.34-8-3ZM4 6v12c0 1.66 3.58 3 8 3s8-1.34 8-3V6M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3',
