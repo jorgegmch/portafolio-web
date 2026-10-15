@@ -1,12 +1,12 @@
 # Cierre de la Fase 6 — lista de pendientes (borrador)
 
-Archivo temporal. Reúne lo anotado durante el Hero y existe solo hasta cerrar la Fase 6, o hasta que deje de ser necesario. Al ejecutar `/close-phase 6`, su contenido vigente se reparte entre `docs/PLAN.md` y `docs/MEMORY.md` y el archivo se borra en el mismo commit `docs` de cierre. Hasta entonces, de todo esto solo consta en esos dos archivos la decisión de contacto (commit `54a289c`).
+Archivo temporal. Reúne lo anotado durante el Hero y «Sobre mí» (esta última, en su propia sección) y existe solo hasta cerrar la Fase 6, o hasta que deje de ser necesario. Al ejecutar `/close-phase 6`, su contenido vigente se reparte entre `docs/PLAN.md` y `docs/MEMORY.md` y el archivo se borra en el mismo commit `docs` de cierre. Hasta entonces, de todo esto solo consta en esos dos archivos la decisión de contacto (commit `54a289c`).
 
 Las medidas se tomaron en Chrome contra la compilación del commit `6b88721`, en español e inglés, con las pastillas en reposo y en lo más alto de su flotación (8 px arriba). No se comprobó Safari, Firefox ni un dispositivo físico. Los datos personales se nombran por su campo, nunca por su valor.
 
 ## Estado
 
-- La Fase 6 sigue abierta: solo está hecho el Hero. Sus ajustes finales terminaron en el commit `6b88721`.
+- La Fase 6 sigue abierta: están hechos el Hero y «Sobre mí». Los ajustes finales del Hero terminaron en el commit `6b88721`; «Sobre mí», en el `8dc7561`.
 - **La rama `rebuild/vite-react` se sube con la foto provisional,** por decisión del autor. La foto viaja en el historial y se reemplazará con `/update-hero-photo`.
 - **En el historial quedan** la foto provisional y la primera versión de los PDFs del CV.
 
@@ -212,6 +212,74 @@ Son límites del diseño aprobado, no tareas. Donde hay dos cifras separadas por
 - **Viewport fraccionario:** no se pudo reproducir con zoom. Un ancho de 1023,6 px recibiría dos columnas, que a 1023 funcionan.
 - **Densidad 3:** a 768 y 820 px el retrato se amplía ×1,17 con el archivo mayor, de 1472 px.
 - **Lista del CV abierta:** a 1024×600 tapaba 4 px de la pastilla de Python, y a 320×600 abría 35 px bajo la primera pantalla. No se volvió a medir tras los ajustes finales.
+
+## Sobre mí
+
+Hecha del commit `a5ad05e` al `8dc7561`. Las medidas de esta sección se tomaron en el Chromium sin interfaz de Playwright, contra el servidor de desarrollo (no el build de producción), en español e inglés y a 320, 780, 820, 912, 1024 y 1440 px. No se comprobó Safari, Firefox ni un dispositivo físico.
+
+### Qué tiene
+
+- Título, frase grande, la descripción en cuatro párrafos con el enlace a Certificaciones debajo, la terminal de `java Developer` con la edad en vivo y el mapa debajo, y tres tarjetas: tiempo programando, proyectos construidos y tecnologías.
+- La terminal muestra la salida real de `examples/java/Developer.java`; cómo compilarlo está en `docs/EJEMPLO-JAVA.md`. El mapa y su procedencia, en `docs/MAPA.md`.
+
+### Decisiones tomadas
+
+- **Aparición al hacer scroll** (`useRevealOnScroll` y `Reveal`): cada bloque aparece una sola vez por carga de la página, con un fundido y un desplazamiento vertical de `--reveal-distance` en `--duration-reveal`. No empieza mientras se ve la animación de carga. Con movimiento reducido, o sin IntersectionObserver, todo se ve desde el principio.
+  - Escalonado de `--reveal-stagger`: título 0, frase 1, terminal y enlace 2, mapa 3; las tarjetas, 0, 1 y 2.
+  - Lo que aparece no es lo que escala con el hover. En las tarjetas, el `<li>` aparece y la caja `.stat` de dentro escala; en la terminal, el envoltorio aparece y el panel escala.
+- **La descripción se escribe palabra por palabra** (`useWordReveal` y `TypedText`), con su propio aviso de entrada en pantalla y no dentro de un envoltorio.
+  - 30 ms entre palabras y 200 ms de pausa entre párrafos (`src/config/aboutMotion.ts`); cada palabra entra con un fundido de `--duration-fast`. En español son 176 palabras y la escritura dura unos 6,05 s; en inglés, 188 y unos 6,41 s.
+  - El texto completo está siempre en el DOM: antes de entrar en pantalla, transparente; mientras se escribe, una palabra por span; al terminar, otra vez texto plano.
+  - Al terminar aparece un cursor «|» en `--color-accent`, que parpadea como el de la animación de carga. El carácter lo pinta el CSS y el span va con `aria-hidden`. Con movimiento reducido no parpadea.
+  - Si cambia el idioma a mitad, aparece el texto nuevo completo, con el cursor. Un render con el mismo texto (por ejemplo, al cambiar la edad) no reinicia nada.
+- **Sin control de pausa, decisión del autor:** no hay control para pausar la escritura ni el parpadeo del cursor, que no se detiene. No se afirma que esto cumpla el criterio 2.2.2 de WCAG (pausar, detener, ocultar). Con movimiento reducido del sistema no hay escritura ni parpadeo.
+- **Recarga:** el registro de lo que ya apareció o se escribió dura una carga de la página. Tras recargar, los bloques y la descripción vuelven a aparecer y a escribirse; al volver desde Certificaciones dentro de la misma carga, no. Se deja así por decisión del autor (ver la propuesta en la lista de abajo).
+
+### Verificación
+
+- **Layout:** con la aparición al hacer scroll, idéntico al anterior en 812 valores medidos. Con la escritura, cada párrafo de la descripción y su columna coinciden con los de antes en las tres fases (antes de entrar, a mitad y al terminar), con una diferencia máxima de 0,005 px.
+- **Animaciones:** solo `opacity` y `transform` en la aparición, y solo `opacity` en la escritura. La última palabra empieza a los 5850 ms en español y a los 6210 ms en inglés. El cursor aparece entre 4 y 5 ms después del último `animationend` real del navegador.
+- **Layout-shift:** 0 en la sección durante la aparición, durante la escritura y al aparecer el cursor; el observador se comprobó con un control positivo.
+- **Sin scroll horizontal** a 320 px con el cursor, en los dos idiomas.
+- **Árbol de accesibilidad:** con el de Playwright, los cuatro párrafos están completos en todas las fases y en los dos idiomas, y la sección no tiene regiones vivas.
+- **No se probó con un lector de pantalla real.** Tampoco se ha comprobado cómo se lee «+1» en la tarjeta de tiempo programando: sigue pendiente.
+- **CPU 4× más lenta (por DevTools), en desarrollo:** al empezar la escritura hay una o dos tareas largas, de 58 a 84 ms, y un fotograma de 100 a 117 ms. Coinciden también con la aparición de los demás bloques, y no se aisló qué parte es de la descripción. Durante el resto de la escritura no hay ningún fotograma de más de 50 ms; percentil 95 entre 16,8 y 16,9 ms. Sin ralentizar, ninguna tarea larga.
+- **Hover:** la terminal y las tres tarjetas siguen escalando a 1,03 tras aparecer.
+
+### Lista de cierre de «Sobre mí»
+
+Solo anotado: nada de esto está implementado.
+
+- **Propuestas, no aprobadas:**
+  - **No reescribir tras recargar:** guardar en `sessionStorage` lo que ya apareció o se escribió. No se hace porque cambiaría el contrato de `useWordReveal` y de `Reveal`, que hoy es «una vez por carga de la página».
+  - Un único IntersectionObserver compartido, solo si una medición lo pidiera.
+- **Por comprobar:**
+  - **Salto de layout en el Hero al cargar,** unos 150 ms después y antes de cualquier scroll: valores de 0,0014 a 0,018 en español a 320, 780 y 820 px y en inglés a 320 y 780 px, en nodos del Hero. No se comparó con la versión anterior.
+  - **Restauración del scroll al recargar:** en el Chromium sin interfaz, sobre el servidor de desarrollo, la página vuelve arriba (`scrollRestoration` en `auto`). Comprobarlo en un navegador real.
+  - **Al imprimir,** lo que no ha aparecido (incluida la descripción sin escribir) sale en blanco.
+  - **Salto del Hero** tras llegar por `/#about`, de unos ±25 px.
+  - **`scroll-margin-top` de 72 px insuficiente** cuando la barra va en dos filas: harían falta 103 px de 780 a 912 px y 119 px a 320 px.
+  - **Lectura de «+1»** con un lector de pantalla real.
+- **Fase 10, CSP:** el retraso de cada palabra va en `style={{ animationDelay }}`, el primer estilo en línea del proyecto. Tenerlo en cuenta al escribir la CSP de `vercel.json`; no se ha comprobado si una CSP concreta lo bloquearía.
+- **Tests:** jsdom no tiene `AnimationEvent` y sus estilos anuncian `WebkitAnimation`, así que React escucha `webkitAnimationEnd` en los tests y `animationend` en el navegador. Hoy lo resuelve un helper dentro de `TypedText.test.tsx`; la alternativa es un polyfill en `src/test/setup.ts`.
+- **Aceptado por el autor, a la vista:**
+  - las tarjetas apiladas a 780 y 912 px son más anchas que la columna de texto;
+  - el hueco bajo el mapa entre 1024 y 1180 px.
+- **Otros pendientes:**
+  - las pastillas del Hero también escalan en táctil: falta `(hover: hover)`;
+  - los unos 10 picos de redondeo del contorno del mapa, que solo importarían si se dibujara con trazo;
+  - el nivel de inglés ya no consta en el sitio desde que se quitó «Español nativo · Inglés B1»: decidir dónde va;
+  - `primaryStack` y el campo `primary` de los datos quedan sin uso;
+  - la cápsula de contorno está duplicada entre `CvDownload` y el `.cta` de «Sobre mí»;
+  - las comprobaciones de contraste de `LoadingIntro.styles.test.ts` solo exigen un umbral: reforzarlas con un valor fijado, como cambio aparte;
+  - el comando `/update-projects` y las imágenes de los proyectos destacados, para la sección de proyectos;
+  - la línea «Destacados» de `.claude/rules/contenido-veraz.md` («El resto se ve desde "Ver todos en GitHub"»): revisarla con la sección de proyectos;
+  - el README de logitrack-iq muestra credenciales de demo (líneas 201 y 203); ya se avisó al autor;
+  - en `examples/java/Developer.java` la edad es un literal que hay que actualizar a mano en cada cumpleaños; está documentado en `docs/EJEMPLO-JAVA.md`, pero ningún test avisa si se desfasa.
+- **Documentos:**
+  - `docs/PLAN.md`: «Cómo retomar» (línea 11) y la Fase 6 (línea 27) siguen diciendo que el siguiente paso es el Hero; el pendiente de decisión «Full-Stack» frente a «Full Stack» (línea 226) ya está resuelto con guion.
+  - Este archivo: la línea de «Proceso y herramientas» sobre «13 tecnologías» ya no vale, porque `PLAN.md` dice 14.
+- **Bloqueante antes del merge a `main`:** reescribir la descripción de portafolio-web en GitHub, en `data/` y en los diccionarios, junto con el README, y decidir si «| jorge.dev» se mantiene.
 
 ## Fuera del Hero
 

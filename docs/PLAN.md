@@ -27,13 +27,13 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 Es el siguiente paso: ver «Cómo retomar». El Hero tiene un encargo aprobado más detallado que esta casilla: el encargo 1 de «Trabajo pendiente aprobado».
 
 - [ ] **Hero:** foto, nombre, tagline, "Ver proyectos", "Descargar CV" con dropdown (versión diseñada y versión ATS, según idioma), iconos del stack principal
-- [ ] **Sobre mí:** bio, panel terminal que muestra la salida de `java Developer` con la edad en vivo y sin datos de contacto, 4 tarjetas de estadísticas, botón "Ver certificaciones"
-  - Condición para el revelado al hacer scroll (commits 3.x): Reveal no anima el elemento que escala; las tarjetas separan el `<li>` (caja y objetivo del hover) del elemento que revela.
+- [x] **Sobre mí:** bio, panel terminal que muestra la salida de `java Developer` con la edad en vivo y sin datos de contacto, 3 tarjetas de estadísticas, botón "Ver certificaciones". Detalle y pendientes en `docs/CIERRE-FASE-6.md`, «Sobre mí».
+  - Condición para el revelado al hacer scroll: Reveal no anima el elemento que escala. En las tarjetas, el `<li>` es el que se revela y el `<div class="stat">` de dentro es el que escala con el hover; en la terminal, el envoltorio se revela y el panel escala.
 - [ ] **Tecnologías:** grupos con logos, sin niveles ni porcentajes
 - [ ] **Proyectos:** 5 destacados + botón "Ver todos en GitHub". En orden: LogiTrack IQ (protagonista), LogiTrack API, Portafolio Web, Inventory Guardian, RebelWear
 - [ ] **Contacto:** email y teléfono visibles como texto, con llamado a la acción, ubicación a nivel de ciudad y tiempo de respuesta; LinkedIn y GitHub; sin formulario. Las acciones de escribir un correo y abrir WhatsApp siguen en `ContactButton`, que arma el dato al hacer clic
 - [ ] Repetir la verificación de `.claude/rules/contacto.md` con la sección de contacto ya montada: cero literales en `dist/` (sin contar los PDFs del CV) y en `src/`, y los PDFs del CV solo con el email y el teléfono de `src/config/contact.ts`
-- [ ] `examples/java/Developer.java`: el record real y compilable
+- [x] `examples/java/Developer.java`: el record real y compilable (commit `494ee80`; cómo compilarlo, en `docs/EJEMPLO-JAVA.md`)
 
 ### Fase 7 — Página `/certificaciones`
 
