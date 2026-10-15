@@ -4,6 +4,7 @@ import styles from '@/components/sections/About.module.css'
 import { Reveal, type RevealOrder } from '@/components/ui/Reveal'
 import { StatIcon } from '@/components/ui/StatIcon'
 import { TerminalPanel } from '@/components/ui/TerminalPanel'
+import { TypedText } from '@/components/ui/TypedText'
 import { WorldMap } from '@/components/ui/WorldMap'
 import { HIGHLIGHT_PHRASE } from '@/config/about'
 import { developer } from '@/config/developer'
@@ -33,7 +34,9 @@ const STAT_ORDERS: readonly RevealOrder[] = [0, 1, 2]
  *
  * Al entrar en pantalla aparecen, escalonados, el título, la frase, la
  * terminal, el enlace, el mapa y las tarjetas, cada uno una sola vez por
- * carga de la página; la descripción no. Lo que escala bajo el puntero (la
+ * carga de la página. La descripción no aparece con ellos: se escribe
+ * palabra por palabra, con su propio aviso, y termina con un cursor; el
+ * texto completo está siempre en el DOM. Lo que escala bajo el puntero (la
  * terminal y la caja de cada tarjeta) va dentro de lo que aparece, nunca es
  * lo mismo: en las tarjetas, el <li> aparece y la caja va dentro.
  *
@@ -94,11 +97,7 @@ export function About() {
       </Reveal>
       <div className={styles.columns}>
         <div className={styles.text}>
-          <div className={styles.bio}>
-            {t.about.bio.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
+          <TypedText revealKey="about-bio" paragraphs={t.about.bio} className={styles.bio} />
           <Reveal revealKey="about-cta" order={2}>
             <Link className={styles.cta} to={routes.certifications}>
               {t.about.viewCertifications}

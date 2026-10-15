@@ -234,9 +234,13 @@ describe('About: revelado al hacer scroll', () => {
       },
     )
 
+    // La descripción tiene su propio aviso: «todo» la incluye.
     it('desmontar y volver a montar lo deja todo visible y sin observadores nuevos', async () => {
       const { region, Section, unmount } = await renderAbout()
+      const bio = within(region).getByText(about.bio[0] ?? '').parentElement
+      if (!bio) throw new Error('La descripción no tiene contenedor')
       wrappersIn(region).forEach(enter)
+      enter(bio)
       unmount()
       const observersBefore = io.instances.length
 
