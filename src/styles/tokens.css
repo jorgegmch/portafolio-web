@@ -207,8 +207,9 @@
      como los bordes: se lee como silueta sin competir con el texto, y el
      punto verde de la ciudad resalta sobre ella. Es decorativo. */
   --color-map-land: rgba(0, 212, 255, 0.12);
-  /* Brillo fijo del punto de la ciudad: el mismo del punto de estado. */
-  --map-city-glow: var(--hero-status-glow);
+  /* Brillo fijo del punto de la ciudad: el del punto de estado al 80 %, en
+     la misma proporción en que se redujo el punto (de 8 a 6,4 unidades). */
+  --map-city-glow: calc(var(--hero-status-glow) * 0.8);
 
   /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
   --nav-height: 4.5rem;

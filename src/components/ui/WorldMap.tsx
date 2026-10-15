@@ -4,11 +4,12 @@ import { worldMap } from '@/data/worldMap'
 import { project } from '@/lib/mapProjection'
 
 /**
- * Radio del punto, en unidades del viewBox: escala con el mapa. Con 8 mide
- * unos 10 px con el mapa a 600 px de ancho y unos 4,5 px a 280, y no tapa
- * Colombia (unas 33 unidades de ancho).
+ * Radio del punto, en unidades del viewBox: escala con el mapa. Con 6,4 mide
+ * unos 7,4 px de diámetro con el mapa a 576 px de ancho y unos 3,4 px a 267,
+ * y no tapa Colombia (unas 33 unidades de ancho). Su brillo, en tokens.css
+ * (--map-city-glow), guarda la misma proporción.
  */
-const CITY_RADIUS = 8
+const CITY_RADIUS = 6.4
 
 const city = project(site.coordinates)
 

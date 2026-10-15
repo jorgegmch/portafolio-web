@@ -62,14 +62,14 @@ El mar Caspio es un agujero dentro del polígono de Afro-Eurasia. Sus dos anillo
 - **Valor guardado:** solo el redondeado, en `src/config/site.ts`: `coordinates: { lat: 7.0, lon: -73.1 }`. Un decimal son unos 11 km: nivel de ciudad.
 - **Fuente:** DIVIPOLA del DANE, corte al 30 de diciembre de 2024, conjunto «DIVIPOLA - Códigos cabeceras - Centros poblados» de datos.gov.co (`xaxy-8nri`), fila `68547000`, la cabecera municipal de Piedecuesta. Así lo anotan el comentario de `site.ts` y `src/config/site.about.test.ts`, que comprueba que el valor guardado es esa cabecera redondeada a un decimal.
 - **Licencia del conjunto:** Creative Commons Attribution | Share Alike 4.0 International (`licenseId: CC_40_BY_SA`), comprobada el 2026-10-14 en los metadatos del conjunto: https://www.datos.gov.co/api/views/xaxy-8nri.json.
-- **En pantalla:** `WorldMap` coloca el punto en `project(site.coordinates)`; no hay coordenadas de píxel escritas a mano. El radio es de 8 unidades del viewBox (`CITY_RADIUS`) y escala con el mapa.
+- **En pantalla:** `WorldMap` coloca el punto en `project(site.coordinates)`; no hay coordenadas de píxel escritas a mano. El radio es de 6,4 unidades del viewBox (`CITY_RADIUS`) y escala con el mapa.
 
 ## Colores
 
 Solo tokens de `src/styles/tokens.css`, sin colores literales en el componente ni en su CSS (lo fijan sus tests):
 
 - **Tierra:** `--color-map-land: rgba(0, 212, 255, 0.12)`, el cian de la paleta, translúcido como los bordes. Sobre `--color-bg` (`#08080f`) queda como `rgb(7, 32, 44)`, con un contraste de **1,19:1** frente al fondo. Es una decisión visual: se lee como silueta sin competir con el texto. Al ser decorativo, no se le aplica el mínimo de contraste de WCAG.
-- **Punto:** `--color-accent-alt`, con un brillo fijo `drop-shadow(0 0 var(--map-city-glow) …)` del mismo verde al 30 %. `--map-city-glow` es `var(--hero-status-glow)` (0,5rem): el mismo brillo que el punto de estado del Hero. No hay pulso ni transición.
+- **Punto:** `--color-accent-alt`, con un brillo fijo `drop-shadow(0 0 var(--map-city-glow) …)` del mismo verde al 30 %. `--map-city-glow` es `calc(var(--hero-status-glow) * 0.8)` (0,4rem): el brillo del punto de estado del Hero al 80 %, en la misma proporción que el radio. En el mapa, la sombra se mide en unidades del viewBox, así que escala con él igual que el punto. No hay pulso ni transición.
 
 ## Limitación conocida
 

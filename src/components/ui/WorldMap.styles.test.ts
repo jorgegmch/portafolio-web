@@ -29,8 +29,10 @@ describe('WorldMap: estilos', () => {
       })
     })
 
-    it('su radio de brillo es el del punto de estado del Hero', () => {
-      expect(cssToken(tokensCss, '--map-city-glow')).toBe('var(--hero-status-glow)')
+    // El punto pasó de 8 a 6,4 unidades: el brillo baja en la misma
+    // proporción, para que guarden la relación entre los dos.
+    it('su radio de brillo es el 80 % del del punto de estado del Hero', () => {
+      expect(cssToken(tokensCss, '--map-city-glow')).toBe('calc(var(--hero-status-glow) * 0.8)')
     })
   })
 

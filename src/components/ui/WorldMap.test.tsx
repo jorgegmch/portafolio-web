@@ -112,6 +112,11 @@ describe('WorldMap', () => {
     it('tiene radio', () => {
       expect(Number(renderMap().city?.getAttribute('r'))).toBeGreaterThan(0)
     })
+
+    // En unidades del viewBox, así que escala con el mapa.
+    it('su radio es de 6,4 unidades del viewBox', () => {
+      expect(renderMap().city?.getAttribute('r')).toBe('6.4')
+    })
   })
 
   it('suma la clase que recibe a la suya', () => {
