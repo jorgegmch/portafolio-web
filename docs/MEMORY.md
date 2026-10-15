@@ -3,8 +3,8 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 
 ## Estado actual
 - Fases 1 a 5 cerradas en rebuild/vite-react y subidas a origin, sin merge.
-- Fase 6 abierta: Hero y «Sobre mí» hechos; faltan Tecnologías, Proyectos y Contacto. Pendientes y decisiones de la fase en docs/CIERRE-FASE-6.md. «Sobre mí» (desde a5ad05e) está sin subir: el push lo hace el autor.
-- Siguen dos encargos aprobados: transición de idioma (Fase 7) y cursor glitch; están en PLAN.md y ninguno se ejecuta sin que el autor lo pida.
+- Fase 6 abierta: Hero y «Sobre mí» hechos; faltan Servicios (antes «Tecnologías»), Proyectos y Contacto. Pendientes y decisiones de la fase en docs/CIERRE-FASE-6.md.
+- Siguen dos encargos aprobados: transición de idioma (Fase 7) y cursor glitch; su texto literal está en docs/ENCARGOS.md y ninguno se ejecuta sin que el autor lo pida.
 - Las descripciones de proyectos están sincronizadas con GitHub.
 
 ## Decisiones (y por qué)
@@ -26,7 +26,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - permissions.deny frena solo al agente; mis comandos con ! no se bloquean (verificado solo con git push --dry-run).
 - Tres nombres en config/site.ts: el logo muestra site.handle, el h1 del hero site.shortName, y site.legalName queda para la terminal del hero.
 - --nav-height (4,5 rem) es una estimación hecha sin navegador: es ajustable si la barra cambia.
-- Intro: el foco inicial va a la capa (un foco puesto por código al cargar muestra el anillo sin teclado) y el margen de duración es por fotograma (el retraso crece con los temporizadores encadenados). El resto, en «Cierre de la Fase 5» de PLAN.md.
+- Intro: el foco inicial va a la capa (un foco puesto por código al cargar muestra el anillo sin teclado) y el margen de duración es por fotograma (el retraso crece con los temporizadores encadenados). El resto, en el commit de cierre de la Fase 5 (96266ff).
 - Aparición al hacer scroll y escritura de la bio: una vez por carga de página, con el registro en el módulo; recargar lo repite. Guardarlo en sessionStorage cambiaría el contrato de Reveal y useWordReveal: queda como propuesta. Lo que aparece no es lo que escala (el <li> aparece, la caja de dentro escala), para que dos transform no choquen en un elemento.
 - Sin control de pausa en la escritura de la bio ni en el parpadeo de su cursor, por decisión del autor; no se afirma que cumpla WCAG 2.2.2.
 
@@ -48,5 +48,5 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - En el servidor de desarrollo, un selector `[class*="_x_"]` coincide con la clase de igual nombre de otro módulo (`_intro_` del Hero y de LoadingIntro).
 
 ## Próximos pasos
-1. Siguiente sección de la Fase 6 (Tecnologías), cuando el autor lo pida, con plan por commits aprobado antes. «Cómo retomar» de PLAN.md aún dice Hero: se corrige en /close-phase 6.
+1. Sección «Servicios» de la Fase 6 (antes «Tecnologías»), con el plan por commits aprobado el 2026-10-15; ver «Cómo retomar» de PLAN.md.
 2. Extensiones de Claude Code pendientes (hooks, subagente, verify-contact): ver PLAN.md.

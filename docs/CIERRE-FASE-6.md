@@ -274,7 +274,7 @@ Solo anotado: nada de esto está implementado.
   - las comprobaciones de contraste de `LoadingIntro.styles.test.ts` solo exigen un umbral: reforzarlas con un valor fijado, como cambio aparte;
   - el comando `/update-projects` y las imágenes de los proyectos destacados, para la sección de proyectos;
   - la línea «Destacados» de `.claude/rules/contenido-veraz.md` («El resto se ve desde "Ver todos en GitHub"»): revisarla con la sección de proyectos;
-  - el README de logitrack-iq muestra credenciales de demo (líneas 201 y 203); ya se avisó al autor;
+  - los READMEs de logitrack-iq (líneas 201 y 203, tres usuarios) y de logitrack-api (tabla «Preloaded users», dos usuarios) publican credenciales de demo. Son otros repos: quedan fuera de este trabajo, por decisión del autor (2026-10-15);
   - en `examples/java/Developer.java` la edad es un literal que hay que actualizar a mano en cada cumpleaños; está documentado en `docs/EJEMPLO-JAVA.md`, pero ningún test avisa si se desfasa.
 - **Documentos:**
   - `docs/PLAN.md`: «Cómo retomar» (línea 11) y la Fase 6 (línea 27) siguen diciendo que el siguiente paso es el Hero; el pendiente de decisión «Full-Stack» frente a «Full Stack» (línea 226) ya está resuelto con guion.
