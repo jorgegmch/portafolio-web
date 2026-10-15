@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { projects } from '@/data/projects'
 import { primaryStack, technologies } from '@/data/technologies'
+import { en } from '@/i18n/en'
 
 // Los logos se buscan en disco, desde la raíz del repo: lo que se comprueba es
 // que el catálogo no nombra ningún archivo que no se publique.
@@ -11,8 +12,8 @@ const byId = (id: string) => technologies.find((technology) => technology.id ===
 const catalogLogos = technologies.flatMap((technology) => technology.logos)
 
 describe('catálogo de tecnologías', () => {
-  it('tiene 14 tecnologías', () => {
-    expect(technologies).toHaveLength(14)
+  it('tiene 15 tecnologías', () => {
+    expect(technologies).toHaveLength(15)
   })
 
   it('no repite ningún id', () => {
@@ -101,6 +102,31 @@ describe('catálogo de tecnologías', () => {
         expect(projects.map((project) => project.id)).toContain(id)
       })
     })
+  })
+
+  describe('React', () => {
+    it('es una tecnología de frontend, sin logo todavía', () => {
+      expect(byId('react')).toEqual({ id: 'react', name: 'React', group: 'frontend', logos: [] })
+    })
+
+    // Regla de contenido veraz: la etiqueta sale de la descripción de un repo
+    // en GitHub. La entrada cita ese repo, y su descripción nombra React.
+    it('cita junto a la entrada el proyecto que la respalda, y su descripción la nombra', () => {
+      const SOURCE = 'crm-registro-campers'
+      const source = readFileSync('src/data/technologies.ts', 'utf8')
+      const entry = source.indexOf("id: 'react'")
+      const comment = /((?:^ *\/\/.*\n)+) *\{ $/m.exec(source.slice(0, entry))?.[1] ?? ''
+
+      expect(entry).toBeGreaterThan(-1)
+      expect(comment).toContain(SOURCE)
+      expect(projects.map((project) => project.id)).toContain(SOURCE)
+      expect(en.projects.items[SOURCE].description).toContain('React')
+    })
+  })
+
+  // Decisión del autor (2026-10-15): SQLite no entra en el catálogo.
+  it('SQLite no está en el catálogo', () => {
+    expect(technologies.some((technology) => /sqlite/i.test(technology.id))).toBe(false)
   })
 
   it('el stack principal es Java, Spring Boot y PostgreSQL', () => {

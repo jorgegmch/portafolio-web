@@ -15,6 +15,9 @@ const technologyList = [
   { id: 'typescript', name: 'TypeScript', group: 'languages', logos: ['typescript.svg'] },
   { id: 'html', name: 'HTML', group: 'frontend', logos: ['html.svg'] },
   { id: 'css', name: 'CSS', group: 'frontend', logos: [] },
+  // Respaldada por la descripción de crm-registro-campers en GitHub (regla de
+  // contenido veraz): «React, TypeScript and JSON Server».
+  { id: 'react', name: 'React', group: 'frontend', logos: [] },
   { id: 'git-github', name: 'Git/GitHub', group: 'tools', logos: ['git.svg'] },
   { id: 'docker', name: 'Docker', group: 'tools', logos: [] },
   { id: 'n8n', name: 'n8n', group: 'tools', logos: [] },
