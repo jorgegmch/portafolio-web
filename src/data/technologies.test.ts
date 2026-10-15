@@ -61,6 +61,14 @@ describe('catálogo de tecnologías', () => {
       expect(byId('postgresql')?.logos).toEqual([])
     })
 
+    // Sin archivo oficial con fondo transparente confirmado: el glifo de
+    // Simple Icons (decisión del autor, 2026-10-15).
+    it('MySQL, n8n y CSS llevan su glifo de Simple Icons', () => {
+      expect(byId('mysql')?.logos).toEqual(['mysql.svg'])
+      expect(byId('n8n')?.logos).toEqual(['n8n.svg'])
+      expect(byId('css')?.logos).toEqual(['css.svg'])
+    })
+
     it('ningún logo se repite entre tecnologías', () => {
       expect(new Set(catalogLogos).size).toBe(catalogLogos.length)
     })
@@ -105,8 +113,13 @@ describe('catálogo de tecnologías', () => {
   })
 
   describe('React', () => {
-    it('es una tecnología de frontend, sin logo todavía', () => {
-      expect(byId('react')).toEqual({ id: 'react', name: 'React', group: 'frontend', logos: [] })
+    it('es una tecnología de frontend, con el glifo de Simple Icons', () => {
+      expect(byId('react')).toEqual({
+        id: 'react',
+        name: 'React',
+        group: 'frontend',
+        logos: ['react.svg'],
+      })
     })
 
     // Regla de contenido veraz: la etiqueta sale de la descripción de un repo

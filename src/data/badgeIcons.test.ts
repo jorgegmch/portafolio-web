@@ -8,6 +8,7 @@ import { parseSvg, svgIssues } from '@/test/svgSafety'
 const DUKE = 'public/tech/duke.svg'
 const DATABASE = 'public/icons/database.svg'
 const AI_AGENTS = 'public/icons/ai-agents.svg'
+const AI_AGENTS_WHITE = 'public/icons/ai-agents-white.svg'
 
 const tokensCss = readCss('src/styles/tokens.css')
 const read = (path: string) => readFileSync(path, 'utf8')
@@ -242,6 +243,62 @@ describe('icono genérico de agentes de IA', () => {
 
     it('ya no se presenta como dibujo propio', () => {
       expect(comment(AI_AGENTS)).not.toMatch(/drawn for this site|own work|robot/i)
+    })
+  })
+})
+
+// Copia del chip para la ficha de «Servicios», sobre fondo oscuro. El de la
+// pastilla del Hero, en negro sobre placa clara, no se toca.
+describe('icono genérico de agentes de IA, en blanco', () => {
+  // El mismo original de PrimeIcons que el del Hero.
+  const OFFICIAL_SHA256 = '6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1'
+  const root = () => parseSvg(read(AI_AGENTS_WHITE)).documentElement
+  const drawing = () => read(AI_AGENTS_WHITE).replace(LEADING_COMMENT, '')
+
+  it('existe en public/icons, fuera de la carpeta de logos de marca', () => {
+    expect(existsSync(AI_AGENTS_WHITE)).toBe(true)
+    expect(AI_AGENTS_WHITE).not.toContain('/tech/')
+  })
+
+  it('es un SVG seguro como icono estático', () => {
+    expect(svgIssues(read(AI_AGENTS_WHITE))).toEqual([])
+  })
+
+  it('su único cambio respecto al original es el relleno, de negro a blanco', async () => {
+    expect(drawing().match(/fill="(?:black|white)"/g)).toEqual(['fill="white"'])
+    expect(await sha256(drawing().replace('fill="white"', 'fill="black"'))).toBe(OFFICIAL_SHA256)
+  })
+
+  it('su color es fijo: no depende de currentColor', () => {
+    expect(read(AI_AGENTS_WHITE)).not.toMatch(/currentColor/i)
+    expect(root().querySelector('path')?.getAttribute('fill')).toBe('white')
+  })
+
+  it('el chip del Hero sigue en negro', () => {
+    expect(parseSvg(read(AI_AGENTS)).documentElement.querySelector('path')?.getAttribute('fill')).toBe(
+      'black',
+    )
+  })
+
+  describe('comentario de atribución', () => {
+    it('dice de dónde sale y qué se cambió', () => {
+      expect(comment(AI_AGENTS_WHITE)).toContain('https://github.com/primefaces/primeicons')
+      expect(comment(AI_AGENTS_WHITE)).toContain('raw-svg/microchip-ai.svg')
+      expect(comment(AI_AGENTS_WHITE)).toContain('version 7.0.0')
+      expect(comment(AI_AGENTS_WHITE)).toContain('changed from black to white')
+    })
+
+    // La licencia MIT pide conservar sus avisos en toda copia: los mismos
+    // que el comentario del chip del Hero.
+    it('conserva el aviso completo de la licencia MIT del original', () => {
+      const notice = (path: string) => comment(path).slice(comment(path).indexOf('MIT License'))
+
+      expect(notice(AI_AGENTS_WHITE)).toBe(notice(AI_AGENTS))
+      expect(notice(AI_AGENTS_WHITE)).toContain('Copyright (c) 2018-2021 PrimeTek')
+    })
+
+    it('no lleva ninguna dirección de correo', () => {
+      expect(read(AI_AGENTS_WHITE)).not.toContain('@')
     })
   })
 })

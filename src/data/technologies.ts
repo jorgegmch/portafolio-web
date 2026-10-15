@@ -9,18 +9,18 @@ const technologyList = [
   { id: 'spring-boot', name: 'Spring Boot', group: 'backend', logos: [], primary: true },
   { id: 'spring-security', name: 'Spring Security', group: 'backend', logos: [] },
   { id: 'postgresql', name: 'PostgreSQL', group: 'databases', logos: [], primary: true },
-  { id: 'mysql', name: 'MySQL', group: 'databases', logos: [] },
+  { id: 'mysql', name: 'MySQL', group: 'databases', logos: ['mysql.svg'] },
   { id: 'python', name: 'Python', group: 'languages', logos: ['python.svg'] },
   { id: 'javascript', name: 'JavaScript', group: 'languages', logos: ['javascript.svg'] },
   { id: 'typescript', name: 'TypeScript', group: 'languages', logos: ['typescript.svg'] },
   { id: 'html', name: 'HTML', group: 'frontend', logos: ['html.svg'] },
-  { id: 'css', name: 'CSS', group: 'frontend', logos: [] },
+  { id: 'css', name: 'CSS', group: 'frontend', logos: ['css.svg'] },
   // Respaldada por la descripción de crm-registro-campers en GitHub (regla de
   // contenido veraz): «React, TypeScript and JSON Server».
-  { id: 'react', name: 'React', group: 'frontend', logos: [] },
+  { id: 'react', name: 'React', group: 'frontend', logos: ['react.svg'] },
   { id: 'git-github', name: 'Git/GitHub', group: 'tools', logos: ['git.svg'] },
   { id: 'docker', name: 'Docker', group: 'tools', logos: [] },
-  { id: 'n8n', name: 'n8n', group: 'tools', logos: [] },
+  { id: 'n8n', name: 'n8n', group: 'tools', logos: ['n8n.svg'] },
   // Respaldada por dos proyectos (regla de contenido veraz): n8n-daily-news-agent,
   // un agente de IA con Gemini en n8n, y logitrack-iq, un flujo de n8n con un
   // agente de IA que propone órdenes de compra a través de un servidor MCP.

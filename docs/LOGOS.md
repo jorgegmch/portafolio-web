@@ -74,6 +74,10 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 | `javascript.svg` | Lleva dentro su aviso de licencia MIT, con los correos de sus autores. | `a70a3d8d36ea6b0e614a04ec30d5a4fb2bf36d515492cb84050ded2b84d14393` |
 | `python.svg` | `python-logo-only.svg`, de python.org/community/logos. Idéntico byte a byte al oficial, según `src/data/brandLogos.test.ts`; el archivo no lleva comentario de procedencia. Licencia: no consta. | `baec8662a1461c2cacc326b54d2727cb2f1ce07ba02d00f5b826d035104f649f` |
 | `typescript.svg` | `ts-logo-512.svg`, de typescriptlang.org/branding. Idéntico byte a byte al oficial, según `src/data/brandLogos.test.ts`; el archivo no lleva comentario de procedencia. Licencia: no consta. | `139ae451b37a00251fe24358191699efa665f63f1c8369cb9dad833159e159e2` |
+| `mysql.svg` | Simple Icons 16.35.0, `icons/mysql.svg`, CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#4479A1"`, su color de marca en los datos de Simple Icons. SHA-256 del original: `67c144cc3e44ad14062a3f20ebe29c5e7eeb2c2c9c0f43cf48d87fe6291a8b2d`. | `bbbc657d92a187a219ce5aa016a4b8c115774c52bac7e6510f695da0b7226f7a` |
+| `react.svg` | Simple Icons 16.35.0, `icons/react.svg`, CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#61DAFB"`, su color de marca en los datos de Simple Icons. SHA-256 del original: `ab9136a1a4a8be72ac6743e1bdd1912d878bd68d57787ea7a6c6838e3b23c01c`. | `060d2776249190bc235c9b97fabffb2922c341a1c58b08df713633b6f6ffb60c` |
+| `n8n.svg` | Simple Icons 16.35.0, `icons/n8n.svg` (solo el símbolo), CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#EA4B71"`, su color de marca en los datos de Simple Icons. SHA-256 del original: `f5a606188c78bf134fe7d85ae3d1310f6f4b7beafcd1d2fbdef2af02c92240a8`. | `2e6bba9f08c65aca92e9e59d57341b4171faea5bf375da6d47f180b7402c430f` |
+| `css.svg` | Simple Icons 16.35.0, `icons/css.svg`, CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#663399"`, su color de marca en los datos de Simple Icons. No se confirmó que el logo de CSS-Next sea oficial: por la regla de uso, va el de Simple Icons. SHA-256 del original: `9a97b95e3207aa4a6545dbb862e22450a01f37201c00e6b7d9c2958b59ca9ff9`. | `880bbeabbc51125c09d6dd25445f6546ded9f7b334c914bea32bf3af6cfd9084` |
 
 ### Iconos genéricos (`public/icons/`)
 
@@ -84,8 +88,9 @@ Ninguno es un logo de marca.
 | `envelope.svg` | Dibujado para este sitio: un sobre cerrado, de trazo. | Obra propia | `e51bfb2484da7fb0290c815c7dcaf867104ffc5c6927480253f125e357391a98` |
 | `database.svg` | Dibujado para este sitio: un cilindro apilado, de trazo. | Obra propia | `3e4712703731686d594ac307eb8bb275061b14be3e2dee1d55c7c4041af2bdf1` |
 | `ai-agents.svg` | `raw-svg/microchip-ai.svg` de `github.com/primefaces/primeicons`, versión 7.0.0. El dibujo no se modificó; solo se le añadió el comentario de procedencia y la licencia. | MIT, © 2018-2021 PrimeTek | `3fc8ee8a861362387f6530aafffee1282bbde09aa145c496c6ec0927cfd6393b` |
+| `ai-agents-white.svg` | Copia del anterior para la ficha de «Servicios», sobre fondo oscuro. Mismo original; el relleno pasa de negro a blanco y el comentario lo dice. El del Hero no se toca. | MIT, © 2018-2021 PrimeTek | `c4c696b5d431a690a1669bc52244b1f12d9e3d66c2526836c4c6012f098244f4` |
 
-- **SHA-256 del original de PrimeIcons,** antes de añadirle el comentario: `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1`. Un test compara el dibujo con ese original.
+- **SHA-256 del original de PrimeIcons,** antes de añadirle el comentario: `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1`. Un test compara el dibujo de cada uno con ese original; en el blanco, devolviéndole el relleno negro.
 - **El repositorio de PrimeIcons está archivado.** Las versiones publicadas bajo MIT siguen siendo MIT.
 
 ### Iconos en línea

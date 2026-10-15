@@ -5,7 +5,17 @@ import { technologies } from '@/data/technologies'
 // Los logos se leen de disco, desde la raíz del repo: lo que se comprueba es
 // el archivo que se publica.
 const DIR = 'public/tech'
-const EXPECTED = ['python.svg', 'javascript.svg', 'typescript.svg', 'git.svg', 'html.svg']
+const EXPECTED = [
+  'python.svg',
+  'javascript.svg',
+  'typescript.svg',
+  'git.svg',
+  'html.svg',
+  'mysql.svg',
+  'react.svg',
+  'n8n.svg',
+  'css.svg',
+]
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 const CC_BY_3 = 'Creative Commons Attribution 3.0 Unported License'
@@ -31,10 +41,36 @@ const OFFICIAL_SHA256: Record<string, string> = {
   'git.svg': '1080a5430edb6278dc03e4b04efc16c8bed5b943408d648ad721a28836814220',
   // https://www.w3.org/html/logo/ -> HTML5_Badge.svg, con LF
   'html.svg': '6e3fc58300e722bcb19bd2909d84ab4166e0034e55c75034e6b72d58d62b752e',
+  // Simple Icons 16.35.0 -> icons/<slug>.svg (CC0 1.0)
+  'mysql.svg': '67c144cc3e44ad14062a3f20ebe29c5e7eeb2c2c9c0f43cf48d87fe6291a8b2d',
+  'react.svg': 'ab9136a1a4a8be72ac6743e1bdd1912d878bd68d57787ea7a6c6838e3b23c01c',
+  'n8n.svg': 'f5a606188c78bf134fe7d85ae3d1310f6f4b7beafcd1d2fbdef2af02c92240a8',
+  'css.svg': '9a97b95e3207aa4a6545dbb862e22450a01f37201c00e6b7d9c2958b59ca9ff9',
+}
+
+/**
+ * Glifos de Simple Icons: se publican sin color y aquí llevan añadido el fill
+ * de su color de marca, el de los datos de Simple Icons 16.35.0. Es la única
+ * modificación que admite docs/LOGOS.md.
+ */
+const SIMPLE_ICONS_FILL: Record<string, string> = {
+  'mysql.svg': '#4479A1',
+  'react.svg': '#61DAFB',
+  'n8n.svg': '#EA4B71',
+  'css.svg': '#663399',
 }
 
 /** Logos a los que se añade el comentario de atribución; el resto va intacto. */
-const WITH_ADDED_COMMENT = ['git.svg', 'html.svg']
+const WITH_ADDED_COMMENT = ['git.svg', 'html.svg', ...Object.keys(SIMPLE_ICONS_FILL)]
+
+/** El archivo oficial: sin el comentario añadido y, en un glifo, sin su fill. */
+const official = (file: string) => {
+  const content = WITH_ADDED_COMMENT.includes(file)
+    ? text(file).replace(ADDED_COMMENT, '')
+    : text(file)
+  const fill = SIMPLE_ICONS_FILL[file]
+  return fill ? content.replace(`<svg fill="${fill}" `, '<svg ') : content
+}
 
 const path = (file: string) => `${DIR}/${file}`
 const text = (file: string) => readFileSync(path(file), 'utf8')
@@ -125,11 +161,37 @@ describe('logos de marca con archivo oficial', () => {
 
     // Sin alterar: el dibujo es el del archivo oficial.
     it('coincide con el archivo oficial', async () => {
-      const content = WITH_ADDED_COMMENT.includes(file)
-        ? text(file).replace(ADDED_COMMENT, '')
-        : text(file)
+      expect(await sha256(official(file))).toBe(OFFICIAL_SHA256[file])
+    })
+  })
 
-      expect(await sha256(content)).toBe(OFFICIAL_SHA256[file])
+  describe.each(Object.keys(SIMPLE_ICONS_FILL))('glifo de Simple Icons %s', (file) => {
+    const root = () => parse(file).documentElement
+
+    it('su único cambio es el fill de su color de marca, en la raíz', () => {
+      expect(root().getAttribute('fill')).toBe(SIMPLE_ICONS_FILL[file])
+      expect(text(file).replace(ADDED_COMMENT, '').match(/\bfill=/g)).toHaveLength(1)
+    })
+
+    it('el comentario dice de dónde sale, su versión, su licencia y el cambio', () => {
+      const comment = ADDED_COMMENT.exec(text(file))?.[0] ?? ''
+      const slug = file.replace('.svg', '')
+
+      expect(comment).toContain(
+        `https://github.com/simple-icons/simple-icons/blob/16.35.0/icons/${slug}.svg`,
+      )
+      expect(comment).toContain('License: CC0 1.0 Universal')
+      expect(comment).toContain(`fill="${SIMPLE_ICONS_FILL[file] ?? ''}"`)
+    })
+
+    // docs/LOGOS.md registra el original y el modificado, como pide su regla.
+    it('docs/LOGOS.md registra el SHA-256 del original y el del archivo modificado', async () => {
+      const record = readFileSync('docs/LOGOS.md', 'utf8')
+      const fileHash = await sha256(text(file))
+      const row = record.split('\n').find((line) => line.startsWith(`| \`${file}\``)) ?? ''
+
+      expect(row).toContain(fileHash)
+      expect(row).toContain(OFFICIAL_SHA256[file])
     })
   })
 
