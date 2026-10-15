@@ -73,9 +73,17 @@ describe('pastillas del Hero', () => {
       expect(genericBadges.length).toBeGreaterThan(0)
     })
 
-    // Solo se usa un icono genérico cuando no hay logo de marca que mostrar.
-    it.each(genericBadges)('$technology no tiene logo en el catálogo', (badge) => {
-      expect(technology(badge.technology)?.logos).toEqual([])
+    // Genérico por falta de logo (AI Agents no es una marca) o, hasta la Ronda 2
+    // del Hero (docs/PLAN.md), por decisión del autor aunque haya logo. Lista
+    // cerrada: se borra en la Ronda 2.
+    const GENERIC_UNTIL_ROUND_2 = ['postgresql']
+
+    it.each(genericBadges)('$technology no tiene logo, o espera a la Ronda 2', (badge) => {
+      if (GENERIC_UNTIL_ROUND_2.includes(badge.technology)) {
+        expect(technology(badge.technology)?.logos.length).toBeGreaterThan(0)
+      } else {
+        expect(technology(badge.technology)?.logos).toEqual([])
+      }
     })
 
     it.each(genericBadges)('$icon existe en public/icons y no en public/tech', (badge) => {

@@ -15,6 +15,10 @@ const EXPECTED = [
   'react.svg',
   'n8n.svg',
   'css.svg',
+  'spring-boot.svg',
+  'spring-security.svg',
+  'postgresql.svg',
+  'docker.svg',
 ]
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
@@ -46,7 +50,38 @@ const OFFICIAL_SHA256: Record<string, string> = {
   'react.svg': 'ab9136a1a4a8be72ac6743e1bdd1912d878bd68d57787ea7a6c6838e3b23c01c',
   'n8n.svg': 'f5a606188c78bf134fe7d85ae3d1310f6f4b7beafcd1d2fbdef2af02c92240a8',
   'css.svg': '9a97b95e3207aa4a6545dbb862e22450a01f37201c00e6b7d9c2958b59ca9ff9',
+  // https://spring.io/img/projects/spring-boot.svg
+  'spring-boot.svg': '8f9ccd66abde74dd74fde03541f4295bf5e55242b502167b38deeb6bee69c145',
+  // https://spring.io/img/projects/spring-security.svg
+  'spring-security.svg': '96afd13b56af0eac6a96fcedcac63d4274fa15655e2b713428041e7cfae9d91b',
+  // https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg, con
+  // LF: el oficial trae CRLF (ver POSTGRESQL_CRLF_SHA256)
+  'postgresql.svg': 'fe85bc84bce23d01bfe7e8c21715a21b5c011f6e2e1b7b431a8079ce6e4765cc',
+  // https://www.docker.com/static/Docker-Logos-1.zip -> SVG/docker-mark-ocean-blue.svg
+  'docker.svg': '0fd7f9164de13672bb1708ac7cc401ed439eb938ffa7358d5cb278e107904687',
 }
+
+/**
+ * Logos oficiales que traen su propio <style>. Se admite solo en estos
+ * archivos, solo con este contenido exacto (sin contar los espacios) y solo
+ * mientras el archivo sea el oficial (su test de hash sigue igual).
+ */
+const ALLOWED_STYLE: Record<string, string> = {
+  'spring-boot.svg': '.st0{fill:#6DB33F;}',
+  'spring-security.svg': '.cls-1{fill:#6bb344;}',
+  'docker.svg': '.st0 { fill: none; } .st1 { fill: #2560ff; } .st2 { clip-path: url(#clippath); }',
+}
+
+/** DOCTYPE admitido solo en postgresql.svg: el público de SVG 1.1, sin subconjunto interno. */
+const ALLOWED_DOCTYPE: Record<string, string> = {
+  'postgresql.svg':
+    '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+}
+
+/** SHA-256 del oficial de PostgreSQL tal como se descarga, con CRLF en todas sus líneas. */
+const POSTGRESQL_CRLF_SHA256 = '51f93e19516081fc7d6fe6ab9bbab07abe5f7819e28016eefacea6dea691bc54'
+
+const withoutSpaces = (css: string) => css.replace(/\s+/g, '')
 
 /**
  * Glifos de Simple Icons: se publican sin color y aquí llevan añadido el fill
@@ -125,8 +160,11 @@ describe('logos de marca con archivo oficial', () => {
     })
 
     describe('no carga ni ejecuta nada de fuera', () => {
+      // El <style> solo se admite en los archivos de ALLOWED_STYLE.
       it('no lleva scripts, imágenes incrustadas, HTML ni enlaces', () => {
-        const forbidden = ['script', 'image', 'foreignObject', 'iframe', 'a', 'style']
+        const forbidden = ['script', 'image', 'foreignObject', 'iframe', 'a', 'style'].filter(
+          (name) => !(name === 'style' && file in ALLOWED_STYLE),
+        )
         const names = elements(file).map(({ name }) => name)
 
         expect(names.length).toBeGreaterThan(0)
@@ -150,8 +188,15 @@ describe('logos de marca con archivo oficial', () => {
         urls.forEach(([, target = '']) => expect(target).toMatch(/^['"]?#/))
       })
 
-      it('no declara DOCTYPE ni entidades', () => {
-        expect(text(file)).not.toMatch(/<!DOCTYPE|<!ENTITY/i)
+      // Entidades y subconjuntos internos, en ninguno. DOCTYPE, solo el
+      // admitido en ALLOWED_DOCTYPE, y exactamente ese.
+      it('no declara entidades, y DOCTYPE solo el admitido', () => {
+        const doctypes = text(file).match(/<!DOCTYPE[^>]*>/gi) ?? []
+        const allowed = ALLOWED_DOCTYPE[file]
+
+        expect(text(file)).not.toMatch(/<!ENTITY/i)
+        doctypes.forEach((doctype) => expect(doctype).not.toContain('['))
+        expect(doctypes.map(withoutSpaces)).toEqual(allowed ? [withoutSpaces(allowed)] : [])
       })
     })
 
@@ -162,6 +207,34 @@ describe('logos de marca con archivo oficial', () => {
     // Sin alterar: el dibujo es el del archivo oficial.
     it('coincide con el archivo oficial', async () => {
       expect(await sha256(official(file))).toBe(OFFICIAL_SHA256[file])
+    })
+  })
+
+  describe.each(Object.keys(ALLOWED_STYLE))('<style> admitido en %s', (file) => {
+    const styles = () => [...parse(file).querySelectorAll('style')].map((style) => style.textContent)
+
+    it('lleva un solo <style>, con exactamente el contenido del archivo oficial', () => {
+      expect(styles().map((css) => withoutSpaces(css ?? ''))).toEqual([
+        withoutSpaces(ALLOWED_STYLE[file] ?? ''),
+      ])
+    })
+
+    // El test de referencias mira los atributos; este, el texto del <style>.
+    it('todo url() de su <style> apunta a un elemento del propio archivo', () => {
+      const urls = styles().flatMap((css) => [...(css ?? '').matchAll(/url\(([^)]*)\)/g)])
+
+      urls.forEach(([, target = '']) => expect(target).toMatch(/^['"]?#/))
+    })
+  })
+
+  // Aquí va con LF; devolverle el CRLF de todas sus líneas da el archivo oficial.
+  it('postgresql.svg, con sus finales de línea en CRLF, es el archivo oficial', async () => {
+    expect(await sha256(text('postgresql.svg').replace(/\n/g, '\r\n'))).toBe(POSTGRESQL_CRLF_SHA256)
+  })
+
+  it('ningún otro logo lleva <style>', () => {
+    EXPECTED.filter((file) => !(file in ALLOWED_STYLE)).forEach((file) => {
+      expect(parse(file).querySelector('style'), file).toBeNull()
     })
   })
 

@@ -56,9 +56,23 @@ describe('catálogo de tecnologías', () => {
       expect(byId('java')?.logos).toEqual(['duke.svg'])
     })
 
-    // Su marca no admite mostrar el elefante junto a otras: va solo con texto.
-    it('PostgreSQL no tiene logo', () => {
-      expect(byId('postgresql')?.logos).toEqual([])
+    // Logo oficial aunque su política no lo admita: decisión del autor
+    // (2026-10-15, en docs/LOGOS.md). La pastilla del Hero sigue con su icono
+    // genérico hasta la Ronda 2.
+    it('PostgreSQL lleva su logo oficial', () => {
+      expect(byId('postgresql')?.logos).toEqual(['postgresql.svg'])
+    })
+
+    it('Spring Boot, Spring Security y Docker llevan su logo oficial', () => {
+      expect(byId('spring-boot')?.logos).toEqual(['spring-boot.svg'])
+      expect(byId('spring-security')?.logos).toEqual(['spring-security.svg'])
+      expect(byId('docker')?.logos).toEqual(['docker.svg'])
+    })
+
+    it('todas las tecnologías llevan logo, salvo AI Agents, que no es una marca', () => {
+      expect(technologies.filter(({ logos }) => logos.length === 0).map(({ id }) => id)).toEqual([
+        'ai-agents',
+      ])
     })
 
     // Sin archivo oficial con fondo transparente confirmado: el glifo de

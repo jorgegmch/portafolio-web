@@ -6,9 +6,21 @@ import type { HeroBadge, Technology } from '@/data/types'
 // logo utilizable se muestra con su nombre.
 const technologyList = [
   { id: 'java', name: 'Java', group: 'backend', logos: ['duke.svg'], primary: true },
-  { id: 'spring-boot', name: 'Spring Boot', group: 'backend', logos: [], primary: true },
-  { id: 'spring-security', name: 'Spring Security', group: 'backend', logos: [] },
-  { id: 'postgresql', name: 'PostgreSQL', group: 'databases', logos: [], primary: true },
+  {
+    id: 'spring-boot',
+    name: 'Spring Boot',
+    group: 'backend',
+    logos: ['spring-boot.svg'],
+    primary: true,
+  },
+  { id: 'spring-security', name: 'Spring Security', group: 'backend', logos: ['spring-security.svg'] },
+  {
+    id: 'postgresql',
+    name: 'PostgreSQL',
+    group: 'databases',
+    logos: ['postgresql.svg'],
+    primary: true,
+  },
   { id: 'mysql', name: 'MySQL', group: 'databases', logos: ['mysql.svg'] },
   { id: 'python', name: 'Python', group: 'languages', logos: ['python.svg'] },
   { id: 'javascript', name: 'JavaScript', group: 'languages', logos: ['javascript.svg'] },
@@ -19,7 +31,7 @@ const technologyList = [
   // contenido veraz): «React, TypeScript and JSON Server».
   { id: 'react', name: 'React', group: 'frontend', logos: ['react.svg'] },
   { id: 'git-github', name: 'Git/GitHub', group: 'tools', logos: ['git.svg'] },
-  { id: 'docker', name: 'Docker', group: 'tools', logos: [] },
+  { id: 'docker', name: 'Docker', group: 'tools', logos: ['docker.svg'] },
   { id: 'n8n', name: 'n8n', group: 'tools', logos: ['n8n.svg'] },
   // Respaldada por dos proyectos (regla de contenido veraz): n8n-daily-news-agent,
   // un agente de IA con Gemini en n8n, y logitrack-iq, un flujo de n8n con un
