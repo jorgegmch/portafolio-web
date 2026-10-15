@@ -1,0 +1,12 @@
+/* De trazo, en el color de quien lo usa. Mismo tamaño y trazo que los iconos
+   de las tarjetas de «Sobre mí». */
+.icon {
+  flex-shrink: 0;
+  width: var(--stat-icon-size);
+  height: var(--stat-icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}

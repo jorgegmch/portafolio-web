@@ -54,6 +54,22 @@ export const technologyName = (id: TechnologyId): string =>
 export const techLogoUrl = (file: string) => `${import.meta.env.BASE_URL}tech/${file}`
 
 /**
+ * Icono de la ficha de «Mi stack tecnológico» para lo que no es una marca y
+ * no tiene logo: un icono genérico de public/icons, en blanco para el fondo
+ * oscuro. Solo puede nombrar tecnologías sin `logos`.
+ */
+export const STACK_GENERIC_ICONS: Partial<Record<TechnologyId, string>> = {
+  'ai-agents': 'ai-agents-white.svg',
+}
+
+/** URL del icono de la ficha de una tecnología: su primer logo o su icono genérico. */
+export const stackIconUrl = (technology: Technology<TechnologyId>): string => {
+  const [logo] = technology.logos
+  if (logo) return techLogoUrl(logo)
+  return `${import.meta.env.BASE_URL}icons/${STACK_GENERIC_ICONS[technology.id] ?? ''}`
+}
+
+/**
  * Pastillas que flotan junto al retrato del Hero, en orden. El nombre visible
  * es el de la tecnología en el catálogo. `brand` distingue el logo de marca,
  * que va sin alterar, del icono genérico que se usa cuando no hay logo que

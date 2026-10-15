@@ -1,7 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { projects } from '@/data/projects'
-import { primaryStack, technologies } from '@/data/technologies'
+import {
+  primaryStack,
+  STACK_GENERIC_ICONS,
+  stackIconUrl,
+  technologies,
+} from '@/data/technologies'
 import { en } from '@/i18n/en'
 
 // Los logos se buscan en disco, desde la raíz del repo: lo que se comprueba es
@@ -154,6 +159,36 @@ describe('catálogo de tecnologías', () => {
   // Decisión del autor (2026-10-15): SQLite no entra en el catálogo.
   it('SQLite no está en el catálogo', () => {
     expect(technologies.some((technology) => /sqlite/i.test(technology.id))).toBe(false)
+  })
+
+  describe('icono de la ficha de «Mi stack tecnológico»', () => {
+    it('con logo de marca, es su primer logo, de public/tech', () => {
+      technologies
+        .filter(({ logos }) => logos.length > 0)
+        .forEach((technology) => {
+          expect(stackIconUrl(technology)).toBe(`/tech/${technology.logos[0] ?? ''}`)
+        })
+    })
+
+    // AI Agents no es una marca: va con el chip de PrimeIcons, en blanco.
+    it('AI Agents lleva el chip blanco de public/icons', () => {
+      const aiAgents = byId('ai-agents')
+
+      expect(aiAgents && stackIconUrl(aiAgents)).toBe('/icons/ai-agents-white.svg')
+    })
+
+    it('el icono genérico solo cubre tecnologías sin logo, y existe', () => {
+      Object.entries(STACK_GENERIC_ICONS).forEach(([id, file]) => {
+        expect(byId(id)?.logos).toEqual([])
+        expect(existsSync(`public/icons/${file ?? ''}`)).toBe(true)
+      })
+    })
+
+    it('toda tecnología tiene icono', () => {
+      technologies.forEach((technology) => {
+        expect(stackIconUrl(technology), technology.id).toMatch(/^\/(tech|icons)\/.+\.svg$/)
+      })
+    })
   })
 
   it('el stack principal es Java, Spring Boot y PostgreSQL', () => {

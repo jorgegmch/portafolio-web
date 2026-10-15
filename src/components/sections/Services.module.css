@@ -1,0 +1,238 @@
+.services {
+  padding: var(--space-9) var(--container-padding);
+  /* A la izquierda, el borde que comparte con la barra, el Hero y el pie. */
+  padding-left: var(--container-padding-start);
+  /* La barra es fija: al llegar por el ancla, el título no queda debajo. */
+  scroll-margin-top: var(--nav-height);
+}
+
+/* La etiqueta, como la de «Sobre mí»: el diccionario guarda el texto normal
+   y las mayúsculas son solo visuales. */
+.heading,
+.stackHeading {
+  color: var(--color-accent-alt);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-lead);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* Las frases grandes, como la de «Sobre mí». */
+.phrase,
+.stackPhrase {
+  margin-top: var(--space-4);
+  color: var(--color-text);
+  font-size: var(--font-size-phrase);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+/* Desde 1024 px: seis columnas. Tres tarjetas arriba y dos abajo, del mismo
+   ancho y centradas. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  list-style: none;
+}
+
+/* El <li> es el que aparece al entrar en pantalla; la caja va dentro. Como
+   rejilla de una sola celda, la estira a su alto. */
+.cardItem {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Inicio y ancho a la vez: con solo el inicio, el final quedaría en auto y
+   la tarjeta ocuparía una sola columna. */
+.cardItem:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.cardItem:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
+/* La caja: el mismo fondo y borde que las tarjetas de «Sobre mí». El texto
+   del enlace baja al pie aunque la rejilla estire la caja. */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.cardIcon {
+  color: var(--color-accent-alt);
+}
+
+.cardTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+.cardText {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  line-height: var(--leading-base);
+}
+
+/* Pequeño, al pie, con una flecha: no compite con el título. */
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  color: var(--color-accent-alt);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.arrow {
+  width: var(--font-size-sm);
+  height: var(--font-size-sm);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* Con teclado, la misma respuesta que con el puntero, en cualquier pantalla. */
+.card:focus-visible {
+  transform: scale(var(--lift-scale));
+}
+
+.stack {
+  margin-top: var(--space-9);
+}
+
+/* Filas que se envuelven y se centran: la última, incompleta, queda en medio,
+   como las tarjetas de arriba. */
+.techList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-7);
+  list-style: none;
+}
+
+/* Por encima de 1280 px, ocho por fila (8 + 7). El ancho es un porcentaje
+   del contenedor menos los huecos, con el mismo hueco que la lista: sin
+   anchos fijos que un redondeo pueda desbordar. Cada tramo baja n para que
+   la ficha no pase de unos 120 px (nombres como «Spring Security» en una
+   línea). Como rejilla de una celda, estira la ficha al alto de la fila. */
+.techItem {
+  display: grid;
+  flex: 0 0 calc((100% - 7 * var(--space-4)) / 8);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* La ficha: fondo oscuro, sin placa detrás del logo. */
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+/* Logo oficial, a su tamaño y sin tocar: object-fit encaja los que no son
+   cuadrados sin deformarlos. */
+.chipLogo {
+  width: var(--stack-logo-size);
+  height: var(--stack-logo-size);
+  object-fit: contain;
+}
+
+.chipName {
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  text-align: center;
+}
+
+/* De 1024 a 1280 px, seis fichas por fila (6 + 6 + 3): ocho bajarían de
+   120 px. */
+@media (max-width: 1280px) {
+  .techItem {
+    flex: 0 0 calc((100% - 5 * var(--space-4)) / 6);
+  }
+}
+
+/* De 481 a 1023 px: 2 + 2 + 1, con la última centrada y del mismo ancho.
+   Fichas: cuatro por fila (4 + 4 + 4 + 3). */
+@media (max-width: 1023px) {
+  .cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cardItem:nth-child(4) {
+    grid-column: span 2;
+  }
+
+  .cardItem:nth-child(5) {
+    grid-column: 2 / span 2;
+  }
+
+  .techItem {
+    flex: 0 0 calc((100% - 3 * var(--space-4)) / 4);
+  }
+}
+
+/* De 481 a 768 px, tres fichas por fila (5 × 3). */
+@media (max-width: 768px) {
+  .techItem {
+    flex: 0 0 calc((100% - 2 * var(--space-4)) / 3);
+  }
+}
+
+/* En teléfono, dos por fila; la última ficha queda sola y centrada. */
+@media (max-width: 480px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cardItem:nth-child(n) {
+    grid-column: auto;
+  }
+
+  .card {
+    padding: var(--space-4);
+  }
+
+  .techItem {
+    flex: 0 0 calc((100% - 1 * var(--space-4)) / 2);
+  }
+}
+
+/* Las tarjetas y las fichas se elevan bajo el puntero, como las de «Sobre
+   mí», pero solo donde hay puntero de verdad: en táctil, :hover se queda
+   pegado tras tocar. Con movimiento reducido el cambio es instantáneo,
+   porque la duración es la de --duration-fast. */
+@media (hover: hover) {
+  .card:hover {
+    transform: scale(var(--lift-scale));
+  }
+
+  .chip:hover {
+    transform: scale(var(--lift-scale));
+  }
+}

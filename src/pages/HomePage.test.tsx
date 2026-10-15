@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Navbar } from '@/components/layout/Navbar'
-import { routes } from '@/config/routes'
+import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
@@ -39,6 +39,31 @@ describe('HomePage', () => {
     expect(
       screen.getByRole('heading', { level: 1, name: dictionaries[lang].hero.heading }),
     ).toBeInTheDocument()
+  })
+
+  // «Servicios» va entre «Sobre mí» y Proyectos, que aún no existe.
+  it('las secciones van en orden: Hero, Sobre mí y Servicios', () => {
+    setBrowserLang('es')
+
+    const { container } = renderHome()
+
+    expect([...container.querySelectorAll('section[id]')].map((section) => section.id)).toEqual([
+      sections.hero,
+      sections.about,
+      sections.services,
+    ])
+  })
+
+  // La barra y el menú móvil enlazan a #services: la sección tiene que existir.
+  it('el enlace «Servicios» de la barra lleva a una sección que existe', () => {
+    setBrowserLang('es')
+
+    const { container } = renderHome({ withNavbar: true })
+    const link = screen.getByRole('link', { name: dictionaries.es.nav.services })
+    const target = link.getAttribute('href')?.split('#')[1] ?? ''
+
+    expect(target).toBe(sections.services)
+    expect(container.querySelector(`section#${target}`)).toBeInTheDocument()
   })
 
   it.each(['es', 'en'] as const)('en %s, el título es el nombre corto de config', (lang) => {
