@@ -8,7 +8,7 @@ export const en: Dictionary = {
   },
   nav: {
     about: 'About',
-    technologies: 'Technologies',
+    services: 'Services',
     projects: 'Projects',
     contact: 'Contact',
     skipToContent: 'Skip to content',
@@ -67,15 +67,38 @@ export const en: Dictionary = {
       plusPosition: 'suffix',
     },
   },
-  technologies: {
-    heading: 'Technologies',
-    groups: {
-      backend: 'Backend',
-      databases: 'Databases',
-      languages: 'Languages',
-      frontend: 'Frontend',
-      tools: 'Tools',
-      ai: 'AI',
+  services: {
+    kicker: 'Services',
+    heading: 'What I can do for you',
+    stackKicker: 'My tech stack',
+    stackHeading: 'Technologies I work with',
+    relatedProject: 'View related project',
+    items: {
+      backend: {
+        title: 'Backend Development',
+        description:
+          'REST APIs with Java and Spring Boot, with JWT authentication, roles and permissions, and OpenAPI documentation.',
+      },
+      frontend: {
+        title: 'Frontend Development',
+        description:
+          'Responsive interfaces with HTML, CSS, JavaScript and TypeScript, and React, with AI agent support.',
+      },
+      databases: {
+        title: 'Databases',
+        description:
+          'Relational modeling and queries in PostgreSQL and MySQL, with foreign keys and constraints that protect data integrity.',
+      },
+      automation: {
+        title: 'Automation and AI agents',
+        description:
+          'Agentic workflows built on AGENTS.md, skills and commands, connecting AI agents to n8n workflows and MCP servers, with clear rules on what each agent can do.',
+      },
+      communication: {
+        title: 'Strategic communication',
+        description:
+          'I turn business goals into technology solutions. I listen, translate them into clear technical requirements and communicate them to the team.',
+      },
     },
   },
   projects: {

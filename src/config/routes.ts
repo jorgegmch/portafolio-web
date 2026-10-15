@@ -7,7 +7,7 @@ export const routes = {
 export const sections = {
   hero: 'hero',
   about: 'about',
-  technologies: 'technologies',
+  services: 'services',
   projects: 'projects',
   contact: 'contact',
 } as const

@@ -14,7 +14,7 @@ import { LANG_NAMES, LANGS } from '@/i18n/types'
 // Secciones de la home enlazadas desde la barra, en su orden en la página.
 const SECTION_LINKS = [
   sections.about,
-  sections.technologies,
+  sections.services,
   sections.projects,
   sections.contact,
 ] as const

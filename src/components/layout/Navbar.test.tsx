@@ -74,7 +74,7 @@ describe('Navbar', () => {
 
     it.each([
       [es.nav.about, sections.about],
-      [es.nav.technologies, sections.technologies],
+      [es.nav.services, sections.services],
       [es.nav.projects, sections.projects],
       [es.nav.contact, sections.contact],
     ])('el enlace "%s" lleva al ancla #%s de la home', (name, id) => {

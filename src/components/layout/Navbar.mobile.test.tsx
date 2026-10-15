@@ -13,7 +13,7 @@ const { es } = dictionaries
 // Enlaces que el menú pliega en pantallas estrechas.
 const MENU_LINKS = [
   es.nav.about,
-  es.nav.technologies,
+  es.nav.services,
   es.nav.projects,
   es.nav.contact,
   es.nav.certifications,
@@ -148,7 +148,7 @@ describe('Navbar: menú en pantallas estrechas', () => {
       await user.click(menuToggle())
       await user.tab()
       await user.tab()
-      expect(link(es.nav.technologies)).toHaveFocus()
+      expect(link(es.nav.services)).toHaveFocus()
       await user.keyboard('{Escape}')
 
       expect(menuToggle()).toHaveAttribute('aria-expanded', 'false')

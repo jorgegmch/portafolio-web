@@ -8,7 +8,7 @@ export const es: Dictionary = {
   },
   nav: {
     about: 'Sobre mí',
-    technologies: 'Tecnologías',
+    services: 'Servicios',
     projects: 'Proyectos',
     contact: 'Contacto',
     skipToContent: 'Saltar al contenido',
@@ -72,15 +72,38 @@ export const es: Dictionary = {
       plusPosition: 'prefix',
     },
   },
-  technologies: {
-    heading: 'Tecnologías',
-    groups: {
-      backend: 'Backend',
-      databases: 'Bases de datos',
-      languages: 'Lenguajes',
-      frontend: 'Frontend',
-      tools: 'Herramientas',
-      ai: 'IA',
+  services: {
+    kicker: 'Servicios',
+    heading: 'Lo que puedo hacer por ti',
+    stackKicker: 'Mi stack tecnológico',
+    stackHeading: 'Tecnologías con las que trabajo',
+    relatedProject: 'Ver proyecto relacionado',
+    items: {
+      backend: {
+        title: 'Desarrollo Backend',
+        description:
+          'APIs REST con Java y Spring Boot, con autenticación JWT, roles y permisos, y documentación OpenAPI.',
+      },
+      frontend: {
+        title: 'Desarrollo Frontend',
+        description:
+          'Interfaces responsivas con HTML, CSS, JavaScript y TypeScript, y React, con apoyo de agentes de IA.',
+      },
+      databases: {
+        title: 'Bases de datos',
+        description:
+          'Modelado relacional y consultas en PostgreSQL y MySQL, con claves foráneas y restricciones que protegen la integridad de los datos.',
+      },
+      automation: {
+        title: 'Automatización y agentes de IA',
+        description:
+          'Ciclos de trabajo con agentes de IA (AGENTS.md, skills y comandos), conectados a flujos de n8n y servidores MCP, con reglas claras de lo que cada agente puede hacer.',
+      },
+      communication: {
+        title: 'Comunicación estratégica',
+        description:
+          'Convierto los objetivos del negocio en soluciones tecnológicas. Escucho, los traduzco a requerimientos técnicos claros y los comunico al equipo.',
+      },
     },
   },
   projects: {

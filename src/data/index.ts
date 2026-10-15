@@ -8,6 +8,7 @@ export {
   projectUrl,
   type ProjectId,
 } from '@/data/projects'
+export { services, type ServiceId } from '@/data/services'
 export {
   HERO_SOCIAL_LIMIT,
   heroSocial,

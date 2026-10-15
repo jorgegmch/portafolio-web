@@ -1,7 +1,8 @@
 import type { CertificationId } from '@/data/certifications'
 import type { ProjectId } from '@/data/projects'
+import type { ServiceId } from '@/data/services'
 import type { HeroSocialId } from '@/data/social'
-import type { CertificationCategory, TechnologyGroup } from '@/data/types'
+import type { CertificationCategory } from '@/data/types'
 import type { CodingTime } from '@/lib/codingTime'
 
 export const LANGS = ['es', 'en'] as const
@@ -28,7 +29,7 @@ export interface Dictionary {
   }
   nav: {
     about: string
-    technologies: string
+    services: string
     projects: string
     contact: string
     skipToContent: string
@@ -93,9 +94,16 @@ export interface Dictionary {
       plusPosition: PlusPosition
     }
   }
-  technologies: {
+  services: {
+    /** Etiqueta del bloque de tarjetas; las mayúsculas las pone el CSS. */
+    kicker: string
     heading: string
-    groups: Record<TechnologyGroup, string>
+    /** Etiqueta del bloque de tecnologías; las mayúsculas las pone el CSS. */
+    stackKicker: string
+    stackHeading: string
+    /** Texto del enlace de cada tarjeta al repo que la respalda. */
+    relatedProject: string
+    items: Record<ServiceId, { title: string; description: string }>
   }
   projects: {
     heading: string
