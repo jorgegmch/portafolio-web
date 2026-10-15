@@ -6,8 +6,16 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 
 ## Reglas de uso
 
+- **Decisión del autor (2026-10-15):** todas las tecnologías del catálogo llevan su logo oficial, aunque la política de su marca no lo permita. El autor asume el riesgo. La política de cada marca se sigue leyendo y anotando aquí, pero ya no decide si va el logo.
+- **De dónde sale cada logo,** en este orden:
+  1. el archivo oficial de la marca, con fondo transparente;
+  2. si no lo hay, el glifo de Simple Icons 16.35.0 (CC0 1.0, verificada en su `LICENSE.md`), en el color de marca de sus datos;
+  3. un icono genérico solo para lo que no es una marca (AI Agents): propio, o de un conjunto de licencia permisiva (CC0, MIT o ISC) verificada en su repositorio oficial.
 - Un logo de marca se carga con `<img>`, sin modificar el archivo y sin filtros, opacidad, sombras ni mezclas.
-- Si la marca no permite usar su logo, la tecnología va solo con su nombre o con un icono genérico: propio, o de un conjunto de licencia permisiva (CC0, MIT o ISC) verificada en su repositorio oficial.
+  - **Única excepción a «sin modificar»:** los glifos de Simple Icons se publican sin color, y aquí llevan añadido el `fill` de su color de marca. De cada uno se anotan el SHA-256 del original y el del archivo modificado, y un test compara el dibujo con el original.
+  - El fundido de la aparición al hacer scroll es una transición del envoltorio, no un estilo del logo: está permitido (decisión del autor, 2026-10-15).
+- **Cómo se ven:** a su color original, sin fondo ni placa detrás; la ficha que los contiene sí lleva su fondo oscuro. Sin siluetas blancas, salvo GitHub, que en negro no se ve: usa el Invertocat blanco de `public/social/`. Si un logo no se lee sobre el fondo oscuro, se avisa al autor con su color de marca; no se cambia por cuenta propia.
+- **Java:** Duke por ahora. La taza no tiene descarga oficial; si el autor la consigue, se cambia en la Ronda 2 del Hero (`docs/PLAN.md`).
 - Cada archivo nuevo se anota aquí con su origen, su licencia y su SHA-256.
 - **Interpretación del autor, no una cita:** rodear los logos de WhatsApp y LinkedIn con un círculo es la lectura que el autor hace de sus políticas de marca. Ninguna de las tres marcas de la fila de redes publica por escrito un espacio libre ni un tamaño mínimo; GitHub solo distribuye una variante con espacio libre.
 
@@ -15,7 +23,9 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 
 Leídas por el autor el 7 y el 8 de octubre de 2026.
 
-### Logos que solo pueden ir como texto
+### Marcas cuya política no permite el logo
+
+Se usa igualmente, por la decisión del autor del 2026-10-15 (ver «Reglas de uso»).
 
 | Marca | Motivo anotado |
 |---|---|
@@ -29,13 +39,14 @@ Leídas por el autor el 7 y el 8 de octubre de 2026.
 
 ### Sin decidir
 
-- Logos de CSS, GitHub en el catálogo de tecnologías y Spring Security.
 - Si la atribución va también visible en el sitio.
-- **Pendiente, Python y TypeScript:** sus políticas de marca no constan aquí; se leen en su fuente oficial antes de tocar esos logos.
+- **Pendiente, Python y TypeScript:** sus políticas de marca no constan aquí; se leen en su fuente oficial y se anotan.
+
+**Git y GitHub** van en una sola ficha, con el logo de Git (decisión del autor, 2026-10-15).
 
 ### Dónde irán los que hoy no se muestran
 
-La sección de servicios listará todas las tecnologías del catálogo, con logo donde la marca lo permita y solo texto donde no. Ahí van Duke y n8n.
+La sección «Servicios», en «Mi stack tecnológico», lista todas las tecnologías del catálogo, cada una con su logo. Ahí van Duke y n8n.
 
 ## Procedencia y SHA-256
 

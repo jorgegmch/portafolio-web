@@ -25,7 +25,9 @@ detiene: el commit lo decide el autor.
   y pregunta.
 - No des por buena la política de una marca porque conste en
   `docs/LOGOS.md`: es un registro, no una autorización.
-- No modifiques el logo de una marca. Va con `<img>`, sin filtros.
+- No modifiques el logo de una marca. Va con `<img>`, sin filtros. Única
+  excepción: un glifo de Simple Icons, con el `fill` de su color de marca,
+  como dice `docs/LOGOS.md`.
 - No relajes `src/test/svgSafety.ts` ni debilites ningún test.
 - No borres el icono ni los tests de la tecnología que sale sin que el
   autor apruebe la lista exacta.
@@ -128,14 +130,20 @@ caso, y espera.
    palabra y no afirmes que la marca permite usar su logo a partir de un
    resumen. Antes de usar un logo de marca, dale el enlace al autor para
    que lo abra y lo confirme: pregunta con AskUserQuestion y espera.
+   Por decisión del autor (2026-10-15, en `docs/LOGOS.md`), el logo
+   oficial se usa aunque la política no lo permita: la política se lee y
+   se anota, pero no decide si va el logo.
 7. **Icono,** en este orden:
-   - si la marca permite el logo: búscalo en esa fuente. Antes de
-     descargar, di la URL exacta y la carpeta de trabajo de fuera del repo
-     donde lo guardas;
-   - si no puedes descargarlo: dale al autor el enlace o la página y
-     espera; antes de leer lo que traiga, di la ruta exacta;
-   - si la marca no lo permite, o ninguno de los dos puede descargarlo:
-     busca un icono genérico de licencia CC0, MIT o ISC. Verifica la
+   - el archivo oficial de la marca, con fondo transparente: búscalo en su
+     fuente oficial. Antes de descargar, di la URL exacta y la carpeta de
+     trabajo de fuera del repo donde lo guardas;
+   - si no lo hay, o no puedes descargarlo: el glifo de Simple Icons
+     16.35.0 (CC0) en el color de marca de sus datos. Anota el SHA-256 del
+     original y el del archivo con el `fill`, y añade el test que compara
+     el dibujo con el original. Si tampoco está, dale al autor el enlace o
+     la página y espera; antes de leer lo que traiga, di la ruta exacta;
+   - solo si la tecnología no es una marca: busca un icono genérico de
+     licencia CC0, MIT o ISC. Verifica la
      licencia en el `LICENSE` del repositorio oficial del conjunto y que
      cubre ese icono; sin crédito visible. Presenta tres o cuatro
      candidatos con capturas dentro de la pastilla, a su tamaño real (de

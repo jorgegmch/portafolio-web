@@ -27,7 +27,9 @@ el commit lo decide el autor.
 - No des por buena la política de una marca porque conste en
   `docs/LOGOS.md`: es un registro, no una autorización.
 - No modifiques el logo de una marca: ni el dibujo, ni el color, ni un
-  comentario añadido. Va con `<img>`, sin filtros.
+  comentario añadido. Va con `<img>`, sin filtros. Única excepción: un
+  glifo de Simple Icons, con el `fill` de su color de marca, como dice
+  `docs/LOGOS.md`.
 - No relajes `src/test/svgSafety.ts` ni debilites ningún test para que
   pase. Si un archivo no pasa, dilo y pregunta.
 - No descargues nada al repo: las descargas van a una carpeta de trabajo
@@ -97,16 +99,24 @@ Léelo en el código antes de empezar; esto dice dónde mirar.
    palabra y no afirmes que la marca permite usar su logo a partir de un
    resumen. Antes de usar un logo de marca, dale el enlace al autor para
    que lo abra y lo confirme: pregunta con AskUserQuestion y espera.
+   Por decisión del autor (2026-10-15, en `docs/LOGOS.md`), el logo
+   oficial se usa aunque la política no lo permita: la política se lee y
+   se anota, pero no decide si va el logo.
 6. **Icono.**
-   - Si la marca permite usar su logo: búscalo en esa misma fuente. Antes
-     de descargar, di la URL exacta y la carpeta de trabajo de fuera del
-     repo donde lo vas a guardar. Si no puedes descargarlo, dale al autor
-     el enlace o la página y espera a que lo traiga; antes de leer lo que
-     traiga, di la ruta exacta que vas a leer.
-   - Si no lo permite: propón un icono genérico, propio o de un conjunto
-     con licencia CC0, MIT o ISC verificada en su repositorio oficial.
-     Enseña los candidatos con capturas, a tamaño real y ampliadas, sobre
-     el fondo oscuro, y espera la elección del autor.
+   - El logo oficial de la marca: búscalo en su fuente oficial. Antes de
+     descargar, di la URL exacta y la carpeta de trabajo de fuera del
+     repo donde lo vas a guardar.
+   - Si no hay archivo oficial, o no puedes descargarlo: el glifo de
+     Simple Icons 16.35.0 (CC0). Anota el SHA-256 del original y el del
+     archivo con el `fill`, y añade el test que compara el dibujo con el
+     original. Si tampoco está, dale al autor el enlace o la página y
+     espera a que lo traiga; antes de leer lo que traiga, di la ruta
+     exacta que vas a leer.
+   - Solo si lo que se añade no es una marca (el correo, por ejemplo):
+     propón un icono genérico, propio o de un conjunto con licencia CC0,
+     MIT o ISC verificada en su repositorio oficial. Enseña los
+     candidatos con capturas, a tamaño real y ampliadas, sobre el fondo
+     oscuro, y espera la elección del autor.
 7. **Comprobar el archivo.** Antes de copiarlo, pásale `svgIssues` de
    `src/test/svgSafety.ts` con un test temporal que no se versiona y que
    borras al terminar. Si trae un `script`, un `style`, un enlace, una
