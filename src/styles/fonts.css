@@ -1,9 +1,64 @@
-/* Fuentes servidas desde el propio sitio, sin peticiones a terceros. Solo el
-   subconjunto latin y los pesos que usa algún componente; cada peso nuevo se
-   añade aquí junto con el componente que lo necesita. */
+/* Fuentes servidas desde el propio sitio, sin peticiones a terceros. Los
+   woff2 están en public/fonts/, junto a su licencia (SIL Open Font License
+   1.1); su origen y sus hashes, en docs/FUENTES.md. Solo el subconjunto latin
+   y los pesos que pide el diseño. Anton y Manrope 400 se precargan en
+   index.html. */
 
-@import '@fontsource/outfit/latin-400.css';
-@import '@fontsource/outfit/latin-600.css';
-@import '@fontsource/outfit/latin-800.css';
-@import '@fontsource/jetbrains-mono/latin-400.css';
-@import '@fontsource/jetbrains-mono/latin-500.css';
+/* Voz humana, títulos: Anton, un solo peso. */
+@font-face {
+  font-family: 'Anton';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/anton-latin-400-normal.woff2') format('woff2');
+}
+
+/* Voz humana, texto corrido: Manrope. */
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/manrope-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/manrope-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/manrope-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/manrope-latin-800-normal.woff2') format('woff2');
+}
+
+/* Voz de código: JetBrains Mono. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
+}

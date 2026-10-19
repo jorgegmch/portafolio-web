@@ -28,3 +28,22 @@ export const cssMedia = (css: string, query: string) => {
 /** Primer valor de una variable en un CSS: el de :root, antes de los @media. */
 export const cssToken = (css: string, name: string) =>
   new RegExp(`${name}:\\s*([^;]+);`).exec(css)?.[1] ?? ''
+
+/**
+ * Valor final de una variable que apunta a otra (`var(--x)`), siguiendo la
+ * cadena hasta un valor literal. Falla si un eslabón no existe o si la cadena
+ * vuelve sobre sí misma.
+ */
+export const resolvedToken = (css: string, name: string) => {
+  const seen = new Set<string>()
+  let current = name
+  for (;;) {
+    if (seen.has(current)) throw new Error(`Cadena circular en ${name}`)
+    seen.add(current)
+    const value = cssToken(css, current)
+    if (!value) throw new Error(`No existe la variable ${current}`)
+    const next = /^var\((--[a-z0-9-]+)\)$/.exec(value)?.[1]
+    if (!next) return value
+    current = next
+  }
+}

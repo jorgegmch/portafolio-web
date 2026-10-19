@@ -16,11 +16,11 @@ describe('WorldMap: estilos', () => {
   })
 
   describe('punto de la ciudad', () => {
-    it('va en el verde de la paleta', () => {
+    it('va en el acento de la paleta', () => {
       expect(cssRule(css, '.city')).toMatchObject({ fill: 'var(--color-accent-alt)' })
     })
 
-    // La técnica del punto de estado del Hero: un brillo fijo del mismo verde
+    // La técnica del punto de estado del Hero: un brillo fijo del mismo acento
     // al 30 %. En SVG no hay box-shadow, así que va como drop-shadow.
     it('lleva el brillo fijo del punto de estado del Hero', () => {
       expect(cssRule(css, '.city')).toMatchObject({

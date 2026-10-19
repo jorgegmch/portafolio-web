@@ -107,7 +107,7 @@
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
-/* Decorativo, en el verde de la cifra: al borde derecho, centrado con ella. */
+/* Decorativo, en el acento de la cifra: al borde derecho, centrado con ella. */
 .statIcon {
   color: var(--color-accent-alt);
   align-self: center;

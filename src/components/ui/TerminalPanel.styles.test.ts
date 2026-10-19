@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { contrastRatio } from '@/test/contrast'
-import { cssRule, cssToken, readCss } from '@/test/cssRules'
+import { cssRule, readCss, resolvedToken } from '@/test/cssRules'
 
 const css = readCss('src/components/ui/TerminalPanel.module.css')
 const tokensCss = readCss('src/styles/tokens.css')
@@ -11,9 +11,9 @@ const FIELD = '--color-text-muted'
 const VALUE = '--color-text'
 const AA_TEXT = 4.5
 
-/** Contraste WCAG entre dos tokens de color de tokens.css. */
+/** Contraste WCAG entre dos tokens de color de tokens.css, ya resueltos. */
 const contrast = (foreground: string, background: string) =>
-  contrastRatio(cssToken(tokensCss, foreground), cssToken(tokensCss, background))
+  contrastRatio(resolvedToken(tokensCss, foreground), resolvedToken(tokensCss, background))
 
 describe('TerminalPanel: estilos', () => {
   it('no lleva colores literales: todos salen de tokens', () => {
@@ -37,7 +37,7 @@ describe('TerminalPanel: estilos', () => {
       expect(cssRule(css, '.panel')).toMatchObject({ 'background-color': `var(${BACKGROUND})` })
     })
 
-    it('el prompt va en el verde de la paleta', () => {
+    it('el prompt va en el acento de la paleta', () => {
       expect(cssRule(css, '.prompt')).toMatchObject({ color: `var(${PROMPT})` })
     })
 
@@ -52,9 +52,9 @@ describe('TerminalPanel: estilos', () => {
     })
 
     it.each([
-      ['el prompt', PROMPT, 14.26],
-      ['los nombres de campo', FIELD, 6.92],
-      ['el comando y los valores', VALUE, 16.52],
+      ['el prompt', PROMPT, 6.08],
+      ['los nombres de campo', FIELD, 7.07],
+      ['el comando y los valores', VALUE, 16.3],
     ])('%s cumple AA sobre el fondo del panel', (_, token, expected) => {
       expect(contrast(token, BACKGROUND)).toBeGreaterThanOrEqual(AA_TEXT)
       expect(contrast(token, BACKGROUND)).toBeCloseTo(expected, 1)

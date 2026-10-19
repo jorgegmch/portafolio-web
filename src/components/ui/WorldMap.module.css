@@ -10,7 +10,7 @@
 }
 
 /* Brillo fijo, como el punto de estado del Hero. En SVG no hay box-shadow:
-   va como drop-shadow, con el mismo verde al 30 %. Sin color-mix la sombra
+   va como drop-shadow, con el mismo acento al 30 %. Sin color-mix la sombra
    no se aplica y queda el punto. */
 .city {
   fill: var(--color-accent-alt);

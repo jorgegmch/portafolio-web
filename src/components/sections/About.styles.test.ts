@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { contrastRatio } from '@/test/contrast'
-import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
+import { cssMedia, cssRule, cssToken, readCss, resolvedToken } from '@/test/cssRules'
 
 const css = readCss('src/components/sections/About.module.css')
 const tokensCss = readCss('src/styles/tokens.css')
@@ -14,9 +14,9 @@ const HOVER = '(hover: hover)'
 
 const AA_TEXT = 4.5
 
-/** Contraste WCAG entre dos tokens de color de tokens.css. */
+/** Contraste WCAG entre dos tokens de color de tokens.css, ya resueltos. */
 const contrast = (foreground: string, background: string) =>
-  contrastRatio(cssToken(tokensCss, foreground), cssToken(tokensCss, background))
+  contrastRatio(resolvedToken(tokensCss, foreground), resolvedToken(tokensCss, background))
 
 describe('About: estilos', () => {
   it('no lleva colores literales: todos salen de tokens', () => {
@@ -82,7 +82,7 @@ describe('About: estilos', () => {
   })
 
   describe('título', () => {
-    it('va en el verde de la paleta', () => {
+    it('va en el acento de la paleta', () => {
       expect(cssRule(css, '.heading')).toMatchObject({ color: 'var(--color-accent-alt)' })
     })
 
@@ -116,7 +116,7 @@ describe('About: estilos', () => {
       expect(max('--font-size-phrase')).toBeLessThan(max('--font-size-display'))
     })
 
-    it('el resalte es el verde de la paleta, y nada más', () => {
+    it('el resalte es el acento de la paleta, y nada más', () => {
       expect(cssRule(css, '.highlight')).toEqual({ color: 'var(--color-accent-alt)' })
     })
   })
@@ -273,7 +273,7 @@ describe('About: estilos', () => {
       expect(css).not.toMatch(/\.statItem\b[^{]*:hover/)
     })
 
-    it('la cifra va en el verde de la paleta, con el tamaño de título', () => {
+    it('la cifra va en el acento de la paleta, con el tamaño de título', () => {
       expect(cssRule(css, '.statValue')).toMatchObject({
         color: `var(${VALUE})`,
         'font-size': 'var(--font-size-title)',
@@ -285,8 +285,8 @@ describe('About: estilos', () => {
     })
 
     it.each([
-      ['la cifra', VALUE, 14.26],
-      ['la etiqueta', LABEL, 16.52],
+      ['la cifra', VALUE, 6.08],
+      ['la etiqueta', LABEL, 16.3],
     ])('%s cumple AA sobre el fondo de la tarjeta', (_, token, expected) => {
       expect(contrast(token, BACKGROUND)).toBeGreaterThanOrEqual(AA_TEXT)
       expect(contrast(token, BACKGROUND)).toBeCloseTo(expected, 1)
@@ -323,9 +323,9 @@ describe('About: estilos', () => {
     })
 
     // Decorativo, pero con contraste de sobra sobre la tarjeta.
-    it('el icono va en el verde de las cifras', () => {
+    it('el icono va en el acento de las cifras', () => {
       expect(cssRule(css, '.statIcon')).toMatchObject({ color: `var(${VALUE})` })
-      expect(contrast(VALUE, BACKGROUND)).toBeCloseTo(14.26, 1)
+      expect(contrast(VALUE, BACKGROUND)).toBeCloseTo(6.08, 1)
     })
 
     // La geometría real se mide en el navegador: aquí se fija la intención.

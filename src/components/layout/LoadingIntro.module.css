@@ -76,7 +76,7 @@
 }
 
 /*
- * El anillo es el global y del mismo azul que el borde: lo que lo distingue
+ * El anillo es el global y del mismo acento que el borde: lo que lo distingue
  * es el hueco, así que aquí se separa más que en el resto de la página.
  */
 .skip:focus-visible {

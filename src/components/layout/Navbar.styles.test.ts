@@ -10,8 +10,13 @@ const navbarCss = read('src/components/layout/Navbar.module.css')
 const tokensCss = read('src/styles/tokens.css')
 const fontsCss = read('src/styles/fonts.css')
 
-const MEDIUM_WEIGHT_TOKEN = '--font-weight-medium'
-const MEDIUM_WEIGHT_FONT = '@fontsource/jetbrains-mono/latin-500.css'
+const LOGO_WEIGHT_TOKEN = '--font-weight-semibold'
+
+/** Pesos de JetBrains Mono que declara fonts.css con @font-face. */
+const monoWeights = [...fontsCss.matchAll(/@font-face\s*\{([^}]*)\}/g)]
+  .map(([, body = '']) => body)
+  .filter((body) => body.includes("font-family: 'JetBrains Mono'"))
+  .map((body) => /font-weight:\s*(\d+);/.exec(body)?.[1])
 
 /** Declaraciones de la regla que tiene exactamente ese selector. */
 const rule = (css: string, selector: string) => {
@@ -26,19 +31,20 @@ const rule = (css: string, selector: string) => {
 }
 
 describe('Navbar: peso del logo', () => {
-  it('el logo usa el token de peso medio', () => {
+  // La spec pide el logo en mono 600.
+  it('el logo usa el token de peso 600', () => {
     expect(rule(navbarCss, '.brand')).toMatchObject({
-      'font-weight': `var(${MEDIUM_WEIGHT_TOKEN})`,
+      'font-weight': `var(${LOGO_WEIGHT_TOKEN})`,
     })
   })
 
-  it('el token existe y vale 500', () => {
-    expect(tokensCss).toMatch(new RegExp(`${MEDIUM_WEIGHT_TOKEN}:\\s*500;`))
+  it('el token existe y vale 600', () => {
+    expect(tokensCss).toMatch(new RegExp(`${LOGO_WEIGHT_TOKEN}:\\s*600;`))
   })
 
-  // Sin el archivo del peso 500, el navegador engordaría el 400 por su cuenta.
-  it('la fuente mono se carga también en peso 500', () => {
-    expect(fontsCss).toContain(`@import '${MEDIUM_WEIGHT_FONT}';`)
+  // Sin el archivo del peso 600, el navegador engordaría el 400 por su cuenta.
+  it('la fuente mono se carga también en peso 600', () => {
+    expect(monoWeights).toContain('600')
   })
 
   it('el tamaño del logo sigue saliendo del mismo token', () => {

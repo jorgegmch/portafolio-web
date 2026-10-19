@@ -9,47 +9,91 @@
  *   1280px  escritorio pequeño
  *   1024px  tablet en horizontal o laptop pequeña
  *   1023px  hasta aquí el hero va apilado: en 1024 ya caben dos columnas
+ *    900px  rediseño v2: paneles con radio menor; la navegación pasa a menú
  *    768px  tablet en vertical (origen)
  *    480px  teléfono
  *    380px  teléfono estrecho: el estado del hero usa su texto corto
  */
 
 :root {
-  /* Fondos (origen) */
-  --color-bg: #08080f;
-  --color-surface: #0e0e1c;
+  /* Paleta del rediseño v2 (docs/design/redesign-v2/DESIGN-SPEC.md §2). El
+     contraste medido va al lado. */
+  --color-void: #060607; /* fondo de página, entre paneles */
+  --color-ink: #111113; /* Hero, pie, modal · Bone 16,3:1 */
+  --color-graphite: #19171a; /* panel Perfil · Muted 6,7:1 */
+  --color-deep: #0f0f11; /* panel Proyectos */
+  --color-tile: #222024; /* tarjetas de cifras · --color-tile-text 8,2:1 */
+  --color-card: #1a1a1d; /* tarjetas de proyecto, campos del formulario */
+  --color-card-raised: #1e1e22; /* tarjeta de proyecto que sube encima */
+  --color-paper: #ece7dd; /* panel Servicios · tinta 16,1:1 · --color-paper-muted 5,8:1 */
+  --color-signal: #ff5b24; /* acento · 6,1:1 sobre Ink · tinta encima 6,4:1 */
+  /* Acento sobre Paper: 4,2:1, así que solo en texto de 24 px o más. */
+  --color-signal-deep: #c2410c;
+  --color-bone: #f2eee6; /* texto principal sobre oscuro */
+  --color-bone-soft: #d9d4cb; /* párrafos sobre oscuro · 12,1:1 sobre Graphite */
+  --color-muted: #a29e97; /* rótulos y secundarios sobre oscuro · 7,1:1 sobre Ink */
+  --color-ink-text: #0a0a0b; /* texto sobre Paper y sobre Signal */
+  --color-error: #ff8a6b; /* errores del formulario sobre Ink */
+  /* Tonos que la spec nombra por su uso. */
+  --color-tile-text: #bdb8af; /* etiquetas de las cifras, sobre Tile */
+  --color-paper-muted: #5b5750; /* rótulos sobre Paper */
+  --color-code-comment: #8c8880; /* comentarios del código del Traductor */
+  /* Luz radial detrás de la foto del Hero: Signal al 38 %. */
+  --color-signal-glow: rgba(255, 91, 36, 0.38);
 
-  /* Texto. Contraste sobre --color-surface, el fondo más claro. */
-  --color-text: #eeeef2; /* origen, 16.5:1 */
-  --color-text-muted: #9999b8; /* origen, 6.9:1 */
-  /* El origen era #6b6b8a (3.7:1); se aclaró para cumplir AA. */
-  --color-text-subtle: #8080a0; /* 5.0:1 */
+  /* Líneas translúcidas: Bone sobre oscuro, tinta sobre Paper. Decorativas. */
+  --line-08: rgba(242, 238, 230, 0.08);
+  --line-10: rgba(242, 238, 230, 0.1);
+  --line-12: rgba(242, 238, 230, 0.12);
+  --line-18: rgba(242, 238, 230, 0.18);
+  --line-ink-16: rgba(10, 10, 11, 0.16);
+  --line-ink-28: rgba(10, 10, 11, 0.28);
+  --line-ink-30: rgba(10, 10, 11, 0.3);
+  /* Relleno de la píldora translúcida de la navegación. */
+  --color-glass: rgba(242, 238, 230, 0.06);
 
-  /* Acentos (origen) */
-  --color-accent: #00d4ff; /* 10.8:1 */
-  --color-accent-alt: #00ff88; /* 14.3:1 */
+  --color-focus: var(--color-signal);
 
-  /* Bordes (origen). Son decorativos: no llegan a 3:1. */
-  --color-border: rgba(0, 212, 255, 0.13);
-  --color-border-strong: #3a3a5a;
+  /*
+   * Alias de transición. Los componentes de antes del rediseño usan nombres
+   * por función; aquí apuntan a la paleta v2, así que la paleta verde y cian
+   * ya no existe. Se retiran a medida que los lotes 2 y 3 rehacen cada
+   * escena: ningún componente nuevo debe usarlos.
+   */
+  --color-bg: var(--color-void);
+  --color-surface: var(--color-ink);
+  --color-text: var(--color-bone);
+  --color-text-muted: var(--color-muted);
+  --color-text-subtle: var(--color-muted);
+  --color-accent: var(--color-signal);
+  --color-accent-alt: var(--color-signal);
+  --color-border: var(--line-12);
+  --color-border-strong: var(--line-18);
+  --color-nav-bg: rgba(17, 17, 19, 0.9); /* Ink al 90 % */
 
-  --color-focus: var(--color-accent);
-
-  /* Fondo decorativo y barra de navegación (origen) */
-  --color-nav-bg: rgba(8, 8, 15, 0.9);
-  --color-grid-line: rgba(0, 212, 255, 0.028);
-  --color-glow-accent: rgba(0, 212, 255, 0.045);
-  --color-glow-accent-alt: rgba(0, 255, 136, 0.04);
-
-  /* Familias (origen) */
+  /* Familias: dos voces. La humana (Anton en títulos, Manrope en el texto) y
+     la de código (JetBrains Mono). Se cargan en fonts.css. */
+  --font-display: 'Anton', Impact, 'Arial Narrow', sans-serif;
+  --font-sans: 'Manrope', 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-  --font-sans: 'Outfit', 'Helvetica Neue', sans-serif;
 
+  /* Pesos. Manrope carga 400, 500, 700 y 800; JetBrains Mono, 400 y 600;
+     Anton, solo 400. */
   --font-weight-regular: 400;
-  --font-weight-medium: 500; /* solo la fuente mono lo carga */
-  /* Títulos: solo Outfit los carga. */
+  --font-weight-medium: 500;
+  /* Solo la fuente mono lo carga. Pedido en Manrope, el navegador usa su 700,
+     el siguiente más grueso: sin negrita falsa. */
   --font-weight-semibold: 600;
+  --font-weight-bold: 700;
   --font-weight-extrabold: 800;
+
+  /* Escala de títulos del rediseño, con clamp (spec §2). */
+  --font-size-hero-name: clamp(7.5rem, 21.5vw, 20.625rem); /* 120 a 330 px */
+  --font-size-scene-title: clamp(4.5rem, 12vw, 11.875rem); /* 72 a 190 px */
+  --font-size-profile-phrase: clamp(3.5rem, 8vw, 8rem); /* 56 a 128 px */
+  --font-size-contact-title: clamp(5rem, 12.5vw, 13.75rem); /* 80 a 220 px */
+  /* Rótulos en mono: mayúsculas con este espaciado. */
+  --tracking-label: 0.08em;
 
   /* Tamaños: 12, 13, 14, 16 y 19 px del origen, pasados a rem. */
   --font-size-xs: 0.75rem;
@@ -171,7 +215,7 @@
   --hero-status-glow: 0.5rem;
   /* Halo que separa el retrato del fondo. */
   --portrait-halo-blur: 1.5rem;
-  --color-halo: rgba(0, 212, 255, 0.3);
+  --color-halo: var(--color-signal-glow);
   /* Pastillas que flotan junto al retrato: cuánto suben, cuánto tarda cada
      vaivén y cuánto crecen bajo el puntero. */
   --float-distance: 0.5rem;
@@ -197,16 +241,16 @@
      retrato. A 1024 px el hueco entre el nombre y la figura es estrecho y
      va pegada a ella; se separa según crece la ventana, hasta su tope. */
   --hero-java-right: clamp(70.5%, calc(70.5% + (100vw - 64rem) * 0.23), 75%);
-  /* Fondo translúcido (--color-surface al 72 %) y borde de la pastilla. */
-  --color-badge-bg: rgba(14, 14, 28, 0.72);
-  --color-badge-border: rgba(238, 238, 242, 0.14);
+  /* Fondo translúcido (Ink al 72 %) y borde (Bone al 14 %) de la pastilla. */
+  --color-badge-bg: rgba(17, 17, 19, 0.72);
+  --color-badge-border: rgba(242, 238, 230, 0.14);
   /* Placa clara bajo el icono: sin ella, un logo oscuro no se ve. */
   --color-plate: var(--color-text);
 
-  /* Mapa de «Sobre mí». La tierra va en el cian de la paleta, translúcido
-     como los bordes: se lee como silueta sin competir con el texto, y el
-     punto verde de la ciudad resalta sobre ella. Es decorativo. */
-  --color-map-land: rgba(0, 212, 255, 0.12);
+  /* Mapa de «Sobre mí». La tierra va en Signal al 12 %, translúcida como los
+     bordes: se lee como silueta sin competir con el texto, y el punto de la
+     ciudad resalta sobre ella. Es decorativo. */
+  --color-map-land: rgba(255, 91, 36, 0.12);
   /* Brillo fijo del punto de la ciudad: el del punto de estado al 80 %, en
      la misma proporción en que se redujo el punto (de 8 a 6,4 unidades). */
   --map-city-glow: calc(var(--hero-status-glow) * 0.8);
@@ -214,14 +258,26 @@
   /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
   --nav-height: 4.5rem;
 
-  --grid-size: 3.5rem; /* origen: 56px */
-
   /* Radios (origen: 2px, 4px y 50%) */
   --radius-sm: 0.125rem;
   --radius-md: 0.25rem;
   --radius-full: 50%;
   /* Cápsula: extremos redondos del todo, sea cual sea el alto. */
   --radius-pill: 100rem;
+  /* Radios del rediseño (spec §2): panel (28 px desde 900 px hacia abajo),
+     tarjeta, bloque y campo del formulario. */
+  --radius-panel: 2.5rem; /* 40px */
+  --radius-card: 2rem; /* 32px */
+  --radius-block: 1.5rem; /* 24px */
+  --radius-field: 1.125rem; /* 18px */
+
+  /* Paneles: cada escena es una pieza propia sobre el Void. Hueco entre
+     ellos y con el borde de la ventana, relleno interno y ancho máximo del
+     contenido en pantallas anchas. */
+  --panel-gap: 0.75rem; /* 12px; 8px en teléfono */
+  --panel-padding-top: 6.5rem; /* 104px; 48px en teléfono */
+  --panel-padding-inline: 4rem; /* 64px; 24px desde 900 px, 20px en teléfono */
+  --content-max: 100rem; /* 1600px */
 
   --focus-ring-width: 0.125rem;
   --focus-ring-offset: 0.125rem;
@@ -255,6 +311,14 @@
   --reveal-distance: 1.875rem;
   --reveal-stagger: 80ms;
   --ease-standard: ease;
+  /* Movimiento del rediseño (spec §2). Toda entrada usa --ease-cine: salida
+     suave, sin rebote. Las cintas van en sentidos opuestos, cada una a su
+     ritmo. La intro dura como mucho --dur-intro. */
+  --ease-cine: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-reveal: 700ms;
+  --dur-marquee-a: 42s;
+  --dur-marquee-b: 54s;
+  --dur-intro: 2.2s;
 
   /* Capas */
   --z-background: -1;
@@ -281,11 +345,23 @@
   }
 }
 
+/* Paneles en tablet y teléfono: radio menor y menos relleno a los lados. */
+@media (max-width: 900px) {
+  :root {
+    --radius-panel: 1.75rem; /* 28px */
+    --panel-padding-inline: 1.5rem; /* 24px */
+  }
+}
+
 /* Tarjeta de una sola línea: el icono, por debajo de la cifra (26 px), para
-   no alargarla. */
+   no alargarla. En teléfono, los paneles se separan menos y tienen menos
+   relleno. */
 @media (max-width: 480px) {
   :root {
     --stat-icon-size: 1.5rem;
+    --panel-gap: 0.5rem; /* 8px */
+    --panel-padding-top: 3rem; /* 48px */
+    --panel-padding-inline: 1.25rem; /* 20px */
   }
 }
 
@@ -299,5 +375,6 @@
     --duration-reveal: 0.01ms;
     --reveal-distance: 0;
     --reveal-stagger: 0ms;
+    --dur-reveal: 0.01ms;
   }
 }

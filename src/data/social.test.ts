@@ -6,7 +6,7 @@ import { HERO_SOCIAL_LIMIT, heroSocial, heroSocialIconUrl, heroSocialUrl } from 
 import { dictionaries } from '@/i18n/index'
 import { LANGS } from '@/i18n/types'
 import { getEmail, getWhatsappUrl } from '@/lib/assembleContact'
-import { cssToken, readCss } from '@/test/cssRules'
+import { readCss, resolvedToken } from '@/test/cssRules'
 import { parseSvg, svgIssues } from '@/test/svgSafety'
 
 // Los iconos se buscan en disco, desde la raíz del repo.
@@ -158,8 +158,8 @@ describe('icono genérico de sobre', () => {
 
   // Va junto a logos blancos sobre el fondo oscuro: trazo claro, de un token.
   it('su trazo es el color de texto de la paleta, sin relleno', () => {
-    expect(cssToken(tokensCss, '--color-text')).toMatch(/^#[0-9a-f]{6}$/)
-    expect(root().getAttribute('stroke')).toBe(cssToken(tokensCss, '--color-text'))
+    expect(resolvedToken(tokensCss, '--color-text')).toMatch(/^#[0-9a-f]{6}$/)
+    expect(root().getAttribute('stroke')).toBe(resolvedToken(tokensCss, '--color-text'))
     expect(root().getAttribute('fill')).toBe('none')
   })
 

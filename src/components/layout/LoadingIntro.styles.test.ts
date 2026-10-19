@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { INTRO_TIMING } from '@/lib/introFrames'
 import { contrastRatio } from '@/test/contrast'
+import { resolvedToken } from '@/test/cssRules'
 
 // Vitest no procesa el CSS (css: false) y jsdom no lo aplica: se comprueba el
 // texto de los archivos tal como está en disco, desde la raíz del repo.
@@ -165,12 +166,12 @@ describe('LoadingIntro: estilos', () => {
       )
     }
 
-    /** Contraste WCAG entre dos tokens de color de tokens.css. */
+    /** Contraste WCAG entre dos tokens de color de tokens.css, ya resueltos. */
     const contrast = (foreground: string, background: string) =>
-      contrastRatio(token(foreground), token(background))
+      contrastRatio(resolvedToken(tokensCss, foreground), resolvedToken(tokensCss, background))
 
     describe('en reposo', () => {
-      it('el borde es del azul de la paleta', () => {
+      it('el borde es del acento de la paleta', () => {
         expect(rule(introCss, '.skip')).toMatchObject({ border: `1px solid var(${BORDER})` })
       })
 
@@ -180,11 +181,11 @@ describe('LoadingIntro: estilos', () => {
     })
 
     describe('con el puntero encima o con el foco del teclado', () => {
-      it('el texto pasa al azul', () => {
+      it('el texto pasa al acento', () => {
         expect(hoverAndFocus()).toMatchObject({ color: `var(${TEXT_ACTIVE})` })
       })
 
-      it('el borde no cambia: ya es azul', () => {
+      it('el borde no cambia: ya es del acento', () => {
         expect(hoverAndFocus()).not.toHaveProperty('border-color')
         expect(hoverAndFocus()).not.toHaveProperty('border')
       })
@@ -202,7 +203,7 @@ describe('LoadingIntro: estilos', () => {
         })
       })
 
-      // El anillo y el borde son del mismo azul: se distinguen por el hueco.
+      // El anillo y el borde son del mismo acento: se distinguen por el hueco.
       it('queda más separado que el anillo global', () => {
         const offset = Number.parseFloat(token('--space-1'))
         const globalOffset = Number.parseFloat(token('--focus-ring-offset'))
@@ -238,7 +239,7 @@ describe('LoadingIntro: estilos', () => {
       })
 
       it('el anillo de foco, que usa el color de foco global, también', () => {
-        expect(token('--color-focus')).toBe(`var(${BORDER})`)
+        expect(resolvedToken(tokensCss, '--color-focus')).toBe(resolvedToken(tokensCss, BORDER))
         expect(contrast(BORDER, BACKGROUND)).toBeGreaterThanOrEqual(AA_NON_TEXT)
       })
     })

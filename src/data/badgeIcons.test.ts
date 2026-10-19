@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { cssToken, readCss } from '@/test/cssRules'
+import { readCss, resolvedToken } from '@/test/cssRules'
 import { parseSvg, svgIssues } from '@/test/svgSafety'
 
 // Los iconos se leen de disco, desde la raíz del repo: lo que se comprueba es
@@ -133,8 +133,8 @@ describe('icono genérico de base de datos', () => {
   it('su trazo es el color de superficie de la paleta, sin relleno', () => {
     const root = parseSvg(read(DATABASE)).documentElement
 
-    expect(cssToken(tokensCss, '--color-surface')).toMatch(/^#[0-9a-f]{6}$/)
-    expect(root.getAttribute('stroke')).toBe(cssToken(tokensCss, '--color-surface'))
+    expect(resolvedToken(tokensCss, '--color-surface')).toMatch(/^#[0-9a-f]{6}$/)
+    expect(root.getAttribute('stroke')).toBe(resolvedToken(tokensCss, '--color-surface'))
     expect(root.getAttribute('fill')).toBe('none')
   })
 

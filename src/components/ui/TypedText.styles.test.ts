@@ -37,7 +37,7 @@ describe('TypedText: estilos', () => {
   describe('cursor', () => {
     // Absoluto y sin desplazamientos: queda donde acaba el texto y no ocupa
     // sitio ni mueve nada.
-    it('es absoluto, azul y parpadea, sin desplazamientos', () => {
+    it('es absoluto, del acento y parpadea, sin desplazamientos', () => {
       expect(cssRule(css, '.cursor')).toEqual({
         position: 'absolute',
         color: 'var(--color-accent)',
@@ -63,7 +63,7 @@ describe('TypedText: estilos', () => {
       })
     })
 
-    it('el azul es el de acento de los tokens', () => {
+    it('el color es el de acento de los tokens', () => {
       expect(cssToken(tokensCss, '--color-accent')).not.toBe('')
     })
   })

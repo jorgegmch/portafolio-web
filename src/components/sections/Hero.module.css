@@ -210,7 +210,7 @@
   margin-top: var(--hero-space-actions);
 }
 
-/* Cápsula rellena. El brillo es una sombra del verde de la paleta: no ocupa
+/* Cápsula rellena. El brillo es una sombra del acento de la paleta: no ocupa
    sitio. Cambia de golpe bajo el puntero, porque solo se animan transform y
    opacity. */
 .primary {

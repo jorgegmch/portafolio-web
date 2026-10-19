@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { portrait } from '@/assets/hero/portrait'
-import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
+import { cssMedia, cssRule, cssToken, readCss, resolvedToken } from '@/test/cssRules'
 
 const heroCss = readCss('src/components/sections/Hero.module.css')
 const tokensCss = readCss('src/styles/tokens.css')
@@ -63,7 +63,7 @@ describe('Hero: estilos', () => {
         expect(cssToken(tokensCss, '--hero-greeting-rule')).toMatch(/^var\(--space-\d\)$/)
       })
 
-      it('la izquierda va de transparente, en el borde, al verde de acento junto al texto', () => {
+      it('la izquierda va de transparente, en el borde, al acento junto al texto', () => {
         expect(before).toEqual({
           background: 'linear-gradient(to right, transparent, var(--color-accent-alt))',
         })
@@ -104,9 +104,9 @@ describe('Hero: estilos', () => {
       expect(cssRule(heroCss, '.name')).toMatchObject({ color: 'var(--color-text)' })
     })
 
-    it('el apellido va en el verde de la paleta', () => {
+    it('el apellido va en el acento de la paleta', () => {
       expect(cssRule(heroCss, '.lastName')).toMatchObject({ color: 'var(--color-accent-alt)' })
-      expect(cssToken(tokensCss, '--color-accent-alt')).toBe('#00ff88')
+      expect(resolvedToken(tokensCss, '--color-accent-alt')).toBe(resolvedToken(tokensCss, '--color-signal'))
     })
 
     it('el tamaño sale del token del nombre', () => {
@@ -232,7 +232,7 @@ describe('Hero: estilos', () => {
     })
 
     describe('cursor', () => {
-      it('va en el verde de acento de la paleta', () => {
+      it('va en el acento de la paleta', () => {
         expect(cssRule(heroCss, '.cursor')).toMatchObject({ color: 'var(--color-accent-alt)' })
       })
 
@@ -301,7 +301,7 @@ describe('Hero: estilos', () => {
         expect(parseFloat(cssToken(tokensCss, '--radius-pill'))).toBeGreaterThanOrEqual(50)
       })
 
-      it('va relleno con el verde de acento y texto del color de fondo', () => {
+      it('va relleno con el acento y texto del color de fondo', () => {
         expect(primary).toMatchObject({
           background: 'var(--color-accent-alt)',
           color: 'var(--color-bg)',
@@ -336,8 +336,8 @@ describe('Hero: estilos', () => {
       })
 
       // El brillo es una sombra: no ocupa sitio ni mueve nada. Su color se
-      // deriva del verde de la paleta, sin escribir ninguno.
-      it('lleva un brillo derivado del verde de acento', () => {
+      // deriva del acento de la paleta, sin escribir ninguno.
+      it('lleva un brillo derivado del acento', () => {
         expect(primary['box-shadow']).toBe(
           '0 0 var(--hero-cta-glow) color-mix(in srgb, var(--color-accent-alt) 35%, transparent)',
         )
@@ -416,7 +416,7 @@ describe('Hero: estilos', () => {
       })
     })
 
-    it('el punto es un círculo del verde de acento, con el tamaño de su token', () => {
+    it('el punto es un círculo del acento, con el tamaño de su token', () => {
       expect(dot).toMatchObject({
         width: 'var(--hero-status-dot)',
         height: 'var(--hero-status-dot)',
@@ -431,12 +431,12 @@ describe('Hero: estilos', () => {
     })
 
     describe('brillo del punto', () => {
-      /** Porcentaje del verde de acento en la sombra de una regla. */
+      /** Porcentaje del acento en la sombra de una regla. */
       const glowShare = (shadow = '') => Number(/var\(--color-accent-alt\) (\d+)%/.exec(shadow)?.[1])
 
       // Sin color-mix la declaración entera se descarta y el punto queda sin
       // brillo: por eso el color va aquí y no en un token.
-      it('es una sombra del verde de acento, sin desplazamiento ni color literal', () => {
+      it('es una sombra del acento, sin desplazamiento ni color literal', () => {
         expect(dot['box-shadow']).toBe(
           '0 0 var(--hero-status-glow) color-mix(in srgb, var(--color-accent-alt) 30%, transparent)',
         )
@@ -556,7 +556,7 @@ describe('Hero: estilos', () => {
     it.each([
       ['bajo el puntero', hover],
       ['con el foco', focus],
-    ])('%s solo cambia el color del borde, al verde de acento', (_, rule) => {
+    ])('%s solo cambia el color del borde, al acento', (_, rule) => {
       expect(rule).toEqual({ 'border-color': 'var(--color-accent-alt)' })
     })
 
@@ -1077,7 +1077,7 @@ describe('Hero: estilos', () => {
         filter: 'drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo))',
       })
       expect(cssToken(tokensCss, '--portrait-halo-blur')).toMatch(/^[\d.]+rem$/)
-      expect(cssToken(tokensCss, '--color-halo')).toMatch(/^rgba\(/)
+      expect(resolvedToken(tokensCss, '--color-halo')).toMatch(/^rgba\(/)
     })
 
     // La máscara recorta todo lo que sale del cuadro de la imagen. Si el halo
@@ -1105,7 +1105,7 @@ describe('Hero: estilos', () => {
   })
 
   describe('pantallas estrechas', () => {
-    const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '1023px', '768px', '480px', '380px']
+    const ALLOWED_BREAKPOINTS = ['1280px', '1024px', '1023px', '900px', '768px', '480px', '380px']
     const narrow = cssMedia(heroCss, '(max-width: 1023px)')
     const phone = cssMedia(heroCss, '(max-width: 480px)')
 

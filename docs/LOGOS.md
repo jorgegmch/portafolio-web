@@ -89,8 +89,8 @@ Ninguno es un logo de marca.
 
 | Archivo | Origen | Licencia | SHA-256 |
 |---|---|---|---|
-| `envelope.svg` | Dibujado para este sitio: un sobre cerrado, de trazo. | Obra propia | `e51bfb2484da7fb0290c815c7dcaf867104ffc5c6927480253f125e357391a98` |
-| `database.svg` | Dibujado para este sitio: un cilindro apilado, de trazo. | Obra propia | `3e4712703731686d594ac307eb8bb275061b14be3e2dee1d55c7c4041af2bdf1` |
+| `envelope.svg` | Dibujado para este sitio: un sobre cerrado, de trazo. Trazo en Bone desde el rediseño v2. | Obra propia | `258092ee1ef7f842ae19a39f91051d7214badd9bc4a056dd1ba204a51c533fc2` |
+| `database.svg` | Dibujado para este sitio: un cilindro apilado, de trazo. Trazo en Ink desde el rediseño v2. | Obra propia | `3003f8c7f08d8cd43c08a909909c4f9866b0f5ac06aa23ad94d536fbb832fbf2` |
 | `ai-agents.svg` | `raw-svg/microchip-ai.svg` de `github.com/primefaces/primeicons`, versión 7.0.0. El dibujo no se modificó; solo se le añadió el comentario de procedencia y la licencia. | MIT, © 2018-2021 PrimeTek | `3fc8ee8a861362387f6530aafffee1282bbde09aa145c496c6ec0927cfd6393b` |
 | `ai-agents-white.svg` | Copia del anterior para la ficha de «Servicios», sobre fondo oscuro. Mismo original; el relleno pasa de negro a blanco y el comentario lo dice. El del Hero no se toca. | MIT, © 2018-2021 PrimeTek | `c4c696b5d431a690a1669bc52244b1f12d9e3d66c2526836c4c6012f098244f4` |
 

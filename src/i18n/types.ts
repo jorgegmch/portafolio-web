@@ -58,7 +58,7 @@ export interface Dictionary {
     intro: string
     tagline: string
     viewProjects: string
-    /** Estado junto al punto verde; las mayúsculas las pone el CSS. */
+    /** Estado junto al punto de acento; las mayúsculas las pone el CSS. */
     availability: string
     /**
      * Versión corta del estado, para las pantallas donde `availability` no

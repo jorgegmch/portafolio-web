@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { cssRule, cssToken, readCss } from '@/test/cssRules'
 
@@ -16,10 +17,17 @@ const weightTokens = [...tokensCss.matchAll(/(--font-weight-[a-z]+):\s*(\d+);/g)
   ([, name = '', value = '']) => [name, value] as const,
 )
 
-/** Archivos de fuente que importa fonts.css, como pares [familia, peso]. */
-const fontImports = [
-  ...fontsCss.matchAll(/@import '@fontsource\/([a-z-]+)\/latin-(\d+)\.css';/g),
-].map(([, family = '', weight = '']) => [family, weight] as const)
+/** Bloques @font-face de fonts.css. */
+const fontFaces = [...fontsCss.matchAll(/@font-face\s*\{([^}]*)\}/g)].map(([, body = '']) => body)
+
+/** Fuentes que declara fonts.css, como pares [familia, peso]. */
+const fontImports = fontFaces.map(
+  (body) =>
+    [
+      /font-family:\s*'([^']+)';/.exec(body)?.[1] ?? '',
+      /font-weight:\s*(\d+);/.exec(body)?.[1] ?? '',
+    ] as const,
+)
 
 const isLoaded = (family: string, weight: string) =>
   fontImports.some(([loadedFamily, loadedWeight]) => loadedFamily === family && loadedWeight === weight)
@@ -39,7 +47,7 @@ describe('tipografía de títulos', () => {
     })
 
     // Sin el archivo de un peso, el navegador engordaría otro por su cuenta.
-    it.each(weightTokens)('el peso de %s (%s) tiene su @import en fonts.css', (_name, value) => {
+    it.each(weightTokens)('el peso de %s (%s) tiene su @font-face en fonts.css', (_name, value) => {
       expect(fontImports.map(([, weight]) => weight)).toContain(value)
     })
 
@@ -53,9 +61,56 @@ describe('tipografía de títulos', () => {
       expect(cssToken(tokensCss, EXTRABOLD)).toBe('800')
     })
 
-    // Los títulos van en Outfit: los pesos tienen que existir en esa familia.
-    it.each(['600', '800'])('Outfit se carga en peso %s', (weight) => {
-      expect(isLoaded('outfit', weight)).toBe(true)
+    // Los pesos que pide la spec del rediseño, en su familia.
+    it.each([
+      ['Anton', '400'],
+      ['Manrope', '400'],
+      ['Manrope', '500'],
+      ['Manrope', '700'],
+      ['Manrope', '800'],
+      ['JetBrains Mono', '400'],
+      ['JetBrains Mono', '600'],
+    ])('%s se carga en peso %s', (family, weight) => {
+      expect(isLoaded(family, weight)).toBe(true)
+    })
+
+    it('no se carga nada más', () => {
+      expect(fontImports).toHaveLength(7)
+    })
+  })
+
+  // Cero peticiones a terceros: cada fuente sale de public/fonts/, en woff2,
+  // y se muestra con la de respaldo mientras llega.
+  describe('fuentes alojadas en el sitio', () => {
+    it.each(fontFaces)('cada @font-face es local, en woff2 y con swap', (body) => {
+      expect(body).toMatch(/src:\s*url\('\/fonts\/[a-z0-9-]+\.woff2'\) format\('woff2'\);/)
+      expect(body).toContain('font-display: swap;')
+      expect(body).not.toMatch(/https?:|\/\//)
+    })
+
+    it.each(fontFaces)('el archivo de cada @font-face existe', (body) => {
+      const file = /url\('\/fonts\/([a-z0-9-]+\.woff2)'\)/.exec(body)?.[1] ?? ''
+
+      expect(existsSync(`public/fonts/${file}`)).toBe(true)
+    })
+
+    // La OFL pide que la licencia viaje con la fuente.
+    it.each(['anton', 'manrope', 'jetbrains-mono'])('la licencia de %s va junto a sus archivos', (family) => {
+      expect(readFileSync(`public/fonts/OFL-${family}.txt`, 'utf8')).toContain(
+        'SIL OPEN FONT LICENSE Version 1.1',
+      )
+    })
+
+    it('index.html precarga Anton y Manrope, sin pedir nada a Google Fonts', () => {
+      const html = readFileSync('index.html', 'utf8')
+
+      expect(html).toContain(
+        '<link rel="preload" href="/fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />',
+      )
+      expect(html).toContain(
+        '<link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />',
+      )
+      expect(html).not.toMatch(/fonts\.(googleapis|gstatic)\.com/)
     })
   })
 
@@ -66,7 +121,7 @@ describe('tipografía de títulos', () => {
 
     it('va en la fuente de texto, la que carga ese peso', () => {
       expect(cssRule(heroCss, '.name')).not.toHaveProperty('font-family')
-      expect(cssToken(tokensCss, '--font-sans')).toMatch(/^'Outfit'/)
+      expect(cssToken(tokensCss, '--font-sans')).toMatch(/^'Manrope'/)
     })
 
     it('el token de tamaño crece: de 40 px en teléfono a 90 px en escritorio', () => {

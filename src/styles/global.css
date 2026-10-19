@@ -22,19 +22,9 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--color-bg);
-  /* Dos resplandores y una rejilla, de atrás hacia delante. */
-  background-image:
-    radial-gradient(ellipse at 14% 66%, var(--color-glow-accent) 0%, transparent 55%),
-    radial-gradient(ellipse at 86% 10%, var(--color-glow-accent-alt) 0%, transparent 55%),
-    linear-gradient(var(--color-grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    100% 100%,
-    var(--grid-size) var(--grid-size),
-    var(--grid-size) var(--grid-size);
-  color: var(--color-text);
+  /* El Void: el fondo que se ve entre los paneles. */
+  background-color: var(--color-void);
+  color: var(--color-bone);
   font-family: var(--font-sans);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-regular);
