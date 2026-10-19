@@ -56,7 +56,6 @@ export const en: Dictionary = {
       "I come from a communications background: I learned to listen before I speak and to explain complex ideas to different audiences. In software, that means turning what a client needs into clear technical requirements and explaining the team's decisions without unnecessary jargon.",
       "I work with Scrum, learn fast and document what I build. If your team is looking for someone who can code, understands the business and can explain it, let's talk.",
     ],
-    viewCertifications: 'View certifications',
     terminalLabel: 'Output of java Developer',
     stats: {
       codingTime: {
@@ -181,41 +180,6 @@ export const en: Dictionary = {
         description:
           'Console-based point-of-sale system in Java for a phone store, with JDBC/MySQL persistence, tier-based discounts, and credit account management.',
       },
-    },
-  },
-  certifications: {
-    heading: 'Certifications',
-    back: 'Back to home',
-    hours: (count) => `${count} hours`,
-    categories: {
-      formal: 'Formal education',
-      'soft-skills': 'Soft skills',
-      technical: 'Technical',
-    },
-    items: {
-      // Official degree titles keep the original name, with the translation
-      // in parentheses.
-      'comunicador-social-periodista': {
-        title: 'Comunicador Social y Periodista (Social Communicator and Journalist)',
-      },
-      'diplomado-comunicacion-digital': {
-        title: 'Diplomado in Strategic Digital Communication (certificate program)',
-      },
-      'bachiller-academico-sistemas': {
-        title:
-          'Bachiller Académico con Énfasis en Sistemas (High School Diploma with an Emphasis in Computer Systems)',
-      },
-      'servicio-al-cliente': { title: 'Customer Service: A Personal Challenge' },
-      'taller-desempeno-laboral': {
-        title: 'Workshop: Strengthening Competencies for Better Job Performance',
-      },
-      'taller-competencias-vida': { title: 'Workshop: Strengthening Competencies for Life' },
-      'congreso-comunicacion-afacom': {
-        title:
-          '3rd Communication Congress "Challenges of Communication in the Knowledge Society"',
-      },
-      'bootcamp-programacion-basico': { title: 'Programming Bootcamp, Basic Level' },
-      'curso-desarrollo-ia': { title: 'AI Development Course' },
     },
   },
   contact: {

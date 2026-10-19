@@ -1,6 +1,5 @@
 export const routes = {
   home: '/',
-  certifications: '/certificaciones',
 } as const
 
 /** Ids de las secciones de la home, usados como anclas en la navegación. */

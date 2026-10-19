@@ -1,8 +1,6 @@
-import type { CertificationId } from '@/data/certifications'
 import type { ProjectId } from '@/data/projects'
 import type { ServiceId } from '@/data/services'
 import type { HeroSocialId } from '@/data/social'
-import type { CertificationCategory } from '@/data/types'
 import type { CodingTime } from '@/lib/codingTime'
 
 export const LANGS = ['es', 'en'] as const
@@ -14,7 +12,7 @@ export type PlusPosition = 'prefix' | 'suffix'
 
 /**
  * Forma única de los textos del sitio. Cada idioma debe cumplirla completa:
- * si falta una clave, un proyecto o una certificación, TypeScript falla.
+ * si falta una clave, un proyecto o un servicio, TypeScript falla.
  */
 export interface Dictionary {
   meta: {
@@ -80,7 +78,6 @@ export interface Dictionary {
     phrase: { lead: string; highlight: string }
     /** Un elemento por párrafo. */
     bio: readonly string[]
-    viewCertifications: string
     /** Nombre accesible del panel de la terminal. */
     terminalLabel: string
     /** Etiqueta de cada tarjeta según su cifra, que la tarjeta muestra aparte. */
@@ -108,13 +105,6 @@ export interface Dictionary {
     viewRepo: string
     viewAll: string
     items: Record<ProjectId, { description: string }>
-  }
-  certifications: {
-    heading: string
-    back: string
-    hours: (count: number) => string
-    categories: Record<CertificationCategory, string>
-    items: Record<CertificationId, { title: string }>
   }
   contact: {
     heading: string

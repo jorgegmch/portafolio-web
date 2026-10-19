@@ -11,6 +11,8 @@ export type CertificationCategory = 'formal' | 'soft-skills' | 'technical'
 
 export interface Certification<Id extends string = string> {
   id: Id
+  /** Título oficial, en su idioma original; no se traduce. */
+  title: string
   /** Entidad que certifica; nombre propio, no se traduce. */
   entity: string
   date: YearMonth

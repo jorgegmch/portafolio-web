@@ -5,7 +5,6 @@ import { cssRule, cssToken, readCss } from '@/test/cssRules'
 const tokensCss = readCss('src/styles/tokens.css')
 const fontsCss = readCss('src/styles/fonts.css')
 const heroCss = readCss('src/components/sections/Hero.module.css')
-const certificationsCss = readCss('src/pages/CertificationsPage.module.css')
 
 const SEMIBOLD = '--font-weight-semibold'
 const EXTRABOLD = '--font-weight-extrabold'
@@ -137,32 +136,8 @@ describe('tipografía de títulos', () => {
     })
   })
 
-  describe('título de Certificaciones', () => {
-    it('usa el peso intermedio', () => {
-      expect(cssRule(certificationsCss, '.title')).toMatchObject({
-        'font-weight': `var(${SEMIBOLD})`,
-      })
-    })
-
-    it('es más grueso que el texto normal y menos que el nombre del Hero', () => {
-      const weight = (name: string) => Number(cssToken(tokensCss, name))
-
-      expect(weight(SEMIBOLD)).toBeGreaterThan(weight('--font-weight-regular'))
-      expect(weight(SEMIBOLD)).toBeLessThan(weight(EXTRABOLD))
-    })
-
-    it('conserva su tamaño', () => {
-      expect(cssRule(certificationsCss, '.title')).toMatchObject({
-        'font-size': `var(${TITLE_SIZE})`,
-      })
-    })
-  })
-
   describe('pesos escritos a mano', () => {
-    it.each([
-      ['Hero', heroCss],
-      ['Certificaciones', certificationsCss],
-    ])('en %s todo font-weight sale de un token', (_name, css) => {
+    it.each([['Hero', heroCss]])('en %s todo font-weight sale de un token', (_name, css) => {
       const weights = [...css.matchAll(/font-weight:\s*([^;]+);/g)].map(([, value]) => value)
 
       expect(weights.length).toBeGreaterThan(0)

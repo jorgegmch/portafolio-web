@@ -1,9 +1,0 @@
-.page {
-  padding: var(--space-9) var(--container-padding);
-  padding-left: var(--container-padding-start);
-}
-
-.title {
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-semibold);
-}

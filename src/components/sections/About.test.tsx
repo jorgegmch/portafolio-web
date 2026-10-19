@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { About } from '@/components/sections/About'
 import styles from '@/components/sections/About.module.css'
-import { routes, sections } from '@/config/routes'
+import { sections } from '@/config/routes'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
 import { LANGS } from '@/i18n/types'
@@ -149,44 +149,6 @@ describe('About', () => {
       const { region } = renderAbout()
 
       expect(within(region).queryByRole('button')).not.toBeInTheDocument()
-    })
-  })
-
-  describe('enlace a certificaciones', () => {
-    it.each(LANGS)('en %s, lleva a la ruta de certificaciones', (lang) => {
-      const { region } = renderAbout(lang)
-
-      expect(
-        within(region).getByRole('link', { name: dictionaries[lang].about.viewCertifications }),
-      ).toHaveAttribute('href', routes.certifications)
-    })
-
-    it('es el único enlace y abre en la misma pestaña', () => {
-      const { region } = renderAbout()
-
-      expect(within(region).getAllByRole('link')).toHaveLength(1)
-      expect(within(region).getByRole('link')).not.toHaveAttribute('target')
-    })
-
-    // Cierra la columna de texto: va tras la descripción y antes de la terminal.
-    it('va justo después de la descripción y antes de la terminal', () => {
-      const { region } = renderAbout()
-      const lastParagraph = dictionaries.es.about.bio.at(-1) ?? ''
-      const link = within(region).getByRole('link')
-
-      expect(precedes(within(region).getByText(lastParagraph), link)).toBe(true)
-      expect(precedes(link, within(region).getByRole('figure'))).toBe(true)
-    })
-
-    // Debajo de la descripción va el envoltorio que hace aparecer el enlace, y
-    // dentro de él, solo el enlace.
-    it('comparte columna con la descripción, justo debajo de ella', () => {
-      const { region } = renderAbout()
-      const bio = within(region).getByText(dictionaries.es.about.bio[0] ?? '').parentElement
-      const link = within(region).getByRole('link')
-
-      expect([...(bio?.parentElement?.children ?? [])]).toEqual([bio, link.parentElement])
-      expect([...(link.parentElement?.children ?? [])]).toEqual([link])
     })
   })
 

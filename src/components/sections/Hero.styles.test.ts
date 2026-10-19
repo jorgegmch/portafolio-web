@@ -700,7 +700,6 @@ describe('Hero: estilos', () => {
         'src/components/ui/LangToggle.module.css',
         'src/components/ui/PauseToggle.module.css',
         'src/components/ui/SkipLink.module.css',
-        'src/pages/CertificationsPage.module.css',
       ]
 
       it('en dos columnas el párrafo iguala el largo de sus líneas', () => {

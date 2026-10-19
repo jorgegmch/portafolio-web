@@ -161,7 +161,7 @@ describe('About: la descripción se escribe', () => {
       expect(bio).not.toHaveClass(WAITING)
       expect(words()).toHaveLength(wordCount(es.about.bio))
       expect(paragraphs()).toEqual([...es.about.bio])
-      expect(wrappersIn(region)).toHaveLength(8)
+      expect(wrappersIn(region)).toHaveLength(7)
       wrappersIn(region).forEach((wrapper) => expect(wrapper).toHaveClass(HIDDEN))
     })
   })

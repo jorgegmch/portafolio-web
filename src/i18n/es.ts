@@ -61,7 +61,6 @@ export const es: Dictionary = {
       'Vengo de la Comunicación Social: aprendí a escuchar antes de hablar y a explicar ideas complejas a públicos distintos. En software, eso significa convertir lo que necesita un cliente en requerimientos técnicos claros y explicar las decisiones del equipo sin tecnicismos innecesarios.',
       'Trabajo con Scrum, aprendo rápido y documento lo que construyo. Si tu equipo busca a alguien que programe, entienda el negocio y sepa explicarlo, hablemos.',
     ],
-    viewCertifications: 'Ver certificaciones',
     terminalLabel: 'Salida de java Developer',
     stats: {
       codingTime: {
@@ -185,36 +184,6 @@ export const es: Dictionary = {
         description:
           'Sistema de punto de venta por consola en Java para una tienda de celulares, con persistencia en JDBC/MySQL, descuentos por niveles y gestión de cuentas de crédito.',
       },
-    },
-  },
-  certifications: {
-    heading: 'Certificaciones',
-    back: 'Volver al inicio',
-    hours: (count) => `${count} horas`,
-    categories: {
-      formal: 'Formación formal',
-      'soft-skills': 'Habilidades blandas',
-      technical: 'Técnico',
-    },
-    items: {
-      'comunicador-social-periodista': { title: 'Comunicador Social y Periodista' },
-      'diplomado-comunicacion-digital': {
-        title: 'Diplomado en Comunicación Digital Estratégica',
-      },
-      'bachiller-academico-sistemas': { title: 'Bachiller Académico con Énfasis en Sistemas' },
-      'servicio-al-cliente': { title: 'Servicio al Cliente: Un Reto Personal' },
-      'taller-desempeno-laboral': {
-        title: 'Taller Fortalecimiento de Competencias para el Mejor Desempeño Laboral',
-      },
-      'taller-competencias-vida': {
-        title: 'Taller Fortalecimiento de Competencias para la Vida',
-      },
-      'congreso-comunicacion-afacom': {
-        title:
-          'III Congreso de Comunicación "Retos de la Comunicación en la Sociedad del Conocimiento"',
-      },
-      'bootcamp-programacion-basico': { title: 'Bootcamp de Programación Nivel Básico' },
-      'curso-desarrollo-ia': { title: 'Curso de Desarrollo con IA' },
     },
   },
   contact: {

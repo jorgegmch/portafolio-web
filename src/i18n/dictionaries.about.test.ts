@@ -4,8 +4,6 @@ import { LANGS } from '@/i18n/types'
 
 const HEADING = { es: 'Sobre mí', en: 'About me' } as const
 
-const VIEW_CERTIFICATIONS = { es: 'Ver certificaciones', en: 'View certifications' } as const
-
 const PHRASE = {
   es: 'Del negocio al código, y del código a palabras claras',
   en: 'From business to code, and from code to plain language',
@@ -58,11 +56,10 @@ const COUNTS = [0, 1, 14] as const
 const PLUS_POSITION = { es: 'prefix', en: 'suffix' } as const
 
 describe('textos de «Sobre mí»', () => {
-  it.each(LANGS)('en %s, el título y el botón son los previstos', (lang) => {
+  it.each(LANGS)('en %s, el título es el previsto', (lang) => {
     const { about } = dictionaries[lang]
 
     expect(about.heading).toBe(HEADING[lang])
-    expect(about.viewCertifications).toBe(VIEW_CERTIFICATIONS[lang])
   })
 
   describe('frase grande', () => {

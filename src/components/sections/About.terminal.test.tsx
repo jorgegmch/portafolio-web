@@ -190,21 +190,20 @@ describe('About: terminal del desarrollador', () => {
   })
 
   describe('lugar en la sección', () => {
-    // Orden de lectura: descripción, enlace a certificaciones, terminal, tarjetas.
-    it('va después de la descripción y del enlace, y antes de las tarjetas', () => {
+    // Orden de lectura: descripción, terminal, tarjetas.
+    it('va después de la descripción y antes de las tarjetas', () => {
       const { region, panel } = renderAbout()
       const lastParagraph = within(region).getByText(dictionaries.es.about.bio.at(-1) ?? '')
       const follows = (earlier: Element, later: Element) =>
         Boolean(earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING)
       const [firstCard] = within(region).getAllByRole('listitem')
 
-      expect(follows(lastParagraph, within(region).getByRole('link'))).toBe(true)
-      expect(follows(within(region).getByRole('link'), panel())).toBe(true)
+      expect(follows(lastParagraph, panel())).toBe(true)
       expect(follows(panel(), firstCard as Element)).toBe(true)
     })
 
-    // Comparten la rejilla de dos columnas: a la izquierda la descripción con
-    // el enlace; a la derecha, la terminal sola.
+    // Comparten la rejilla de dos columnas: a la izquierda la descripción; a
+    // la derecha, la terminal sola.
     it('comparte contenedor con la columna de texto, como segunda celda', () => {
       const { region, panel } = renderAbout()
       const text = within(region).getByText(dictionaries.es.about.bio[0] ?? '').parentElement
@@ -213,11 +212,10 @@ describe('About: terminal del desarrollador', () => {
 
       expect(cells).toHaveLength(2)
       expect(cells[0]).toBe(text)
-      expect(cells[0]).toContainElement(within(region).getByRole('link'))
       expect(cells[1]).toContainElement(panel())
     })
 
-    // Bajo la terminal va el mapa, y nada más: ni el enlace ni las tarjetas.
+    // Bajo la terminal va el mapa, y nada más: ni la descripción ni las tarjetas.
     // Cada uno va solo dentro del envoltorio que lo hace aparecer.
     it('en su celda van la terminal y, debajo, el mapa; nada más', () => {
       const { panel } = renderAbout()

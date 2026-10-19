@@ -372,22 +372,7 @@ describe('About: estilos', () => {
     })
   })
 
-  describe('enlace a certificaciones', () => {
-    it('es una cápsula de contorno con el alto táctil', () => {
-      expect(cssRule(css, '.cta')).toMatchObject({
-        'min-height': 'var(--touch-target)',
-        border: '1px solid var(--color-accent-alt)',
-        'border-radius': 'var(--radius-pill)',
-        'background-color': 'transparent',
-        color: 'var(--color-accent-alt)',
-      })
-    })
-
-    it('se separa de la descripción con un espaciado de tokens', () => {
-      expect(cssRule(css, '.cta')).toMatchObject({ 'margin-top': 'var(--space-6)' })
-      expect(cssToken(tokensCss, '--space-6')).toBe('2rem')
-    })
-
+  describe('foco', () => {
     it('no quita el anillo de foco', () => {
       expect(css).not.toMatch(/outline:\s*(?:none|0)/)
     })

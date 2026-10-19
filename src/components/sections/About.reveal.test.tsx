@@ -54,7 +54,6 @@ const renderAbout = async () => {
     heading: within(region).getByRole('heading', { level: 2 }),
     phrase,
     terminal: within(region).getByRole('figure'),
-    cta: within(region).getByRole('link'),
     map,
   }
   const cards = within(region).getAllByRole('listitem')
@@ -84,15 +83,15 @@ afterEach(() => {
 
 describe('About: revelado al hacer scroll', () => {
   describe('qué se revela', () => {
-    it('hay ocho envoltorios, todos ocultos al empezar', async () => {
+    it('hay siete envoltorios, todos ocultos al empezar', async () => {
       const { region } = await renderAbout()
       const wrappers = wrappersIn(region)
 
-      expect(wrappers).toHaveLength(8)
+      expect(wrappers).toHaveLength(7)
       wrappers.forEach((wrapper) => expect(wrapper).toHaveClass(HIDDEN))
     })
 
-    it('título, frase, terminal, enlace y mapa van cada uno solo en su envoltorio', async () => {
+    it('título, frase, terminal y mapa van cada uno solo en su envoltorio', async () => {
       const { blocks } = await renderAbout()
 
       Object.values(blocks).forEach((block) => {
@@ -115,14 +114,13 @@ describe('About: revelado al hacer scroll', () => {
       })
     })
 
-    it('los envoltorios son exactamente esos ocho, en el orden del documento', async () => {
+    it('los envoltorios son exactamente esos siete, en el orden del documento', async () => {
       const { region, blocks, cards } = await renderAbout()
-      const { heading, phrase, terminal, cta, map } = blocks
+      const { heading, phrase, terminal, map } = blocks
 
       expect(wrappersIn(region)).toEqual([
         heading.parentElement,
         phrase.parentElement,
-        cta.parentElement,
         terminal.parentElement,
         map.parentElement,
         ...cards,
@@ -165,7 +163,7 @@ describe('About: revelado al hacer scroll', () => {
     it('ningún envoltorio lleva la clase de un elemento que escala', async () => {
       const { region } = await renderAbout()
 
-      expect(wrappersIn(region)).toHaveLength(8)
+      expect(wrappersIn(region)).toHaveLength(7)
       wrappersIn(region).forEach((wrapper) => {
         expect(wrapper).not.toHaveClass(STAT)
         expect(wrapper).not.toHaveClass(PANEL)
@@ -174,14 +172,13 @@ describe('About: revelado al hacer scroll', () => {
   })
 
   describe('escalonado', () => {
-    // Título 0, frase 1, terminal 2, enlace 2, mapa 3; tarjetas 0, 1 y 2.
+    // Título 0, frase 1, terminal 2, mapa 3; tarjetas 0, 1 y 2.
     it('cada envoltorio lleva el puesto de la tabla, y solo ese', async () => {
       const { blocks, cards } = await renderAbout()
       const expected: [Element | null, number][] = [
         [blocks.heading.parentElement, 0],
         [blocks.phrase.parentElement, 1],
         [blocks.terminal.parentElement, 2],
-        [blocks.cta.parentElement, 2],
         [blocks.map.parentElement, 3],
         [cards[0] ?? null, 0],
         [cards[1] ?? null, 1],
@@ -202,7 +199,7 @@ describe('About: revelado al hacer scroll', () => {
       const { region } = await renderAbout()
       const wrappers = wrappersIn(region)
 
-      expect(wrappers).toHaveLength(8)
+      expect(wrappers).toHaveLength(7)
       wrappers.forEach((wrapper, index) => {
         enter(wrapper)
 
@@ -214,7 +211,7 @@ describe('About: revelado al hacer scroll', () => {
     })
 
     // Una clave repetida haría que, al volver, apareciera también el otro.
-    it.each([0, 1, 2, 3, 4, 5, 6, 7])(
+    it.each([0, 1, 2, 3, 4, 5, 6])(
       'si solo se reveló el envoltorio %i, al volver a montar solo ese aparece visible',
       async (revealedIndex) => {
         const { region, Section, unmount } = await renderAbout()
@@ -226,7 +223,7 @@ describe('About: revelado al hacer scroll', () => {
         render(<Section />)
         const again = wrappersIn(screen.getByRole('region', { name: about.heading }))
 
-        expect(again).toHaveLength(8)
+        expect(again).toHaveLength(7)
         again.forEach((wrapper, index) => {
           if (index === revealedIndex) expect(wrapper).not.toHaveClass(HIDDEN)
           else expect(wrapper).toHaveClass(HIDDEN)
@@ -247,7 +244,7 @@ describe('About: revelado al hacer scroll', () => {
       render(<Section />)
       const again = wrappersIn(screen.getByRole('region', { name: about.heading }))
 
-      expect(again).toHaveLength(8)
+      expect(again).toHaveLength(7)
       again.forEach((wrapper) => expect(wrapper).not.toHaveClass(HIDDEN))
       expect(io.instances).toHaveLength(observersBefore)
     })
@@ -257,7 +254,7 @@ describe('About: revelado al hacer scroll', () => {
     mockMatchMedia(true)
     const { region } = await renderAbout()
 
-    expect(wrappersIn(region)).toHaveLength(8)
+    expect(wrappersIn(region)).toHaveLength(7)
     wrappersIn(region).forEach((wrapper) => expect(wrapper).not.toHaveClass(HIDDEN))
     expect(io.instances).toHaveLength(0)
   })

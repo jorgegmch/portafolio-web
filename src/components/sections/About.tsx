@@ -1,5 +1,4 @@
 import { useId, useState } from 'react'
-import { Link } from 'react-router-dom'
 import styles from '@/components/sections/About.module.css'
 import { Reveal, type RevealOrder } from '@/components/ui/Reveal'
 import { StatIcon } from '@/components/ui/StatIcon'
@@ -8,7 +7,7 @@ import { TypedText } from '@/components/ui/TypedText'
 import { WorldMap } from '@/components/ui/WorldMap'
 import { HIGHLIGHT_PHRASE } from '@/config/about'
 import { developer } from '@/config/developer'
-import { routes, sections } from '@/config/routes'
+import { sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { builtProjects } from '@/data/projects'
 import { technologies } from '@/data/technologies'
@@ -24,16 +23,16 @@ const STAT_ORDERS: readonly RevealOrder[] = [0, 1, 2]
 
 /**
  * Sección «Sobre mí»: título, una frase grande, la descripción en cuatro
- * párrafos con el enlace a las certificaciones debajo, la terminal del
- * desarrollador con el mapa debajo y tres tarjetas con cifras.
+ * párrafos, la terminal del desarrollador con el mapa debajo y tres tarjetas
+ * con cifras.
  * La frase es un párrafo, no un título; su tramo final va en un span que
- * config/about puede resaltar. Desde 1024 px la descripción y el enlace
- * ocupan la columna izquierda, y la terminal y el mapa la derecha; por
+ * config/about puede resaltar. Desde 1024 px la descripción ocupa la
+ * columna izquierda, y la terminal y el mapa la derecha; por
  * debajo, todo va apilado. Las tarjetas van después, a todo el ancho. El
  * mapa es decorativo: no añade nada al texto de la sección.
  *
  * Al entrar en pantalla aparecen, escalonados, el título, la frase, la
- * terminal, el enlace, el mapa y las tarjetas, cada uno una sola vez por
+ * terminal, el mapa y las tarjetas, cada uno una sola vez por
  * carga de la página. La descripción no aparece con ellos: se escribe
  * palabra por palabra, con su propio aviso, y termina con un cursor; el
  * texto completo está siempre en el DOM. Lo que escala bajo el puntero (la
@@ -98,11 +97,6 @@ export function About() {
       <div className={styles.columns}>
         <div className={styles.text}>
           <TypedText revealKey="about-bio" paragraphs={t.about.bio} className={styles.bio} />
-          <Reveal revealKey="about-cta" order={2}>
-            <Link className={styles.cta} to={routes.certifications}>
-              {t.about.viewCertifications}
-            </Link>
-          </Reveal>
         </div>
         <div className={styles.terminal}>
           <Reveal revealKey="about-terminal" order={2}>

@@ -22,7 +22,6 @@ const flat = (value = '') => value.replace(/\s+/g, ' ').replace(/\( /g, '(').rep
  */
 const CONSUMERS = [
   ['el Hero', 'src/components/sections/Hero.module.css', '.hero', 'var(--nav-height) var(--container-padding) 0'],
-  ['Certificaciones', 'src/pages/CertificationsPage.module.css', '.page', 'var(--space-9) var(--container-padding)'],
 ] as const
 
 const FORMULA =

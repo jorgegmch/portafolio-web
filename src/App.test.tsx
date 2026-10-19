@@ -15,6 +15,7 @@ vi.mock('@/hooks/useParticleCanvas', () => ({ useParticleCanvas: vi.fn() }))
 
 const { es } = dictionaries
 const UNKNOWN_URL = '/no-existe'
+const OLD_CERTIFICATIONS_URL = '/certificaciones'
 
 const setUrl = (path: string) => window.history.replaceState(null, '', path)
 
@@ -86,15 +87,17 @@ describe('App', () => {
       expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
     })
 
-    it('la ruta de certificaciones monta su página dentro del contenido principal', () => {
-      renderAt(routes.certifications)
+    // La página de certificaciones se retiró con el rediseño v2: quien llegue
+    // por un enlace antiguo acaba en el inicio.
+    it('la antigua ruta de certificaciones redirige al inicio', () => {
+      renderAt(OLD_CERTIFICATIONS_URL)
 
-      expect(pageTitle(es.certifications.heading)).toBeInTheDocument()
-      expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+      expect(pageTitle(site.shortName)).toBeInTheDocument()
+      expect(window.location.pathname).toBe(routes.home)
     })
 
-    it('las dos rutas comparten barra y pie', () => {
-      renderAt(routes.certifications)
+    it('la página lleva la navegación y el pie', () => {
+      renderAt(routes.home)
 
       expect(screen.getByRole('banner')).toBeInTheDocument()
       expect(screen.getByRole('contentinfo')).toBeInTheDocument()
@@ -145,7 +148,7 @@ describe('App', () => {
 
   describe('navegación', () => {
     it('al cargar una ruta no sube: el navegador restaura la posición', () => {
-      renderAt(routes.certifications)
+      renderAt(routes.home)
 
       expect(scrollTo).not.toHaveBeenCalled()
     })
@@ -192,8 +195,8 @@ describe('App', () => {
         expect(skipIntro()).toHaveFocus()
       })
 
-      it('aparece también al entrar por otra ruta', () => {
-        renderAt(routes.certifications)
+      it('aparece también al entrar por una URL que redirige al inicio', () => {
+        renderAt(OLD_CERTIFICATIONS_URL)
 
         expect(skipIntro()).toBeInTheDocument()
       })

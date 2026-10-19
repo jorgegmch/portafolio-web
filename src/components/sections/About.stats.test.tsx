@@ -93,14 +93,13 @@ describe('About: tarjetas', () => {
     })
 
     // Debajo de las dos columnas, a todo el ancho: lo último de la sección.
-    it('van después de la terminal y del enlace a certificaciones', () => {
+    it('van después de la terminal', () => {
       const { region, cards } = renderAbout()
       const follows = (earlier: Element, later: Element) =>
         Boolean(earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING)
       const [first] = cards()
 
       expect(follows(within(region).getByRole('figure'), first as Element)).toBe(true)
-      expect(follows(within(region).getByRole('link'), first as Element)).toBe(true)
     })
 
     it('su lista es lo último de la sección, fuera de las columnas', () => {
