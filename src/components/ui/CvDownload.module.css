@@ -2,38 +2,30 @@
   position: relative;
 }
 
-/* Cápsula de contorno: acompaña a la rellena sin competir con ella. La usan
-   el botón que abre el menú y el enlace directo cuando solo hay un archivo. */
+/* Enlace subrayado (spec §3.1): acompaña al CTA relleno sin competir con
+   él. Lo usan el botón que abre el menú y el enlace directo cuando solo hay
+   un archivo. */
 .toggle {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--touch-target);
-  padding: var(--space-3) var(--space-5);
-  border: 1px solid var(--color-accent-alt);
-  border-radius: var(--radius-pill);
+  padding: 0;
+  border: 0;
   background-color: transparent;
-  color: var(--color-accent-alt);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-normal);
-  text-decoration: none;
-  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
-  text-transform: uppercase;
+  color: var(--color-bone);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
   white-space: nowrap;
   cursor: pointer;
 }
 
 /* Cambia de golpe, porque solo se animan transform y opacity. */
-.toggle:hover {
-  background-color: var(--color-accent-alt);
-  color: var(--color-bg);
-}
-
+.toggle:hover,
 .toggle[aria-expanded='true'] {
-  background-color: var(--color-accent-alt);
-  color: var(--color-bg);
+  color: var(--color-signal);
 }
 
 /* Texto corto: no existe hasta el corte de teléfono estrecho. */
@@ -64,11 +56,12 @@
   position: absolute;
   top: calc(100% + var(--space-2));
   left: 0;
+  z-index: 1;
   min-width: 100%;
   padding: var(--space-1);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
+  border: 1px solid var(--line-18);
+  border-radius: var(--radius-field);
+  background-color: var(--color-ink);
   list-style: none;
 }
 
@@ -77,37 +70,33 @@
   align-items: center;
   min-height: var(--touch-target);
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  letter-spacing: var(--tracking-normal);
+  border-radius: var(--radius-field);
+  color: var(--color-bone-soft);
+  font-size: var(--font-size-md);
   text-decoration: none;
   white-space: nowrap;
 }
 
 .option:hover {
-  color: var(--color-accent);
+  color: var(--color-signal);
 }
 
-/* Más estrecho, como el botón relleno, para que quepan dos en fila. El
-   control va segundo en la fila y es más estrecho que la lista: alineada a
-   su borde derecho no se sale de la pantalla. */
+/* En teléfono el control va centrado en su fila, a todo el ancho; la lista
+   se alinea a su borde derecho para no salirse de la pantalla. */
 @media (max-width: 480px) {
-  .toggle {
-    padding: var(--space-2) var(--space-4);
-    font-size: var(--font-size-sm);
+  .root {
+    text-align: center;
   }
 
   .list {
     right: 0;
     left: auto;
+    text-align: left;
   }
 }
 
-/* Con el texto largo los dos botones no caben en una fila. Con display: none
-   el texto oculto tampoco existe para un lector de pantalla; el nombre del
-   control lo lleva aria-label. */
+/* Con display: none el texto oculto tampoco existe para un lector de
+   pantalla; el nombre del control lo lleva aria-label. */
 @media (max-width: 380px) {
   .labelLong {
     display: none;

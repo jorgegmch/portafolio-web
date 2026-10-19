@@ -87,10 +87,52 @@
   --font-weight-extrabold: 800;
 
   /* Escala de títulos del rediseño, con clamp (spec §2). */
-  --font-size-hero-name: clamp(7.5rem, 21.5vw, 20.625rem); /* 120 a 330 px */
+  /* La spec solo limita por ancho; aquí también por alto (28svh), para que
+     en una ventana de 900 px de alto el nombre no se meta bajo los textos
+     del pie del Hero. A 1920 × 1080 queda en 302 px. */
+  --font-size-hero-name: clamp(7.5rem, min(21.5vw, 28svh), 20.625rem); /* 120 a 330 px */
   --font-size-scene-title: clamp(4.5rem, 12vw, 11.875rem); /* 72 a 190 px */
   --font-size-profile-phrase: clamp(3.5rem, 8vw, 8rem); /* 56 a 128 px */
   --font-size-contact-title: clamp(5rem, 12.5vw, 13.75rem); /* 80 a 220 px */
+  /* Interlineado de los títulos en Anton (spec: 0,84 a 0,92) y del cuerpo
+     (1,55 a 1,6), y espaciado apretado de los títulos en Manrope. */
+  --leading-display: 0.84;
+  --leading-body: 1.55;
+  --tracking-tight: -0.01em;
+
+  /* Hero (spec §3.1). Alto del panel: la ventana menos los huecos. */
+  --hero-min-height: calc(100svh - 2 * var(--panel-gap));
+  --hero-stage-min: 43.75rem; /* 700px */
+  /* Luz radial Signal y anillo detrás de la foto. */
+  --hero-glow-size: 47.5rem; /* 760px */
+  --hero-ring-size: 35rem; /* 560px */
+  /* Ancho de la foto: Hero.tsx lo repite en `sizes`. */
+  --hero-photo-width: clamp(17rem, 36vw, 29.375rem); /* 272 a 470 px */
+  /* Tratamiento estático de la foto: blanco y negro con contraste, y un
+     borde de luz Signal. */
+  --hero-photo-contrast: 1.15;
+  --hero-photo-light: 1.25rem;
+  /* Bloques inferiores: distancia al pie del escenario, rol y párrafo. */
+  --hero-blocks-bottom: 7rem; /* 112px */
+  --hero-role-size: 1.75rem; /* 28px */
+  --hero-intro-size: 1.0625rem; /* 17px */
+  --hero-intro-measure: 23.75rem; /* 380px */
+  --hero-cta-height: 3.5rem; /* 56px */
+  /* Separación del subrayado de los enlaces de texto. */
+  --underline-offset: 0.375rem; /* 6px */
+  --hero-status-dot: 0.5rem; /* 8px */
+  /* Pulso del punto de disponibilidad. */
+  --dur-pulse: 2.2s;
+  /* Velo de la tarjeta del Hero en pantallas estrechas: Ink al 82 %. */
+  --color-ink-veil: rgba(17, 17, 19, 0.82);
+
+  /* Cintas: hueco y signo entre elementos, tamaño de letra, y el giro de la
+     del Hero. */
+  --ribbon-gap: 2.25rem; /* 36px */
+  --ribbon-separator-size: 1.375rem; /* 22px */
+  --ribbon-font-size: 2.5rem; /* 40px */
+  --hero-ribbon-tilt: -1.6deg;
+  --hero-ribbon-scale: 1.04;
   /* Rótulos en mono: mayúsculas con este espaciado. */
   --tracking-label: 0.08em;
 
@@ -129,21 +171,8 @@
   --space-8: 4rem;
   --space-9: 6rem;
 
-  /* Contenedor: mismo ancho para la barra, las secciones y el pie. */
-  --container-max: 80rem; /* origen: 1280px */
+  /* Margen lateral de la pantalla de carga. */
   --container-gutter: 8vw; /* origen */
-  --container-padding: max(
-    var(--container-gutter),
-    calc((100% - var(--container-max)) / 2)
-  );
-  /* Borde izquierdo en dos columnas: el contenido se acerca a ese lado hasta
-     --container-shift. Crece con la ventana, de cero a 1024 px al total a
-     1152, para que nada salte al dejar el apilado. El derecho sigue en
-     --container-padding. */
-  --container-shift: 2rem;
-  --container-padding-start: calc(
-    var(--container-padding) - clamp(0rem, calc((100vw - 64rem) * 0.25), var(--container-shift))
-  );
 
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
@@ -153,98 +182,12 @@
      al cruzar ningún ancho. */
   --about-text-width: min(var(--measure), calc(30rem + (100vw - 64rem) * 0.375));
 
-  /* Retrato del hero, apilado bajo el texto: ancho máximo (576 px) y alto
-     máximo, que solo manda en un teléfono en horizontal. */
-  --portrait-width: 36rem;
-  --portrait-stack-height: 95svh;
-  /* Hero apilado: relleno superior (menor en teléfono) y hueco entre el texto
-     y el retrato, más cortos que en escritorio para que la cara entre antes. */
-  --hero-stack-padding: 4rem;
-  --hero-stack-padding-phone: 3rem;
-  --hero-stack-gap: 2rem;
-  /* En dos columnas se dimensiona por el alto de la ventana, con tope por
-     ancho. Hasta 1280 px, una parte de la ventana: el párrafo ocupa más
-     líneas y la figura lo alcanzaría. Por encima, una rampa que arranca en
-     ese mismo valor (524,8 px a 1280) y llega al máximo (736 px) a 1440: sin
-     ella, el retrato saltaba de golpe al cruzar 1280 px. */
-  --portrait-max-width: 46rem;
-  --portrait-ramp: calc(132vw - 72.8rem);
-  --portrait-share-compact: 41vw;
-  /* Aire entre la barra y el pelo, y parte de la caja que queda vacía sobre
-     el pelo (el lienzo de la foto deja transparente el 12,5 % de arriba). */
-  --portrait-head-gap: 2rem;
-  --portrait-head-room: 0.125;
-  /* Distancia del texto al borde superior: lo deja a la altura de la cabeza.
-     Crece con la ventana, como el retrato y sin escalones: 80 px a 1024,
-     96 px a 1280 y 128 px desde 1312. */
-  --hero-text-offset: min(8rem, max(calc(5rem + (100vw - 64rem) * 0.0625), calc(100vw - 74rem)));
-  /* Parte del alto sobrante que queda sobre el texto cuando el retrato es
-     más alto que él: con 0,5 quedaría centrado; menos, y sube. */
-  --hero-text-top-share: 0.4;
-  /* Ancho del párrafo junto al retrato: más corto que --measure, para que
-     sus líneas queden lejos del hombro de la figura. */
-  --hero-intro-measure: 30rem;
-  /* Tamaño del párrafo. Con más de 16 px el texto no cabe en cuatro líneas
-     junto al retrato hasta los 1088 px de ventana; de ahí crece hasta su
-     máximo a 1152, donde ya hay sitio. Apilado y en teléfono vale 16 px.
-     El máximo va en rem y sin unidad, porque de él salen el tope y la
-     pendiente: 18 px. En inglés baja a 17 (más abajo): el texto aprobado es
-     más largo y a 18 px pasa a cinco líneas desde 1126 px. */
-  --hero-intro-size-max: 1.125;
-  --hero-intro-size: clamp(1rem, calc(1rem + (100vw - 68rem) * (var(--hero-intro-size-max) - 1) / 4), calc(var(--hero-intro-size-max) * 1rem));
-  /* Línea de rol bajo el nombre: siempre mayor que el párrafo (16 a 17 px), de
-     20 px en teléfono a 24 px en escritorio. */
-  --hero-role-size: clamp(1.25rem, 2.2vw, 1.5rem);
-  /* Rol que rota bajo el nombre: cuánto baja el texto que espera y cuánto
-     sube el que sale. La duración del cambio es --duration-role-swap. */
-  --hero-role-shift: 0.4em;
-  /* Saludo sobre el nombre: espaciado de letras propio, más cerrado que
-     --tracking-wider, largo de las líneas de los lados y hueco hasta el
-     texto. */
-  --hero-greeting-tracking: 0.12em;
-  --hero-greeting-rule: var(--space-5);
-  --hero-greeting-gap: var(--space-3);
-  /* Brillo del botón principal: radio de la sombra, en reposo y bajo el
-     puntero. */
-  --hero-cta-glow: 1rem;
-  --hero-cta-glow-hover: 1.5rem;
-  /* Punto del estado de disponibilidad (10 px) y radio de su brillo fijo
-     (8 px), la mitad que el del botón principal. */
-  --hero-status-dot: 0.625rem;
+  /* Brillo fijo del punto de la ciudad en el mapa de «Sobre mí», del que sale
+     --map-city-glow. */
   --hero-status-glow: 0.5rem;
-  /* Halo que separa el retrato del fondo. */
-  --portrait-halo-blur: 1.5rem;
-  --color-halo: var(--color-signal-glow);
-  /* Pastillas que flotan junto al retrato: cuánto suben, cuánto tarda cada
-     vaivén y cuánto crecen bajo el puntero. */
-  --float-distance: 0.5rem;
-  --duration-float: 3s;
-  --hero-badge-scale: 1.06;
-  /* Elevación de las tarjetas y la terminal de «Sobre mí» bajo el puntero.
-     Menor que la de las pastillas: sobre una tarjeta de 400 px, el 6 % deja
-     3 px entre vecinas a 1920; el 3 %, 10 px. */
+  /* Elevación de las tarjetas y la terminal de «Sobre mí» y de las fichas de
+     «Servicios» bajo el puntero. */
   --lift-scale: 1.03;
-  /* Sus medidas van en em: cada pastilla crece con su tamaño de texto. */
-  --badge-padding: 0.4em;
-  --badge-padding-end: 0.85em;
-  --badge-gap: 0.55em;
-  --badge-radius: 0.75em;
-  --badge-plate-size: 2.1em;
-  --badge-plate-radius: 0.45em;
-  --badge-icon-size: 1.65em;
-  /* Cuánto crece la caja de un icono cuyo dibujo no llena su cuadro, para
-     igualarlo al de TypeScript. El tope es 1,27: más, y se sale de la placa. */
-  --badge-icon-scale-postgresql: 1.16;
-  --badge-icon-scale-ai-agents: 1.25;
-  /* Java, a la izquierda de la cabeza: distancia al borde derecho del
-     retrato. A 1024 px el hueco entre el nombre y la figura es estrecho y
-     va pegada a ella; se separa según crece la ventana, hasta su tope. */
-  --hero-java-right: clamp(70.5%, calc(70.5% + (100vw - 64rem) * 0.23), 75%);
-  /* Fondo translúcido (Ink al 72 %) y borde (Bone al 14 %) de la pastilla. */
-  --color-badge-bg: rgba(17, 17, 19, 0.72);
-  --color-badge-border: rgba(242, 238, 230, 0.14);
-  /* Placa clara bajo el icono: sin ella, un logo oscuro no se ve. */
-  --color-plate: var(--color-text);
 
   /* Mapa de «Sobre mí». La tierra va en Signal al 12 %, translúcida como los
      bordes: se lee como silueta sin competir con el texto, y el punto de la
@@ -325,9 +268,6 @@
   --duration-fast: 200ms;
   --duration-base: 300ms;
   --duration-slow: 650ms;
-  /* Cambio de un texto del rol al siguiente. config/heroRoles la repite
-     para el temporizador; un test las compara. */
-  --duration-role-swap: 500ms;
   /* Aparición de un bloque al entrar en pantalla: cuánto dura, cuánto sube
      y cuánto espera cada uno tras el anterior cuando entran a la vez. El
      escalonado es criterio propio, ajustable aquí. */
@@ -358,18 +298,6 @@
   --z-intro: 300;
 }
 
-/* El párrafo del Hero en inglés es más largo: su tamaño máximo es 17 px. */
-:root:lang(en) {
-  --hero-intro-size-max: 1.0625;
-}
-
-/* Apilado no hay retrato al lado: los dos lados vuelven a ser iguales. */
-@media (max-width: 1023px) {
-  :root {
-    --container-padding-start: var(--container-padding);
-  }
-}
-
 @media (max-width: 768px) {
   :root {
     --container-gutter: 6vw; /* origen */
@@ -396,6 +324,16 @@
     --panel-gap: 0.5rem; /* 8px */
     --panel-padding-top: 3rem; /* 48px */
     --panel-padding-inline: 1.25rem; /* 20px */
+    /* Hero en teléfono (tablero móvil): nombre de 112 px, textos y cinta
+       más pequeños, y una luz menor tras la foto. */
+    --font-size-hero-name: 7rem;
+    --hero-role-size: 1.375rem; /* 22px */
+    --hero-intro-size: 0.9375rem; /* 15px */
+    --ribbon-font-size: 1.625rem; /* 26px */
+    --ribbon-gap: 1.375rem; /* 22px */
+    --ribbon-separator-size: 0.875rem; /* 14px */
+    --hero-glow-size: 26.25rem; /* 420px */
+    --hero-ring-size: 17.5rem; /* 280px */
   }
 }
 
@@ -405,7 +343,6 @@
     --duration-fast: 0.01ms;
     --duration-base: 0.01ms;
     --duration-slow: 0.01ms;
-    --duration-role-swap: 0.01ms;
     --duration-reveal: 0.01ms;
     --reveal-distance: 0;
     --reveal-stagger: 0ms;

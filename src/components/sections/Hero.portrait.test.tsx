@@ -7,7 +7,7 @@ import { site } from '@/config/site'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
 import { LANGS } from '@/i18n/types'
-import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
+import { cssRule, cssToken, readCss } from '@/test/cssRules'
 
 const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
 
@@ -87,9 +87,8 @@ describe('Hero: retrato', () => {
       )
     })
 
-    describe('sizes: el ancho del retrato en cada diseño', () => {
+    describe('sizes: el ancho del retrato', () => {
       const sizes = () => image().getAttribute('sizes') ?? ''
-      const entries = () => sizes().split(/,\s*(?=\()|,\s*(?=min\()/)
 
       it('lo declara, porque srcset lleva anchos', () => {
         renderHero()
@@ -97,121 +96,15 @@ describe('Hero: retrato', () => {
         expect(sizes()).not.toBe('')
       })
 
-      it('es exactamente este', () => {
+      // `sizes` no admite variables de CSS: repite el token del ancho de la
+      // foto. Si cambia un lado y no el otro, falla.
+      it('es el token del ancho de la foto, y el CSS lo usa', () => {
         renderHero()
-
-        expect(sizes()).toBe(
-          [
-            '(max-width: 768px) min(88vw, 36rem, 76vh)',
-            '(max-width: 1023px) min(84vw, 36rem, 76vh)',
-            '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 7.75rem) * 0.9143))',
-            'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 7.75rem) * 0.9143))',
-          ].join(', '),
-        )
-      })
-
-      it('solo usa breakpoints de tokens.css, con max-width, de menor a mayor', () => {
-        renderHero()
-
-        const queries = [...sizes().matchAll(/\(([a-z-]+): (\d+)px\)/g)].map(
-          ([, feature = '', value = '']) => ({ feature, value: Number(value) }),
-        )
-
-        expect(queries.length).toBeGreaterThan(0)
-        queries.forEach(({ feature, value }) => {
-          expect(feature).toBe('max-width')
-          expect([1280, 1024, 1023, 768, 480]).toContain(value)
-        })
-        expect(queries.map(({ value }) => value)).toEqual(
-          [...queries].map(({ value }) => value).sort((a, b) => a - b),
-        )
-      })
-
-      // `sizes` no admite variables de CSS y repite medidas del diseño. Aquí
-      // se reconstruye desde los tokens y el CSS: si cambia un lado y no el
-      // otro, falla.
-      describe('coincide con el CSS', () => {
         const tokensCss = readCss('src/styles/tokens.css')
         const heroCss = readCss('src/components/sections/Hero.module.css')
-        const token = (name: string) => cssToken(tokensCss, name)
-        const rem = (name: string) => parseFloat(token(name))
-        /** El margen lateral de la página en el diseño apilado. */
-        const stackedGutter = parseFloat(
-          cssToken(cssMedia(tokensCss, '(max-width: 768px)'), '--container-gutter'),
-        )
-        /** El margen lateral por encima de 768 px: el valor base del token. */
-        const baseGutter = parseFloat(token('--container-gutter'))
-        const { width, height } = portrait.aspectRatio
-        /** Ancho de la caja por cada unidad de alto libre: proporción / parte que ocupa la figura. */
-        const widthPerHeight = (width / height / (1 - Number(token('--portrait-head-room')))).toFixed(4)
-        const byHeight = `calc((100vh - ${rem('--nav-height') + rem('--portrait-head-gap')}rem) * ${widthPerHeight})`
-        /** Tope por alto del retrato apilado, pasado a ancho con la proporción de la caja. */
-        const stackHeight = `${(parseFloat(token('--portrait-stack-height')) * width) / height}vh`
-        const stacked = (gutter: number) =>
-          `min(${100 - 2 * gutter}vw, ${token('--portrait-width')}, ${stackHeight})`
-        const twoColumns = (share: string) =>
-          `min(${token(share)}, ${token('--portrait-max-width')}, ${byHeight})`
 
-        it('los tokens que usa existen, en sus unidades', () => {
-          expect(token('--nav-height')).toMatch(/^[\d.]+rem$/)
-          expect(token('--portrait-head-gap')).toMatch(/^[\d.]+rem$/)
-          expect(token('--portrait-max-width')).toMatch(/^[\d.]+rem$/)
-          expect(token('--portrait-width')).toMatch(/^[\d.]+rem$/)
-          expect(token('--portrait-ramp')).toMatch(/^calc\([\d.]+vw - [\d.]+rem\)$/)
-          expect(token('--portrait-share-compact')).toMatch(/^[\d.]+vw$/)
-          expect(Number(token('--portrait-head-room'))).toBeGreaterThan(0)
-          expect(stackedGutter).toBeGreaterThan(0)
-          expect(token('--portrait-stack-height')).toMatch(/^[\d.]+svh$/)
-          expect(baseGutter).toBeGreaterThan(stackedGutter)
-          expect(token('--container-gutter')).toMatch(/^[\d.]+vw$/)
-        })
-
-        // De 769 a 1023 px el retrato también va apilado, pero la página tiene
-        // el margen lateral de escritorio.
-        it('el tramo de 769 a 1023 px usa el margen lateral base', () => {
-          renderHero()
-
-          expect(entries()[1]).toBe(`(max-width: 1023px) ${stacked(baseGutter)}`)
-        })
-
-        it('sizes es el que sale de los tokens', () => {
-          renderHero()
-
-          expect(sizes()).toBe(
-            [
-              `(max-width: 768px) ${stacked(stackedGutter)}`,
-              `(max-width: 1023px) ${stacked(baseGutter)}`,
-              `(max-width: 1280px) ${twoColumns('--portrait-share-compact')}`,
-              twoColumns('--portrait-ramp'),
-            ].join(', '),
-          )
-        })
-
-        // Y el CSS usa esos mismos tokens, en los mismos tramos.
-        it('el CSS calcula el retrato con esos tokens, en esos tramos', () => {
-          const base = cssRule(heroCss, '.hero')
-          const compact = cssRule(cssMedia(heroCss, '(max-width: 1280px)'), '.hero')
-          const stackedRule = cssRule(cssMedia(heroCss, '(max-width: 1023px)'), '.portrait')
-
-          expect(base['--portrait-height']).toContain(
-            '(100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))',
-          )
-          expect(base['--portrait-height']).toContain(`var(--portrait-cap) * ${height} / ${width}`)
-          expect(base['--portrait-cap']).toBe('min(var(--portrait-max-width), var(--portrait-ramp))')
-          expect(compact['--portrait-cap']).toBe(
-            'min(var(--portrait-max-width), var(--portrait-share-compact))',
-          )
-          expect(stackedRule.width).toBe(
-            `min(100%, var(--portrait-width), calc(var(--portrait-stack-height) * ${width} / ${height}))`,
-          )
-        })
-      })
-
-      // La última entrada no lleva condición: es la del diseño base, de escritorio.
-      it('termina con el ancho del diseño de escritorio, sin condición', () => {
-        renderHero()
-
-        expect(entries().at(-1)).toMatch(/^min\(/)
+        expect(sizes()).toBe(cssToken(tokensCss, '--hero-photo-width'))
+        expect(cssRule(heroCss, '.portrait')).toMatchObject({ width: 'var(--hero-photo-width)' })
       })
     })
 
@@ -242,9 +135,9 @@ describe('Hero: retrato', () => {
       expect(screen.getByRole('region')).toContainElement(image())
     })
 
-    // En el documento va después del texto: así se lee primero el nombre y, en
-    // pantallas estrechas, la imagen queda debajo.
-    it('va después del nombre y de la presentación', () => {
+    // En el documento va entre el nombre, al que tapa en parte, y los textos
+    // del pie, que van encima de ella; en pantallas estrechas, en ese orden.
+    it('va después del nombre y antes de la presentación', () => {
       renderHero()
 
       const intro = screen.getByText(dictionaries.es.hero.intro)
@@ -252,7 +145,7 @@ describe('Hero: retrato', () => {
         Boolean(earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING)
 
       expect(follows(heading(), image())).toBe(true)
-      expect(follows(intro, image())).toBe(true)
+      expect(follows(image(), intro)).toBe(true)
     })
 
     // El envoltorio lleva el halo: si contuviera algo más, también le daría halo.

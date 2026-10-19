@@ -40,7 +40,6 @@ describe('Hero: descarga del CV, con el registro vacío', () => {
     expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name })).not.toBeInTheDocument()
     expect(screen.getByRole('region').textContent).not.toContain(name)
-    expect(screen.queryByText(dictionaries[lang].hero.downloadCvShort)).not.toBeInTheDocument()
   })
 
   it('no deja ningún enlace a un PDF', () => {

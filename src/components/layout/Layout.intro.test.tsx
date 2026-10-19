@@ -9,8 +9,6 @@ import { LangProvider } from '@/i18n/LangProvider'
 import { buildIntroFrames, INTRO_TIMING } from '@/lib/introFrames'
 import { mockMatchMedia } from '@/test/mockMatchMedia'
 
-// El canvas tiene sus propios tests; aquí solo importa el estado de la intro.
-vi.mock('@/hooks/useParticleCanvas', () => ({ useParticleCanvas: vi.fn() }))
 
 const { es } = dictionaries
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'

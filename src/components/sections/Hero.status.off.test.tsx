@@ -45,14 +45,17 @@ describe('Hero: estado de disponibilidad, desactivado', () => {
     expect(screen.getByRole('region').textContent).not.toContain(availabilityShort)
   })
 
-  // Sin estado no queda ni su párrafo ni su punto: solo saludo, rol y presentación.
+  // Sin estado no queda ni su párrafo ni su punto: ningún párrafo vacío y
+  // ningún adorno suelto.
   it('no deja ningún elemento vacío en su lugar', () => {
     renderHero()
 
     const region = screen.getByRole('region')
+    const paragraphs = [...region.querySelectorAll('p')]
 
-    expect(region.querySelectorAll('p')).toHaveLength(3)
-    expect(region.querySelectorAll('span[aria-hidden="true"]')).toHaveLength(1)
+    expect(paragraphs.length).toBeGreaterThan(0)
+    paragraphs.forEach((paragraph) => expect(paragraph.textContent.trim()).not.toBe(''))
+    expect(region.querySelectorAll('span[aria-hidden="true"]')).toHaveLength(0)
   })
 
   it('el resto del Hero sigue en su sitio', () => {

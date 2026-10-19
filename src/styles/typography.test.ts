@@ -8,7 +8,7 @@ const heroCss = readCss('src/components/sections/Hero.module.css')
 
 const SEMIBOLD = '--font-weight-semibold'
 const EXTRABOLD = '--font-weight-extrabold'
-const DISPLAY_SIZE = '--font-size-display'
+const HERO_NAME_SIZE = '--font-size-hero-name'
 const TITLE_SIZE = '--font-size-title'
 
 /** Tokens de peso de tokens.css, como pares [nombre, valor]. */
@@ -31,10 +31,13 @@ const fontImports = fontFaces.map(
 const isLoaded = (family: string, weight: string) =>
   fontImports.some(([loadedFamily, loadedWeight]) => loadedFamily === family && loadedWeight === weight)
 
-/** Mínimo y máximo, en rem, de un token escrito como clamp(mín, fluido, máx). */
+/**
+ * Mínimo y máximo, en rem, de un token escrito como clamp(mín, fluido, máx).
+ * El tramo fluido puede llevar comas dentro (min(…, …)).
+ */
 const clampBounds = (name: string) => {
   const [, min = '', max = ''] =
-    /^clamp\(\s*([\d.]+)rem\s*,[^,]+,\s*([\d.]+)rem\s*\)$/.exec(cssToken(tokensCss, name)) ?? []
+    /^clamp\(\s*([\d.]+)rem\s*,.+,\s*([\d.]+)rem\s*\)$/.exec(cssToken(tokensCss, name)) ?? []
   return { min: Number.parseFloat(min), max: Number.parseFloat(max) }
 }
 
@@ -114,25 +117,28 @@ describe('tipografía de títulos', () => {
   })
 
   describe('nombre del Hero', () => {
-    it('usa el peso más grueso', () => {
-      expect(cssRule(heroCss, '.name')).toMatchObject({ 'font-weight': `var(${EXTRABOLD})` })
+    // Anton solo tiene un peso: pedir otro haría una negrita falsa.
+    it('va en Anton, en su único peso, el que carga fonts.css', () => {
+      expect(cssRule(heroCss, '.name')).toMatchObject({
+        'font-family': 'var(--font-display)',
+        'font-weight': 'var(--font-weight-regular)',
+      })
+      expect(cssToken(tokensCss, '--font-display')).toMatch(/^'Anton'/)
+      expect(isLoaded('Anton', '400')).toBe(true)
     })
 
-    it('va en la fuente de texto, la que carga ese peso', () => {
-      expect(cssRule(heroCss, '.name')).not.toHaveProperty('font-family')
-      expect(cssToken(tokensCss, '--font-sans')).toMatch(/^'Manrope'/)
-    })
-
-    it('el token de tamaño crece: de 40 px en teléfono a 90 px en escritorio', () => {
-      expect(cssToken(tokensCss, DISPLAY_SIZE)).toBe('clamp(2.5rem, 7vw, 5.625rem)')
+    // La escala de la spec: de 120 a 330 px.
+    it('el tamaño sale de su token, de 120 a 330 px', () => {
+      expect(cssRule(heroCss, '.name')).toMatchObject({ 'font-size': `var(${HERO_NAME_SIZE})` })
+      expect(clampBounds(HERO_NAME_SIZE)).toEqual({ min: 7.5, max: 20.625 })
     })
 
     it('es mayor que el título de sección en los dos extremos', () => {
-      const display = clampBounds(DISPLAY_SIZE)
+      const name = clampBounds(HERO_NAME_SIZE)
       const title = clampBounds(TITLE_SIZE)
 
-      expect(display.min).toBeGreaterThan(title.min)
-      expect(display.max).toBeGreaterThan(title.max)
+      expect(name.min).toBeGreaterThan(title.min)
+      expect(name.max).toBeGreaterThan(title.max)
     })
   })
 

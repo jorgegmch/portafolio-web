@@ -10,9 +10,6 @@ import { dictionaries } from '@/i18n/index'
 import { buildIntroFrames, INTRO_TIMING } from '@/lib/introFrames'
 import { mockMatchMedia } from '@/test/mockMatchMedia'
 
-// El canvas tiene sus propios tests; aquí solo importa que el fondo esté montado.
-vi.mock('@/hooks/useParticleCanvas', () => ({ useParticleCanvas: vi.fn() }))
-
 const { es } = dictionaries
 const UNKNOWN_URL = '/no-existe'
 const OLD_CERTIFICATIONS_URL = '/certificaciones'
@@ -62,14 +59,6 @@ describe('App', () => {
       expect(screen.getAllByRole('banner')).toHaveLength(1)
       expect(screen.getAllByRole('main')).toHaveLength(1)
       expect(screen.getAllByRole('contentinfo')).toHaveLength(1)
-    })
-
-    it('monta el fondo de partículas, fuera del contenido principal', () => {
-      const { container } = renderAt(routes.home)
-
-      const canvas = container.querySelector('canvas')
-      expect(canvas).toBeInTheDocument()
-      expect(main()).not.toContainElement(canvas)
     })
 
     it('ya no queda el texto de la plantilla', () => {
@@ -209,13 +198,12 @@ describe('App', () => {
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
       })
 
-      it('el resto de la página queda inerte: skip link, fondo, barra, contenido y pie', () => {
-        const { container } = renderAt(routes.home)
+      it('el resto de la página queda inerte: skip link, barra, contenido y pie', () => {
+        renderAt(routes.home)
         const page = inertPage()
 
         expect(page).not.toBeNull()
         expect(page).toContainElement(skipLink())
-        expect(page).toContainElement(container.querySelector('canvas'))
         expect(page).toContainElement(screen.getByRole('banner'))
         expect(page).toContainElement(screen.getByRole('contentinfo'))
       })

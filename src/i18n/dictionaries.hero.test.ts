@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { dictionaries } from '@/i18n/index'
 import { LANGS } from '@/i18n/types'
 
-const GREETINGS = { es: 'Hola, soy', en: "Hello, I'm" } as const
-
 const VIEW_PROJECTS = { es: 'Ver proyectos', en: 'View projects' } as const
 
 const AVAILABILITY = {
@@ -11,11 +9,12 @@ const AVAILABILITY = {
   en: 'Available for freelance',
 } as const
 
-// Aprobado por el autor palabra por palabra: cambiarlo exige su visto bueno y
+// El español sale literal de la spec del rediseño v2 (§3.1), escrita por el
+// autor; el inglés es su traducción. Cambiarlos exige su visto bueno y
 // actualizar también estas dos constantes.
 const INTRO = {
-  es: 'Construyo APIs con Java y Spring Boot, integro agentes de IA en automatizaciones y soy un puente comunicativo entre el negocio y el equipo. Vengo de la comunicación social: escucho, planifico, documento y comunico, activamente.',
-  en: 'I build APIs with Java and Spring Boot, integrate AI agents into automations, and act as a communication bridge between the business and the team. I come from a communications background: I actively listen, plan, document and communicate.',
+  es: 'Traduzco lo que tu negocio necesita en software que funciona, y te lo explico sin tecnicismos.',
+  en: 'I translate what your business needs into software that works, and I explain it without jargon.',
 } as const
 
 const SOCIAL_LABEL = { es: 'Redes y contacto', en: 'Social and contact' } as const
@@ -55,9 +54,10 @@ describe('textos del hero', () => {
     expect(dictionaries[lang].hero.availability).toBe(AVAILABILITY[lang])
   })
 
-  // El largo no cabe en una línea en los teléfonos más estrechos.
+  // El largo no cabe en una línea en los teléfonos; el corto es el del
+  // tablero móvil del rediseño.
   it('en español hay además un texto corto, el aprobado', () => {
-    expect(dictionaries.es.hero.availabilityShort).toBe('Freelance disponible')
+    expect(dictionaries.es.hero.availabilityShort).toBe('Disponible para freelance')
   })
 
   it('el texto corto es más corto que el largo', () => {
@@ -81,17 +81,6 @@ describe('textos del hero', () => {
     const { viewProjects } = dictionaries[lang].hero
 
     expect(viewProjects).not.toBe(viewProjects.toUpperCase())
-  })
-
-  it.each(LANGS)('en %s, el saludo es el aprobado', (lang) => {
-    expect(dictionaries[lang].hero.greeting).toBe(GREETINGS[lang])
-  })
-
-  // Las mayúsculas sostenidas las pone el CSS: el texto se guarda normal.
-  it.each(LANGS)('en %s, el saludo no se guarda en mayúsculas sostenidas', (lang) => {
-    const { greeting } = dictionaries[lang].hero
-
-    expect(greeting).not.toBe(greeting.toUpperCase())
   })
 
   it.each(LANGS)('en %s, la presentación tiene texto', (lang) => {

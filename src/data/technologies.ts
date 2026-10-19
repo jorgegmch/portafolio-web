@@ -1,4 +1,4 @@
-import type { HeroBadge, Technology } from '@/data/types'
+import type { Technology } from '@/data/types'
 
 // Sin porcentajes ni niveles: solo qué tecnologías y a qué grupo pertenecen.
 // Los nombres de los grupos (traducibles) viven en i18n/.
@@ -68,22 +68,3 @@ export const stackIconUrl = (technology: Technology<TechnologyId>): string => {
   if (logo) return techLogoUrl(logo)
   return `${import.meta.env.BASE_URL}icons/${STACK_GENERIC_ICONS[technology.id] ?? ''}`
 }
-
-/**
- * Pastillas que flotan junto al retrato del Hero, en orden. El nombre visible
- * es el de la tecnología en el catálogo. `brand` distingue el logo de marca,
- * que va sin alterar, del icono genérico que se usa cuando no hay logo que
- * mostrar: propio (base de datos) o de un conjunto de licencia abierta (el
- * chip de AI Agents, de PrimeIcons).
- */
-export const heroBadges = [
-  { technology: 'python', icon: 'python.svg', brand: true },
-  { technology: 'java', icon: 'duke.svg', brand: true },
-  { technology: 'typescript', icon: 'typescript.svg', brand: true },
-  { technology: 'postgresql', icon: 'database.svg', brand: false },
-  { technology: 'ai-agents', icon: 'ai-agents.svg', brand: false },
-] as const satisfies readonly HeroBadge<TechnologyId>[]
-
-/** URL pública del icono de una pastilla: public/tech si es de marca, public/icons si no. */
-export const heroBadgeIconUrl = ({ icon, brand }: HeroBadge) =>
-  brand ? techLogoUrl(icon) : `${import.meta.env.BASE_URL}icons/${icon}`

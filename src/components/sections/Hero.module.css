@@ -1,657 +1,299 @@
+/* Panel Ink, de alto la ventana. Arriba deja el hueco de la navegación, que
+   va dentro de este panel; recorta la luz, la foto y la cinta girada. */
 .hero {
-  /* Tope por ancho del retrato en dos columnas. */
-  --portrait-cap: min(var(--portrait-max-width), var(--portrait-ramp));
-  /* Alto del retrato: el que deja el pelo a --portrait-head-gap de la barra
-     (ventana menos barra y ese aire, entre la parte de la caja que ocupa la
-     figura), o el que corresponde al tope por ancho si es menor. */
-  --portrait-height: min(
-    calc((100svh - var(--nav-height) - var(--portrait-head-gap)) / (1 - var(--portrait-head-room))),
-    calc(var(--portrait-cap) * 5 / 4)
-  );
-  /* Lo que ocupa la línea de rol, con su margen. */
-  --hero-role-height: calc(var(--hero-role-size) * var(--leading-tight) + var(--space-3));
-  /* Lo que el texto empieza por debajo del pelo, menos su relleno final,
-     que pesa según la proporción del reparto: lo que se descuenta para
-     colocarlo junto a la figura. */
-  --hero-text-drop: calc(
-    var(--hero-text-offset) - var(--hero-role-height) - var(--portrait-head-gap) - var(--space-4) *
-      var(--hero-text-top-share) / (1 - var(--hero-text-top-share))
-  );
-  /* Separación sobre el párrafo, sobre los botones y sobre el estado y las
-     redes. Los tramos estrechos la aprietan. */
-  --hero-space-intro: var(--space-5);
-  --hero-space-actions: var(--space-6);
-  --hero-space-meta: var(--space-5);
-
-  /* Referencia del retrato, que va anclado fuera del flujo. */
   position: relative;
-  display: grid;
-  /* El texto nunca baja de lo que mide el nombre; la segunda columna reserva
-     el lado del retrato. */
-  grid-template-columns: minmax(min-content, 1fr) minmax(0, 46%);
-  align-items: start;
-  gap: var(--space-7);
-  /* Arriba, el hueco de la navegación, que va dentro de este panel; de la
-     figura a la navegación queda el aire del token y abajo el retrato llega
-     al borde del panel. */
-  min-height: calc(
-    var(--nav-height) + var(--portrait-height) * (1 - var(--portrait-head-room)) +
-      var(--portrait-head-gap)
-  );
-  /* Arriba, solo el hueco de la navegación; abajo nada: el alto lo marca el
-     retrato. */
-  padding: var(--nav-height) var(--container-padding) 0;
-  /* A la izquierda, el borde que comparte con el retrato apilado. */
-  padding-left: var(--container-padding-start);
-  /* Panel en Ink; recorta el halo y el retrato en sus esquinas. */
+  display: flex;
+  flex-direction: column;
+  min-height: var(--hero-min-height);
+  padding-top: var(--nav-height);
   overflow: hidden;
   background-color: var(--color-ink);
   /* Al llegar por el ancla, el panel queda a un hueco del borde. */
   scroll-margin-top: var(--panel-gap);
 }
 
-/* Arriba, a la altura de la cabeza, donde la figura es estrecha: más abajo,
-   el hombro lo pisaría. Queda por encima de la caja del retrato, que invade
-   esta columna por su zona transparente. */
-.text {
+/* Metadatos: disponibilidad a un lado y ciudad con su hora al otro. */
+.meta {
   position: relative;
-  z-index: 1;
-  /* Sube lo que ocupa el rol: así el párrafo sigue a la altura de siempre,
-     lejos del hombro. Abajo, poco relleno: si el texto es más alto que el
-     retrato, el Hero crece y el pelo se aleja de la barra. */
-  padding: calc(var(--hero-text-offset) - var(--hero-role-height)) 0 var(--space-4);
-  /* Ocupa todo el alto del Hero, en columna: lo que sobra se lo reparten los
-     dos huecos de abajo. */
+  z-index: 4;
   display: flex;
-  flex-direction: column;
-  align-self: stretch;
-}
-
-/* Junto a la figura: donde el retrato es más alto que el texto, un hueco
-   arriba y otro abajo se reparten lo que sobra, el de arriba la parte menor
-   que dice --hero-text-top-share. Donde no sobra, encogen hasta cero y el
-   texto se queda arriba, a la distancia de siempre. */
-.text::before,
-.text::after {
-  content: '';
-  flex: 1 1 0;
-}
-
-/* La figura va del pelo al borde inferior, y el texto empieza más abajo. El
-   hueco de arriba mide como mínimo esa diferencia y la sube con un margen
-   negativo: las dos se anulan, así que no añade alto, y el reparto se mide
-   desde el pelo. Si la diferencia es negativa no hace nada. */
-.text::before {
-  flex-grow: var(--hero-text-top-share);
-  min-height: var(--hero-text-drop);
-  margin-top: min(0%, calc(-1 * var(--hero-text-drop)));
-}
-
-.text::after {
-  flex-grow: calc(1 - var(--hero-text-top-share));
-}
-
-/* Texto entre dos líneas finas: la izquierda arranca en el borde del nombre
-   y el texto queda sangrado. */
-.greeting {
-  display: flex;
-  align-items: center;
-  gap: var(--hero-greeting-gap);
-  margin-bottom: var(--space-3);
-  color: var(--color-text-muted);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding: 0 var(--nav-padding-inline);
+  color: var(--color-muted);
   font-family: var(--font-mono);
-  font-size: var(--font-size-md);
-  letter-spacing: var(--hero-greeting-tracking);
-  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
-/* Adorno: sin texto, no existe para un lector de pantalla. Verdes junto al
-   texto y transparentes en el extremo lejano. */
-.greeting::before,
-.greeting::after {
-  content: '';
-  flex: none;
-  width: var(--hero-greeting-rule);
-  height: 1px;
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-.greeting::before {
-  background: linear-gradient(to right, transparent, var(--color-accent-alt));
+.statusDot {
+  flex-shrink: 0;
+  width: var(--hero-status-dot);
+  height: var(--hero-status-dot);
+  border-radius: var(--radius-full);
+  background-color: var(--color-signal);
 }
 
-/* El espaciado deja un hueco tras la última letra: se descuenta para que
-   esta línea quede tan cerca del texto como la otra. */
-.greeting::after {
-  margin-left: calc(-1 * var(--hero-greeting-tracking));
-  background: linear-gradient(to left, transparent, var(--color-accent-alt));
+/* Por defecto se ve el texto largo; el corto solo en teléfono. */
+.statusShort {
+  display: none;
 }
 
+/* Escenario: el nombre, la foto delante y los bloques de texto encima. */
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: var(--hero-stage-min);
+}
+
+/* Luz radial Signal y anillo fino detrás de la foto. Decorativos. */
+.glow,
+.ring {
+  position: absolute;
+  left: 50%;
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.glow {
+  top: 52%;
+  width: var(--hero-glow-size);
+  height: var(--hero-glow-size);
+  background: radial-gradient(circle, var(--color-signal-glow) 0%, transparent 62%);
+}
+
+.ring {
+  top: 50%;
+  width: var(--hero-ring-size);
+  height: var(--hero-ring-size);
+  border: 1px solid var(--line-10);
+}
+
+/* El nombre gigante, centrado y detrás de la foto. Las mayúsculas son solo
+   visuales: el h1 se lee con el texto del diccionario. */
 .name {
-  color: var(--color-text);
-  font-size: var(--font-size-display);
-  font-weight: var(--font-weight-extrabold);
-  line-height: var(--leading-tight);
-  /* Con el nombre entero como ancho mínimo de su columna, el retrato cede
-     antes de que se parta. */
-  white-space: nowrap;
+  position: absolute;
+  inset: var(--space-5) 0 auto;
+  z-index: 1;
+  color: var(--color-bone);
+  font-family: var(--font-display);
+  font-size: var(--font-size-hero-name);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-display);
+  text-align: center;
+  text-transform: uppercase;
 }
 
-.lastName {
-  color: var(--color-accent-alt);
+.first,
+.last {
+  display: block;
+}
+
+.last {
+  color: var(--color-signal);
+}
+
+/* La foto, centrada, anclada abajo y delante del nombre. El tratamiento es
+   estático: blanco y negro con contraste y un borde de luz Signal. */
+.portrait {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 3;
+  width: var(--hero-photo-width);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  filter: grayscale(1) contrast(var(--hero-photo-contrast)) drop-shadow(0 0 1px var(--color-signal))
+    drop-shadow(0 0 var(--hero-photo-light) var(--color-signal-glow));
+}
+
+/* Bloques inferiores, a los dos lados de la foto y por encima de ella. */
+.blocks {
+  position: absolute;
+  right: var(--nav-padding-inline);
+  bottom: var(--hero-blocks-bottom);
+  left: var(--nav-padding-inline);
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .role {
-  margin-top: var(--space-3);
-  color: var(--color-text);
   font-size: var(--hero-role-size);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--leading-tight);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--tracking-tight);
 }
 
-/* Para lectores de pantalla: está en el árbol de accesibilidad, pero no
-   ocupa sitio ni se ve. Nunca con display: none, que también lo quitaría de
-   ahí. */
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+.stackLine {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
 }
 
-/* Los textos del rol comparten celda: la línea mide lo que el más largo y
-   no cambia de alto cuando uno sustituye a otro. */
-.roleStack {
-  display: grid;
-}
-
-/* En espera: invisible y un poco más abajo, sin transición, para volver ahí
-   de golpe después de salir. */
-.roleItem {
-  grid-area: 1 / 1;
-  opacity: 0;
-  transform: translateY(var(--hero-role-shift));
-}
-
-/* El que entra sube hasta su sitio mientras aparece. */
-.roleCurrent {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity var(--duration-role-swap) var(--ease-standard),
-    transform var(--duration-role-swap) var(--ease-standard);
-}
-
-/* El que sale sigue subiendo mientras se apaga. */
-.roleLeaving {
-  transform: translateY(calc(-1 * var(--hero-role-shift)));
-  transition:
-    opacity var(--duration-role-swap) var(--ease-standard),
-    transform var(--duration-role-swap) var(--ease-standard);
-}
-
-/* Adorno fijo junto al rol: no es un cursor de escritura, no parpadea. */
-.cursor {
-  margin-left: var(--space-1);
-  color: var(--color-accent-alt);
+.pitch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+  max-width: var(--hero-intro-measure);
 }
 
 .intro {
-  max-width: var(--hero-intro-measure);
-  margin-top: var(--hero-space-intro);
-  color: var(--color-text-muted);
+  color: var(--color-bone-soft);
   font-size: var(--hero-intro-size);
-  /* Líneas de largo parecido: ninguna se alarga hacia el hombro de la
-     figura. Donde no se admite, se parten como siempre. */
-  text-wrap: balance;
+  line-height: var(--leading-body);
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-top: var(--hero-space-actions);
+  align-items: center;
+  gap: var(--space-5);
 }
 
-/* Cápsula rellena. El brillo es una sombra del acento de la paleta: no ocupa
-   sitio. Cambia de golpe bajo el puntero, porque solo se animan transform y
-   opacity. */
+/* CTA principal: píldora Signal de 56 px. */
 .primary {
   display: inline-flex;
   align-items: center;
-  min-height: var(--touch-target);
-  padding: var(--space-3) var(--space-5);
-  border: 1px solid var(--color-accent-alt);
+  gap: var(--space-3);
+  min-height: var(--hero-cta-height);
+  padding: 0 var(--space-6);
   border-radius: var(--radius-pill);
-  background: var(--color-accent-alt);
-  box-shadow: 0 0 var(--hero-cta-glow) color-mix(in srgb, var(--color-accent-alt) 35%, transparent);
-  color: var(--color-bg);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-normal);
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-extrabold);
   text-decoration: none;
-  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.primary:hover {
-  box-shadow: 0 0 var(--hero-cta-glow-hover) color-mix(in srgb, var(--color-accent-alt) 55%, transparent);
-}
-
-/* El estado lo dice el texto; el punto solo lo acompaña. */
-.status {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--hero-space-meta);
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  letter-spacing: var(--tracking-normal);
-  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
-  text-transform: uppercase;
-}
-
-/* Donde el texto largo no cabe en una línea se muestra el corto. Con
-   display: none, el oculto tampoco existe para un lector de pantalla. */
-.statusShort {
-  display: none;
-}
-
-/* Brillo fijo, como un LED: una sombra más corta y más tenue que la del
-   botón principal. Sin color-mix la sombra no se aplica y queda el punto. */
-.statusDot {
-  flex: none;
-  width: var(--hero-status-dot);
-  height: var(--hero-status-dot);
-  border-radius: var(--radius-full);
-  background: var(--color-accent-alt);
-  box-shadow: 0 0 var(--hero-status-glow) color-mix(in srgb, var(--color-accent-alt) 30%, transparent);
-}
-
-.social {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--hero-space-meta);
-  list-style: none;
-}
-
-/* Círculo de solo borde, igual para el enlace y para el botón. El puntero y
-   el foco cambian el borde, de golpe: el logo de dentro no se toca. */
-.socialControl {
-  display: grid;
-  place-items: center;
-  width: var(--touch-target);
-  height: var(--touch-target);
-  padding: 0;
-  border: 1px solid var(--color-text-subtle);
-  border-radius: var(--radius-full);
-  background: none;
-  cursor: pointer;
-}
-
-.socialControl:hover {
-  border-color: var(--color-accent-alt);
-}
-
-.socialControl:focus-visible {
-  border-color: var(--color-accent-alt);
-}
-
-/* Logo oficial o icono propio, cargado como imagen: conserva su proporción y
-   no lleva filtro, opacidad ni sombra. */
-.socialIcon {
+.arrow {
+  flex-shrink: 0;
   width: var(--icon-size);
   height: var(--icon-size);
-  object-fit: contain;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
 }
 
-/* Reserva el hueco con la proporción del retrato (assets/hero/portrait): otra
-   imagen de 4:5 entra sin tocar el diseño. */
-.portrait {
-  /* Anclado abajo a la derecha: el desvanecido termina en el borde de la
-     sección. También es la referencia de las posiciones de las pastillas. */
-  position: absolute;
-  right: var(--container-padding);
-  bottom: 0;
-  height: var(--portrait-height);
-  aspect-ratio: 4 / 5;
-  /* La caja se mete en la columna de texto: no se queda con el puntero. */
-  pointer-events: none;
+/* La cinta de stack cruza el pie del panel, girada. El giro es fijo: lo que
+   se mueve es su pista (Ribbon). */
+.ribbon {
+  position: relative;
+  z-index: 5;
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) 0;
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+  font-family: var(--font-display);
+  font-size: var(--ribbon-font-size);
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+  transform: rotate(var(--hero-ribbon-tilt)) scale(var(--hero-ribbon-scale));
 }
 
-/* Halo que separa la silueta oscura del fondo oscuro. Va fuera de la imagen:
-   así se calcula sobre la foto ya desvanecida y la máscara no lo recorta. */
-.glow {
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 0 var(--portrait-halo-blur) var(--color-halo));
-}
-
-.photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* El busto termina en corte recto abajo: la máscara lo funde con el fondo
-     sin tocar el archivo. A los lados la foto es silueta y no se difumina. */
-  mask-image: linear-gradient(to bottom, black 72%, transparent);
-}
-
-/* Capa decorativa: las pastillas que flotan alrededor del retrato. */
-.badges {
-  position: absolute;
-  inset: 0;
-}
-
-/* Cada pastilla trae su altura (--badge-y), el lado por el que se ancla
-   (--badge-left o --badge-right, en porcentaje del retrato), su desfase
-   (--float-phase, fracción de la duración) y su tamaño de texto, que es el
-   mismo para las cinco en cada tramo: así solo cambia el ancho. Las de la
-   derecha se anclan por la derecha para no salirse de la página. Solo un
-   lado a la vez: si un tramo cambia de lado, anula el otro con `initial`.
-   Van en anillo alrededor de la figura: dos a la izquierda en todos los
-   anchos (una junto a la cabeza, tras el nombre, y otra abajo), una abajo
-   hacia el centro y dos a la derecha. */
-.float {
-  position: absolute;
-  top: var(--badge-y);
-  right: var(--badge-right, auto);
-  left: var(--badge-left, auto);
-  animation: float var(--duration-float) ease-in-out infinite alternate;
-  animation-delay: calc(var(--duration-float) * var(--float-phase));
-}
-
-.float:nth-child(1) {
-  --badge-left: 4%;
-  --badge-y: 68%;
-  --float-phase: 0;
-
-  font-size: var(--font-size-base);
-}
-
-/* A la izquierda de la cabeza, en el hueco que deja el nombre. Se ancla por
-   la derecha, a una distancia fluida: así su borde se separa de la figura
-   según el hueco crece con la ventana. */
-.float:nth-child(2) {
-  --badge-right: var(--hero-java-right);
-  --badge-y: 31%;
-  --float-phase: -0.45;
-
-  font-size: var(--font-size-base);
-}
-
-.float:nth-child(3) {
-  --badge-right: 26%;
-  --badge-y: 88%;
-  --float-phase: -0.9;
-
-  font-size: var(--font-size-base);
-}
-
-.float:nth-child(4) {
-  --badge-right: -5%;
-  --badge-y: 38%;
-  --float-phase: -1.3;
-  --badge-icon-scale: var(--badge-icon-scale-postgresql);
-
-  font-size: var(--font-size-base);
-}
-
-.float:nth-child(5) {
-  --badge-right: 6%;
-  --badge-y: 63%;
-  --float-phase: -1.75;
-  --badge-icon-scale: var(--badge-icon-scale-ai-agents);
-
-  font-size: var(--font-size-base);
-}
-
-.badge {
-  display: flex;
-  gap: var(--badge-gap);
-  align-items: center;
-  padding: var(--badge-padding) var(--badge-padding-end) var(--badge-padding) var(--badge-padding);
-  border: 1px solid var(--color-badge-border);
-  border-radius: var(--badge-radius);
-  background: var(--color-badge-bg);
-  color: var(--color-text);
-  line-height: 1;
-  white-space: nowrap;
-  /* El retrato no intercepta el puntero; la pastilla sí, para ampliarse. */
-  pointer-events: auto;
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-.badge:hover {
-  transform: scale(var(--hero-badge-scale));
-}
-
-/* Fondo claro bajo el icono, igual en todas. Es un fondo, no un efecto: el
-   logo de marca va encima sin filtro, opacidad ni sombra. */
-.plate {
-  display: grid;
-  place-items: center;
-  width: var(--badge-plate-size);
-  height: var(--badge-plate-size);
-  border-radius: var(--badge-plate-radius);
-  background: var(--color-plate);
-}
-
-/* La caja crece con el factor de su pastilla (1 si no trae ninguno): así
-   un dibujo con aire alrededor se ve del tamaño de los demás, sin tocar el
-   archivo del icono. */
-.badgeIcon {
-  width: calc(var(--badge-icon-size) * var(--badge-icon-scale, 1));
-  height: calc(var(--badge-icon-size) * var(--badge-icon-scale, 1));
-  object-fit: contain;
-}
-
-@keyframes float {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(calc(-1 * var(--float-distance)));
+@media (prefers-reduced-motion: no-preference) {
+  .statusDot {
+    animation: hero-pulse var(--dur-pulse) ease-in-out infinite;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .float {
-    animation: none;
+@keyframes hero-pulse {
+  50% {
+    opacity: 0.3;
   }
 }
 
-/* Con el párrafo en más líneas, la figura lo alcanza antes: el tope por
-   ancho baja y la pastilla de abajo a la izquierda se mueve con él. El
-   retrato es más bajo que el texto, así que los bloques se aprietan para que
-   el Hero no crezca y el pelo siga junto a la barra. */
+/* Hasta 1280 px todo va en columna: los textos a los lados de la foto piden
+   unos 1180 px y, más estrechos, la pisarían. El nombre arriba, la foto
+   delante de su pie y los textos en una tarjeta translúcida sobre el pie de
+   la foto. Las letras de Anton sobresalen de su interlineado: el escenario
+   les deja aire arriba. */
 @media (max-width: 1280px) {
-  .hero {
-    --portrait-cap: min(var(--portrait-max-width), var(--portrait-share-compact));
-    --hero-space-intro: var(--space-4);
-    --hero-space-actions: var(--space-5);
-    --hero-space-meta: var(--space-4);
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 0;
+    padding: var(--space-6) var(--nav-padding-inline) var(--space-6);
   }
 
-  .float:nth-child(1) {
-    --badge-left: 0%;
-    --badge-y: 80%;
-  }
-
-  .float:nth-child(3) {
-    --badge-right: 6%;
-    --badge-y: 86%;
-  }
-
-  .float:nth-child(5) {
-    --badge-right: -2%;
-    --badge-y: 62%;
-  }
-}
-
-/* Apilado: por debajo de 1024 px el texto no cabe en el alto que da el
-   retrato, así que el retrato vuelve al flujo, debajo del texto. */
-@media (max-width: 1023px) {
-  .hero {
-    /* Apilado no hay retrato al lado que alcanzar: vuelve el aire de escritorio. */
-    --hero-space-intro: var(--space-5);
-    --hero-space-actions: var(--space-6);
-    --hero-space-meta: var(--space-5);
-
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--hero-stack-gap);
-    min-height: auto;
-    padding: calc(var(--nav-height) + var(--hero-stack-padding)) var(--container-padding) 0;
-  }
-
-  /* La separación de la rejilla ya da el hueco hasta el retrato. Sin figura
-     al lado no hay nada que centrar: vuelve a ser un bloque normal. */
-  .text {
-    display: block;
-    padding: 0;
-  }
-
-  .text::before,
-  .text::after {
-    content: none;
-  }
-
-  /* Sin retrato al lado, el párrafo recupera su ancho normal y parte las
-     líneas como siempre. */
-  .intro {
-    max-width: var(--measure);
-    text-wrap: wrap;
+  .name {
+    position: relative;
+    inset: auto;
   }
 
   .portrait {
     position: relative;
+    bottom: auto;
+    left: auto;
+    margin-top: calc(-1 * var(--space-7));
+    transform: none;
+  }
+
+  .blocks {
+    position: relative;
     right: auto;
     bottom: auto;
-    /* También por alto: en un teléfono en horizontal, su ancho máximo serían
-       dos pantallas de alto. */
-    width: min(100%, var(--portrait-width), calc(var(--portrait-stack-height) * 4 / 5));
-    height: auto;
-    justify-self: center;
+    left: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+    width: 100%;
+    margin-top: calc(-1 * var(--space-9));
+    padding: var(--space-5);
+    border: 1px solid var(--line-08);
+    border-radius: var(--radius-block);
+    background-color: var(--color-ink-veil);
   }
 
-  /* En anillo, como en escritorio: dos a la izquierda (una arriba, sobre el
-     pelo, y otra abajo), una abajo hacia el centro y dos a la derecha. */
-  .float:nth-child(1) {
-    --badge-left: 0%;
-    --badge-y: 58%;
-
-    font-size: var(--font-size-md);
-  }
-
-  .float:nth-child(2) {
-    --badge-right: initial;
-    --badge-left: 0%;
-    --badge-y: 2%;
-
-    font-size: var(--font-size-md);
-  }
-
-  .float:nth-child(3) {
-    --badge-right: 24%;
-    --badge-y: 86%;
-
-    font-size: var(--font-size-md);
-  }
-
-  .float:nth-child(4) {
-    --badge-right: -2%;
-    --badge-y: 46%;
-
-    font-size: var(--font-size-md);
-  }
-
-  .float:nth-child(5) {
-    --badge-right: 4%;
-    --badge-y: 66%;
-
-    font-size: var(--font-size-md);
+  .pitch {
+    max-width: none;
   }
 }
 
-/* En teléfono todo lo que acorta el texto sube la cara hacia la primera
-   pantalla: bloques más juntos, menos hueco hasta el retrato y sin estado. */
+/* En teléfono: el estado corto, sin la hora, y los botones a todo el ancho. */
 @media (max-width: 480px) {
-  .hero {
-    --hero-space-intro: var(--space-4);
-    --hero-space-actions: var(--space-5);
-    --hero-space-meta: var(--space-4);
-
-    gap: var(--space-5);
-    padding-top: calc(var(--nav-height) + var(--hero-stack-padding-phone));
-  }
-
-  /* Con display: none tampoco existe para un lector de pantalla. */
-  .status {
-    display: none;
-  }
-
-  /* Más estrecho, para que quepan dos en fila; el alto táctil no cambia. */
-  .primary {
-    padding: var(--space-2) var(--space-4);
-    font-size: var(--font-size-sm);
-  }
-
-  /* El retrato mide menos de 410 px: con los tamaños de tablet las cinco no
-     caben sin tapar la cara. Todas llevan el texto más pequeño; una va
-     arriba a la izquierda, sobre el pelo y pegada al borde, y el resto por
-     debajo de la cara, dos a la izquierda y dos a la derecha. */
-  .float:nth-child(1) {
-    --badge-left: 0%;
-    --badge-y: 58%;
-
-    font-size: var(--font-size-sm);
-  }
-
-  .float:nth-child(2) {
-    --badge-left: 0%;
-    --badge-y: 4%;
-
-    font-size: var(--font-size-sm);
-  }
-
-  .float:nth-child(3) {
-    --badge-right: initial;
-    --badge-left: 0%;
-    --badge-y: 84%;
-
-    font-size: var(--font-size-sm);
-  }
-
-  .float:nth-child(4) {
-    --badge-right: 0%;
-    --badge-y: 48%;
-
-    font-size: var(--font-size-sm);
-  }
-
-  .float:nth-child(5) {
-    --badge-right: 2%;
-    --badge-y: 74%;
-
-    font-size: var(--font-size-sm);
-  }
-}
-
-/* El texto largo del estado necesita 314 px de columna, que hay desde 374 px
-   de ventana: hasta aquí, con algo de margen, va el corto. */
-@media (max-width: 380px) {
-  .statusLong {
+  .statusLong,
+  .clock {
     display: none;
   }
 
   .statusShort {
     display: inline;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primary {
+    justify-content: center;
   }
 }

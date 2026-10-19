@@ -34,21 +34,22 @@ describe('CvDownload: estilos', () => {
     })
   })
 
-  // Segundo en la fila y más estrecho que la lista: a la izquierda se saldría de la pantalla.
+  // A la izquierda, la lista se saldría de la pantalla en un teléfono.
   it('en teléfono la lista se alinea al borde derecho del control', () => {
-    expect(cssRule(cssMedia(css, '(max-width: 480px)'), '.list')).toEqual({
+    expect(cssRule(cssMedia(css, '(max-width: 480px)'), '.list')).toMatchObject({
       right: '0',
       left: 'auto',
     })
   })
 
-  it('el control es una cápsula de contorno con el alto táctil', () => {
+  // Spec §3.1: el secundario es un enlace subrayado, no una cápsula.
+  it('el control es texto subrayado, sin borde ni fondo, con el alto táctil', () => {
     expect(cssRule(css, '.toggle')).toMatchObject({
       'min-height': 'var(--touch-target)',
-      border: '1px solid var(--color-accent-alt)',
-      'border-radius': 'var(--radius-pill)',
+      border: '0',
       'background-color': 'transparent',
-      color: 'var(--color-accent-alt)',
+      'text-decoration': 'underline',
+      'text-underline-offset': 'var(--underline-offset)',
     })
   })
 
@@ -119,13 +120,11 @@ describe('CvDownload: estilos', () => {
     expect(css).not.toMatch(/outline\s*:/)
   })
 
-  it('en teléfono el control se estrecha sin perder el alto táctil', () => {
+  // En teléfono los botones del Hero van en columna: el control se centra.
+  it('en teléfono el control va centrado y no pierde el alto táctil', () => {
     const phone = cssMedia(css, '(max-width: 480px)')
 
-    expect(cssRule(phone, '.toggle')).toMatchObject({
-      padding: 'var(--space-2) var(--space-4)',
-      'font-size': 'var(--font-size-sm)',
-    })
-    expect(cssRule(phone, '.toggle')).not.toHaveProperty('min-height')
+    expect(cssRule(phone, '.root')).toEqual({ 'text-align': 'center' })
+    expect(cssRule(phone, '.toggle')).toEqual({})
   })
 })

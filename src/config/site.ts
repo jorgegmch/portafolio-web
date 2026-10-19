@@ -18,6 +18,10 @@ export const site = {
   location: 'Piedecuesta, Santander, Colombia',
   /** Ciudad y código del país, para la terminal de «Sobre mí»; no se traduce. */
   locationShort: 'Piedecuesta, CO',
+  /** Zona horaria de la ciudad, para el reloj del Hero y de Contacto. */
+  timeZone: 'America/Bogota',
+  /** Su desfase con UTC tal como se muestra; Colombia no cambia de hora. */
+  utcOffsetLabel: 'GMT-5',
   /** Ciudad y país, para los créditos del pie y Contacto; no se traduce. */
   locationCredits: 'Piedecuesta, Colombia',
   /** Con qué está hecho el sitio, para los créditos del pie: sale de package.json. */

@@ -33,15 +33,6 @@ export interface Technology<Id extends string = string> {
   primary?: boolean
 }
 
-export interface HeroBadge<Id extends string = string> {
-  /** Id de la tecnología del catálogo que le da nombre. */
-  technology: Id
-  /** Archivo del icono: en public/tech si es de marca, en public/icons si no. */
-  icon: string
-  /** Logo oficial de una marca, que no se altera. */
-  brand: boolean
-}
-
 export interface Project<Id extends string = string> {
   /** Nombre exacto del repositorio en GitHub; de él se deriva la URL. */
   id: Id

@@ -2,18 +2,15 @@ import { useId } from 'react'
 import { Link } from 'react-router-dom'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
-import { ContactButton } from '@/components/ui/ContactButton'
 import { CvDownload } from '@/components/ui/CvDownload'
+import { Ribbon } from '@/components/ui/Ribbon'
 import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
-import { ROLE_ROTATION } from '@/config/heroRoles'
 import { routes, sections } from '@/config/routes'
+import { site } from '@/config/site'
 import { cvFilesFor, cvUrl, type CvVersion } from '@/data/cv'
-import { heroSocial, heroSocialIconUrl, heroSocialUrl } from '@/data/social'
-import { heroBadgeIconUrl, heroBadges, technologyName } from '@/data/technologies'
-import { useIntroPlaying } from '@/hooks/useIntroPlaying'
+import { technologies, technologyName } from '@/data/technologies'
+import { useClock } from '@/hooks/useClock'
 import { useLang } from '@/hooks/useLang'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
-import { useRotatingIndex } from '@/hooks/useRotatingIndex'
 import type { Dictionary } from '@/i18n/types'
 import { splitName } from '@/lib/splitName'
 
@@ -23,29 +20,17 @@ const [small] = portrait.sources
 const PORTRAIT_SRC_SET = portrait.sources.map(({ src, width }) => `${src} ${width}w`).join(', ')
 
 /**
- * Ancho del retrato en pantalla, en cada diseño. `sizes` no admite variables
- * de CSS, así que repite las medidas del diseño: apilado (hasta 1023 px), el
- * ancho de la página menos sus márgenes, que cambian en 768 px, 36rem, o lo
- * que deja el alto de la ventana (el 95 % por la proporción 4:5); en dos
- * columnas, lo que pide el alto de la
- * ventana (menos la navegación y el aire sobre el pelo, por la proporción 4:5 de la
- * caja y el 12,5 % transparente de arriba), con tope por ancho.
+ * Ancho del retrato en pantalla. `sizes` no admite variables de CSS, así que
+ * repite el token --hero-photo-width; un test los compara.
  */
-const PORTRAIT_SIZES = [
-  '(max-width: 768px) min(88vw, 36rem, 76vh)',
-  '(max-width: 1023px) min(84vw, 36rem, 76vh)',
-  '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 7.75rem) * 0.9143))',
-  'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 7.75rem) * 0.9143))',
-].join(', ')
+const PORTRAIT_SIZES = 'clamp(17rem, 36vw, 29.375rem)'
 
-/** Adorno junto al rol; es un signo, no texto traducible. */
-const ROLE_CURSOR = '|'
+/** Signos que no son texto traducible: separador de datos y prefijo de comentario. */
+const SEPARATOR = ' · '
+const COMMENT_PREFIX = '// '
 
-/** Une los textos del rol en la frase que oye un lector de pantalla. */
-const ROLE_SEPARATOR = ', '
-
-/** Cada texto del rol dura lo que se ve más lo que tarda en entrar el siguiente. */
-const ROLE_INTERVAL_MS = ROLE_ROTATION.visibleMs + ROLE_ROTATION.transitionMs
+/** Las tecnologías del catálogo, en su orden, para la cinta. */
+const STACK_NAMES = technologies.map(({ id }) => technologyName(id))
 
 /** Clave del diccionario con el nombre de cada versión del CV. */
 const CV_LABEL_KEYS = {
@@ -54,43 +39,21 @@ const CV_LABEL_KEYS = {
 } as const satisfies Record<CvVersion, keyof Dictionary['hero']>
 
 /**
- * Primera sección de la home: saludo, nombre en dos colores, rol que rota
- * entre los textos de hero.roles, presentación breve, un botón que lleva a los proyectos,
- * la descarga del CV en el idioma activo si data/cv tiene sus archivos,
- * si config/availability lo activa, el estado de disponibilidad, y la fila de
- * redes de data/social, con el retrato al lado. En la fila, los perfiles son
- * enlaces y el correo y WhatsApp salen por ContactButton, que arma el dato al
- * hacer clic. Lleva el
- * único h1 de la página; el nombre sale de hero.heading y se parte al
- * renderizar, sin guardarlo dos veces.
- * El retrato es estático y sale entero de assets/hero/portrait.
- * A su alrededor flotan las pastillas de data/heroBadges, con el nombre que
- * cada tecnología tiene en el catálogo: son decorativas, porque la sección de
- * tecnologías ya las nombra.
+ * Primera escena, en el panel Ink (spec §3.1). Arriba, el estado de
+ * disponibilidad (si config/availability lo activa) y la ciudad con su hora,
+ * que avanza sola. En el centro, el nombre gigante, detrás de la foto, que
+ * va anclada abajo en blanco y negro con un borde de luz. Abajo, el rol con
+ * su línea de stack y, al otro lado, la presentación con «Ver proyectos» y la
+ * descarga del CV. Cierra la cinta con las tecnologías del catálogo.
  *
- * El rol muestra un texto cada vez, con su cursor decorativo. No empieza a
- * rotar hasta que termina la animación de carga y, con movimiento reducido,
- * se queda en el primero. Un lector de pantalla no oye los cambios: recibe
- * los textos una sola vez, en una frase fija.
+ * Lleva el único h1 de la página: el nombre sale de hero.heading y se parte al
+ * renderizar, sin guardarlo dos veces. La luz y el anillo tras la foto son
+ * decorativos. La cinta es una lista que el lector de pantalla oye una vez.
  */
 export function Hero() {
   const { lang, t } = useLang()
   const headingId = useId()
-  const { roles } = t.hero
-  const reducedMotion = useReducedMotion()
-  const introPlaying = useIntroPlaying()
-  const rotatingRole = useRotatingIndex(roles.length, {
-    intervalMs: ROLE_INTERVAL_MS,
-    paused: introPlaying || reducedMotion,
-  })
-  // Con movimiento reducido el texto es el primero, aunque ya hubiera rotado.
-  const currentRole = reducedMotion ? 0 : rotatingRole
-  const leavingRole = (currentRole + roles.length - 1) % roles.length
-  const roleClass = (index: number) => {
-    if (index === currentRole) return `${styles.roleItem} ${styles.roleCurrent}`
-    if (index === leavingRole) return `${styles.roleItem} ${styles.roleLeaving}`
-    return styles.roleItem
-  }
+  const clock = useClock(site.timeZone)
   const { first, last } = splitName(t.hero.heading)
   const cvOptions = cvFilesFor(lang).map((entry) => ({
     label: t.hero[CV_LABEL_KEYS[entry.version]],
@@ -99,38 +62,7 @@ export function Hero() {
 
   return (
     <section id={sections.hero} className={styles.hero} aria-labelledby={headingId}>
-      <div className={styles.text}>
-        <p className={styles.greeting}>{t.hero.greeting}</p>
-        <h1 id={headingId} className={styles.name}>
-          {first} <span className={styles.lastName}>{last}</span>
-        </h1>
-        <p className={styles.role}>
-          <span className={styles.visuallyHidden}>{roles.join(ROLE_SEPARATOR)}</span>
-          {/* Los textos van apilados en la misma celda: mide lo que el mayor
-              y la línea no cambia de alto al rotar. */}
-          <span className={styles.roleStack} aria-hidden="true">
-            {roles.map((role, index) => (
-              <span key={role} className={roleClass(index)}>
-                {role}
-                <span className={styles.cursor}>{ROLE_CURSOR}</span>
-              </span>
-            ))}
-          </span>
-        </p>
-        <p className={styles.intro}>{t.hero.intro}</p>
-        <div className={styles.actions}>
-          <Link
-            className={styles.primary}
-            to={{ pathname: routes.home, hash: `#${sections.projects}` }}
-          >
-            {t.hero.viewProjects}
-          </Link>
-          <CvDownload
-            label={t.hero.downloadCv}
-            shortLabel={t.hero.downloadCvShort}
-            options={cvOptions}
-          />
-        </div>
+      <div className={styles.meta}>
         {AVAILABLE_FOR_FREELANCE && (
           <p className={styles.status}>
             <span className={styles.statusDot} aria-hidden="true" />
@@ -145,51 +77,21 @@ export function Hero() {
             )}
           </p>
         )}
-        <ul className={styles.social} aria-label={t.hero.socialLabel}>
-          {heroSocial.map((entry) => {
-            // Decorativo: el nombre lo lleva el enlace o el botón.
-            const icon = (
-              <img
-                className={styles.socialIcon}
-                src={heroSocialIconUrl(entry)}
-                alt=""
-                decoding="async"
-              />
-            )
-            return (
-              <li key={entry.id}>
-                {entry.kind === 'link' ? (
-                  <a
-                    className={styles.socialControl}
-                    href={heroSocialUrl(entry.id)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${t.hero.social[entry.id]} (${t.common.opensInNewTab})`}
-                  >
-                    {icon}
-                  </a>
-                ) : (
-                  <ContactButton
-                    kind={entry.kind}
-                    label={
-                      entry.kind === 'whatsapp'
-                        ? `${t.hero.social[entry.id]} (${t.common.opensInNewTab})`
-                        : t.hero.social[entry.id]
-                    }
-                    icon={icon}
-                    className={styles.socialControl}
-                    reveal={false}
-                  />
-                )}
-              </li>
-            )
-          })}
-        </ul>
+        <p className={styles.clock}>
+          {site.locationShort}
+          {SEPARATOR}
+          <time>{clock}</time> {site.utcOffsetLabel}
+        </p>
       </div>
-      <div className={styles.portrait}>
-        {/* El halo va en el envoltorio y la máscara en la imagen: juntos, la
-            máscara cortaría el halo en línea recta en el borde del cuadro. */}
-        <div className={styles.glow}>
+
+      <div className={styles.stage}>
+        <div className={styles.glow} aria-hidden="true" />
+        <div className={styles.ring} aria-hidden="true" />
+        <h1 id={headingId} className={styles.name}>
+          <span className={styles.first}>{first}</span>{' '}
+          <span className={styles.last}>{last}</span>
+        </h1>
+        <div className={styles.portrait}>
           <img
             className={styles.photo}
             src={small.src}
@@ -201,26 +103,33 @@ export function Hero() {
             decoding="async"
           />
         </div>
-        <div className={styles.badges} aria-hidden="true">
-          {heroBadges.map((badge) => (
-            // El envoltorio flota y la pastilla escala: en un solo elemento,
-            // una transformación pisaría a la otra.
-            <div key={badge.technology} className={styles.float}>
-              <div className={styles.badge}>
-                <span className={styles.plate}>
-                  <img
-                    className={styles.badgeIcon}
-                    src={heroBadgeIconUrl(badge)}
-                    alt=""
-                    decoding="async"
-                  />
-                </span>
-                <span>{technologyName(badge.technology)}</span>
-              </div>
+        <div className={styles.blocks}>
+          <div className={styles.identity}>
+            <p className={styles.role}>{site.role}</p>
+            <p className={styles.stackLine}>
+              {COMMENT_PREFIX}
+              {t.hero.stackLine}
+            </p>
+          </div>
+          <div className={styles.pitch}>
+            <p className={styles.intro}>{t.hero.intro}</p>
+            <div className={styles.actions}>
+              <Link
+                className={styles.primary}
+                to={{ pathname: routes.home, hash: `#${sections.projects}` }}
+              >
+                {t.hero.viewProjects}
+                <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </Link>
+              <CvDownload label={t.hero.downloadCv} options={cvOptions} />
             </div>
-          ))}
+          </div>
         </div>
       </div>
+
+      <Ribbon className={styles.ribbon} items={STACK_NAMES} label={t.hero.stackLabel} />
     </section>
   )
 }

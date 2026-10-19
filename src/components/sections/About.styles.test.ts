@@ -65,12 +65,11 @@ describe('About: estilos', () => {
       expect(css).not.toMatch(/\.(?:map|terminal)\b[^{]*:hover/)
     })
 
-    it('el factor es un token propio, menor que el de las pastillas del Hero', () => {
+    it('el factor es un token propio, una elevación leve', () => {
       const lift = Number(cssToken(tokensCss, '--lift-scale'))
 
       expect(lift).toBe(1.03)
       expect(lift).toBeGreaterThan(1)
-      expect(lift).toBeLessThan(Number(cssToken(tokensCss, '--hero-badge-scale')))
     })
   })
 

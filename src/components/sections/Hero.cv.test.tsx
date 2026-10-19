@@ -53,14 +53,13 @@ describe('Hero: descarga del CV', () => {
       expect(screen.queryByRole('link', { name: t.cvInfographic })).not.toBeInTheDocument()
     })
 
-    // El CSS deja ver uno de los dos textos según el ancho; el nombre no cambia.
-    it('lleva el texto largo y el corto, y se llama igual con cualquiera de los dos', () => {
+    // En teléfono los botones van en columna: el texto largo cabe y no hay corto.
+    it('lleva solo el texto del diccionario, que es su nombre', () => {
       renderHero(lang)
 
-      const texts = [...toggle(lang).querySelectorAll('span')].map((span) => span.textContent)
-
-      expect(texts).toEqual([t.downloadCv, t.downloadCvShort])
+      expect(toggle(lang)).toHaveTextContent(new RegExp(`^${t.downloadCv}$`))
       expect(toggle(lang)).toHaveAccessibleName(t.downloadCv)
+      expect(toggle(lang)).not.toHaveAttribute('aria-label')
     })
 
     it('va en la misma fila que «Ver proyectos», después de él', () => {

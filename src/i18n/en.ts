@@ -26,15 +26,13 @@ export const en: Dictionary = {
   },
   hero: {
     heading: site.shortName,
-    greeting: "Hello, I'm",
-    roles: [site.role, 'Backend with Java and Spring Boot', 'Automation with AI agents'],
     intro:
-      'I build APIs with Java and Spring Boot, integrate AI agents into automations, and act as a communication bridge between the business and the team. I come from a communications background: I actively listen, plan, document and communicate.',
-    tagline: 'Where code meets storytelling.',
+      'I translate what your business needs into software that works, and I explain it without jargon.',
+    stackLine: 'Java · Spring Boot · AI agents',
+    stackLabel: 'Technologies',
     viewProjects: 'View projects',
     availability: 'Available for freelance',
     downloadCv: 'Download CV',
-    downloadCvShort: 'CV',
     cvInfographic: 'Infographic version (PDF)',
     cvAts: 'ATS version (PDF)',
     photoAlt: `Photo of ${site.shortName}`,

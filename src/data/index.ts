@@ -17,8 +17,6 @@ export {
   type HeroSocialId,
 } from '@/data/social'
 export {
-  heroBadgeIconUrl,
-  heroBadges,
   primaryStack,
   techLogoUrl,
   technologies,

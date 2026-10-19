@@ -4,7 +4,6 @@ import { Footer } from '@/components/layout/Footer'
 import styles from '@/components/layout/Layout.module.css'
 import { LoadingIntro } from '@/components/layout/LoadingIntro'
 import { Navbar } from '@/components/layout/Navbar'
-import { ParticleBackground } from '@/components/layout/ParticleBackground'
 import { SkipLink } from '@/components/ui/SkipLink'
 import { MAIN_CONTENT_ID } from '@/config/routes'
 import { IntroPlayingContext } from '@/hooks/IntroPlayingContext'
@@ -15,8 +14,8 @@ import { useLang } from '@/hooks/useLang'
 import { useScrollToHash } from '@/hooks/useScrollToHash'
 
 /**
- * Armazón común a todas las páginas: animación de carga, skip link, fondo,
- * grano, navegación, contenido principal y pie. Cada escena y el pie son
+ * Armazón común a todas las páginas: animación de carga, skip link, grano,
+ * navegación, contenido principal y pie. Cada escena y el pie son
  * paneles separados por el Void; la navegación va sobre el primero, el del
  * Hero. La página de cada ruta llega como children.
  *
@@ -54,7 +53,6 @@ export function Layout({ children }: { children: ReactNode }) {
           data-motion={motionPaused ? 'paused' : 'running'}
         >
           <SkipLink targetId={MAIN_CONTENT_ID} label={t.nav.skipToContent} />
-          <ParticleBackground />
           <FilmGrain />
           <Navbar />
           {/* tabIndex -1: el skip link puede llevar el foco aquí sin que entre en el orden de tabulación. */}

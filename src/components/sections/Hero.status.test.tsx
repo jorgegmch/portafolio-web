@@ -55,12 +55,11 @@ describe('Hero: estado de disponibilidad, activado', () => {
     expect(status().querySelector('a, button, [role], [tabindex]')).toBeNull()
   })
 
-  it('va después del botón', () => {
+  // Va en los metadatos de arriba del panel: antes del nombre.
+  it('va antes del nombre', () => {
     renderHero()
 
-    const link = screen.getByRole('link', { name: dictionaries.es.hero.viewProjects })
-
-    expect(precedes(link, status())).toBe(true)
+    expect(precedes(status(), screen.getByRole('heading', { level: 1 }))).toBe(true)
   })
 
   // El estado lo dice el texto; el punto verde solo lo acompaña.
@@ -72,7 +71,7 @@ describe('Hero: estado de disponibilidad, activado', () => {
     expect(status(lang).firstElementChild).toBe(dots(lang)[0])
   })
 
-  it('queda fuera de la capa decorativa', () => {
+  it('queda fuera de lo decorativo', () => {
     renderHero()
 
     expect(status().closest('[aria-hidden="true"]')).toBeNull()

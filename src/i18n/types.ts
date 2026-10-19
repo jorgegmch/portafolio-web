@@ -46,13 +46,12 @@ export interface Dictionary {
   hero: {
     /** Título de la página de inicio: el nombre corto, que no se traduce. */
     heading: string
-    /** Saludo sobre el nombre; las mayúsculas sostenidas las pone el CSS. */
-    greeting: string
-    /** Textos del tag que rota bajo el nombre, en orden; el primero es el fijo. */
-    roles: readonly string[]
-    /** Presentación breve bajo el nombre. */
+    /** Presentación breve, junto a los botones. */
     intro: string
-    tagline: string
+    /** Línea en mono bajo el rol; el «//» lo pone el componente. */
+    stackLine: string
+    /** Nombre accesible de la lista de tecnologías de la cinta. */
+    stackLabel: string
     viewProjects: string
     /** Estado junto al punto de acento; las mayúsculas las pone el CSS. */
     availability: string
@@ -62,8 +61,6 @@ export interface Dictionary {
      */
     availabilityShort?: string
     downloadCv: string
-    /** Versión corta de `downloadCv`, para los teléfonos donde no cabe junto a `viewProjects`. */
-    downloadCvShort: string
     cvInfographic: string
     cvAts: string
     photoAlt: string

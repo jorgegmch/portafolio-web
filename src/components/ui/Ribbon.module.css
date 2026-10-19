@@ -1,0 +1,52 @@
+/* La banda recorta lo que sale por los lados. */
+.ribbon {
+  overflow: hidden;
+}
+
+/* Las dos copias seguidas, en una sola línea. */
+.track {
+  display: flex;
+  width: max-content;
+}
+
+.list {
+  display: flex;
+  flex-shrink: 0;
+  list-style: none;
+}
+
+/* Cada elemento, seguido del signo que los separa. El signo es adorno: va en
+   el CSS, con texto alternativo vacío para que el lector de pantalla no lo
+   lea (la primera declaración queda para quien no admite esa sintaxis). */
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--ribbon-gap);
+  padding-right: var(--ribbon-gap);
+  white-space: nowrap;
+}
+
+.item::after {
+  font-size: var(--ribbon-separator-size);
+  content: '✦';
+  content: '✦' / '';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    animation: ribbon-slide var(--dur-marquee-a) linear infinite;
+  }
+
+  .reverse {
+    animation-direction: reverse;
+    animation-duration: var(--dur-marquee-b);
+  }
+}
+
+/* La pista mide dos copias: media vuelta deja la segunda donde estaba la
+   primera, y el bucle no se nota. */
+@keyframes ribbon-slide {
+  to {
+    transform: translateX(-50%);
+  }
+}
