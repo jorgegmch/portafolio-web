@@ -48,8 +48,11 @@
   color: var(--color-bone);
 }
 
-/* El alias gigante, solo en contorno. Decorativo. */
+/* El alias gigante, solo en contorno. Decorativo: con un interlineado tan
+   corto sus letras suben sobre la fila de créditos, así que no recibe clics
+   para no tapar los enlaces de las redes. */
 .brand {
+  pointer-events: none;
   color: transparent;
   font-family: var(--font-display);
   font-size: var(--font-size-credits-brand);
