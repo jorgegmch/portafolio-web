@@ -245,6 +245,9 @@ test-results
 playwright-report
 blob-report
 .lighthouseci
+# Playwright MCP: scripts, capturas y trazas, que pueden llevar el contacto
+# ya ensamblado. Nunca se versionan.
+.playwright-mcp/
 
 # Agent tooling: version only shared rules, skills and settings
 !.claude/
