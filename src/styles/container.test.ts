@@ -15,13 +15,14 @@ const FLOOR = 48
 /** Una fórmula partida en varias líneas, en una sola. */
 const flat = (value = '') => value.replace(/\s+/g, ' ').replace(/\( /g, '(').replace(/ \)/g, ')')
 
-/** Todo lo que comparte el borde izquierdo de la página, con su relleno vertical. */
+/**
+ * Todo lo que comparte el borde izquierdo de la página, con su atajo
+ * `padding` entero. La navegación, las escenas rediseñadas y el pie usan el
+ * relleno de los paneles (--panel-padding-x), no este borde.
+ */
 const CONSUMERS = [
-  ['la barra', 'src/components/layout/Navbar.module.css', '.nav', 'var(--space-3)'],
-  ['el Hero', 'src/components/sections/Hero.module.css', '.hero', '0'],
-  ['Sobre mí', 'src/components/sections/About.module.css', '.about', 'var(--space-9)'],
-  ['el pie', 'src/components/layout/Footer.module.css', '.footer', 'var(--space-5)'],
-  ['Certificaciones', 'src/pages/CertificationsPage.module.css', '.page', 'var(--space-9)'],
+  ['el Hero', 'src/components/sections/Hero.module.css', '.hero', 'var(--nav-height) var(--container-padding) 0'],
+  ['Certificaciones', 'src/pages/CertificationsPage.module.css', '.page', 'var(--space-9) var(--container-padding)'],
 ] as const
 
 const FORMULA =
@@ -139,11 +140,11 @@ describe('contenedor: borde izquierdo en dos columnas', () => {
   })
 
   describe('quién lo usa', () => {
-    it.each(CONSUMERS)('%s lo aplica solo a la izquierda', (_, path, selector, vertical) => {
+    it.each(CONSUMERS)('%s lo aplica solo a la izquierda', (_, path, selector, padding) => {
       const rule = cssRule(readCss(path), selector)
 
       expect(rule).toMatchObject({
-        padding: `${vertical} var(--container-padding)`,
+        padding,
         'padding-left': `var(${START})`,
       })
       expect(rule).not.toHaveProperty('padding-right')
@@ -177,7 +178,7 @@ describe('contenedor: borde izquierdo en dos columnas', () => {
       const stacked = cssRule(cssMedia(heroCss, `(max-width: ${STACKED_UNTIL}px)`), '.hero')
 
       expect(stacked).toMatchObject({
-        padding: 'var(--hero-stack-padding) var(--container-padding) 0',
+        padding: 'calc(var(--nav-height) + var(--hero-stack-padding)) var(--container-padding) 0',
       })
       expect(stacked).not.toHaveProperty('padding-left')
     })

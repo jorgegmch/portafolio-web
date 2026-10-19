@@ -691,12 +691,14 @@ describe('Hero: estilos', () => {
       const OTHER_SHEETS = [
         'src/styles/global.css',
         'src/styles/tokens.css',
+        'src/components/layout/FilmGrain.module.css',
         'src/components/layout/Footer.module.css',
         'src/components/layout/Layout.module.css',
         'src/components/layout/LoadingIntro.module.css',
         'src/components/layout/Navbar.module.css',
         'src/components/ui/CvDownload.module.css',
-        'src/components/ui/LangSwitcher.module.css',
+        'src/components/ui/LangToggle.module.css',
+        'src/components/ui/PauseToggle.module.css',
         'src/components/ui/SkipLink.module.css',
         'src/pages/CertificationsPage.module.css',
       ]
@@ -722,21 +724,24 @@ describe('Hero: estilos', () => {
   })
 
   describe('sección', () => {
-    // La barra es fija: sin este margen, al llegar por el ancla taparía el inicio.
-    it('al llegar por su ancla no queda bajo la barra', () => {
+    // La navegación ya no es fija: al llegar por el ancla, el panel queda a
+    // un hueco del borde, como los demás.
+    it('al llegar por su ancla queda a un hueco del borde', () => {
       expect(cssRule(heroCss, '.hero')).toMatchObject({
-        'scroll-margin-top': 'var(--nav-height)',
+        'scroll-margin-top': 'var(--panel-gap)',
       })
     })
 
-    it('usa el mismo margen lateral que la barra y el pie', () => {
+    it('usa el margen lateral del contenedor', () => {
       expect(cssRule(heroCss, '.hero').padding).toContain('var(--container-padding)')
     })
 
-    // El retrato llega hasta el borde inferior y sube hasta casi tocar la
-    // barra: la sección no pone relleno ni arriba ni abajo.
-    it('no deja relleno arriba ni abajo', () => {
-      expect(cssRule(heroCss, '.hero')).toMatchObject({ padding: '0 var(--container-padding)' })
+    // La navegación va dentro de este panel: arriba se le deja su hueco. El
+    // retrato llega hasta el borde inferior: abajo no hay relleno.
+    it('arriba deja solo el hueco de la navegación, y abajo nada', () => {
+      expect(cssRule(heroCss, '.hero')).toMatchObject({
+        padding: 'var(--nav-height) var(--container-padding) 0',
+      })
     })
 
     // El texto va arriba, a la altura de la cabeza, donde la figura es
@@ -1028,11 +1033,11 @@ describe('Hero: estilos', () => {
         expect(hero['--portrait-height']).toContain(`* ${height} / ${width})`)
       })
 
-      // Así el pelo queda siempre a la misma distancia de la barra y el
-      // retrato termina en el borde inferior.
-      it('el alto mínimo de la sección se deriva del retrato', () => {
+      // Así el pelo queda siempre a la misma distancia de la navegación, que
+      // va dentro del panel, y el retrato termina en el borde inferior.
+      it('el alto mínimo de la sección se deriva del retrato y de la navegación', () => {
         expect(flat(hero['min-height'])).toBe(
-          'calc(var(--portrait-height) * (1 - var(--portrait-head-room)) + var(--portrait-head-gap))',
+          'calc(var(--nav-height) + var(--portrait-height) * (1 - var(--portrait-head-room)) + var(--portrait-head-gap))',
         )
       })
 
@@ -1129,12 +1134,13 @@ describe('Hero: estilos', () => {
       expect(narrow).not.toBe('')
     })
 
-    // Apilado: relleno arriba, sin alto mínimo y un hueco hasta el retrato,
-    // los tres más cortos que en escritorio para que la cara entre antes.
+    // Apilado: relleno arriba (tras el hueco de la navegación), sin alto
+    // mínimo y un hueco hasta el retrato, más cortos que en escritorio para
+    // que la cara entre antes.
     it('hasta 1023 px la sección lleva su relleno y su hueco, desde tokens', () => {
       expect(cssRule(narrow, '.hero')).toMatchObject({
         gap: 'var(--hero-stack-gap)',
-        padding: 'var(--hero-stack-padding) var(--container-padding) 0',
+        padding: 'calc(var(--nav-height) + var(--hero-stack-padding)) var(--container-padding) 0',
         'min-height': 'auto',
       })
       expect(cssRule(narrow, '.text')).toMatchObject({ padding: '0' })
@@ -1152,7 +1158,7 @@ describe('Hero: estilos', () => {
 
     it('en teléfono el relleno superior es aún menor', () => {
       expect(cssRule(phone, '.hero')).toMatchObject({
-        'padding-top': 'var(--hero-stack-padding-phone)',
+        'padding-top': 'calc(var(--nav-height) + var(--hero-stack-padding-phone))',
       })
       expect(cssToken(tokensCss, '--hero-stack-padding-phone')).toBe('3rem')
       expect(parseFloat(cssToken(tokensCss, '--hero-stack-padding-phone'))).toBeLessThan(

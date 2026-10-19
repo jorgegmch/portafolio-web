@@ -31,17 +31,23 @@
   grid-template-columns: minmax(min-content, 1fr) minmax(0, 46%);
   align-items: start;
   gap: var(--space-7);
-  /* De la figura a la barra queda el aire del token y abajo el retrato llega
-     al borde: así su desvanecido se funde con lo que venga después. */
+  /* Arriba, el hueco de la navegación, que va dentro de este panel; de la
+     figura a la navegación queda el aire del token y abajo el retrato llega
+     al borde del panel. */
   min-height: calc(
-    var(--portrait-height) * (1 - var(--portrait-head-room)) + var(--portrait-head-gap)
+    var(--nav-height) + var(--portrait-height) * (1 - var(--portrait-head-room)) +
+      var(--portrait-head-gap)
   );
-  /* Sin relleno arriba ni abajo: el alto lo marca el retrato. */
-  padding: 0 var(--container-padding);
-  /* A la izquierda, el borde que comparte con la barra y el pie. */
+  /* Arriba, solo el hueco de la navegación; abajo nada: el alto lo marca el
+     retrato. */
+  padding: var(--nav-height) var(--container-padding) 0;
+  /* A la izquierda, el borde que comparte con el retrato apilado. */
   padding-left: var(--container-padding-start);
-  /* La barra es fija: al llegar por el ancla, el inicio no queda debajo. */
-  scroll-margin-top: var(--nav-height);
+  /* Panel en Ink; recorta el halo y el retrato en sus esquinas. */
+  overflow: hidden;
+  background-color: var(--color-ink);
+  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
+  scroll-margin-top: var(--panel-gap);
 }
 
 /* Arriba, a la altura de la cabeza, donde la figura es estrecha: más abajo,
@@ -502,7 +508,7 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--hero-stack-gap);
     min-height: auto;
-    padding: var(--hero-stack-padding) var(--container-padding) 0;
+    padding: calc(var(--nav-height) + var(--hero-stack-padding)) var(--container-padding) 0;
   }
 
   /* La separación de la rejilla ya da el hueco hasta el retrato. Sin figura
@@ -583,7 +589,7 @@
     --hero-space-meta: var(--space-4);
 
     gap: var(--space-5);
-    padding-top: var(--hero-stack-padding-phone);
+    padding-top: calc(var(--nav-height) + var(--hero-stack-padding-phone));
   }
 
   /* Con display: none tampoco existe para un lector de pantalla. */

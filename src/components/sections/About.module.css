@@ -1,9 +1,9 @@
+/* Panel Perfil, en Graphite, con el relleno de los paneles. */
 .about {
-  padding: var(--space-9) var(--container-padding);
-  /* A la izquierda, el borde que comparte con la barra, el Hero y el pie. */
-  padding-left: var(--container-padding-start);
-  /* La barra es fija: al llegar por el ancla, el título no queda debajo. */
-  scroll-margin-top: var(--nav-height);
+  padding: var(--panel-padding-top) var(--panel-padding-x) var(--panel-padding-bottom);
+  background-color: var(--color-graphite);
+  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
+  scroll-margin-top: var(--panel-gap);
 }
 
 /* Título pequeño, como una etiqueta sobre la frase grande. */

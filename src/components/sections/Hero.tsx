@@ -28,14 +28,14 @@ const PORTRAIT_SRC_SET = portrait.sources.map(({ src, width }) => `${src} ${widt
  * ancho de la página menos sus márgenes, que cambian en 768 px, 36rem, o lo
  * que deja el alto de la ventana (el 95 % por la proporción 4:5); en dos
  * columnas, lo que pide el alto de la
- * ventana (menos la barra y el aire sobre el pelo, por la proporción 4:5 de la
+ * ventana (menos la navegación y el aire sobre el pelo, por la proporción 4:5 de la
  * caja y el 12,5 % transparente de arriba), con tope por ancho.
  */
 const PORTRAIT_SIZES = [
   '(max-width: 768px) min(88vw, 36rem, 76vh)',
   '(max-width: 1023px) min(84vw, 36rem, 76vh)',
-  '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
-  'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
+  '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 7.75rem) * 0.9143))',
+  'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 7.75rem) * 0.9143))',
 ].join(', ')
 
 /** Adorno junto al rol; es un signo, no texto traducible. */

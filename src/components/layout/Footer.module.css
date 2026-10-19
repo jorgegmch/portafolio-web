@@ -1,45 +1,96 @@
+/* El último panel: Ink, con el relleno de los paneles y su límite de ancho. */
 .footer {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4) var(--space-6);
-  padding: var(--space-5) var(--container-padding);
-  padding-left: var(--container-padding-start);
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-subtle);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  letter-spacing: var(--tracking-normal);
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--panel-padding-x) var(--space-7);
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  background-color: var(--color-ink);
+  color: var(--color-bone);
 }
 
-.name {
-  color: var(--color-accent);
+/* Cuatro columnas de créditos; dos desde 900 px. */
+.credits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.credit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Rótulo en mono: mayúsculas solo visuales. */
+.label {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 }
 
 .social {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
+  gap: var(--space-4);
   list-style: none;
 }
 
 .link {
-  color: var(--color-text-muted);
+  color: var(--color-bone);
+}
+
+/* El alias gigante, solo en contorno. Decorativo. */
+.brand {
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: var(--font-size-credits-brand);
+  line-height: var(--leading-credits-brand);
+  text-transform: uppercase;
+  white-space: nowrap;
+  -webkit-text-stroke: var(--outline-width) var(--color-outline);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  color: var(--color-muted);
+  font-size: var(--font-size-md);
+}
+
+.top {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  color: var(--color-bone);
+  font-weight: var(--font-weight-bold);
   text-decoration: none;
 }
 
-.link:hover {
-  color: var(--color-accent);
+.arrow {
+  width: var(--font-size-md);
+  height: var(--font-size-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
 }
 
-@media (max-width: 480px) {
-  .footer {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .social {
-    justify-content: center;
+@media (max-width: 900px) {
+  .credits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

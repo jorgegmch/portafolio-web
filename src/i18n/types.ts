@@ -9,12 +9,6 @@ export const LANGS = ['es', 'en'] as const
 export type Lang = (typeof LANGS)[number]
 export const DEFAULT_LANG: Lang = 'es'
 
-/** Nombre de cada idioma en su propia lengua; no se traduce. */
-export const LANG_NAMES: Record<Lang, string> = {
-  es: 'Español',
-  en: 'English',
-}
-
 /** Lado de la cifra en el que cada idioma pone el «+»: «+20» o «20+». */
 export type PlusPosition = 'prefix' | 'suffix'
 
@@ -33,8 +27,12 @@ export interface Dictionary {
     projects: string
     contact: string
     skipToContent: string
+    /** Lo que hace el botón de idioma: pasar al otro. Va tras «ES / EN». */
     language: string
-    certifications: string
+    /** Nombre fijo del botón de pausa global de animaciones. */
+    pauseAnimations: string
+    /** CTA de la navegación: lleva a Contacto. */
+    cta: string
     /** Nombre accesible del landmark de navegación. */
     main: string
     /** Nombre accesible del enlace del logo. */
@@ -123,10 +121,18 @@ export interface Dictionary {
     email: string
   }
   footer: {
+    /** Rótulos de las cuatro columnas de «créditos finales». */
+    credits: {
+      design: string
+      builtWith: string
+      from: string
+      online: string
+    }
     /** Aviso de derechos; va tras el año y el nombre. */
     rights: string
     /** Nombre accesible de la lista de redes. */
     social: string
+    backToTop: string
   }
   common: {
     /** Aviso para lectores de pantalla en enlaces con target="_blank". */

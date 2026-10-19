@@ -1,0 +1,28 @@
+/* Píldora con borde, del alto táctil. */
+.toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-18);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-bone);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  border-color: var(--color-muted);
+}
+
+.current {
+  color: var(--color-bone);
+}
+
+.other {
+  color: var(--color-muted);
+}

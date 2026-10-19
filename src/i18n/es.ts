@@ -7,13 +7,14 @@ export const es: Dictionary = {
     description: `Portafolio de ${site.legalName}, ${site.role}. Backend con Java, Spring Boot y PostgreSQL.`,
   },
   nav: {
-    about: 'Sobre mí',
+    about: 'Perfil',
     services: 'Servicios',
     projects: 'Proyectos',
     contact: 'Contacto',
     skipToContent: 'Saltar al contenido',
-    language: 'Idioma',
-    certifications: 'Certificaciones',
+    language: 'cambiar el idioma a inglés',
+    pauseAnimations: 'Pausar animaciones',
+    cta: 'Hablemos',
     main: 'Navegación principal',
     home: 'Ir al inicio',
     openMenu: 'Abrir menú',
@@ -221,8 +222,15 @@ export const es: Dictionary = {
     email: 'Correo',
   },
   footer: {
+    credits: {
+      design: 'Diseño y código',
+      builtWith: 'Construido con',
+      from: 'Desde',
+      online: 'En la red',
+    },
     rights: 'Todos los derechos reservados',
     social: 'Redes',
+    backToTop: 'Volver arriba',
   },
   common: {
     opensInNewTab: 'se abre en una pestaña nueva',

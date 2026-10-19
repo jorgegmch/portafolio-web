@@ -69,7 +69,6 @@
   --color-accent-alt: var(--color-signal);
   --color-border: var(--line-12);
   --color-border-strong: var(--line-18);
-  --color-nav-bg: rgba(17, 17, 19, 0.9); /* Ink al 90 % */
 
   /* Familias: dos voces. La humana (Anton en títulos, Manrope en el texto) y
      la de código (JetBrains Mono). Se cargan en fonts.css. */
@@ -255,8 +254,17 @@
      la misma proporción en que se redujo el punto (de 8 a 6,4 unidades). */
   --map-city-glow: calc(var(--hero-status-glow) * 0.8);
 
-  /* Alto mínimo de la barra fija; el contenido reserva ese mismo hueco. */
-  --nav-height: 4.5rem;
+  /* Alto de la navegación, que va dentro del panel del Hero: su relleno
+     (24 px arriba y abajo) y los controles de 44 px. El Hero le reserva ese
+     hueco arriba. En pantallas estrechas el relleno baja a 16 px. */
+  --nav-height: 5.75rem; /* 92px */
+  --nav-padding-block: var(--space-5);
+  --nav-padding-inline: var(--space-6);
+  /* Logo y números de la navegación: 15 y 11 px del tablero. */
+  --font-size-brand: 0.9375rem;
+  --font-size-2xs: 0.6875rem;
+  /* Botón circular del menú en pantallas estrechas. */
+  --menu-button-size: 3rem; /* 48px */
 
   /* Radios (origen: 2px, 4px y 50%) */
   --radius-sm: 0.125rem;
@@ -278,6 +286,24 @@
   --panel-padding-top: 6.5rem; /* 104px; 48px en teléfono */
   --panel-padding-inline: 4rem; /* 64px; 24px desde 900 px, 20px en teléfono */
   --content-max: 100rem; /* 1600px */
+  /* Relleno lateral de un panel: el de arriba o, en pantallas anchas, el que
+     deja el contenido en --content-max. El 100 % es el ancho del bloque que
+     contiene al panel, porque se resuelve donde se usa. */
+  --panel-padding-x: max(var(--panel-padding-inline), calc((100% - var(--content-max)) / 2));
+  --panel-padding-bottom: var(--space-9);
+
+  /* Grano de película: textura fija, sin animar, por encima de todo menos
+     del skip link y la intro. */
+  --grain-opacity: 0.07;
+
+  /* Pie de «créditos finales»: la marca gigante, solo en contorno. */
+  /* La spec pide un mínimo de 80 px, pero así «jorgegmch» no cabe en un
+     teléfono (mide unos 345 px y el panel deja 334 a 390): el mínimo baja a
+     56 px y por encima de unos 330 px de ventana manda el 17vw de la spec. */
+  --font-size-credits-brand: clamp(3.5rem, 17vw, 16.875rem); /* 56 a 270 px */
+  --leading-credits-brand: 0.8;
+  --color-outline: rgba(242, 238, 230, 0.35);
+  --outline-width: 1.5px;
 
   --focus-ring-width: 0.125rem;
   --focus-ring-offset: 0.125rem;
@@ -294,8 +320,6 @@
   --flip-perspective: 62.5rem; /* 1000px */
   /* Logo de las fichas de «Mi stack tecnológico». */
   --stack-logo-size: 3rem; /* 48px; LOGO_SIZE de Services.tsx lo repite */
-
-  --blur-nav: 1.5rem; /* origen: 24px */
 
   /* Duraciones y easing (origen) */
   --duration-fast: 200ms;
@@ -323,6 +347,7 @@
   /* Capas */
   --z-background: -1;
   --z-nav: 100; /* origen */
+  --z-grain: 150;
   --z-skip-link: 200;
   --z-intro: 300;
 }
@@ -350,6 +375,9 @@
   :root {
     --radius-panel: 1.75rem; /* 28px */
     --panel-padding-inline: 1.5rem; /* 24px */
+    --nav-height: 5rem; /* 80px */
+    --nav-padding-block: var(--space-4);
+    --nav-padding-inline: var(--space-4);
   }
 }
 

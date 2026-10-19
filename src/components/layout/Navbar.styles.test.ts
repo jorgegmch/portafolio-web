@@ -47,8 +47,8 @@ describe('Navbar: peso del logo', () => {
     expect(monoWeights).toContain('600')
   })
 
-  it('el tamaño del logo sigue saliendo del mismo token', () => {
-    expect(rule(navbarCss, '.brand')).toMatchObject({ 'font-size': 'var(--font-size-sm)' })
+  it('el tamaño del logo sale de su token', () => {
+    expect(rule(navbarCss, '.brand')).toMatchObject({ 'font-size': 'var(--font-size-brand)' })
   })
 
   it('los enlaces de la barra no cambian de peso', () => {

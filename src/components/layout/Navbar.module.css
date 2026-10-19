@@ -1,92 +1,115 @@
+/* Arriba del panel del Hero, a su mismo ancho: el armazón la coloca sobre
+   él. No es fija: se va con el Hero al desplazar la página. */
 .header {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: var(--z-nav);
-}
-
-/* El fondo va en una capa aparte para animar solo su opacidad. */
-.header::before {
   position: absolute;
-  inset: 0;
-  z-index: var(--z-background);
-  border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-nav-bg);
-  -webkit-backdrop-filter: blur(var(--blur-nav));
-  backdrop-filter: blur(var(--blur-nav));
-  content: '';
-  opacity: 0;
-  transition: opacity var(--duration-base) var(--ease-standard);
-}
-
-.header[data-scrolled='true']::before {
-  opacity: 1;
-}
-
-.nav {
+  top: var(--panel-gap);
+  right: var(--panel-gap);
+  left: var(--panel-gap);
+  z-index: var(--z-nav);
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-4) var(--space-6);
+  justify-content: space-between;
+  gap: var(--space-4);
   min-height: var(--nav-height);
-  padding: var(--space-3) var(--container-padding);
-  padding-left: var(--container-padding-start);
+  padding: var(--nav-padding-block) var(--nav-padding-inline);
 }
 
-.brand,
-.link {
+/* El alias en mono, con el guion bajo en el acento. */
+.brand {
+  color: var(--color-bone);
   font-family: var(--font-mono);
+  font-size: var(--font-size-brand);
+  /* El logo va en mono 600, el peso que carga fonts.css. */
+  font-weight: var(--font-weight-semibold);
   text-decoration: none;
 }
 
-.brand {
-  color: var(--color-accent);
-  font-size: var(--font-size-sm);
-  /* El logo va en mono 600, el peso que carga fonts.css. */
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--tracking-wide);
+.brand::after {
+  color: var(--color-signal);
+  content: '_';
 }
 
+/* En escritorio, la caja del menú no existe: la píldora y los controles son
+   piezas sueltas de la cabecera. */
+.menu {
+  display: contents;
+}
+
+/* display: contents le ganaría al atributo hidden del menú cerrado. */
+.menu[hidden] {
+  display: none;
+}
+
+/* Píldora translúcida con las escenas numeradas. */
 .links {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-6);
-  margin-left: auto;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--line-10);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-glass);
   list-style: none;
 }
 
 .link {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-xs);
-  letter-spacing: var(--tracking-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  color: var(--color-bone);
+  font-size: var(--font-size-md);
+  text-decoration: none;
 }
 
 .link:hover {
-  color: var(--color-accent);
+  background-color: var(--line-08);
 }
 
-/* display: flex le ganaría al atributo hidden del menú cerrado. */
-.links[hidden] {
-  display: none;
+.number {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* «Hablemos»: píldora rellena del acento. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-extrabold);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Botón circular del menú, solo en pantallas estrechas. */
 .menuToggle {
   display: inline-flex;
-  margin-left: auto;
-  padding: var(--space-2);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
+  align-items: center;
+  justify-content: center;
+  width: var(--menu-button-size);
+  height: var(--menu-button-size);
+  border: 1px solid var(--line-18);
+  border-radius: var(--radius-full);
   background-color: transparent;
-  color: var(--color-text-muted);
+  color: var(--color-bone);
   cursor: pointer;
 }
 
 .menuToggle:hover,
 .menuToggle[aria-expanded='true'] {
-  border-color: var(--color-text-muted);
-  color: var(--color-text);
+  border-color: var(--color-muted);
 }
 
 .menuIcon {
@@ -98,25 +121,36 @@
   stroke-width: var(--icon-stroke-width);
 }
 
-/* Los enlaces pasan a ser un panel bajo la barra, de lado a lado. */
-@media (max-width: 768px) {
-  .links {
+/* Hasta 900 px, la píldora y los controles van en un menú que se despliega
+   bajo la cabecera, a su ancho. */
+@media (max-width: 900px) {
+  .menu {
     position: absolute;
     top: 100%;
-    right: 0;
-    left: 0;
+    right: var(--nav-padding-inline);
+    left: var(--nav-padding-inline);
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    margin-left: 0;
-    padding: var(--space-2) var(--container-padding) var(--space-4);
-    border-bottom: 1px solid var(--color-border);
-    background-color: var(--color-surface);
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--line-12);
+    border-radius: var(--radius-block);
+    background-color: var(--color-ink);
+  }
+
+  .links {
+    flex-direction: column;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
   }
 
   .link {
-    display: block;
-    padding: var(--space-3) 0;
-    font-size: var(--font-size-md);
+    min-height: var(--touch-target);
+    font-size: var(--font-size-base);
+  }
+
+  .actions {
+    flex-wrap: wrap;
   }
 }

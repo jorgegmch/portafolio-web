@@ -1,0 +1,41 @@
+/* Círculo con borde, del alto táctil, como el botón de idioma. */
+.toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border: 1px solid var(--line-18);
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  color: var(--color-bone);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  border-color: var(--color-muted);
+}
+
+/* Pausado, el botón se marca con el acento. */
+.toggle[aria-pressed='true'] {
+  border-color: var(--color-signal);
+  color: var(--color-signal);
+}
+
+.icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* Con movimiento reducido ya está todo quieto: no hay nada que pausar. */
+@media (prefers-reduced-motion: reduce) {
+  .toggle {
+    display: none;
+  }
+}

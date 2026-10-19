@@ -104,8 +104,8 @@ describe('Hero: retrato', () => {
           [
             '(max-width: 768px) min(88vw, 36rem, 76vh)',
             '(max-width: 1023px) min(84vw, 36rem, 76vh)',
-            '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 6.5rem) * 0.9143))',
-            'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 6.5rem) * 0.9143))',
+            '(max-width: 1280px) min(41vw, 46rem, calc((100vh - 7.75rem) * 0.9143))',
+            'min(calc(132vw - 72.8rem), 46rem, calc((100vh - 7.75rem) * 0.9143))',
           ].join(', '),
         )
       })

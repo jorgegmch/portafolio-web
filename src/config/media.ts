@@ -3,8 +3,8 @@
  * coincidir con los breakpoints anotados en styles/tokens.css.
  */
 export const mediaQueries = {
-  /** Ancho al que la barra pliega sus enlaces en un menú. */
-  compactNav: '(max-width: 768px)',
+  /** Ancho al que la navegación pliega sus enlaces y controles en un menú. */
+  compactNav: '(max-width: 900px)',
   /** Dispositivos sin puntero que se pose, como los táctiles. */
   noHover: '(hover: none)',
 } as const

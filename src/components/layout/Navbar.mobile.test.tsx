@@ -11,13 +11,10 @@ import { mockMatchMedia } from '@/test/mockMatchMedia'
 const { es } = dictionaries
 
 // Enlaces que el menú pliega en pantallas estrechas.
-const MENU_LINKS = [
-  es.nav.about,
-  es.nav.services,
-  es.nav.projects,
-  es.nav.contact,
-  es.nav.certifications,
-]
+const MENU_LINKS = [es.nav.about, es.nav.services, es.nav.projects, es.nav.contact]
+
+// Tras los enlaces, el menú lleva sus controles: pausa, idioma y «Hablemos».
+const MENU_CONTROLS = 3
 
 const setup = ({ compact }: { compact: boolean }) => {
   const media = mockMatchMedia(compact)
@@ -39,7 +36,7 @@ const queryMenuToggle = () =>
   screen.queryByRole('button', { name: new RegExp(`^(${es.nav.openMenu}|${es.nav.closeMenu})$`) })
 const link = (name: string) => screen.getByRole('link', { name })
 const queryLink = (name: string) => screen.queryByRole('link', { name })
-const langToggle = () => screen.getByRole('button', { name: new RegExp(`^${es.nav.language}`) })
+const outside = () => screen.getByRole('button', { name: 'Fuera' })
 const brand = () => screen.getByRole('link', { name: new RegExp(site.handle) })
 
 beforeEach(() => {
@@ -84,7 +81,7 @@ describe('Navbar: menú en pantallas estrechas', () => {
       for (const name of MENU_LINKS) expect(queryLink(name)).not.toBeInTheDocument()
     })
 
-    it('el foco salta del botón al selector de idioma, sin pasar por los enlaces', async () => {
+    it('el foco salta del botón a lo que sigue, sin pasar por el menú', async () => {
       const { user } = setup({ compact: true })
 
       await user.tab()
@@ -92,7 +89,7 @@ describe('Navbar: menú en pantallas estrechas', () => {
       await user.tab()
       expect(menuToggle()).toHaveFocus()
       await user.tab()
-      expect(langToggle()).toHaveFocus()
+      expect(outside()).toHaveFocus()
     })
 
     it('Escape no hace nada', async () => {
@@ -180,18 +177,18 @@ describe('Navbar: menú en pantallas estrechas', () => {
       const { user } = setup({ compact: true })
 
       await user.click(menuToggle())
-      await user.click(screen.getByRole('button', { name: 'Fuera' }))
+      await user.click(outside())
 
       expect(menuToggle()).toHaveAttribute('aria-expanded', 'false')
     })
 
-    it('salir con Tab hacia el selector de idioma lo cierra', async () => {
+    it('salir con Tab del menú lo cierra', async () => {
       const { user } = setup({ compact: true })
 
       await user.click(menuToggle())
-      for (let i = 0; i <= MENU_LINKS.length; i += 1) await user.tab()
+      for (let i = 0; i <= MENU_LINKS.length + MENU_CONTROLS; i += 1) await user.tab()
 
-      expect(langToggle()).toHaveFocus()
+      expect(outside()).toHaveFocus()
       expect(menuToggle()).toHaveAttribute('aria-expanded', 'false')
     })
   })

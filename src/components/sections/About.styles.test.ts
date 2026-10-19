@@ -75,9 +75,10 @@ describe('About: estilos', () => {
   })
 
   describe('sección', () => {
-    // La barra es fija: al llegar por el ancla, el título no queda debajo.
-    it('reserva el alto de la barra al llegar por el ancla', () => {
-      expect(cssRule(css, '.about')).toMatchObject({ 'scroll-margin-top': 'var(--nav-height)' })
+    // La navegación ya no es fija: al llegar por el ancla, el panel queda a
+    // un hueco del borde.
+    it('al llegar por el ancla, el panel queda a un hueco del borde', () => {
+      expect(cssRule(css, '.about')).toMatchObject({ 'scroll-margin-top': 'var(--panel-gap)' })
     })
   })
 

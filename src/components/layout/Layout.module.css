@@ -1,4 +1,23 @@
-/* La barra es fija: el contenido le reserva su hueco para no quedar debajo. */
+/* El Void con los paneles encima, separados entre sí y del borde de la
+   ventana por el mismo hueco. Es la referencia de la navegación, que va
+   sobre el primer panel. */
+.frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--panel-gap);
+  min-height: 100vh;
+  padding: var(--panel-gap);
+}
+
+/* Cada escena es un panel con sus esquinas redondeadas; el fondo y el
+   relleno los pone cada una. */
 .main {
-  padding-top: var(--nav-height);
+  display: flex;
+  flex-direction: column;
+  gap: var(--panel-gap);
+}
+
+.main > * {
+  border-radius: var(--radius-panel);
 }

@@ -15,7 +15,6 @@ vi.mock('@/hooks/useParticleCanvas', () => ({ useParticleCanvas: vi.fn() }))
 
 const { es } = dictionaries
 const UNKNOWN_URL = '/no-existe'
-const TOP_INSTANTLY = { top: 0, left: 0, behavior: 'instant' }
 
 const setUrl = (path: string) => window.history.replaceState(null, '', path)
 
@@ -145,16 +144,6 @@ describe('App', () => {
   })
 
   describe('navegación', () => {
-    it('ir a certificaciones cambia la página y sube al inicio de golpe', async () => {
-      const { user } = renderAt(routes.home)
-
-      await user.click(screen.getByRole('link', { name: es.nav.certifications }))
-
-      expect(pageTitle(es.certifications.heading)).toBeInTheDocument()
-      expect(window.location.pathname).toBe(routes.certifications)
-      expect(scrollTo).toHaveBeenLastCalledWith(TOP_INSTANTLY)
-    })
-
     it('al cargar una ruta no sube: el navegador restaura la posición', () => {
       renderAt(routes.certifications)
 
@@ -356,16 +345,6 @@ describe('App', () => {
         expect(querySkipIntro()).not.toBeInTheDocument()
         expect(inertPage()).toBeNull()
         expect(pageTitle(es.hero.heading)).toBeInTheDocument()
-      })
-
-      it('al navegar entre páginas después de haberla visto', async () => {
-        const { user } = renderAt(routes.home)
-        skipAndFadeOut()
-
-        await user.click(screen.getByRole('link', { name: es.nav.certifications }))
-
-        expect(pageTitle(es.certifications.heading)).toBeInTheDocument()
-        expect(querySkipIntro()).not.toBeInTheDocument()
       })
     })
   })

@@ -18,6 +18,10 @@ export const site = {
   location: 'Piedecuesta, Santander, Colombia',
   /** Ciudad y código del país, para la terminal de «Sobre mí»; no se traduce. */
   locationShort: 'Piedecuesta, CO',
+  /** Ciudad y país, para los créditos del pie y Contacto; no se traduce. */
+  locationCredits: 'Piedecuesta, Colombia',
+  /** Con qué está hecho el sitio, para los créditos del pie: sale de package.json. */
+  builtWith: ['React', 'TypeScript', 'Vite'],
   /**
    * Punto de la ciudad en el mapa de «Sobre mí», con un decimal como máximo:
    * nivel de ciudad. Es la cabecera municipal de Piedecuesta en DIVIPOLA del

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Footer } from '@/components/layout/Footer'
-import styles from '@/components/layout/Footer.module.css'
 import { site } from '@/config/site'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
@@ -11,9 +11,11 @@ const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
 const renderFooter = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(BROWSER_LANGS[lang])
   render(
-    <LangProvider>
-      <Footer />
-    </LangProvider>,
+    <MemoryRouter>
+      <LangProvider>
+        <Footer />
+      </LangProvider>
+    </MemoryRouter>,
   )
   return screen.getByRole('contentinfo')
 }
@@ -27,12 +29,12 @@ afterEach(() => {
 
 describe('Footer: aviso de derechos', () => {
   it.each(['es', 'en'] as const)(
-    'en %s, la frase es: símbolo, año, nombre con punto y aviso del diccionario',
+    'en %s, la frase es: símbolo, año, nombre con punto y aviso del diccionario, con punto final',
     (lang) => {
       const footer = renderFooter(lang)
 
       expect(notice(footer)?.textContent).toBe(
-        `© ${site.publishedYear} ${site.shortName}. ${dictionaries[lang].footer.rights}`,
+        `© ${site.publishedYear} ${site.shortName}. ${dictionaries[lang].footer.rights}.`,
       )
     },
   )
@@ -52,12 +54,6 @@ describe('Footer: aviso de derechos', () => {
     const footer = renderFooter()
 
     expect(notice(footer)?.textContent).toContain(`${site.shortName}. `)
-  })
-
-  it('el nombre conserva su estilo propio', () => {
-    renderFooter()
-
-    expect(screen.getByText(site.shortName)).toHaveClass(styles.name ?? '')
   })
 
   it('es una sola frase, y el aviso aparece una sola vez', () => {

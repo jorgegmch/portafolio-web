@@ -26,8 +26,8 @@ const outsideMedia = () => css.replace(/@media[^{]*\{(?:[^{}]*\{[^}]*\})*\s*\}/g
 const LIFT = 'scale(var(--lift-scale))'
 
 describe('Services: estilos', () => {
-  it('la barra fija no tapa el título al llegar por el ancla', () => {
-    expect(rule(css, '.services')).toMatchObject({ 'scroll-margin-top': 'var(--nav-height)' })
+  it('al llegar por el ancla, el panel queda a un hueco del borde', () => {
+    expect(rule(css, '.services')).toMatchObject({ 'scroll-margin-top': 'var(--panel-gap)' })
   })
 
   // Seis tarjetas: filas completas en los tres tramos, sin nada que centrar.

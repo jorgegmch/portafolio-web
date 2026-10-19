@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Footer } from '@/components/layout/Footer'
 import { site, socialLinks } from '@/config/site'
@@ -13,9 +14,11 @@ const setBrowserLangs = (langs: string[]) =>
 
 const renderFooter = () =>
   render(
-    <LangProvider>
-      <Footer />
-    </LangProvider>,
+    <MemoryRouter>
+      <LangProvider>
+        <Footer />
+      </LangProvider>
+    </MemoryRouter>,
   )
 
 const footer = () => screen.getByRole('contentinfo')
@@ -83,12 +86,16 @@ describe('Footer', () => {
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
     })
 
+    // Todo enlace a otro sitio se abre aparte y lleva rel; «Volver arriba» es
+    // de la propia página.
     it('ningún enlace externo se queda sin rel', () => {
       renderFooter()
 
-      const links = within(footer()).getAllByRole('link')
-      expect(links.length).toBeGreaterThan(0)
-      for (const link of links) {
+      const external = within(footer())
+        .getAllByRole('link')
+        .filter((link) => link.getAttribute('href')?.startsWith('http'))
+      expect(external).toHaveLength(socialLinks.length)
+      for (const link of external) {
         expect(link).toHaveAttribute('target', '_blank')
         expect(link).toHaveAttribute('rel', 'noopener noreferrer')
       }
@@ -109,7 +116,7 @@ describe('Footer', () => {
   })
 
   // El valor esperado se obtiene de assembleContact, nunca se escribe aquí.
-  it('no lleva correo, teléfono ni ubicación', () => {
+  it('no lleva correo ni teléfono', () => {
     renderFooter()
     const html = footer().outerHTML
 
@@ -119,6 +126,5 @@ describe('Footer', () => {
     expect(html).not.toContain('mailto:')
     expect(html).not.toContain('tel:')
     expect(html).not.toContain('wa.me')
-    expect(html).not.toContain(site.location)
   })
 })

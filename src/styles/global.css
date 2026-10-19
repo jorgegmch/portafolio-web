@@ -51,3 +51,13 @@ canvas {
   outline: var(--focus-ring-width) solid var(--color-focus);
   outline-offset: var(--focus-ring-offset);
 }
+
+/* Pausa global (WCAG 2.2.2): con el botón «Pausar animaciones», el armazón
+   marca data-motion y toda animación CSS se detiene donde está. Lleva
+   !important porque el atajo animation de cada módulo reinicia el estado de
+   reproducción. Lo que se anime con JavaScript lee useMotionPause. */
+[data-motion='paused'] *,
+[data-motion='paused'] *::before,
+[data-motion='paused'] *::after {
+  animation-play-state: paused !important;
+}
