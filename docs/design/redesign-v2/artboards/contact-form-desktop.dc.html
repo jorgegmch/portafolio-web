@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Formulario de contacto (escritorio)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=JetBrains+Mono:wght@400;600&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+.field{width:100%;box-sizing:border-box;min-height:56px;padding:16px 18px;border-radius:18px;border:1.5px solid rgba(242,238,230,0.14);background:#1A1A1D;color:#F2EEE6;font-family:Manrope,sans-serif;font-size:16px;outline:none}
+.field:focus{border-color:#FF5B24;box-shadow:0 0 0 4px rgba(255,91,36,0.22)}
+.field[aria-invalid="true"]{border-color:#FF8A6B}
+.field::placeholder{color:#8F8B84}
+.sheet-in{animation:sheetIn .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes sheetIn{from{transform:translateY(48px);opacity:0}to{transform:none;opacity:1}}
+.spin{animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.sheet-in,.spin{animation:none}}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 960px; overflow: hidden; background: #060607; font-family: Manrope, 'Segoe UI', system-ui, sans-serif; color: #F2EEE6">
+
+<!-- la escena de Contacto queda detrás, atenuada y un poco hacia atrás -->
+<div aria-hidden="true" style="position: absolute; inset: 12px; border-radius: 40px; background: #FF5B24; transform: scale(0.94); opacity: 0.35; padding: 96px 80px; box-sizing: border-box">
+<span style="font-family: Anton, Impact, sans-serif; font-size: 200px; line-height: 0.84; color: #0A0A0B; text-transform: uppercase">¿Construimos<br>algo?</span>
+</div>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: rgba(6,6,7,0.55)"></div>
+
+<div role="dialog" aria-modal="true" aria-labelledby="form-title" class="sheet-in" style="position: absolute; left: 50%; top: 40px; width: 920px; margin-left: -460px; bottom: 40px; border-radius: 40px; background: #111113; border: 1px solid rgba(242,238,230,0.10); box-shadow: 0 40px 120px rgba(0,0,0,0.6); display: flex; flex-direction: column; overflow: hidden">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 40px 48px 0">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #FF5B24">nuevo_mensaje()</span>
+<h2 id="form-title" style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 72px; line-height: 0.9; text-transform: uppercase">Cuéntame tu idea</h2>
+</div>
+<a href="desktop-page.dc.html" aria-label="Cerrar formulario" style="flex: none; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(242,238,230,0.2); display: flex; align-items: center; justify-content: center; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+</div>
+
+<sc-if value="{{showForm}}" hint-placeholder-val="{{true}}">
+<form noValidate onSubmit="{{submit}}" style="flex: 1; display: flex; flex-direction: column; gap: 22px; padding: 32px 48px 40px; overflow: auto">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="f-name" style="font-size: 14px; font-weight: 700">Nombre <span style="color: #A29E97; font-weight: 500">· obligatorio</span></label>
+<input id="f-name" class="field" type="text" autocomplete="name" placeholder="Cómo te llamas" value="{{name}}" onChange="{{setName}}" aria-invalid="{{nameInvalid}}" aria-describedby="f-name-err">
+<sc-if value="{{nameErr}}" hint-placeholder-val="{{false}}"><span id="f-name-err" style="font-size: 13px; color: #FF8A6B">Escribe tu nombre.</span></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="f-mail" style="font-size: 14px; font-weight: 700">Correo <span style="color: #A29E97; font-weight: 500">· obligatorio</span></label>
+<input id="f-mail" class="field" type="email" autocomplete="email" placeholder="Donde te respondo" value="{{mail}}" onChange="{{setMail}}" aria-invalid="{{mailInvalid}}" aria-describedby="f-mail-err">
+<sc-if value="{{mailErr}}" hint-placeholder-val="{{false}}"><span id="f-mail-err" style="font-size: 13px; color: #FF8A6B">Revisa el correo: falta algo.</span></sc-if>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="f-company" style="font-size: 14px; font-weight: 700">Empresa <span style="color: #A29E97; font-weight: 500">· opcional</span></label>
+<input id="f-company" class="field" type="text" autocomplete="organization" placeholder="Si escribes en nombre de una empresa">
+</div>
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0; margin-bottom: 10px; font-size: 14px; font-weight: 700">¿Qué necesitas? <span style="color: #A29E97; font-weight: 500">· puedes marcar varias</span></legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{c.on}}" onClick="{{c.toggle}}" style="{{c.style}}">{{c.label}}</button>
+</sc-for>
+</div>
+</fieldset>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="f-msg" style="font-size: 14px; font-weight: 700">Mensaje <span style="color: #A29E97; font-weight: 500">· obligatorio</span></label>
+<textarea id="f-msg" class="field" rows="5" placeholder="Qué quieres construir, para cuándo y cualquier detalle que sirva" value="{{msg}}" onChange="{{setMsg}}" aria-invalid="{{msgInvalid}}" aria-describedby="f-msg-err" style="resize: vertical; min-height: 140px; line-height: 1.55"></textarea>
+<sc-if value="{{msgErr}}" hint-placeholder-val="{{false}}"><span id="f-msg-err" style="font-size: 13px; color: #FF8A6B">Cuéntame al menos en una frase qué necesitas.</span></sc-if>
+</div>
+
+<sc-if value="{{showError}}" hint-placeholder-val="{{false}}">
+<div role="alert" style="border-radius: 20px; background: #2A1712; border: 1px solid #7A2E19; padding: 16px 20px; font-size: 15px; line-height: 1.5">No se pudo enviar ahora mismo. Tu mensaje sigue aquí: inténtalo de nuevo o escríbeme directo con «Copiar correo».</div>
+</sc-if>
+
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px">
+<div style="display: flex; align-items: center; gap: 12px; font-size: 14px; color: #A29E97">
+<span>¿Prefieres directo?</span>
+<button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.2); background: transparent; color: #F2EEE6; font-family: Manrope, sans-serif; font-weight: 700; cursor: pointer">Copiar correo</button>
+<a href="#" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.2); color: #F2EEE6; font-weight: 700; text-decoration: none">WhatsApp ↗</a>
+</div>
+<button type="submit" disabled="{{sending}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 0 32px; border-radius: 999px; border: 0; background: #FF5B24; color: #0A0A0B; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; cursor: pointer">
+<sc-if value="{{sending}}" hint-placeholder-val="{{false}}"><svg class="spin" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"></path></svg></sc-if>
+{{submitLabel}}</button>
+</div>
+</form>
+</sc-if>
+
+<sc-if value="{{sent}}" hint-placeholder-val="{{false}}">
+<div role="status" style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 24px; padding: 32px 48px 56px">
+<div style="width: 88px; height: 88px; border-radius: 50%; background: #FF5B24; color: #0A0A0B; display: flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"></path></svg></div>
+<p style="margin: 0; font-family: Anton, Impact, sans-serif; font-size: 88px; line-height: 0.9; text-transform: uppercase">Mensaje<br>recibido</p>
+<pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #A29E97">status: 200 · te respondo a {{mailShown}}</pre>
+<div style="display: flex; gap: 12px">
+<a href="desktop-page.dc.html" style="display: flex; align-items: center; min-height: 52px; padding: 0 24px; border-radius: 999px; background: #F2EEE6; color: #0A0A0B; font-weight: 800; text-decoration: none">Volver al portafolio</a>
+<button type="button" onClick="{{reset}}" style="min-height: 52px; padding: 0 24px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.2); background: transparent; color: #F2EEE6; font-family: Manrope, sans-serif; font-weight: 700; cursor: pointer">Enviar otro</button>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"failSend":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: '', mail: '', msg: '', picked: {}, tried: false, sending: false, sent: false, error: false };
+  }
+  renderVals() {
+    var self = this, st = this.state;
+    var mailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.mail.trim());
+    var nameErr = st.tried && st.name.trim() === '';
+    var mailErr = st.tried && !mailOk;
+    var msgErr = st.tried && st.msg.trim().length < 10;
+    var labels = ['Backend', 'Frontend', 'Full-Stack', 'Bases de datos', 'Automatización e IA', 'Otra cosa'];
+    var chips = labels.map(function (l) {
+      var on = !!st.picked[l];
+      return {
+        label: l, on: on ? 'true' : 'false',
+        toggle: function () { var p = Object.assign({}, self.state.picked); p[l] = !on; self.setState({ picked: p }); },
+        style: 'min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 700; border: 1.5px solid ' + (on ? '#FF5B24' : 'rgba(242,238,230,0.18)') + '; background: ' + (on ? '#FF5B24' : 'transparent') + '; color: ' + (on ? '#0A0A0B' : '#F2EEE6')
+      };
+    });
+    return {
+      name: st.name, mail: st.mail, msg: st.msg, chips: chips,
+      setName: function (e) { self.setState({ name: e.target.value }); },
+      setMail: function (e) { self.setState({ mail: e.target.value }); },
+      setMsg: function (e) { self.setState({ msg: e.target.value }); },
+      nameErr: nameErr, mailErr: mailErr, msgErr: msgErr,
+      nameInvalid: nameErr ? 'true' : 'false', mailInvalid: mailErr ? 'true' : 'false', msgInvalid: msgErr ? 'true' : 'false',
+      sending: st.sending, sent: st.sent, showForm: !st.sent, showError: st.error,
+      submitLabel: st.sending ? 'Enviando…' : 'Enviar mensaje',
+      mailShown: st.mail.trim() || 'tu correo',
+      submit: function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        var ok = st.name.trim() !== '' && mailOk && st.msg.trim().length >= 10;
+        if (!ok) { self.setState({ tried: true }); return; }
+        self.setState({ tried: true, sending: true, error: false });
+        setTimeout(function () {
+          if (self.props.failSend) self.setState({ sending: false, error: true });
+          else self.setState({ sending: false, sent: true });
+        }, 1200);
+      },
+      reset: function () { self.setState({ name: '', mail: '', msg: '', picked: {}, tried: false, sent: false, error: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

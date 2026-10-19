@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Jorge Gómez — Portafolio (teléfono)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=JetBrains+Mono:wght@400;600&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}a:hover{opacity:.8}
+.marq{display:flex;width:max-content;animation:marq 30s linear infinite}
+@keyframes marq{to{transform:translateX(-50%)}}
+.pulse{animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.marq,.pulse{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 3000px; box-sizing: border-box; background: #060607; padding: 8px; display: flex; flex-direction: column; gap: 8px; font-family: Manrope, 'Segoe UI', system-ui, sans-serif; color: #F2EEE6">
+
+<section style="position: relative; border-radius: 28px; background: #111113; overflow: hidden; height: 760px; display: flex; flex-direction: column">
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 0">
+<a href="#inicio" style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 14px; text-decoration: none">jorgegmch<span style="color: #FF5B24">_</span></a>
+<button type="button" aria-label="Abrir menú" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(242,238,230,0.18); background: transparent; color: #F2EEE6; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h16M4 15h16"></path></svg></button>
+</header>
+<p style="margin: 14px 16px 0; display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97"><span class="pulse" style="width: 7px; height: 7px; border-radius: 50%; background: #FF5B24"></span>Disponible para freelance</p>
+<div style="position: relative; flex: 1">
+<div aria-hidden="true" style="position: absolute; left: 50%; top: 46%; width: 420px; height: 420px; transform: translate(-50%,-50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,91,36,0.36) 0%, rgba(17,17,19,0) 62%)"></div>
+<h1 style="position: absolute; inset: 14px 0 auto 0; margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 112px; line-height: 0.86; text-align: center; text-transform: uppercase"><span style="display: block">Jorge</span><span style="display: block; color: #FF5B24">Gómez</span></h1>
+<figure style="position: absolute; left: 50%; top: 150px; transform: translateX(-50%); margin: 0; width: 270px; height: 368px">
+<svg viewBox="0 0 470 640" role="img" aria-label="Marcador: foto recortada de Jorge" style="width: 100%; height: 100%; display: block">
+<path d="M235 52c62 0 104 46 104 112 0 46-18 86-46 108l6 46c76 18 136 56 158 126 10 34 13 120 13 196H0c0-76 3-162 13-196 22-70 82-108 158-126l6-46c-28-22-46-62-46-108 0-66 42-112 104-112z" fill="#28272A"></path>
+<path d="M339 164c0 46-18 86-46 108l6 46c76 18 136 56 158 126 10 34 13 120 13 196" fill="none" stroke="#FF5B24" stroke-width="4"></path>
+</svg>
+</figure>
+<div style="position: absolute; left: 16px; right: 16px; bottom: 20px; display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 24px; background: rgba(17,17,19,0.82); border: 1px solid rgba(242,238,230,0.08)">
+<p style="margin: 0; font-size: 22px; font-weight: 800">Full-Stack Developer</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #D9D4CB">Traduzco lo que tu negocio necesita en software que funciona, y te lo explico sin tecnicismos.</p>
+<a href="#proyectos" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 999px; background: #FF5B24; color: #0A0A0B; font-weight: 800; text-decoration: none">Ver proyectos →</a>
+<a href="#contacto" style="display: flex; align-items: center; justify-content: center; min-height: 44px; font-weight: 700">Descargar CV ↓</a>
+</div>
+</div>
+</section>
+
+<div aria-hidden="true" style="background: #FF5B24; color: #0A0A0B; padding: 12px 0; overflow: hidden; border-radius: 16px">
+<div class="marq" style="gap: 22px; font-family: Anton, Impact, sans-serif; font-size: 26px; text-transform: uppercase; white-space: nowrap">
+<sc-for list="{{stack}}" as="t" hint-placeholder-count="20"><span style="display: flex; gap: 22px">{{t}}<span style="font-size: 14px">✦</span></span></sc-for>
+</div>
+</div>
+
+<section style="border-radius: 28px; background: #19171A; padding: 48px 20px; display: flex; flex-direction: column; gap: 28px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #FF5B24">01 — Perfil</span>
+<h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 52px; line-height: 0.94; text-transform: uppercase"><span style="display: block">Del negocio al código.</span><span style="display: block; color: transparent; -webkit-text-stroke: 1px #F2EEE6">Y del código a palabras claras.</span></h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #D9D4CB">Desarrollador Full-Stack con base en Java y Spring Boot. Vengo de la Comunicación Social: escucho antes de programar y explico lo que construyo.</p>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div style="border-radius: 18px; background: #222024; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Anton, Impact, sans-serif; font-size: 36px; line-height: 1; color: #FF5B24">+1</span><span style="font-size: 12px; color: #BDB8AF">año</span></div>
+<div style="border-radius: 18px; background: #222024; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Anton, Impact, sans-serif; font-size: 36px; line-height: 1">14</span><span style="font-size: 12px; color: #BDB8AF">proyectos</span></div>
+<div style="border-radius: 18px; background: #222024; padding: 14px; display: flex; flex-direction: column; gap: 4px"><span style="font-family: Anton, Impact, sans-serif; font-size: 36px; line-height: 1">15</span><span style="font-size: 12px; color: #BDB8AF">tecnologías</span></div>
+</div>
+<div style="border-radius: 24px; background: #0E0E10; border: 1px solid rgba(242,238,230,0.08); padding: 18px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-size: 12px; color: #A29E97">Lo que dice el negocio</span>
+<p style="margin: 0; font-size: 21px; line-height: 1.3; font-weight: 700">«Avísame cuando un producto esté por agotarse.»</p>
+<span style="font-size: 12px; color: #A29E97">Lo que escribo</span>
+<pre style="margin: 0; border-radius: 16px; background: #141416; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; white-space: pre-wrap"><span style="color: #FF5B24">if</span> (stock &lt; reorderPoint) {
+  agent<span style="color: #FF5B24">.draft</span>(purchaseOrder);
+<span style="color: #8C8880">  // un administrador la aprueba</span>
+}</pre>
+</div>
+</section>
+
+<section style="border-radius: 28px; background: #ECE7DD; color: #0A0A0B; padding: 48px 20px 40px; display: flex; flex-direction: column; gap: 24px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #5B5750">02 — Servicios</span>
+<h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 76px; line-height: 0.88; text-transform: uppercase">Lo que<br>construyo</h2>
+<ul style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{services}}" as="s" hint-placeholder-count="6">
+<li style="border-top: 1px solid rgba(10,10,11,0.16); padding: 14px 0">
+<div style="display: grid; grid-template-columns: 48px minmax(0, 1fr) 44px; gap: 12px; align-items: center">
+<span style="font-family: Anton, Impact, sans-serif; font-size: 34px; color: {{s.numColor}}">{{s.n}}</span>
+<h3 style="margin: 0"><button type="button" aria-expanded="{{s.open}}" onClick="{{s.toggle}}" style="all: unset; cursor: pointer; display: block; min-height: 44px; line-height: 44px; font-size: 19px; font-weight: 800">{{s.title}}</button></h3>
+<span aria-hidden="true" style="{{s.dotStyle}}">{{s.sign}}</span>
+</div>
+<sc-if value="{{s.open}}" hint-placeholder-val="{{false}}"><p style="margin: 8px 0 4px 60px; font-size: 15px; line-height: 1.55; color: #2E2C29">{{s.desc}}</p></sc-if>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section style="border-radius: 28px; background: #FF5B24; color: #0A0A0B; padding: 48px 20px; display: flex; flex-direction: column; gap: 22px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">04 — Contacto</span>
+<h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 76px; line-height: 0.86; text-transform: uppercase">¿Construimos<br>algo?</h2>
+<a href="#contacto" style="display: flex; align-items: center; justify-content: center; min-height: 56px; border-radius: 999px; background: #0A0A0B; color: #F2EEE6; font-weight: 800; text-decoration: none">Escríbeme ↗</a>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button type="button" style="min-height: 48px; border-radius: 999px; border: 1.5px solid #0A0A0B; background: transparent; color: #0A0A0B; font-family: Manrope, sans-serif; font-weight: 800; cursor: pointer">Copiar correo</button>
+<a href="#contacto" style="display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-weight: 800; text-decoration: none">WhatsApp ↗</a>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":3000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { open: 0 }; }
+  renderVals() {
+    var self = this;
+    var titles = [
+      ['Desarrollo Backend', 'APIs REST con Java y Spring Boot, con autenticación JWT, roles y permisos, y documentación OpenAPI.'],
+      ['Desarrollo Frontend', 'Interfaces responsivas con HTML, CSS, JavaScript y TypeScript, y React, con apoyo de agentes de IA.'],
+      ['Desarrollo Full-Stack', 'Construyo aplicaciones completas: API en Java y Spring Boot, base de datos en PostgreSQL e interfaz web con HTML, CSS y JavaScript, de la idea a un sistema que funciona.'],
+      ['Bases de datos', 'Modelado relacional y consultas en PostgreSQL y MySQL, con claves foráneas y restricciones que protegen la integridad de los datos.'],
+      ['Automatización y agentes de IA', 'Ciclos de trabajo con agentes de IA (AGENTS.md, skills y comandos), conectados a flujos de n8n y servidores MCP.'],
+      ['Comunicación estratégica', 'Convierto los objetivos del negocio en soluciones tecnológicas y los comunico al equipo.']
+    ];
+    var services = titles.map(function (t, i) {
+      var open = i === self.state.open;
+      return {
+        n: '0' + (i + 1), title: t[0], desc: t[1], open: open, sign: open ? '−' : '+',
+        numColor: open ? '#C2410C' : 'rgba(10,10,11,0.3)',
+        dotStyle: 'width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; ' + (open ? 'background: #0A0A0B; color: #ECE7DD' : 'border: 1.5px solid rgba(10,10,11,0.3)'),
+        toggle: function () { self.setState({ open: open ? -1 : i }); }
+      };
+    });
+    var s = ['Java', 'Spring Boot', 'PostgreSQL', 'Python', 'TypeScript', 'React', 'Docker', 'n8n', 'Agentes de IA'];
+    return { services: services, stack: s.concat(s) };
+  }
+}
+</script>
+</body>
+</html>

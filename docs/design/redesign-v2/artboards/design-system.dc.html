@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Sistema visual</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=JetBrains+Mono:wght@400;600&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1440px; height: 1240px; box-sizing: border-box; background: #060607; padding: 64px; display: flex; flex-direction: column; gap: 48px; font-family: Manrope, 'Segoe UI', system-ui, sans-serif; color: #F2EEE6">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<h1 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 96px; line-height: 0.9; text-transform: uppercase">Sistema visual</h1>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A29E97">tokens.css · v2</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Paleta · contraste medido (WCAG)</span>
+<div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #060607; border: 1px solid rgba(242,238,230,0.12)"></div><b style="font-size: 14px">Void</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#060607 · fondo entre paneles</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #111113"></div><b style="font-size: 14px">Ink</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#111113 · Hero, pie</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #19171A"></div><b style="font-size: 14px">Graphite</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#19171A · Perfil</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #0F0F11; border: 1px solid rgba(242,238,230,0.12)"></div><b style="font-size: 14px">Deep</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#0F0F11 · Proyectos</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #ECE7DD"></div><b style="font-size: 14px">Paper</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#ECE7DD · Servicios · tinta 16.1:1</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #FF5B24"></div><b style="font-size: 14px">Signal</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#FF5B24 · 6.1:1 sobre Ink · tinta encima 6.4:1</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #C2410C"></div><b style="font-size: 14px">Signal Deep</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#C2410C · sobre Paper 4.2:1, solo ≥24 px</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><div style="height: 120px; border-radius: 24px; background: #F2EEE6"></div><b style="font-size: 14px">Bone</b><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">#F2EEE6 · texto 16.3:1 · gris #A29E97 7.1:1</span></div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="border-radius: 32px; background: #111113; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Display · Anton</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 120px; line-height: 0.86; text-transform: uppercase">Jorge</span>
+<span style="font-size: 14px; color: #BDB8AF">Nombres, títulos de escena, cifras. Siempre en mayúsculas.</span>
+</div>
+<div style="border-radius: 32px; background: #111113; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Voz humana · Manrope</span>
+<span style="font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em">Escucho antes de programar.</span>
+<span style="font-size: 17px; line-height: 1.6; color: #D9D4CB">Cuerpo 17–20 px, interlineado 1.55–1.6, pesos 400 / 700 / 800.</span>
+</div>
+<div style="border-radius: 32px; background: #111113; padding: 28px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Voz de código · JetBrains Mono</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 26px; line-height: 1.4"><span style="color: #FF5B24">escuchar</span>() → requerimiento</span>
+<span style="font-size: 14px; color: #BDB8AF">Rótulos, numeración, «traducciones» bajo cada título, cintas.</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 12px">
+<div style="border-radius: 32px; background: #111113; padding: 28px; display: flex; flex-direction: column; gap: 18px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Radios y superficies</span>
+<div style="display: flex; align-items: flex-end; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><div style="width: 104px; height: 104px; border-radius: 40px; background: #FF5B24"></div><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px">40 · panel</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><div style="width: 88px; height: 88px; border-radius: 32px; background: #ECE7DD"></div><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px">32 · tarjeta</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><div style="width: 72px; height: 72px; border-radius: 24px; background: #2A282C"></div><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px">24 · bloque</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><div style="width: 112px; height: 48px; border-radius: 999px; border: 1.5px solid #F2EEE6"></div><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px">pill · botón</span></div>
+</div>
+<span style="font-size: 14px; line-height: 1.6; color: #BDB8AF">Paneles separados 12 px del borde y entre sí (8 px en teléfono, radio 28). El fondo Void entre ellos es lo que hace que cada sección se lea como pieza propia.</span>
+</div>
+<div style="border-radius: 32px; background: #111113; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Tokens de movimiento</span>
+<div style="display: grid; grid-template-columns: 170px 1fr 190px; gap: 10px 16px; font-size: 14px; line-height: 1.45">
+<b style="font-family: 'JetBrains Mono', monospace; font-size: 13px">--ease-cine</b><span>cubic-bezier(.2,.7,.2,1) · todas las entradas</span><span style="color: #A29E97">salida suave, sin rebote</span>
+<b style="font-family: 'JetBrains Mono', monospace; font-size: 13px">--dur-reveal</b><span>700 ms · líneas de título, escalonadas 80 ms</span><span style="color: #A29E97">translateY 100% → 0</span>
+<b style="font-family: 'JetBrains Mono', monospace; font-size: 13px">--dur-curtain</b><span>ligada al scroll · panel anterior a scale(.94)</span><span style="color: #A29E97">transform + opacity</span>
+<b style="font-family: 'JetBrains Mono', monospace; font-size: 13px">--dur-marquee</b><span>42 s y 54 s, sentidos opuestos</span><span style="color: #A29E97">con botón de pausa</span>
+<b style="font-family: 'JetBrains Mono', monospace; font-size: 13px">--dur-intro</b><span>≤ 2,2 s, una vez por sesión, se puede saltar</span><span style="color: #A29E97">frase → código</span>
+<b style="font-family: 'JetBrains Mono', monospace; font-size: 13px">reduce</b><span>sin cortina, sin cintas, sin intro: contenido directo</span><span style="color: #A29E97">prefers-reduced-motion</span>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
