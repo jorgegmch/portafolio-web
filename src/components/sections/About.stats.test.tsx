@@ -9,9 +9,6 @@ import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
 import { LANGS } from '@/i18n/types'
 
-// La edad de la terminal no es asunto de este archivo: fecha ficticia.
-vi.mock('@/lib/birthDate', () => ({ getBirthDate: () => ({ year: 2000, month: 3, day: 15 }) }))
-
 const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
 
 const [START_YEAR = 0, START_MONTH = 0] = site.codingSince.split('-').map(Number)
@@ -40,14 +37,20 @@ const renderAbout = (lang: keyof typeof BROWSER_LANGS = 'es') => {
       </LangProvider>
     </MemoryRouter>,
   )
-  const region = screen.getByRole('region', { name: dictionaries[lang].about.heading })
-  const cards = () => within(region).getAllByRole('listitem')
+  const region = screen.getByRole('region', { name: dictionaries[lang].about.label })
+  /** La lista de las tarjetas: la primera de la escena; la otra es la formación. */
+  const statsList = () => {
+    const [list] = within(region).getAllByRole('list')
+    if (!list) throw new Error('Falta la lista de tarjetas')
+    return list
+  }
+  const cards = () => within(statsList()).getAllByRole('listitem')
   /** Textos de una tarjeta, en el orden en que se leen: la cifra y la etiqueta. */
   const card = (index: number) => {
     const item = cards()[index]
     return item ? readable(item).map((child) => child.textContent) : []
   }
-  return { region, cards, card, ...view }
+  return { region, statsList, cards, card, ...view }
 }
 
 beforeEach(() => {
@@ -63,10 +66,9 @@ afterEach(() => {
 
 describe('About: tarjetas', () => {
   describe('estructura', () => {
-    it('son exactamente tres, en una lista', () => {
-      const { region, cards } = renderAbout()
+    it('son exactamente tres, en su propia lista', () => {
+      const { cards } = renderAbout()
 
-      expect(within(region).getAllByRole('list')).toHaveLength(1)
       expect(cards()).toHaveLength(3)
     })
 
@@ -92,22 +94,16 @@ describe('About: tarjetas', () => {
       expect(card(2)[1]).toBe(stats.technologies(technologies.length))
     })
 
-    // Debajo de las dos columnas, a todo el ancho: lo último de la sección.
-    it('van después de la terminal', () => {
-      const { region, cards } = renderAbout()
+    // En la columna de la bio: después de ella y antes de la formación.
+    it('van después de la bio y antes de la formación', () => {
+      const { region, statsList } = renderAbout()
       const follows = (earlier: Element, later: Element) =>
         Boolean(earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING)
-      const [first] = cards()
+      const bio = within(region).getByText(dictionaries.es.about.bio)
+      const education = within(region).getByRole('heading', { name: dictionaries.es.about.educationLabel })
 
-      expect(follows(within(region).getByRole('figure'), first as Element)).toBe(true)
-    })
-
-    it('su lista es lo último de la sección, fuera de las columnas', () => {
-      const { region } = renderAbout()
-      const list = within(region).getByRole('list')
-
-      expect(list.parentElement).toBe(region)
-      expect(region.lastElementChild).toBe(list)
+      expect(follows(bio, statsList())).toBe(true)
+      expect(follows(statsList(), education)).toBe(true)
     })
 
     it('no son enlaces ni botones', () => {

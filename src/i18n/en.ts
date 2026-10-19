@@ -45,16 +45,12 @@ export const en: Dictionary = {
     },
   },
   about: {
-    heading: 'About me',
-    phrase: { lead: 'From business to code, and from code to ', highlight: 'plain language' },
-    // Translation of the approved Spanish bio: do not edit without approval.
-    bio: [
-      "I'm a junior Full-Stack developer with a Java and Spring Boot foundation. I design REST APIs with JWT authentication and role-based access on PostgreSQL, and I document them with OpenAPI so anyone can understand and use them.",
-      'I code with the support of AI agents, but with method: specifications, rules and skills (AGENTS.md, SDD), so the agent follows a clear structure and the judgment stays mine. That is how I built this very portfolio, with a well-orchestrated agentic workflow. I also integrate agents into the software itself: in LogiTrack IQ I connected n8n and an MCP server so that an agent detects products below their reorder point and drafts purchase orders for an administrator to approve.',
-      "I come from a communications background: I learned to listen before I speak and to explain complex ideas to different audiences. In software, that means turning what a client needs into clear technical requirements and explaining the team's decisions without unnecessary jargon.",
-      "I work with Scrum, learn fast and document what I build. If your team is looking for someone who can code, understands the business and can explain it, let's talk.",
-    ],
-    terminalLabel: 'Output of java Developer',
+    label: 'Profile',
+    tag: 'from_business_to_code()',
+    phrase: { filled: 'From business to code.', outline: 'And from code to plain language.' },
+    // Translation of the one-line bio of the redesign v2 spec (§3.2): do not
+    // edit without the author's approval.
+    bio: 'Full-Stack developer grounded in Java and Spring Boot. I come from Social Communication: I listen before I code, and I explain what I build.',
     stats: {
       codingTime: {
         months: (count) => (count === 1 ? 'Month of coding' : 'Months of coding'),
@@ -63,6 +59,27 @@ export const en: Dictionary = {
       projects: (count) => (count === 1 ? 'Project built' : 'Projects built'),
       technologies: (count) => (count === 1 ? 'Technology' : 'Technologies'),
       plusPosition: 'suffix',
+    },
+    educationLabel: 'Education',
+    // Official titles keep the original name, with the translation in parentheses.
+    educationTranslation: {
+      'tecnico-laboral-programacion': 'Technical Diploma in Software Programming',
+      'comunicador-social-periodista': 'Social Communicator and Journalist',
+    },
+    translator: {
+      label: 'Translator',
+      examplesLabel: 'Examples',
+      saysLabel: 'What the business says',
+      writesLabel: 'What I write',
+      viewRepo: 'View the repo',
+      items: {
+        inventory: { tab: 'Inventory', say: 'Let me know when a product is about to run out.' },
+        permissions: {
+          tab: 'Permissions',
+          say: 'Anyone on the team can create and edit products, but only an administrator can delete them.',
+        },
+        news: { tab: 'News', say: 'I want a news digest every day.' },
+      },
     },
   },
   services: {

@@ -1,178 +1,179 @@
 /* Panel Perfil, en Graphite, con el relleno de los paneles. */
 .about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
   padding: var(--panel-padding-top) var(--panel-padding-x) var(--panel-padding-bottom);
   background-color: var(--color-graphite);
   /* Al llegar por el ancla, el panel queda a un hueco del borde. */
   scroll-margin-top: var(--panel-gap);
 }
 
-/* Título pequeño, como una etiqueta sobre la frase grande. */
-.heading {
-  color: var(--color-accent-alt);
+/* Rótulos en mono, a los dos lados: mayúsculas solo visuales. */
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
   font-family: var(--font-mono);
-  font-size: var(--font-size-lead);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-wide);
-  /* El diccionario guarda el texto normal; las mayúsculas son solo visuales. */
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
-/* A todo el ancho. Líneas de largo parecido; donde no se admite, se parten
-   como siempre. */
+.label {
+  color: var(--color-signal);
+}
+
+.tag {
+  color: var(--color-muted);
+  text-transform: none;
+}
+
+/* La frase grande en Anton: la primera línea rellena y la segunda solo en
+   contorno. Las mayúsculas son visuales. */
 .phrase {
-  margin-top: var(--space-4);
-  color: var(--color-text);
-  font-size: var(--font-size-phrase);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-tight);
+  color: var(--color-bone);
+  font-family: var(--font-display);
+  font-size: var(--font-size-profile-phrase);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-phrase);
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
-/* Solo se aplica si config/about enciende el resalte. */
-.highlight {
-  color: var(--color-accent-alt);
+.filled,
+.outline {
+  display: block;
 }
 
-/* La descripción a la izquierda y la terminal a la derecha, a la altura del
-   primer párrafo: sin align-items, la rejilla la estiraría hasta el último. */
+.outline {
+  color: transparent;
+  -webkit-text-stroke: var(--outline-width) var(--color-bone);
+}
+
+/* Dos columnas: la bio con las cifras y la formación, y el Traductor. */
 .columns {
   display: grid;
-  grid-template-columns: minmax(0, var(--about-text-width)) minmax(0, 1fr);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: var(--space-8);
-  margin-top: var(--space-7);
+  align-items: start;
 }
 
-/* Columna de texto: la descripción. */
-.text {
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
   min-width: 0;
 }
 
 .bio {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
   max-width: var(--measure);
-  color: var(--color-text-muted);
+  color: var(--color-bone-soft);
+  font-size: var(--font-size-bio);
+  line-height: var(--leading-base);
 }
 
-/* Celda de la terminal: no deja que el panel la ensanche. Debajo del panel
-   va el mapa. */
-.terminal {
-  min-width: 0;
-}
-
-/* El panel de la terminal: la sección le añade la elevación bajo el puntero.
-   El mapa, en la misma celda, no se eleva. */
-.panel {
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-/* Al ancho de la celda, con su proporción: apilado, queda bajo la terminal. */
-.map {
-  margin-top: var(--space-6);
-}
-
-/* Tres tarjetas en fila, a partes iguales. */
+/* Tres tarjetas en fila; el <li> es el que aparece al entrar en pantalla. */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-4);
-  margin-top: var(--space-7);
+  gap: var(--space-3);
   list-style: none;
 }
 
-/* El <li> es el que aparece al entrar en pantalla; la caja va dentro. La
-   rejilla de las tarjetas lo estira al alto de sus vecinos, y como rejilla de
-   una sola celda estira a su vez la caja: miden lo mismo que el <li>. */
 .statItem {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
 }
 
-/* La caja de la tarjeta: el mismo fondo y borde que la terminal. La cifra y
-   el icono comparten la primera fila; la etiqueta baja a la segunda. Las
-   filas van juntas arriba aunque la rejilla estire la caja al alto de sus
-   vecinas. */
 .stat {
   display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  align-items: center;
-  gap: var(--space-1) var(--space-3);
+  flex-direction: column;
+  gap: var(--space-1);
   padding: var(--space-5);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-
-/* Decorativo, en el acento de la cifra: al borde derecho, centrado con ella. */
-.statIcon {
-  color: var(--color-accent-alt);
-  align-self: center;
-  margin-left: auto;
+  border-radius: var(--radius-block);
+  background-color: var(--color-tile);
 }
 
 .statValue {
-  color: var(--color-accent-alt);
-  font-size: var(--font-size-title);
-  font-weight: var(--font-weight-extrabold);
-  line-height: var(--leading-tight);
+  color: var(--color-bone);
+  font-family: var(--font-display);
+  font-size: var(--font-size-stat);
+  line-height: var(--leading-none);
+}
+
+/* La primera cifra, la del tiempo programando, va en el acento. */
+.statItem:first-child .statValue {
+  color: var(--color-signal);
 }
 
 .statLabel {
-  flex-basis: 100%;
-  color: var(--color-text);
+  color: var(--color-tile-text);
   font-size: var(--font-size-md);
 }
 
-@media (max-width: 1023px) {
+.education {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line-12);
+}
+
+.educationLabel {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.educationList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.educationRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+  font-size: var(--font-size-base);
+}
+
+.educationTitle {
+  font-weight: var(--font-weight-bold);
+}
+
+.educationEntity {
+  color: var(--color-muted);
+}
+
+/* Hasta 900 px, una sola columna: el Traductor va debajo. */
+@media (max-width: 900px) {
   .columns {
     grid-template-columns: minmax(0, 1fr);
   }
-
-  /* Apilada, la terminal y el mapa no pasan del ancho de la descripción. */
-  .terminal {
-    max-width: var(--measure);
-  }
 }
 
-/* En teléfono no caben tres en fila: van una bajo otra, con la cifra y su
-   etiqueta en la misma línea para no alargar la sección, y el icono al final,
-   en el borde derecho. */
 @media (max-width: 480px) {
+  .about {
+    gap: var(--space-6);
+  }
+
   .stats {
-    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
   }
 
   .stat {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: baseline;
-    gap: var(--space-3);
-    padding: var(--space-4);
-  }
-
-  .statIcon {
-    order: 1;
+    padding: var(--space-3);
+    border-radius: var(--radius-field);
   }
 
   .statLabel {
-    flex-basis: auto;
-  }
-}
-
-/* Las tarjetas y la terminal se elevan bajo el puntero, como las pastillas
-   del Hero, pero solo donde hay puntero de verdad: en táctil, :hover se
-   queda pegado tras tocar. Con movimiento reducido el cambio es instantáneo,
-   porque la duración es la de --duration-fast. */
-@media (hover: hover) {
-  .stat:hover {
-    transform: scale(var(--lift-scale));
-  }
-
-  .panel:hover {
-    transform: scale(var(--lift-scale));
+    font-size: var(--font-size-xs);
   }
 }

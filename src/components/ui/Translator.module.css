@@ -1,0 +1,191 @@
+/* Bloque Ink más oscuro que el panel, con borde fino. */
+.translator {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-6);
+  border: 1px solid var(--line-08);
+  border-radius: var(--radius-card);
+  background-color: var(--color-console);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* Rótulo en mono: mayúsculas solo visuales. */
+.label,
+.caption {
+  color: var(--color-muted);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Pestaña: píldora con borde; la elegida, rellena del acento. */
+.tab {
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line-18);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-bone);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+.tab[aria-pressed='true'] {
+  border-color: var(--color-signal);
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.caption {
+  font-size: var(--font-size-sm);
+}
+
+/* Lo que pide el negocio, entre comillas del idioma. Reserva dos líneas para
+   que el bloque no salte al cambiar de ejemplo. */
+.say {
+  min-height: calc(2 * var(--leading-tight) * var(--translator-say-size));
+  font-size: var(--translator-say-size);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  quotes: '«' '»';
+}
+
+:lang(en) .say {
+  quotes: '“' '”';
+}
+
+/* La flecha entre las dos voces, entre dos líneas finas. */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-signal);
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background-color: var(--line-12);
+}
+
+.arrow {
+  width: var(--space-6);
+  height: var(--space-6);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* El código, con resaltado mínimo. Reserva siete líneas, las del ejemplo más
+   largo, para que el bloque no salte al cambiar de ejemplo. */
+.code {
+  min-height: calc(7 * var(--leading-code) * var(--font-size-code) + 2 * var(--space-5));
+  margin: 0;
+  padding: var(--space-5);
+  overflow-x: auto;
+  border-radius: var(--radius-block);
+  background-color: var(--color-console-code);
+  color: var(--color-bone);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-code);
+  line-height: var(--leading-code);
+  white-space: pre-wrap;
+}
+
+.line {
+  display: block;
+}
+
+.keyword {
+  color: var(--color-signal);
+}
+
+.comment {
+  color: var(--color-code-comment);
+}
+
+.source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  color: var(--color-muted);
+  font-size: var(--font-size-sm);
+}
+
+.repo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  color: var(--color-bone);
+  font-weight: var(--font-weight-bold);
+}
+
+.external {
+  width: var(--font-size-md);
+  height: var(--font-size-md);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .arrow {
+    animation: translator-flow var(--dur-flow) ease-in-out infinite;
+  }
+}
+
+/* La flecha va y viene: solo transform y opacity. */
+@keyframes translator-flow {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateX(calc(-1 * var(--flow-shift)));
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(var(--flow-shift));
+  }
+}
+
+@media (max-width: 480px) {
+  .translator {
+    padding: var(--space-4);
+    border-radius: var(--radius-block);
+  }
+}

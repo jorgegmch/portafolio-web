@@ -97,6 +97,9 @@
   /* Interlineado de los títulos en Anton (spec: 0,84 a 0,92) y del cuerpo
      (1,55 a 1,6), y espaciado apretado de los títulos en Manrope. */
   --leading-display: 0.84;
+  /* Frase de Perfil: más aire, para que las tildes no pisen la línea de arriba. */
+  --leading-phrase: 0.92;
+  --leading-none: 1;
   --leading-body: 1.55;
   --tracking-tight: -0.01em;
 
@@ -126,6 +129,19 @@
   /* Velo de la tarjeta del Hero en pantallas estrechas: Ink al 82 %. */
   --color-ink-veil: rgba(17, 17, 19, 0.82);
 
+  /* Perfil (spec §3.2): bio, cifras de las tarjetas y Traductor. El fondo
+     del Traductor y el de su bloque de código son dos tonos de Ink. */
+  --font-size-bio: 1.25rem; /* 20px */
+  --font-size-stat: 3.5rem; /* 56px */
+  --color-console: #0e0e10;
+  --color-console-code: #141416;
+  --translator-say-size: 1.875rem; /* 30px */
+  --font-size-code: 0.9375rem; /* 15px */
+  --leading-code: 1.75;
+  /* Flecha del Traductor: cuánto va y viene, y cada cuánto. */
+  --flow-shift: 0.375rem; /* 6px */
+  --dur-flow: 2.6s;
+
   /* Cintas: hueco y signo entre elementos, tamaño de letra, y el giro de la
      del Hero. */
   --ribbon-gap: 2.25rem; /* 36px */
@@ -145,10 +161,8 @@
   /* Tamaños fluidos (origen): tagline y título de sección. */
   --font-size-lead: clamp(0.875rem, 1.9vw, 1.3125rem);
   --font-size-title: clamp(1.625rem, 3.5vw, 2.875rem);
-  /* Frase grande de «Sobre mí»: de 28 px en teléfono a 52 px en escritorio. */
+  /* Frase grande de «Servicios»: de 28 px en teléfono a 52 px en escritorio. */
   --font-size-phrase: clamp(1.75rem, 4vw, 3.25rem);
-  /* Nombre del hero: de 40 px en teléfono a 90 px en escritorio. */
-  --font-size-display: clamp(2.5rem, 7vw, 5.625rem);
   /* Línea de la animación de carga: de 16 px en teléfono a 24 px en escritorio. */
   --font-size-intro: clamp(1rem, 2.2vw, 1.5rem);
 
@@ -176,26 +190,9 @@
 
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
-  /* Columna de texto de «Sobre mí» en dos columnas. Crece con la ventana, de
-     30rem (480 px) a 1024 px a --measure (576 px) a 1280, y ahí se queda: a
-     1024 deja a la terminal sitio para el nombre en dos líneas, y no salta
-     al cruzar ningún ancho. */
-  --about-text-width: min(var(--measure), calc(30rem + (100vw - 64rem) * 0.375));
-
-  /* Brillo fijo del punto de la ciudad en el mapa de «Sobre mí», del que sale
-     --map-city-glow. */
-  --hero-status-glow: 0.5rem;
-  /* Elevación de las tarjetas y la terminal de «Sobre mí» y de las fichas de
-     «Servicios» bajo el puntero. */
+  /* Elevación de las fichas de «Servicios» bajo el puntero. */
   --lift-scale: 1.03;
 
-  /* Mapa de «Sobre mí». La tierra va en Signal al 12 %, translúcida como los
-     bordes: se lee como silueta sin competir con el texto, y el punto de la
-     ciudad resalta sobre ella. Es decorativo. */
-  --color-map-land: rgba(255, 91, 36, 0.12);
-  /* Brillo fijo del punto de la ciudad: el del punto de estado al 80 %, en
-     la misma proporción en que se redujo el punto (de 8 a 6,4 unidades). */
-  --map-city-glow: calc(var(--hero-status-glow) * 0.8);
 
   /* Alto de la navegación, que va dentro del panel del Hero: su relleno
      (24 px arriba y abajo) y los controles de 44 px. El Hero le reserva ese
@@ -334,6 +331,12 @@
     --ribbon-separator-size: 0.875rem; /* 14px */
     --hero-glow-size: 26.25rem; /* 420px */
     --hero-ring-size: 17.5rem; /* 280px */
+    /* Perfil en teléfono (tablero móvil). */
+    --font-size-profile-phrase: 3.25rem; /* 52px */
+    --font-size-bio: 1.0625rem; /* 17px */
+    --font-size-stat: 2.25rem; /* 36px */
+    --translator-say-size: 1.3125rem; /* 21px */
+    --font-size-code: 0.78125rem; /* 12,5px */
   }
 }
 

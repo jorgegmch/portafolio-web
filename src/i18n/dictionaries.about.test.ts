@@ -2,36 +2,20 @@ import { describe, expect, it } from 'vitest'
 import { dictionaries } from '@/i18n/index'
 import { LANGS } from '@/i18n/types'
 
-const HEADING = { es: 'Sobre mí', en: 'About me' } as const
+/** Nombre de la escena: el de su rótulo y el de la navegación. */
+const LABEL = { es: 'Perfil', en: 'Profile' } as const
 
+// Frase y bio de la spec del rediseño v2 (§3.2), escritas por el autor; el
+// inglés es su traducción. Cambiarlas exige su visto bueno y actualizar
+// también estas constantes.
 const PHRASE = {
-  es: 'Del negocio al código, y del código a palabras claras',
-  en: 'From business to code, and from code to plain language',
+  es: { filled: 'Del negocio al código.', outline: 'Y del código a palabras claras.' },
+  en: { filled: 'From business to code.', outline: 'And from code to plain language.' },
 } as const
 
-/** El tramo que puede ir resaltado: el final de la frase. */
-const HIGHLIGHT = { es: 'palabras claras', en: 'plain language' } as const
-
-// Aprobado por el autor palabra por palabra: cambiarlo exige su visto bueno y
-// actualizar también estas dos constantes.
 const BIO = {
-  es: [
-    'Soy desarrollador Full-Stack junior con base en Java y Spring Boot. Diseño APIs REST con autenticación JWT y roles sobre PostgreSQL, y las documento con OpenAPI para que cualquiera pueda entenderlas y usarlas.',
-    'Programo apoyado en agentes de IA, pero con método: especificaciones, reglas y skills (AGENTS.md, SDD) para que el agente siga una estructura clara y yo mantenga el criterio. Así construí este mismo portafolio, con un ciclo agéntico bien orquestado. También integro agentes dentro del software: en LogiTrack IQ conecté n8n y un servidor MCP para que un agente detecte productos bajo el punto de reorden y genere órdenes de compra en borrador que un administrador aprueba.',
-    'Vengo de la Comunicación Social: aprendí a escuchar antes de hablar y a explicar ideas complejas a públicos distintos. En software, eso significa convertir lo que necesita un cliente en requerimientos técnicos claros y explicar las decisiones del equipo sin tecnicismos innecesarios.',
-    'Trabajo con Scrum, aprendo rápido y documento lo que construyo. Si tu equipo busca a alguien que programe, entienda el negocio y sepa explicarlo, hablemos.',
-  ],
-  en: [
-    "I'm a junior Full-Stack developer with a Java and Spring Boot foundation. I design REST APIs with JWT authentication and role-based access on PostgreSQL, and I document them with OpenAPI so anyone can understand and use them.",
-    'I code with the support of AI agents, but with method: specifications, rules and skills (AGENTS.md, SDD), so the agent follows a clear structure and the judgment stays mine. That is how I built this very portfolio, with a well-orchestrated agentic workflow. I also integrate agents into the software itself: in LogiTrack IQ I connected n8n and an MCP server so that an agent detects products below their reorder point and drafts purchase orders for an administrator to approve.',
-    "I come from a communications background: I learned to listen before I speak and to explain complex ideas to different audiences. In software, that means turning what a client needs into clear technical requirements and explaining the team's decisions without unnecessary jargon.",
-    "I work with Scrum, learn fast and document what I build. If your team is looking for someone who can code, understands the business and can explain it, let's talk.",
-  ],
-} as const
-
-const TERMINAL_LABEL = {
-  es: 'Salida de java Developer',
-  en: 'Output of java Developer',
+  es: 'Desarrollador Full-Stack con base en Java y Spring Boot. Vengo de la Comunicación Social: escucho antes de programar y explico lo que construyo.',
+  en: 'Full-Stack developer grounded in Java and Spring Boot. I come from Social Communication: I listen before I code, and I explain what I build.',
 } as const
 
 /** Etiqueta de cada tarjeta con 0, con 1 y con varios. */
@@ -55,71 +39,26 @@ const COUNTS = [0, 1, 14] as const
 /** Dónde va el «+» de una cifra aproximada: «+20» en español, «20+» en inglés. */
 const PLUS_POSITION = { es: 'prefix', en: 'suffix' } as const
 
-describe('textos de «Sobre mí»', () => {
-  it.each(LANGS)('en %s, el título es el previsto', (lang) => {
-    const { about } = dictionaries[lang]
-
-    expect(about.heading).toBe(HEADING[lang])
+describe('textos de Perfil', () => {
+  it.each(LANGS)('en %s, el nombre de la escena es el previsto, y el de la navegación', (lang) => {
+    expect(dictionaries[lang].about.label).toBe(LABEL[lang])
+    expect(dictionaries[lang].nav.about).toBe(LABEL[lang])
   })
 
-  describe('frase grande', () => {
-    it.each(LANGS)('en %s, el inicio más el resaltado dan la frase aprobada', (lang) => {
-      const { lead, highlight } = dictionaries[lang].about.phrase
-
-      expect(lead + highlight).toBe(PHRASE[lang])
-    })
-
-    it.each(LANGS)('en %s, el tramo resaltable es el previsto', (lang) => {
-      expect(dictionaries[lang].about.phrase.highlight).toBe(HIGHLIGHT[lang])
-    })
-
-    // El espacio va en el inicio: el resaltado se pinta sin espacios sobrantes.
-    it.each(LANGS)('en %s, el espacio entre los dos tramos va al final del inicio', (lang) => {
-      const { lead, highlight } = dictionaries[lang].about.phrase
-
-      expect(lead.endsWith(' ')).toBe(true)
-      expect(highlight).toBe(highlight.trim())
-    })
+  it.each(LANGS)('en %s, la frase grande son sus dos líneas aprobadas', (lang) => {
+    expect(dictionaries[lang].about.phrase).toEqual(PHRASE[lang])
   })
 
-  describe('descripción', () => {
-    it.each(LANGS)('en %s, son cuatro párrafos', (lang) => {
-      expect(dictionaries[lang].about.bio).toHaveLength(4)
+  describe('bio', () => {
+    it.each(LANGS)('en %s, es la de una línea aprobada, palabra por palabra', (lang) => {
+      expect(dictionaries[lang].about.bio).toBe(BIO[lang])
     })
 
-    // La traducción va párrafo a párrafo: ninguno sobra ni falta en un idioma.
-    it('español e inglés tienen el mismo número de párrafos', () => {
-      expect(dictionaries.en.about.bio).toHaveLength(dictionaries.es.about.bio.length)
+    // La escena no muestra contacto: ni un correo ni un número caben aquí.
+    it.each(LANGS)('en %s, no lleva datos de contacto', (lang) => {
+      expect(dictionaries[lang].about.bio).not.toContain('@')
+      expect(dictionaries[lang].about.bio).not.toMatch(/\d{5,}/)
     })
-
-    it.each([0, 1, 2, 3])('en español, el párrafo %i es el aprobado, palabra por palabra', (index) => {
-      expect(dictionaries.es.about.bio[index]).toBe(BIO.es[index])
-    })
-
-    it.each([0, 1, 2, 3])('en inglés, el párrafo %i es la traducción aprobada', (index) => {
-      expect(dictionaries.en.about.bio[index]).toBe(BIO.en[index])
-    })
-
-    // La sección no muestra contacto: ni un correo ni un número caben aquí.
-    it.each(LANGS)('en %s, ningún párrafo lleva datos de contacto', (lang) => {
-      dictionaries[lang].about.bio.forEach((paragraph) => {
-        expect(paragraph).not.toContain('@')
-        expect(paragraph).not.toMatch(/\d{5,}/)
-      })
-    })
-
-    // Una palabra partida por un espacio doble o un salto rompería la escritura
-    // palabra por palabra.
-    it.each(LANGS)('en %s, las palabras van separadas por un solo espacio', (lang) => {
-      dictionaries[lang].about.bio.forEach((paragraph) => {
-        expect(paragraph).toBe(paragraph.trim())
-        expect(paragraph).not.toMatch(/\s{2,}|[\n\t]/)
-      })
-    })
-  })
-
-  it.each(LANGS)('en %s, el panel de la terminal tiene su nombre accesible', (lang) => {
-    expect(dictionaries[lang].about.terminalLabel).toBe(TERMINAL_LABEL[lang])
   })
 
   describe('etiquetas de las tarjetas', () => {

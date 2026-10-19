@@ -46,16 +46,12 @@ export const es: Dictionary = {
     },
   },
   about: {
-    heading: 'Sobre mí',
-    phrase: { lead: 'Del negocio al código, y del código a ', highlight: 'palabras claras' },
-    // Texto aprobado palabra por palabra: no editar sin aprobación.
-    bio: [
-      'Soy desarrollador Full-Stack junior con base en Java y Spring Boot. Diseño APIs REST con autenticación JWT y roles sobre PostgreSQL, y las documento con OpenAPI para que cualquiera pueda entenderlas y usarlas.',
-      'Programo apoyado en agentes de IA, pero con método: especificaciones, reglas y skills (AGENTS.md, SDD) para que el agente siga una estructura clara y yo mantenga el criterio. Así construí este mismo portafolio, con un ciclo agéntico bien orquestado. También integro agentes dentro del software: en LogiTrack IQ conecté n8n y un servidor MCP para que un agente detecte productos bajo el punto de reorden y genere órdenes de compra en borrador que un administrador aprueba.',
-      'Vengo de la Comunicación Social: aprendí a escuchar antes de hablar y a explicar ideas complejas a públicos distintos. En software, eso significa convertir lo que necesita un cliente en requerimientos técnicos claros y explicar las decisiones del equipo sin tecnicismos innecesarios.',
-      'Trabajo con Scrum, aprendo rápido y documento lo que construyo. Si tu equipo busca a alguien que programe, entienda el negocio y sepa explicarlo, hablemos.',
-    ],
-    terminalLabel: 'Salida de java Developer',
+    label: 'Perfil',
+    tag: 'del_negocio_al_codigo()',
+    phrase: { filled: 'Del negocio al código.', outline: 'Y del código a palabras claras.' },
+    // Bio de una línea de la spec del rediseño v2 (§3.2), escrita por el
+    // autor: no editar sin su aprobación.
+    bio: 'Desarrollador Full-Stack con base en Java y Spring Boot. Vengo de la Comunicación Social: escucho antes de programar y explico lo que construyo.',
     stats: {
       codingTime: {
         months: (count) => (count === 1 ? 'Mes programando' : 'Meses programando'),
@@ -64,6 +60,27 @@ export const es: Dictionary = {
       projects: (count) => (count === 1 ? 'Proyecto construido' : 'Proyectos construidos'),
       technologies: (count) => (count === 1 ? 'Tecnología' : 'Tecnologías'),
       plusPosition: 'prefix',
+    },
+    educationLabel: 'Formación',
+    // Los títulos oficiales van en su idioma original: en español no llevan traducción.
+    educationTranslation: {
+      'tecnico-laboral-programacion': null,
+      'comunicador-social-periodista': null,
+    },
+    translator: {
+      label: 'Traductor',
+      examplesLabel: 'Ejemplos',
+      saysLabel: 'Lo que dice el negocio',
+      writesLabel: 'Lo que escribo',
+      viewRepo: 'Ver el repo',
+      items: {
+        inventory: { tab: 'Inventario', say: 'Avísame cuando un producto esté por agotarse.' },
+        permissions: {
+          tab: 'Permisos',
+          say: 'Cualquiera del equipo puede crear y editar productos, pero solo un administrador puede borrarlos.',
+        },
+        news: { tab: 'Noticias', say: 'Quiero un resumen de noticias todos los días.' },
+      },
     },
   },
   services: {

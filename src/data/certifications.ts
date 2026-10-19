@@ -4,13 +4,24 @@ import type { Certification } from '@/data/types'
  * Registro de certificaciones. La página que las listaba se retiró con el
  * rediseño v2; el registro se conserva porque respalda textos del sitio
  * (regla de contenido veraz). Por ejemplo, el diplomado respalda el servicio
- * «Comunicación estratégica» y el título de la universidad, la formación en
- * Comunicación Social.
+ * «Comunicación estratégica», y el técnico de Campuslands y el título de la
+ * universidad, la formación de Perfil (data/education.ts).
  *
  * El título es el oficial, en su idioma original: no se traduce. Ninguna
  * vista lo muestra hoy.
  */
 const certificationList = [
+  {
+    // Nombre exacto del programa según el certificado (confirmado por el
+    // autor el 2026-10-19). Fechas: agosto de 2025 a septiembre de 2026,
+    // según los CV de public/cv/. Ojo: los CV lo llaman «Técnico Laboral en
+    // Desarrollo de Software»; manda el certificado.
+    id: 'tecnico-laboral-programacion',
+    title: 'Técnico Laboral en Programación de Software',
+    entity: 'Campuslands',
+    date: '2026-09',
+    category: 'technical',
+  },
   {
     id: 'comunicador-social-periodista',
     title: 'Comunicador Social y Periodista',

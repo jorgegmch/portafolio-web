@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { YearMonth } from '@/data/types'
-import type { DateParts } from '@/lib/calculateAge'
+import type { DateParts } from '@/lib/dateParts'
 import { codingTime } from '@/lib/codingTime'
 
 // Inicio ficticio: los tests no dependen del de config/ ni del reloj.

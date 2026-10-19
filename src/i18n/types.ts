@@ -1,6 +1,8 @@
+import type { EducationId } from '@/data/education'
 import type { ProjectId } from '@/data/projects'
 import type { ServiceId } from '@/data/services'
 import type { HeroSocialId } from '@/data/social'
+import type { TranslatorExampleId } from '@/data/translator'
 import type { CodingTime } from '@/lib/codingTime'
 
 export const LANGS = ['es', 'en'] as const
@@ -70,13 +72,14 @@ export interface Dictionary {
     social: Record<HeroSocialId, string>
   }
   about: {
-    heading: string
-    /** Frase grande, en dos tramos: el segundo es el que puede ir resaltado. */
-    phrase: { lead: string; highlight: string }
-    /** Un elemento por párrafo. */
-    bio: readonly string[]
-    /** Nombre accesible del panel de la terminal. */
-    terminalLabel: string
+    /** Nombre de la escena: su rótulo, tras el número, y el de la navegación. */
+    label: string
+    /** Rótulo en mono al otro lado, con forma de llamada a función. */
+    tag: string
+    /** Frase grande en dos líneas: la primera rellena y la segunda en contorno. */
+    phrase: { filled: string; outline: string }
+    /** Bio de una línea. */
+    bio: string
     /** Etiqueta de cada tarjeta según su cifra, que la tarjeta muestra aparte. */
     stats: {
       codingTime: Record<CodingTime['unit'], (count: number) => string>
@@ -84,6 +87,22 @@ export interface Dictionary {
       technologies: (count: number) => string
       /** Dónde va el «+» de una cifra aproximada; el carácter lo pone la tarjeta. */
       plusPosition: PlusPosition
+    }
+    educationLabel: string
+    /**
+     * Traducción entre paréntesis del título oficial de cada fila, que va en
+     * su idioma original; `null` donde no hace falta.
+     */
+    educationTranslation: Record<EducationId, string | null>
+    translator: {
+      label: string
+      /** Nombre accesible del grupo de pestañas. */
+      examplesLabel: string
+      saysLabel: string
+      writesLabel: string
+      viewRepo: string
+      /** Por ejemplo: la pestaña y lo que pide el negocio. El código está en data/. */
+      items: Record<TranslatorExampleId, { tab: string; say: string }>
     }
   }
   services: {

@@ -23,6 +23,8 @@ vi.mock('@/data/projects', () => ({
   get builtProjects() {
     return data.projects.filter((project) => project.built)
   },
+  // El Traductor enlaza a sus repos: la URL no importa en este archivo.
+  projectUrl: (id: string) => `https://example.test/${id}`,
 }))
 vi.mock('@/data/technologies', () => ({
   get technologies() {
@@ -72,8 +74,11 @@ const renderCards = (lang: keyof typeof BROWSER_LANGS = 'es') => {
       </LangProvider>
     </MemoryRouter>,
   )
-  const region = screen.getByRole('region', { name: dictionaries[lang].about.heading })
-  return within(region)
+  const region = screen.getByRole('region', { name: dictionaries[lang].about.label })
+  // La lista de las tarjetas es la primera de la escena; la otra es la formación.
+  const [statsList] = within(region).getAllByRole('list')
+  if (!statsList) throw new Error('Falta la lista de tarjetas')
+  return within(statsList)
     .getAllByRole('listitem')
     .map((item) => readable(item).map((child) => child.textContent))
 }

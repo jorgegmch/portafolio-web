@@ -1,5 +1,5 @@
 import type { YearMonth } from '@/data/types'
-import type { DateParts } from '@/lib/calculateAge'
+import type { DateParts } from '@/lib/dateParts'
 
 const MONTHS_PER_YEAR = 12
 
