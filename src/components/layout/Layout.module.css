@@ -21,3 +21,104 @@
 .main > * {
   border-radius: var(--radius-panel);
 }
+
+/*
+ * Cortina entre escenas (spec §4.3): cada panel se queda fijo y el siguiente
+ * sube encima; el que sale se encoge y se atenúa, ligado al scroll. Mejora
+ * progresiva: sin animation-timeline (o sin timeline-scope) los paneles
+ * quedan apilados, sin efecto, y con movimiento reducido no hay cortina.
+ *
+ * - Punto de fijado: --curtain-top (useCurtain). Un panel más alto que la
+ *   ventana se fija al llegar su borde inferior al de la ventana: todo su
+ *   contenido pasa por la vista antes de quedar tapado. Si el foco cae bajo
+ *   el panel siguiente, useCurtain sube la página hasta destaparlo.
+ * - La línea de tiempo es la del panel siguiente, no la propia: la de un
+ *   panel fijo no avanza mientras lo está (medido en Chromium). Cada panel
+ *   publica la suya (view-timeline) y timeline-scope la hace visible a su
+ *   hermano anterior, que la recibe en --curtain-timeline. Con el rango
+ *   entry, el que sale no cambia mientras se lee: empieza cuando el
+ *   siguiente asoma por abajo y termina cuando lo cubre. Hay reglas para las
+ *   cinco escenas del diseño; el último panel no tiene siguiente.
+ * - Se atenúa con una sombra (::after en Void cuya opacidad sube), no con la
+ *   opacidad del panel: un panel translúcido dejaría ver el de debajo.
+ * - .frame > .main pesa más que la clase de cada escena (el Hero lleva
+ *   position: relative).
+ */
+@supports (animation-timeline: view()) and (timeline-scope: none) {
+  @media (prefers-reduced-motion: no-preference) {
+    .frame > .main {
+      timeline-scope: --curtain-2, --curtain-3, --curtain-4, --curtain-5;
+    }
+
+    .frame > .main > * {
+      position: sticky;
+      top: var(--curtain-top, 0);
+      transform-origin: 50% 100%;
+    }
+
+    .frame > .main > :nth-child(1) {
+      --curtain-timeline: --curtain-2;
+    }
+
+    .frame > .main > :nth-child(2) {
+      --curtain-timeline: --curtain-3;
+
+      view-timeline: --curtain-2 block;
+    }
+
+    .frame > .main > :nth-child(3) {
+      --curtain-timeline: --curtain-4;
+
+      view-timeline: --curtain-3 block;
+    }
+
+    .frame > .main > :nth-child(4) {
+      --curtain-timeline: --curtain-5;
+
+      view-timeline: --curtain-4 block;
+    }
+
+    .frame > .main > :nth-child(5) {
+      view-timeline: --curtain-5 block;
+    }
+
+    .frame > .main > :not(:last-child) {
+      animation: curtain-out linear both;
+      animation-timeline: var(--curtain-timeline);
+      animation-range: entry;
+    }
+
+    .frame > .main > :not(:last-child)::after {
+      position: absolute;
+      inset: 0;
+      z-index: var(--z-curtain-shade);
+      border-radius: inherit;
+      background-color: var(--color-void);
+      content: '';
+      opacity: 0;
+      pointer-events: none;
+      animation: curtain-shade linear both;
+      animation-timeline: var(--curtain-timeline);
+      animation-range: entry;
+    }
+
+    /* La cortina la mueve el scroll del visitante, no se mueve sola: la
+       pausa global (WCAG 2.2.2) no la congela a medio camino. */
+    .frame[data-motion] > .main > *,
+    .frame[data-motion] > .main > ::after {
+      animation-play-state: running !important;
+    }
+  }
+}
+
+@keyframes curtain-out {
+  to {
+    transform: scale(var(--curtain-scale));
+  }
+}
+
+@keyframes curtain-shade {
+  to {
+    opacity: var(--curtain-dim);
+  }
+}

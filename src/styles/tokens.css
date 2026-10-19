@@ -343,11 +343,17 @@
   --dur-marquee-a: 42s;
   --dur-marquee-b: 54s;
   --dur-intro: 2.2s;
+  /* Cortina entre escenas: a qué escala llega el panel que sale cuando el
+     siguiente lo ha cubierto, y cuánto lo oscurece su sombra. */
+  --curtain-scale: 0.94;
+  --curtain-dim: 0.5;
 
   /* Capas */
   --z-background: -1;
   --z-nav: 100; /* origen */
   --z-grain: 150;
+  /* Sombra de la cortina, sobre el contenido de un panel (que llega a 1). */
+  --z-curtain-shade: 2;
   --z-skip-link: 200;
   --z-intro: 300;
 }
