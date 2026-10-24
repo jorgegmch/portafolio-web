@@ -41,8 +41,9 @@ const renderLayout = () =>
     </MemoryRouter>,
   )
 
-const skipIntro = () => screen.getByRole('button', { name: es.intro.skip })
-const querySkipIntro = () => screen.queryByRole('button', { name: es.intro.skip })
+/** La capa de la intro: un diálogo modal que se salta con un clic o con Esc. */
+const skipIntro = () => screen.getByRole('dialog', { name: es.intro.label })
+const querySkipIntro = () => screen.queryByRole('dialog', { name: es.intro.label })
 
 const advance = (ms: number) => {
   act(() => {
@@ -110,8 +111,8 @@ describe('Layout: estado de la intro para la página', () => {
 
     it('al saltarla, sigue tapada hasta que las barras terminan de abrirse', () => {
       renderLayout()
-      // La barra de arriba es la primera hija de la capa, como el botón.
-      const barTop = skipIntro().parentElement?.firstElementChild
+      // La barra de arriba es la primera hija de la capa.
+      const barTop = skipIntro().firstElementChild
       if (!barTop) throw new Error('La capa de la intro no tiene barras')
 
       fireEvent.click(skipIntro())

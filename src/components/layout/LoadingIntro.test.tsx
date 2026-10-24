@@ -1,5 +1,4 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest'
 import { LoadingIntro } from '@/components/layout/LoadingIntro'
 import styles from '@/components/layout/LoadingIntro.module.css'
@@ -34,20 +33,18 @@ const setBrowserLangs = (langs: string[]) =>
 
 let onDone: Mock<() => void>
 
-const renderIntro = () => {
-  const view = render(
+const renderIntro = (t: Dictionary = es) => {
+  render(
     <LangProvider>
       <LoadingIntro onDone={onDone} />
     </LangProvider>,
   )
-  const layer = view.container.firstElementChild
-  const barTop = layer?.querySelector(`.${BAR_TOP}`)
-  const barBottom = layer?.querySelector(`.${BAR_BOTTOM}`)
-  if (!layer || !barTop || !barBottom) throw new Error('Falta la capa o una de sus barras')
-  return { ...view, layer, barTop, barBottom }
+  const layer = screen.getByRole('dialog', { name: t.intro.label })
+  const barTop = layer.querySelector(`.${BAR_TOP}`)
+  const barBottom = layer.querySelector(`.${BAR_BOTTOM}`)
+  if (!barTop || !barBottom) throw new Error('Faltan las barras de la capa')
+  return { layer, barTop, barBottom }
 }
-
-const skipButton = (t: Dictionary = es) => screen.getByRole('button', { name: t.intro.skip })
 
 const advance = (ms: number) => {
   act(() => {
@@ -81,52 +78,38 @@ afterEach(() => {
 })
 
 describe('LoadingIntro', () => {
-  describe('botón de saltar', () => {
-    it('lleva el texto del diccionario', () => {
-      renderIntro()
+  // Sin botón «Saltar»: la capa es un diálogo modal con nombre, y su
+  // descripción dice cómo saltarla. El resto de la página está inerte.
+  describe('capa', () => {
+    it.each([
+      ['es', ['es-CO'], es],
+      ['en', ['en-US'], en],
+    ] as const)('en %s es un diálogo modal con su nombre y cómo saltarla', (_lang, langs, t) => {
+      setBrowserLangs([...langs])
+      const { layer } = renderIntro(t)
 
-      expect(skipButton(es)).toBeInTheDocument()
+      expect(layer).toHaveAttribute('aria-modal', 'true')
+      expect(layer).toHaveAccessibleDescription(t.intro.hint)
     })
 
-    it('en inglés lleva el texto en inglés', () => {
-      setBrowserLangs(['en-US'])
+    it('no tiene ningún botón', () => {
       renderIntro()
 
-      expect(skipButton(en)).toBeInTheDocument()
-    })
-
-    it('es el único control y no envía formularios', () => {
-      renderIntro()
-
-      expect(screen.getAllByRole('button')).toHaveLength(1)
-      expect(skipButton()).toHaveAttribute('type', 'button')
+      expect(screen.queryAllByRole('button')).toHaveLength(0)
     })
   })
 
-  // El foco empieza en la capa y no en el botón: así el anillo del botón solo
-  // aparece cuando se llega a él con el teclado.
   describe('foco', () => {
-    it('al montar está en la capa, no en el botón', () => {
+    it('al montar está en la capa', () => {
       const { layer } = renderIntro()
 
       expect(layer).toHaveFocus()
-      expect(skipButton()).not.toHaveFocus()
     })
 
     it('la capa puede recibirlo sin entrar en el orden de tabulación', () => {
       const { layer } = renderIntro()
 
       expect(layer).toHaveAttribute('tabindex', '-1')
-    })
-
-    it('con un Tab pasa al botón', async () => {
-      vi.useRealTimers()
-      const user = userEvent.setup()
-      renderIntro()
-
-      await user.tab()
-
-      expect(skipButton()).toHaveFocus()
     })
   })
 
@@ -135,7 +118,7 @@ describe('LoadingIntro', () => {
       const { natural, code } = phraseOf(es)
       renderIntro()
 
-      expect(screen.getByText(natural)).not.toHaveClass(STRUCK)
+      expect(screen.getByText(natural).closest('p')).not.toHaveClass(STRUCK)
       expect(screen.queryByText(code)).not.toBeInTheDocument()
     })
 
@@ -145,19 +128,28 @@ describe('LoadingIntro', () => {
       renderIntro()
 
       playFrames(1)
-      expect(screen.getByText(natural)).toHaveClass(STRUCK)
+      expect(screen.getByText(natural).closest('p')).toHaveClass(STRUCK)
 
       // El resto, menos la pausa del último: aún no ha entrado en la salida.
       frames.slice(1, -1).forEach((frame) => advance(frame.holdMs))
       expect(screen.getByText(code)).toBeInTheDocument()
       // La frase tachada sigue a la vista sobre el código.
-      expect(screen.getByText(natural)).toHaveClass(STRUCK)
+      expect(screen.getByText(natural).closest('p')).toHaveClass(STRUCK)
+    })
+
+    // Tachar a lápiz: dos trazos, uno de ida y otro de vuelta.
+    it('el tachado son dos trazos decorativos, dentro de la frase', () => {
+      renderIntro()
+
+      const strokes = screen.getByText(phraseOf(es).natural).closest('p')?.querySelectorAll('[data-stroke]')
+
+      expect(strokes).toHaveLength(2)
     })
 
     it('en inglés usa la frase en inglés', () => {
       setBrowserLangs(['en-US'])
       const { natural, code } = phraseOf(en)
-      renderIntro()
+      renderIntro(en)
 
       expect(screen.getByText(natural)).toBeInTheDocument()
 
@@ -194,11 +186,15 @@ describe('LoadingIntro', () => {
       expect(layer).not.toHaveClass(LEAVING)
     })
 
-    it('al acabar la secuencia entra en la salida', () => {
+    it('con el código completo espera dos segundos más antes de salir', () => {
       const { layer } = renderIntro()
+      playFrames(framesOf(es).length - 1)
 
-      playToEnd()
+      advance(INTRO_TIMING.codeHoldMs - 1)
+      expect(layer).not.toHaveClass(LEAVING)
+      expect(INTRO_TIMING.codeHoldMs).toBeGreaterThanOrEqual(2000)
 
+      advance(1)
       expect(layer).toHaveClass(LEAVING)
     })
 
@@ -227,52 +223,47 @@ describe('LoadingIntro', () => {
       expect(onDone).not.toHaveBeenCalled()
     })
 
-    // El tachado y el desvanecimiento del texto también son transiciones.
-    it('las transiciones de la capa, del texto o del botón no avisan', () => {
+    // El desvanecimiento del texto también es una transición.
+    it('las transiciones de la capa o del texto no avisan', () => {
       const { layer } = renderIntro()
       playToEnd()
 
       fireEvent.transitionEnd(layer)
       fireEvent.transitionEnd(screen.getByText(phraseOf(es).natural))
-      fireEvent.transitionEnd(skipButton())
 
       expect(onDone).not.toHaveBeenCalled()
     })
   })
 
   describe('saltar', () => {
-    // user-event espera con temporizadores propios, que los falsos dejarían
-    // parados: estos tres casos usan el reloj real y no esperan a nada.
-    describe('con ratón y con teclado', () => {
-      beforeEach(() => {
-        vi.useRealTimers()
-      })
+    it.each([
+      ['un clic', (layer: Element) => fireEvent.click(layer)],
+      [
+        'un toque',
+        (layer: Element) => {
+          fireEvent.pointerDown(layer, { pointerType: 'touch' })
+          fireEvent.click(layer)
+        },
+      ],
+    ])('con %s en la capa entra en la salida sin esperar a la secuencia', (_name, press) => {
+      const { layer } = renderIntro()
 
-      it('con un clic entra en la salida sin esperar a la secuencia', async () => {
-        const user = userEvent.setup()
-        const { layer } = renderIntro()
+      press(layer)
 
-        await user.click(skipButton())
+      expect(layer).toHaveClass(LEAVING)
+    })
 
-        expect(layer).toHaveClass(LEAVING)
-      })
+    it('con Esc entra en la salida', () => {
+      const { layer } = renderIntro()
 
-      it.each([
-        ['Enter', '{Enter}'],
-        ['Espacio', ' '],
-      ])('con %s, sin tocar el ratón, entra en la salida', async (_key, keys) => {
-        const user = userEvent.setup()
-        const { layer } = renderIntro()
+      fireEvent.keyDown(layer, { key: 'Escape', code: 'Escape' })
 
-        await user.keyboard(keys)
-
-        expect(layer).toHaveClass(LEAVING)
-      })
+      expect(layer).toHaveClass(LEAVING)
     })
 
     it('tras saltar avisa al abrirse las barras, igual que al acabar', () => {
       const { layer, barTop } = renderIntro()
-      fireEvent.click(skipButton())
+      fireEvent.click(layer)
       expect(layer).toHaveClass(LEAVING)
       expect(onDone).not.toHaveBeenCalled()
 
@@ -296,9 +287,9 @@ describe('LoadingIntro', () => {
       expect(onDone).toHaveBeenCalledTimes(1)
     })
 
-    it('también cubre la salida por el botón', () => {
-      renderIntro()
-      fireEvent.click(skipButton())
+    it('también cubre la salida al saltarla', () => {
+      const { layer } = renderIntro()
+      fireEvent.click(layer)
 
       advance(exitFallbackMs)
 
@@ -329,7 +320,7 @@ describe('LoadingIntro', () => {
 
   describe('limpieza', () => {
     it('desmontar durante la secuencia no deja temporizadores', () => {
-      const { unmount } = renderIntro()
+      const { unmount } = renderIntroWithUnmount()
       playFrames(1)
       expect(vi.getTimerCount()).toBe(1)
 
@@ -339,7 +330,7 @@ describe('LoadingIntro', () => {
     })
 
     it('desmontar durante la salida no deja el respaldo pendiente ni avisa después', () => {
-      const { unmount } = renderIntro()
+      const { unmount } = renderIntroWithUnmount()
       playToEnd()
       expect(vi.getTimerCount()).toBe(1)
 
@@ -349,5 +340,24 @@ describe('LoadingIntro', () => {
       expect(vi.getTimerCount()).toBe(0)
       expect(onDone).not.toHaveBeenCalled()
     })
+
+    it('al desmontar deja de escuchar el teclado de la página', () => {
+      const { unmount } = renderIntroWithUnmount()
+      const remove = vi.spyOn(document, 'removeEventListener')
+
+      unmount()
+
+      expect(remove.mock.calls.map(([type]) => type)).toContain('keydown')
+    })
   })
 })
+
+/** Como renderIntro, pero devolviendo también cómo desmontarla. */
+function renderIntroWithUnmount() {
+  const view = render(
+    <LangProvider>
+      <LoadingIntro onDone={onDone} />
+    </LangProvider>,
+  )
+  return { unmount: view.unmount }
+}

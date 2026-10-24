@@ -15,8 +15,9 @@
 
 /*
  * Excepción deliberada a la regla de no quitar el anillo: la capa recibe el
- * foco al montar, pero no es interactiva y un anillo alrededor de toda la
- * ventana no orienta a nadie. El botón conserva el suyo.
+ * foco al montar, pero no es un control (se salta con un clic o con Esc), no
+ * tiene ninguno dentro y un anillo alrededor de toda la ventana no orienta a
+ * nadie.
  *
  * Lleva :focus-visible para ganar por especificidad al anillo global de
  * global.css, que se carga después y con un .intro a secas no se anularía.
@@ -55,27 +56,21 @@
 }
 
 /* La frase y el código, por encima de las barras. */
-.content,
-.skip {
-  position: relative;
-  transition: opacity var(--duration-fast) var(--ease-cine);
-}
-
 .content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
   text-align: center;
+  transition: opacity var(--duration-fast) var(--ease-cine);
 }
 
-.leaving .content,
-.leaving .skip {
+.leaving .content {
   opacity: 0;
 }
 
-/* La frase de negocio. Al tacharse se apaga y una raya la cruza de izquierda
-   a derecha: se escala, no se dibuja con text-decoration. */
+/* La frase de negocio, tachada a lápiz (spec §4.1). */
 .natural {
   position: relative;
   color: var(--color-bone);
@@ -83,28 +78,76 @@
   font-size: var(--font-size-intro);
   font-weight: var(--font-weight-extrabold);
   line-height: var(--leading-base);
-  transition: opacity var(--duration-fast) var(--ease-cine);
 }
 
-.natural::after {
+/* La frase se apaga mientras se tacha: empieza a mitad del trazo de ida y
+   acaba con el de vuelta. Los trazos van fuera de ella y no se apagan. */
+.struck .phrase {
+  animation: phrase-dim calc(var(--dur-strike-first) / 2 + var(--dur-strike-second)) ease-in-out calc(var(--dur-strike-first) / 2) both;
+}
+
+@keyframes phrase-dim {
+  to {
+    opacity: var(--intro-struck-opacity);
+  }
+}
+
+/*
+ * Cada trazo es una franja fina, inclinada y con los extremos redondos, que
+ * recorta su tinta. La tinta entra con translateX: así sus extremos siguen
+ * redondos mientras se dibuja (con scaleX se aplastarían). No se usa
+ * text-decoration.
+ */
+.stroke {
   position: absolute;
-  top: 50%;
-  right: 0;
-  left: 0;
   height: var(--intro-strike-width);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+  transform: rotate(var(--intro-strike-tilt));
+}
+
+.ink {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
   background-color: currentcolor;
-  content: '';
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform var(--duration-fast) var(--ease-cine);
 }
 
-.struck {
-  opacity: var(--intro-struck-opacity);
+/* De ida: de izquierda a derecha, sobresaliendo un poco por los dos lados. */
+.strokeFirst {
+  top: calc(50% - var(--intro-strike-width) / 2);
+  right: calc(-1 * var(--intro-strike-overshoot));
+  left: calc(-1 * var(--intro-strike-overshoot));
 }
 
-.struck::after {
-  transform: scaleX(1);
+.strokeFirst .ink {
+  transform: translateX(-101%);
+}
+
+.struck .strokeFirst .ink {
+  animation: stroke-draw var(--dur-strike-first) ease-in-out both;
+}
+
+/* De vuelta: de derecha a izquierda, más corto y apenas más abajo. */
+.strokeSecond {
+  top: calc(50% + var(--intro-strike-drop));
+  right: calc(-1 * var(--intro-strike-overshoot) / 2);
+  left: var(--intro-strike-return-start);
+}
+
+.strokeSecond .ink {
+  transform: translateX(101%);
+}
+
+.struck .strokeSecond .ink {
+  animation: stroke-draw var(--dur-strike-second) ease-in-out var(--dur-strike-first) both;
+}
+
+@keyframes stroke-draw {
+  to {
+    transform: translateX(0);
+  }
 }
 
 /* El código, en Signal. pre-wrap: el espacio final de un código a medio
@@ -135,34 +178,15 @@
   }
 }
 
-/* «Saltar», abajo a la derecha, sobre la barra inferior. */
-.skip {
+/* Cómo saltarla: solo para el lector de pantalla, que la lee como
+   descripción de la capa. */
+.hint {
   position: absolute;
-  right: var(--panel-padding-inline);
-  bottom: calc(var(--intro-letterbox) + var(--space-5));
-  min-height: var(--touch-target);
-  padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--color-signal);
-  border-radius: var(--radius-full);
-  background-color: transparent;
-  color: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  letter-spacing: var(--tracking-normal);
-  cursor: pointer;
-}
-
-.skip:hover,
-.skip:focus-visible {
-  color: var(--color-signal);
-}
-
-/*
- * El anillo es el global y del mismo Signal que el borde: lo que lo distingue
- * es el hueco, así que aquí se separa más que en el resto de la página.
- */
-.skip:focus-visible {
-  outline-offset: var(--space-1);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* Las duraciones de los tokens casi llegan a cero: parpadearía sin parar. */

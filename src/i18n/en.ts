@@ -22,7 +22,8 @@ export const en: Dictionary = {
   },
   intro: {
     phrases: [{ natural: 'optimize processes', code: 'optimize_workflow()' }],
-    skip: 'Skip',
+    label: 'Intro',
+    hint: 'Press Escape or click to skip it.',
   },
   hero: {
     heading: site.shortName,

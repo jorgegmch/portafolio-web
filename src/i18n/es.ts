@@ -22,7 +22,8 @@ export const es: Dictionary = {
   },
   intro: {
     phrases: [{ natural: 'optimizar procesos', code: 'optimize_workflow()' }],
-    skip: 'Saltar',
+    label: 'Presentación',
+    hint: 'Pulsa Escape o haz clic para saltarla.',
   },
   hero: {
     heading: site.shortName,

@@ -95,7 +95,7 @@ Relleno interno de los paneles: 104 px arriba y 64 px a los lados en escritorio,
 | `--ease-cine` | `cubic-bezier(.2,.7,.2,1)` |
 | `--dur-reveal` | `700ms`, escalonado de 80 ms por línea |
 | `--dur-marquee-a` / `--dur-marquee-b` | `42s` / `54s`, en sentidos opuestos |
-| `--dur-intro` | ≤ 2,2 s en total |
+| `--dur-intro` | ≤ 5 s en total (antes 2,2 s; ver §4.1) |
 
 ## 3. Estructura y escenas
 
@@ -183,8 +183,11 @@ El orden es único y Certificaciones se elimina (§6). Cada escena es un `<secti
 
 Regla dura: **solo se animan `transform` y `opacity`**, sin librerías y con `prefers-reduced-motion` respetado. El grano y el `drop-shadow` de la foto son estáticos.
 
-1. **Intro.** Una frase de negocio («optimizar procesos») se reescribe como `optimize_workflow()` y dos barras de cine se abren (`translateY`).
-   - Una vez por sesión, ≤ 2,2 s, con botón «Saltar».
+1. **Intro.** Una frase de negocio («optimizar procesos») se tacha a lápiz, se reescribe como `optimize_workflow()` y dos barras de cine se abren (`translateY`).
+   - **Tachado a lápiz:** un trazo de ida, de izquierda a derecha (450 ms, `ease-in-out`), inclinado −1,5°, que sobresale un poco por los dos extremos, de 0,09 em de grosor y extremos redondos; y otro de vuelta, de derecha a izquierda, más corto (300 ms) y apenas más abajo. La frase se apaga con `opacity` mientras se tacha, desde la mitad del primer trazo. Solo `transform` y `opacity`.
+   - Con el código completo espera 2 s más antes de abrir las barras.
+   - Una vez por sesión. Dura unos 4,5 s (medido: 4535–4700 ms) y como mucho 5 s (`--dur-intro`), el límite de WCAG 2.2.2.
+   - **Sin botón «Saltar»:** se salta con un clic o un toque en la capa, o con Esc (también Enter y Espacio). La capa es un diálogo modal con nombre («Presentación») que recibe el foco al montarse; su descripción, solo para el lector de pantalla, dice cómo saltarla. El resto de la página está inerte. Al salir, el foco vuelve al principio del documento: el siguiente Tab llega al skip link.
    - Con movimiento reducido no se muestra.
    - Si ya existe una pantalla de carga, se reemplaza por esta.
 2. **El logo se traduce** (antes era el nombre del Hero, que ahora es estático). En reposo, `jorgegmch_`; con un puntero fino encima (`(hover: hover) and (pointer: fine)`) o con el foco del teclado, las letras se codifican hasta leer «Jorge Gómez_», y al salir vuelven. No cambia solo.

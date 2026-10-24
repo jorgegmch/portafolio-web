@@ -339,19 +339,32 @@
   --ease-standard: ease;
   /* Movimiento del rediseño (spec §2). Toda entrada usa --ease-cine: salida
      suave, sin rebote. Las cintas van en sentidos opuestos, cada una a su
-     ritmo. La intro dura como mucho --dur-intro. */
+     ritmo. La intro dura como mucho --dur-intro (spec §4.1). */
   --ease-cine: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dur-reveal: 700ms;
   --dur-marquee-a: 42s;
   --dur-marquee-b: 54s;
-  --dur-intro: 2.2s;
+  /* Tope de la intro: 5 s, el límite de WCAG 2.2.2 para lo que se mueve sin
+     pausa. Medida (2026-10-24, Chrome): 4535–4700 ms en producción y
+     4660–4700 en desarrollo; su +10 % pasaría de 5 s, así que manda WCAG. */
+  --dur-intro: 5s;
   /* Intro (spec §4.1): lo que tardan las barras de cine en abrirse, la
-     franja Ink que encuadra cada una (34 px, la del tablero), el grosor de la
-     raya que tacha la frase y lo que se apaga la frase tachada. */
+     franja Ink que encuadra cada una (34 px, la del tablero) y lo que se
+     apaga la frase tachada. */
   --dur-intro-exit: 550ms;
   --intro-letterbox: 2.125rem;
-  --intro-strike-width: 0.125rem;
   --intro-struck-opacity: 0.35;
+  /* Tachado a lápiz: un trazo de ida de 450 ms y otro de vuelta de 300 ms;
+     grosor de 0,09 em con extremos redondos, inclinado −1,5°; el de ida
+     sobresale 0,06 em por cada lado y el de vuelta va 0,12 em más abajo y
+     empieza a un 18 % de la izquierda (más corto). */
+  --dur-strike-first: 450ms;
+  --dur-strike-second: 300ms;
+  --intro-strike-width: 0.09em;
+  --intro-strike-tilt: -1.5deg;
+  --intro-strike-overshoot: 0.06em;
+  --intro-strike-drop: 0.12em;
+  --intro-strike-return-start: 18%;
   /* Cortina entre escenas: a qué escala llega el panel que sale cuando el
      siguiente lo ha cubierto, y cuánto lo oscurece su sombra. */
   --curtain-scale: 0.94;

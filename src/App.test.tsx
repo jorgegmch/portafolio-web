@@ -147,15 +147,16 @@ describe('App', () => {
     const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
     const INTRO_SEEN = storageKeys.session.introSeen
 
-    const skipIntro = () => screen.getByRole('button', { name: es.intro.skip })
-    const querySkipIntro = () => screen.queryByRole('button', { name: es.intro.skip })
+    /** La capa de la intro: un diálogo modal que se salta con un clic o con Esc. */
+    const skipIntro = () => screen.getByRole('dialog', { name: es.intro.label })
+    const querySkipIntro = () => screen.queryByRole('dialog', { name: es.intro.label })
     const skipLink = () => screen.getByRole('link', { name: es.nav.skipToContent })
     /** El envoltorio de la página, si está inerte. */
     const inertPage = () => main().closest('[inert]')
 
     /** Salta la intro y da por abiertas sus barras (la de arriba es la primera hija de la capa). */
     const skipAndFadeOut = () => {
-      const barTop = skipIntro().parentElement?.firstElementChild
+      const barTop = skipIntro().firstElementChild
       fireEvent.click(skipIntro())
       if (barTop) fireEvent.transitionEnd(barTop)
     }
@@ -169,19 +170,19 @@ describe('App', () => {
     })
 
     describe('en la primera visita', () => {
-      it('aparece, con el foco en su capa y no en el botón de saltar', () => {
+      it('aparece, con el foco en su capa, que dice cómo saltarla', () => {
         renderAt(routes.home)
 
-        expect(skipIntro().parentElement).toHaveFocus()
-        expect(skipIntro()).not.toHaveFocus()
+        expect(skipIntro()).toHaveFocus()
+        expect(skipIntro()).toHaveAccessibleDescription(es.intro.hint)
       })
 
-      it('desde la capa, un Tab llega al botón de saltar', async () => {
-        const { user } = renderAt(routes.home)
+      it('Esc la salta', () => {
+        renderAt(routes.home)
 
-        await user.tab()
+        fireEvent.keyDown(skipIntro(), { key: 'Escape', code: 'Escape' })
 
-        expect(skipIntro()).toHaveFocus()
+        expect(skipIntro().className).toMatch(/leaving/)
       })
 
       it('aparece también al entrar por una URL que redirige al inicio', () => {
@@ -208,7 +209,7 @@ describe('App', () => {
         expect(page).toContainElement(screen.getByRole('contentinfo'))
       })
 
-      it('la intro queda fuera de lo inerte: su botón se puede usar', () => {
+      it('la intro queda fuera de lo inerte: se puede saltar', () => {
         renderAt(routes.home)
 
         expect(skipIntro().closest('[inert]')).toBeNull()

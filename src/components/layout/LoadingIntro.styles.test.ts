@@ -1,8 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { INTRO_TIMING } from '@/lib/introFrames'
-import { contrastRatio } from '@/test/contrast'
-import { resolvedToken } from '@/test/cssRules'
 
 // Vitest no procesa el CSS (css: false) y jsdom no lo aplica: se comprueba el
 // texto de los archivos tal como está en disco, desde la raíz del repo.
@@ -81,8 +79,8 @@ describe('LoadingIntro: estilos', () => {
       })
     })
 
-    it('en la salida el texto y el botón se desvanecen', () => {
-      expect(introCss).toMatch(/\.leaving \.content,\s*\.leaving \.skip\s*\{\s*opacity:\s*0;\s*\}/)
+    it('en la salida el texto se desvanece', () => {
+      expect(rule(introCss, '.leaving .content')).toMatchObject({ opacity: '0' })
     })
 
     // El respaldo en JS repite, con margen, una duración que vive en CSS: si
@@ -139,14 +137,89 @@ describe('LoadingIntro: estilos', () => {
       })
     })
 
-    // La raya se escala de cero a uno: no se anima text-decoration.
-    it('tachar la frase la apaga y cruza la raya escalándola', () => {
-      expect(rule(introCss, '.natural::after')).toMatchObject({ transform: 'scaleX(0)' })
-      expect(rule(introCss, '.struck::after')).toMatchObject({ transform: 'scaleX(1)' })
-      expect(rule(introCss, '.struck')).toMatchObject({
-        opacity: 'var(--intro-struck-opacity)',
+  })
+
+  // Tachar a lápiz (spec §4.1): un trazo de ida, de izquierda a derecha, y
+  // otro de vuelta, más corto y apenas más abajo. Cada trazo es una franja
+  // inclinada que recorta su tinta: la tinta entra con translateX, así los
+  // extremos quedan redondos durante todo el trazo (scaleX los aplastaría).
+  describe('tachado a lápiz', () => {
+    const ms = (name: string) => Number.parseFloat(token(name))
+
+    it('los trazos duran ~450 y ~300 ms, y la intro espera a que acaben', () => {
+      expect(token('--dur-strike-first')).toBe('450ms')
+      expect(token('--dur-strike-second')).toBe('300ms')
+      expect(INTRO_TIMING.strikeHoldMs).toBeGreaterThanOrEqual(
+        ms('--dur-strike-first') + ms('--dur-strike-second'),
+      )
+    })
+
+    it('cada trazo es una franja inclinada, que recorta su tinta, con extremos redondos', () => {
+      expect(rule(introCss, '.stroke')).toMatchObject({
+        position: 'absolute',
+        height: 'var(--intro-strike-width)',
+        overflow: 'hidden',
+        'border-radius': 'var(--radius-pill)',
+        transform: 'rotate(var(--intro-strike-tilt))',
       })
+      expect(rule(introCss, '.ink')).toMatchObject({ 'border-radius': 'var(--radius-pill)' })
+    })
+
+    it('el grosor es de ~0,09 em y la inclinación de ~−1,5°', () => {
+      expect(token('--intro-strike-width')).toBe('0.09em')
+      expect(token('--intro-strike-tilt')).toBe('-1.5deg')
+    })
+
+    it('el de ida sobresale un poco por los dos extremos', () => {
+      expect(rule(introCss, '.strokeFirst')).toMatchObject({
+        right: 'calc(-1 * var(--intro-strike-overshoot))',
+        left: 'calc(-1 * var(--intro-strike-overshoot))',
+      })
+    })
+
+    it('el de ida entra de izquierda a derecha, con ease-in-out', () => {
+      expect(rule(introCss, '.strokeFirst .ink')).toMatchObject({ transform: 'translateX(-101%)' })
+      expect(rule(introCss, '.struck .strokeFirst .ink')).toMatchObject({
+        animation: 'stroke-draw var(--dur-strike-first) ease-in-out both',
+      })
+    })
+
+    it('el de vuelta, más corto y apenas más abajo, entra de derecha a izquierda al acabar el de ida', () => {
+      expect(rule(introCss, '.strokeSecond')).toMatchObject({
+        top: 'calc(50% + var(--intro-strike-drop))',
+        left: 'var(--intro-strike-return-start)',
+      })
+      expect(rule(introCss, '.strokeSecond .ink')).toMatchObject({ transform: 'translateX(101%)' })
+      expect(rule(introCss, '.struck .strokeSecond .ink')).toMatchObject({
+        animation: 'stroke-draw var(--dur-strike-second) ease-in-out var(--dur-strike-first) both',
+      })
+    })
+
+    // La frase se apaga mientras se tacha, desde la mitad del trazo de ida.
+    it('la frase se apaga mientras se tacha, empezando a mitad del trazo de ida', () => {
+      expect(rule(introCss, '.struck .phrase')).toMatchObject({
+        animation:
+          'phrase-dim calc(var(--dur-strike-first) / 2 + var(--dur-strike-second)) ease-in-out calc(var(--dur-strike-first) / 2) both',
+      })
+      expect(introCss).toMatch(/@keyframes phrase-dim\s*\{\s*to\s*\{\s*opacity:\s*var\(--intro-struck-opacity\);\s*\}\s*\}/)
+    })
+
+    it('los trazos no se apagan con la frase: van fuera de ella', () => {
+      expect(rule(introCss, '.struck .stroke')).not.toHaveProperty('opacity')
       expect(introCss).not.toContain('text-decoration')
+    })
+  })
+
+  describe('descripción para lectores de pantalla', () => {
+    it('cómo saltarla no se ve, pero se lee', () => {
+      expect(rule(introCss, '.hint')).toMatchObject({
+        position: 'absolute',
+        width: '1px',
+        height: '1px',
+        overflow: 'hidden',
+        'clip-path': 'inset(50%)',
+        'white-space': 'nowrap',
+      })
     })
   })
 
@@ -161,7 +234,7 @@ describe('LoadingIntro: estilos', () => {
       expect(transitions.length).toBeGreaterThan(0)
       transitions.forEach((value) => expect(value).toMatch(/^(?:opacity|transform)\b[^,]*$/))
       expect(animated.length).toBeGreaterThan(0)
-      expect(new Set(animated)).toEqual(new Set(['opacity']))
+      expect(new Set(animated)).toEqual(new Set(['opacity', 'transform']))
     })
 
     it('con movimiento reducido el cursor no parpadea', () => {
@@ -174,7 +247,7 @@ describe('LoadingIntro: estilos', () => {
     })
 
     // Excepción aceptada a «nunca outline: none»: la capa recibe el foco al
-    // montar, pero no es interactiva. El botón conserva su anillo.
+    // montar, pero no es un control, y no tiene ninguno dentro.
     // El selector importa: el anillo global es :focus-visible y se carga
     // después, así que un .intro a secas empataría en especificidad y perdería
     // (visto en Chrome). Con .intro:focus-visible gana.
@@ -183,9 +256,8 @@ describe('LoadingIntro: estilos', () => {
       expect(rule(introCss, '.intro')).not.toHaveProperty('outline')
     })
 
-    it('la capa es lo único que quita el anillo: el botón lo conserva', () => {
+    it('la capa es lo único que quita el anillo', () => {
       expect(introCss.match(/outline:\s*(?:none|0)\b/g)).toHaveLength(1)
-      expect(rule(introCss, '.skip')).not.toHaveProperty('outline')
     })
 
     it('no hay colores escritos a mano', () => {
@@ -193,113 +265,4 @@ describe('LoadingIntro: estilos', () => {
     })
   })
 
-  describe('botón de saltar', () => {
-    // El botón queda sobre la barra de abajo, por encima de su franja Ink.
-    const BACKGROUND = '--color-void'
-    const BORDER = '--color-signal'
-    const TEXT = '--color-muted'
-    const TEXT_ACTIVE = '--color-signal'
-    const AA_TEXT = 4.5
-    const AA_NON_TEXT = 3
-
-    /** Declaraciones de la regla que agrupa el puntero encima y el foco con teclado. */
-    const hoverAndFocus = () => {
-      const body =
-        /\.skip:hover,\s*\.skip:focus-visible\s*\{([^}]*)\}/.exec(introCss)?.[1] ?? ''
-      return Object.fromEntries(
-        body
-          .split(';')
-          .map((declaration) => declaration.split(':').map((part) => part.trim()))
-          .filter(([property, value]) => property && value),
-      )
-    }
-
-    /** Contraste WCAG entre dos tokens de color de tokens.css, ya resueltos. */
-    const contrast = (foreground: string, background: string) =>
-      contrastRatio(resolvedToken(tokensCss, foreground), resolvedToken(tokensCss, background))
-
-    describe('en reposo', () => {
-      it('el borde es Signal', () => {
-        expect(rule(introCss, '.skip')).toMatchObject({ border: `1px solid var(${BORDER})` })
-      })
-
-      it('el texto es gris claro', () => {
-        expect(rule(introCss, '.skip')).toMatchObject({ color: `var(${TEXT})` })
-      })
-
-      it('queda encima de la franja de la barra de abajo', () => {
-        expect(rule(introCss, '.skip')).toMatchObject({
-          bottom: 'calc(var(--intro-letterbox) + var(--space-5))',
-        })
-      })
-
-      it('se pulsa con el dedo: mide al menos el alto táctil', () => {
-        expect(rule(introCss, '.skip')).toMatchObject({ 'min-height': 'var(--touch-target)' })
-      })
-    })
-
-    describe('con el puntero encima o con el foco del teclado', () => {
-      it('el texto pasa a Signal', () => {
-        expect(hoverAndFocus()).toMatchObject({ color: `var(${TEXT_ACTIVE})` })
-      })
-
-      it('el borde no cambia: ya es Signal', () => {
-        expect(hoverAndFocus()).not.toHaveProperty('border-color')
-        expect(hoverAndFocus()).not.toHaveProperty('border')
-      })
-
-      // :focus a secas se activaría también con el clic del ratón.
-      it('el foco solo cuenta si llega con el teclado', () => {
-        expect(introCss).not.toMatch(/\.skip:focus(?!-visible)/)
-      })
-    })
-
-    describe('anillo de foco', () => {
-      it('se separa del borde con un token de espaciado', () => {
-        expect(rule(introCss, '.skip:focus-visible')).toMatchObject({
-          'outline-offset': 'var(--space-1)',
-        })
-      })
-
-      // El anillo y el borde son del mismo Signal: se distinguen por el hueco.
-      it('queda más separado que el anillo global', () => {
-        const offset = Number.parseFloat(token('--space-1'))
-        const globalOffset = Number.parseFloat(token('--focus-ring-offset'))
-
-        expect(token('--space-1')).toMatch(/rem$/)
-        expect(token('--focus-ring-offset')).toMatch(/rem$/)
-        expect(offset).toBeGreaterThan(globalOffset)
-      })
-
-      it('conserva el anillo global: ni lo quita ni lo redefine', () => {
-        expect(rule(introCss, '.skip:focus-visible')).not.toHaveProperty('outline')
-        expect(rule(introCss, '.skip')).not.toHaveProperty('outline')
-      })
-    })
-
-    describe('contraste sobre la barra de abajo', () => {
-      it('el fondo de las barras es el token contra el que se mide', () => {
-        expect(rule(introCss, '.bar')).toMatchObject({
-          'background-color': `var(${BACKGROUND})`,
-        })
-      })
-
-      it('el texto en reposo cumple AA', () => {
-        expect(contrast(TEXT, BACKGROUND)).toBeGreaterThanOrEqual(AA_TEXT)
-      })
-
-      it('el texto con el puntero o el foco cumple AA', () => {
-        expect(contrast(TEXT_ACTIVE, BACKGROUND)).toBeGreaterThanOrEqual(AA_TEXT)
-      })
-
-      it('el borde cumple el mínimo de los elementos no textuales', () => {
-        expect(contrast(BORDER, BACKGROUND)).toBeGreaterThanOrEqual(AA_NON_TEXT)
-      })
-
-      it('el anillo de foco, que usa el color de foco global, también', () => {
-        expect(resolvedToken(tokensCss, '--color-focus')).toBe(resolvedToken(tokensCss, BORDER))
-        expect(contrast(BORDER, BACKGROUND)).toBeGreaterThanOrEqual(AA_NON_TEXT)
-      })
-    })
-  })
 })

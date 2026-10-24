@@ -8,12 +8,16 @@
 export const INTRO_TIMING = {
   /** Con la frase a la vista, sin tachar, para que dé tiempo a leerla. */
   naturalHoldMs: 400,
-  /** Con la frase ya tachada, antes de escribir el código. */
-  strikeHoldMs: 250,
+  /**
+   * Mientras se tacha a lápiz y un respiro después, antes de escribir el
+   * código. Debe cubrir los dos trazos: --dur-strike-first (450 ms) más
+   * --dur-strike-second (300 ms), que viven en CSS.
+   */
+  strikeHoldMs: 850,
   /** Entre un carácter del código y el siguiente. */
   typeMs: 18,
-  /** Con el código completo, antes de abrir las barras. */
-  codeHoldMs: 350,
+  /** Con el código completo, antes de abrir las barras: la pausa de antes y 2 s más. */
+  codeHoldMs: 350 + 2000,
   /**
    * Espera máxima a que las barras terminen de abrirse. Debe superar a
    * --dur-intro-exit, la duración de esa transición en CSS.
@@ -23,12 +27,14 @@ export const INTRO_TIMING = {
 
 /**
  * Límites de la duración total de la intro, del primer fotograma a las barras
- * abiertas, en ms. El tope es el --dur-intro de la spec (≤ 2,2 s); el mínimo
- * deja tiempo para leer la frase. Los vigila introFrames.duration.test.ts con
- * las frases reales de cada idioma.
+ * abiertas, en ms. Medida en Chrome (2026-10-24, 8 pasadas por idioma):
+ * 4535–4700 ms en producción y 4660–4700 en desarrollo. El mínimo es el
+ * medido menos un 10 %; el tope es el --dur-intro de la spec, 5 s, el límite
+ * de WCAG 2.2.2 (el medido más un 10 % lo pasaría). Los vigila
+ * introFrames.duration.test.ts con las frases reales de cada idioma.
  */
-export const INTRO_MIN_TOTAL_MS = 1600
-export const INTRO_MAX_TOTAL_MS = 2200
+export const INTRO_MIN_TOTAL_MS = 4080
+export const INTRO_MAX_TOTAL_MS = 5000
 
 /**
  * Margen por fotograma, en ms: cada temporizador encadenado llega algo tarde

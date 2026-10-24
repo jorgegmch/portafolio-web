@@ -26,7 +26,9 @@ const KEYBOARD = [
   { code: 'KeyA', key: 'a' },
 ]
 
+// Sin botón: Esc es la tecla de saltar, y Enter y Espacio también sirven.
 const SKIP_KEYS = [
+  ['Escape', '[Escape]'],
   ['Enter', '[Enter]'],
   ['el Enter del teclado numérico', '[NumpadEnter]'],
   ['Espacio', '[Space]'],
@@ -34,23 +36,12 @@ const SKIP_KEYS = [
 
 const renderIntro = () => {
   const user = userEvent.setup({ keyboardMap: KEYBOARD })
-  const view = render(
+  render(
     <LangProvider>
       <LoadingIntro onDone={() => {}} />
     </LangProvider>,
   )
-  const layer = view.container.firstElementChild
-  if (!(layer instanceof HTMLElement)) throw new Error('La intro no renderizó su capa')
-  return { user, layer, button: screen.getByRole('button', { name: es.intro.skip }) }
-}
-
-/**
- * Lleva el foco a la capa y lo comprueba: si la capa no pudiera recibirlo, el
- * foco se quedaría donde estaba y los tests de la capa pasarían por otra vía.
- */
-const focusLayer = (layer: HTMLElement) => {
-  layer.focus()
-  expect(layer).toHaveFocus()
+  return { user, layer: screen.getByRole('dialog', { name: es.intro.label }) }
 }
 
 beforeEach(() => {
@@ -64,142 +55,89 @@ afterEach(() => {
 })
 
 describe('LoadingIntro: teclado', () => {
-  describe('con la capa enfocada', () => {
-    it('la capa puede tener el foco', () => {
-      const { layer } = renderIntro()
+  it('la capa tiene el foco al montar', () => {
+    const { layer } = renderIntro()
 
-      focusLayer(layer)
-    })
-
-    it.each(SKIP_KEYS)('%s salta, una sola vez', async (_name, keys) => {
-      const { user, layer } = renderIntro()
-      focusLayer(layer)
-
-      await user.keyboard(keys)
-
-      expect(skip).toHaveBeenCalledTimes(1)
-    })
-
-    it.each([
-      ['Escape', '[Escape]'],
-      ['una letra', '[KeyA]'],
-      ['una flecha', '[ArrowDown]'],
-    ])('%s no salta', async (_name, keys) => {
-      const { user, layer } = renderIntro()
-      focusLayer(layer)
-
-      await user.keyboard(keys)
-
-      expect(skip).not.toHaveBeenCalled()
-    })
-
-    it('Tab no salta: sigue sirviendo para llegar al botón', async () => {
-      const { user, layer, button } = renderIntro()
-      focusLayer(layer)
-
-      await user.keyboard('[Tab]')
-
-      expect(skip).not.toHaveBeenCalled()
-      expect(button).toHaveFocus()
-    })
-
-    it('la tecla mantenida no vuelve a saltar', () => {
-      const { layer } = renderIntro()
-      focusLayer(layer)
-
-      fireEvent.keyDown(layer, { key: 'Enter', code: 'Enter' })
-      fireEvent.keyDown(layer, { key: 'Enter', code: 'Enter', repeat: true })
-      fireEvent.keyDown(layer, { key: 'Enter', code: 'Enter', repeat: true })
-
-      expect(skip).toHaveBeenCalledTimes(1)
-    })
-
-    it('una repetición que llega sola tampoco salta', () => {
-      const { layer } = renderIntro()
-      focusLayer(layer)
-
-      fireEvent.keyDown(layer, { key: ' ', code: 'Space', repeat: true })
-
-      expect(skip).not.toHaveBeenCalled()
-    })
-
-    // Son atajos del navegador o del sistema, no una orden de saltar.
-    it.each([
-      ['Ctrl', { ctrlKey: true }],
-      ['Alt', { altKey: true }],
-      ['Meta', { metaKey: true }],
-    ])('Enter con %s no salta ni se anula', (_name, modifier) => {
-      const { layer } = renderIntro()
-      focusLayer(layer)
-
-      const notPrevented = fireEvent.keyDown(layer, { key: 'Enter', code: 'Enter', ...modifier })
-
-      expect(skip).not.toHaveBeenCalled()
-      expect(notPrevented).toBe(true)
-    })
-
-    // Sin anularla, Espacio desplazaría la página que hay debajo.
-    it.each([
-      ['Enter', { key: 'Enter', code: 'Enter' }],
-      ['Espacio', { key: ' ', code: 'Space' }],
-    ])('%s se anula para que no haga nada más', (_name, key) => {
-      const { layer } = renderIntro()
-      focusLayer(layer)
-
-      const notPrevented = fireEvent.keyDown(layer, key)
-
-      expect(notPrevented).toBe(false)
-    })
-
-    it('las demás teclas no se anulan', () => {
-      const { layer } = renderIntro()
-      focusLayer(layer)
-
-      expect(fireEvent.keyDown(layer, { key: 'Tab', code: 'Tab' })).toBe(true)
-      expect(fireEvent.keyDown(layer, { key: 'a', code: 'KeyA' })).toBe(true)
-    })
+    expect(layer).toHaveFocus()
   })
 
-  describe('con el botón enfocado', () => {
-    // El botón ya salta por sí solo al activarse; si la capa atendiera también
-    // la tecla que sube desde él, una pulsación pediría saltar dos veces.
-    it.each(SKIP_KEYS)('%s salta, una sola vez', async (_name, keys) => {
-      const { user, button } = renderIntro()
-      button.focus()
+  it.each(SKIP_KEYS)('%s salta, una sola vez', async (_name, keys) => {
+    const { user } = renderIntro()
 
-      await user.keyboard(keys)
+    await user.keyboard(keys)
 
-      expect(skip).toHaveBeenCalledTimes(1)
-    })
+    expect(skip).toHaveBeenCalledTimes(1)
+  })
 
-    it('un clic salta, una sola vez', async () => {
-      const { user, button } = renderIntro()
+  // Si el foco sale de la capa (por ejemplo, con Tab hacia el navegador), la
+  // tecla sigue llegando: se escucha en todo el documento.
+  it('Esc salta también con el foco fuera de la capa', () => {
+    renderIntro()
 
-      await user.click(button)
+    fireEvent.keyDown(document.body, { key: 'Escape', code: 'Escape' })
 
-      expect(skip).toHaveBeenCalledTimes(1)
-    })
+    expect(skip).toHaveBeenCalledTimes(1)
+  })
 
-    it.each([
-      ['Enter', { key: 'Enter', code: 'Enter' }],
-      ['Espacio', { key: ' ', code: 'Space' }],
-    ])('la capa ni atiende ni anula %s cuando nace en el botón', (_name, key) => {
-      const { button } = renderIntro()
+  it.each([
+    ['una letra', '[KeyA]'],
+    ['una flecha', '[ArrowDown]'],
+    ['Tab', '[Tab]'],
+  ])('%s no salta', async (_name, keys) => {
+    const { user } = renderIntro()
 
-      // fireEvent no activa el botón: lo único que podría saltar es la capa.
-      const notPrevented = fireEvent.keyDown(button, key)
+    await user.keyboard(keys)
 
-      expect(skip).not.toHaveBeenCalled()
-      expect(notPrevented).toBe(true)
-    })
+    expect(skip).not.toHaveBeenCalled()
+  })
 
-    it('otras teclas no saltan', async () => {
-      const { user, button } = renderIntro()
-      button.focus()
+  it('la tecla mantenida no vuelve a saltar', () => {
+    const { layer } = renderIntro()
 
-      await user.keyboard('[Escape][KeyA][ArrowDown]')
+    fireEvent.keyDown(layer, { key: 'Escape', code: 'Escape' })
+    fireEvent.keyDown(layer, { key: 'Escape', code: 'Escape', repeat: true })
+    fireEvent.keyDown(layer, { key: 'Enter', code: 'Enter', repeat: true })
 
-      expect(skip).not.toHaveBeenCalled()
-    })
+    expect(skip).toHaveBeenCalledTimes(1)
+  })
+
+  // Son atajos del navegador o del sistema, no una orden de saltar.
+  it.each([
+    ['Ctrl', { ctrlKey: true }],
+    ['Alt', { altKey: true }],
+    ['Meta', { metaKey: true }],
+  ])('Esc con %s no salta ni se anula', (_name, modifier) => {
+    const { layer } = renderIntro()
+
+    const notPrevented = fireEvent.keyDown(layer, { key: 'Escape', code: 'Escape', ...modifier })
+
+    expect(skip).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+  })
+
+  // Sin anularla, Espacio desplazaría la página que hay debajo.
+  it.each([
+    ['Escape', { key: 'Escape', code: 'Escape' }],
+    ['Enter', { key: 'Enter', code: 'Enter' }],
+    ['Espacio', { key: ' ', code: 'Space' }],
+  ])('%s se anula para que no haga nada más', (_name, key) => {
+    const { layer } = renderIntro()
+
+    expect(fireEvent.keyDown(layer, key)).toBe(false)
+  })
+
+  it('las demás teclas no se anulan', () => {
+    const { layer } = renderIntro()
+
+    expect(fireEvent.keyDown(layer, { key: 'Tab', code: 'Tab' })).toBe(true)
+    expect(fireEvent.keyDown(layer, { key: 'a', code: 'KeyA' })).toBe(true)
+  })
+
+  it('un clic en la capa salta, una sola vez', () => {
+    const { layer } = renderIntro()
+
+    fireEvent.click(layer)
+
+    expect(skip).toHaveBeenCalledTimes(1)
   })
 })

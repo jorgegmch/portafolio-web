@@ -47,7 +47,10 @@ export interface Dictionary {
   intro: {
     /** Frases en lenguaje natural que se transforman en código. */
     phrases: readonly { natural: string; code: string }[]
-    skip: string
+    /** Nombre accesible de la capa de la intro, un diálogo modal. */
+    label: string
+    /** Descripción de la capa: cómo saltarla. Solo la oye el lector de pantalla. */
+    hint: string
   }
   hero: {
     /** Título de la página de inicio: el nombre corto, que no se traduce. */
