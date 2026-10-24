@@ -157,6 +157,13 @@
   gap: var(--space-6);
 }
 
+/* Con el menú del CV abierto, los bloques pasan por encima de la cinta (5):
+   la lista vive dentro de ellos y, si se abre hacia abajo, la cinta la
+   taparía. */
+.blocks:has([aria-expanded='true']) {
+  z-index: var(--z-hero-menu);
+}
+
 .identity {
   display: flex;
   flex-direction: column;

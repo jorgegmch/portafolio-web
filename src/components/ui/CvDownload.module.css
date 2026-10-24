@@ -50,12 +50,14 @@
   transform: rotate(180deg);
 }
 
-/* Anclada bajo el control y alineada a su borde izquierdo. Sin display, para
-   que el atributo hidden la oculte. */
+/* Anclada sobre el control y alineada a su borde derecho: abajo la tapaba la
+   cinta del Hero y a la izquierda se salía de su panel. Si arriba no cabe,
+   useMenuPlacement la pasa abajo. Sin display, para que el atributo hidden
+   la oculte. */
 .list {
   position: absolute;
-  top: calc(100% + var(--space-2));
-  left: 0;
+  right: 0;
+  bottom: calc(100% + var(--space-2));
   z-index: 1;
   min-width: 100%;
   padding: var(--space-1);
@@ -63,6 +65,11 @@
   border-radius: var(--radius-field);
   background-color: var(--color-ink);
   list-style: none;
+}
+
+.list[data-placement='below'] {
+  top: calc(100% + var(--space-2));
+  bottom: auto;
 }
 
 .option {
@@ -81,16 +88,17 @@
   color: var(--color-signal);
 }
 
-/* En teléfono el control va centrado en su fila, a todo el ancho; la lista
-   se alinea a su borde derecho para no salirse de la pantalla. */
+/* En teléfono el control va centrado en su fila. La caja se ciñe al botón
+   para que la lista se alinee a su borde derecho; el texto de la lista sigue
+   alineado a la izquierda. */
 @media (max-width: 480px) {
   .root {
+    width: fit-content;
+    margin-inline: auto;
     text-align: center;
   }
 
   .list {
-    right: 0;
-    left: auto;
     text-align: left;
   }
 }

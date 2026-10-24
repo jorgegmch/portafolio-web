@@ -1,6 +1,7 @@
-import { useId } from 'react'
+import { useId, useRef } from 'react'
 import styles from '@/components/ui/CvDownload.module.css'
 import { useDismissibleMenu } from '@/hooks/useDismissibleMenu'
+import { useMenuPlacement } from '@/hooks/useMenuPlacement'
 
 interface CvDownloadProps {
   /** Nombre del control, ya traducido (por ejemplo, "Descargar CV"). */
@@ -21,9 +22,15 @@ const ICON_CARET = 'M6 9l6 6 6-6'
  * dos y el CSS deja ver uno según el ancho.
  * El menú se abre con Enter o Espacio (es un botón nativo) y se cierra con
  * Escape, al elegir, al hacer clic fuera o al salir con Tab.
+ *
+ * La lista se abre hacia arriba, alineada al borde derecho del botón: abajo
+ * la tapaba la cinta del Hero y a la izquierda se salía de su panel. Si
+ * arriba no cabe, se abre hacia abajo (useMenuPlacement).
  */
 export function CvDownload({ label, shortLabel, options }: CvDownloadProps) {
   const { open, setOpen, toggleRef, areaRef } = useDismissibleMenu<HTMLDivElement>()
+  const listRef = useRef<HTMLUListElement>(null)
+  const placement = useMenuPlacement(listRef, open)
   const listId = useId()
   const [only] = options
 
@@ -70,7 +77,7 @@ export function CvDownload({ label, shortLabel, options }: CvDownloadProps) {
           <path d={ICON_CARET} />
         </svg>
       </button>
-      <ul id={listId} className={styles.list} hidden={!open}>
+      <ul ref={listRef} id={listId} className={styles.list} data-placement={placement} hidden={!open}>
         {options.map((option) => (
           <li key={option.href}>
             <a className={styles.option} href={option.href} download onClick={closeAfterChoice}>

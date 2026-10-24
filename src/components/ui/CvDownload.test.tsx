@@ -194,6 +194,50 @@ describe('CvDownload', () => {
     })
   })
 
+  // Se abre hacia arriba (abajo la tapaba la cinta del Hero); si arriba no
+  // hay sitio, hasta el borde de la ventana o del panel que la recorta, se
+  // abre hacia abajo. jsdom no mide: las cajas se fijan a mano.
+  describe('dirección', () => {
+    const place = ({ listHeight, toggleTop }: { listHeight: number; toggleTop: number }) =>
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+        if (this.tagName === 'UL') return DOMRect.fromRect({ x: 0, y: toggleTop - 8 - listHeight, width: 200, height: listHeight })
+        return DOMRect.fromRect({ x: 0, y: toggleTop, width: 200, height: 44 })
+      })
+
+    const list = (toggle: HTMLElement) => document.getElementById(toggle.getAttribute('aria-controls') ?? '')
+
+    it('si cabe arriba, se abre hacia arriba', async () => {
+      place({ listHeight: 100, toggleTop: 400 })
+      const { user, toggle } = setup()
+
+      await user.click(toggle())
+
+      expect(list(toggle())).toHaveAttribute('data-placement', 'above')
+    })
+
+    it('si arriba no cabe, se abre hacia abajo', async () => {
+      place({ listHeight: 100, toggleTop: 60 })
+      const { user, toggle } = setup()
+
+      await user.click(toggle())
+
+      expect(list(toggle())).toHaveAttribute('data-placement', 'below')
+    })
+
+    it('lo decide de nuevo cada vez que se abre', async () => {
+      const spy = place({ listHeight: 100, toggleTop: 60 })
+      const { user, toggle } = setup()
+      await user.click(toggle())
+      await user.click(toggle())
+      spy.mockRestore()
+      place({ listHeight: 100, toggleTop: 400 })
+
+      await user.click(toggle())
+
+      expect(list(toggle())).toHaveAttribute('data-placement', 'above')
+    })
+  })
+
   describe('cerrar', () => {
     it('Escape cierra y devuelve el foco al botón', async () => {
       const { user, toggle, link } = setup()

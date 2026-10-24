@@ -1,7 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { cssMedia, cssRule, readCss } from '@/test/cssRules'
+import { cssMedia, cssRule, cssToken, readCss } from '@/test/cssRules'
 
 const css = readCss('src/components/ui/CvDownload.module.css')
+
+/** Como cssRule, pero escapando el selector entero (corchetes, paréntesis). */
+const exactRule = (source: string, selector: string) => {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const body = new RegExp(`(?:^|\\})\\s*${escaped}\\s*\\{([^}]*)\\}`).exec(source)?.[1] ?? ''
+  return Object.fromEntries(
+    body
+      .split(';')
+      .map((declaration) => declaration.split(':').map((part) => part.trim()))
+      .filter(([property, value]) => property && value),
+  )
+}
 
 describe('CvDownload: estilos', () => {
   it('no lleva colores literales: todos salen de tokens', () => {
@@ -34,12 +46,30 @@ describe('CvDownload: estilos', () => {
     })
   })
 
-  // A la izquierda, la lista se saldría de la pantalla en un teléfono.
-  it('en teléfono la lista se alinea al borde derecho del control', () => {
-    expect(cssRule(cssMedia(css, '(max-width: 480px)'), '.list')).toMatchObject({
-      right: '0',
-      left: 'auto',
+  // Abajo la tapaba la cinta del Hero, y a la izquierda se salía del panel
+  // (medido a 1440, 1024 y 768): se abre hacia arriba, alineada a la derecha.
+  it('en ningún ancho vuelve a alinearse a la izquierda', () => {
+    expect(cssRule(cssMedia(css, '(max-width: 480px)'), '.list')).not.toHaveProperty('left')
+  })
+
+  it('si arriba no cabe, se abre hacia abajo', () => {
+    expect(exactRule(css, ".list[data-placement='below']")).toMatchObject({
+      top: 'calc(100% + var(--space-2))',
+      bottom: 'auto',
     })
+  })
+
+  // La lista vive dentro de los bloques del Hero, que van bajo la cinta: con
+  // el menú abierto, los bloques suben por encima de ella.
+  it('con el menú abierto, los bloques del Hero quedan sobre la cinta', () => {
+    const hero = readCss('src/components/sections/Hero.module.css')
+    const tokens = readCss('src/styles/tokens.css')
+    const raised = exactRule(hero, ".blocks:has([aria-expanded='true'])")['z-index'] ?? ''
+    const ribbon = Number(cssRule(hero, '.ribbon')['z-index'])
+    const menuLayer = Number(cssToken(tokens, /^var\((--[\w-]+)\)$/.exec(raised)?.[1] ?? '--missing'))
+
+    expect(raised).toMatch(/^var\(--/)
+    expect(menuLayer).toBeGreaterThan(ribbon)
   })
 
   // Spec §3.1: el secundario es un enlace subrayado, no una cápsula.
@@ -95,13 +125,14 @@ describe('CvDownload: estilos', () => {
     })
   })
 
-  it('la lista flota bajo el control, sin empujar el contenido', () => {
+  it('la lista flota sobre el control, alineada a su borde derecho, sin empujar el contenido', () => {
     expect(cssRule(css, '.root')).toMatchObject({ position: 'relative' })
     expect(cssRule(css, '.list')).toMatchObject({
       position: 'absolute',
-      top: 'calc(100% + var(--space-2))',
-      left: '0',
+      bottom: 'calc(100% + var(--space-2))',
+      right: '0',
     })
+    expect(cssRule(css, '.list')).not.toHaveProperty('left')
   })
 
   // El atributo hidden deja de ocultar si la regla fija un display.
@@ -120,11 +151,16 @@ describe('CvDownload: estilos', () => {
     expect(css).not.toMatch(/outline\s*:/)
   })
 
-  // En teléfono los botones del Hero van en columna: el control se centra.
-  it('en teléfono el control va centrado y no pierde el alto táctil', () => {
+  // En teléfono los botones del Hero van en columna: el control se centra, y
+  // su caja se ciñe al botón para que la lista se alinee a su borde derecho.
+  it('en teléfono el control va centrado, ceñido al botón, y no pierde el alto táctil', () => {
     const phone = cssMedia(css, '(max-width: 480px)')
 
-    expect(cssRule(phone, '.root')).toEqual({ 'text-align': 'center' })
+    expect(cssRule(phone, '.root')).toEqual({
+      width: 'fit-content',
+      'margin-inline': 'auto',
+      'text-align': 'center',
+    })
     expect(cssRule(phone, '.toggle')).toEqual({})
   })
 })

@@ -416,6 +416,9 @@
   --z-curtain-shade: 2;
   /* Cintas cruzadas: por encima de esa sombra y del contenido del panel. */
   --z-crossed-ribbons: 3;
+  /* Bloques del Hero con el menú del CV abierto: sobre su cinta, que va a 5
+     dentro del panel. */
+  --z-hero-menu: 6;
   --z-skip-link: 200;
   --z-intro: 300;
 }
