@@ -18,7 +18,6 @@ export {
 } from '@/data/social'
 export {
   primaryStack,
-  techLogoUrl,
   technologies,
   technologyName,
   type TechnologyId,

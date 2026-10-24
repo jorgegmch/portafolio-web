@@ -27,8 +27,6 @@ export interface Technology<Id extends string = string> {
   id: Id
   name: string
   group: TechnologyGroup
-  /** Archivos de logo dentro de public/tech; vacío si se muestra solo el nombre. */
-  logos: readonly string[]
   /** Parte del stack principal (tarjeta de estadísticas). */
   primary?: boolean
 }

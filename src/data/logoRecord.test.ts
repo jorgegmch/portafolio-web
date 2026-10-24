@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 // comprueba que el documento dice la verdad: que cada hash es el del archivo
 // que hay en disco y que ningún archivo se queda sin anotar.
 //
-// No sustituye a socialLogos.test.ts ni a brandLogos.test.ts: aquellos vigilan
-// que el logo sea el oficial; este, que el registro no se quede atrás.
+// No sustituye a socialLogos.test.ts: aquel vigila que el logo sea el
+// oficial; este, que el registro no se quede atrás.
 //
 // Todo se lee de disco, desde la raíz del repo.
 const RECORD = 'docs/LOGOS.md'
@@ -89,7 +89,7 @@ const sha256Of = async (path: string) => {
 const { rows, malformed } = parseRecord(readFileSync(RECORD, 'utf8'))
 
 /**
- * Imágenes que hay en las carpetas de public/, las tres de hoy y cualquiera
+ * Imágenes que hay en las carpetas de public/, las dos de hoy y cualquiera
  * que se añada. Vite resuelve el patrón al transformar el test, así que la
  * lista es la del disco; no se importa ningún archivo.
  */
@@ -101,10 +101,10 @@ const published = Object.keys(import.meta.glob('/public/**/*.{svg,png,webp,jpg,j
 describe('registro de logos e iconos (docs/LOGOS.md)', () => {
   // Control positivo: si el documento cambiara de forma y no saliera ninguna
   // fila, los demás tests pasarían sin comprobar nada.
-  it('tiene filas para las tres carpetas de logos e iconos', () => {
+  it('tiene filas para las dos carpetas de logos e iconos', () => {
     const folders = new Set(rows.map(({ path }) => path.slice(0, path.lastIndexOf('/') + 1)))
 
-    expect([...folders].sort(), FORMAT).toEqual(['public/icons/', 'public/social/', 'public/tech/'])
+    expect([...folders].sort(), FORMAT).toEqual(['public/icons/', 'public/social/'])
   })
 
   it('la búsqueda en disco encuentra las imágenes de public/', () => {

@@ -6,16 +6,15 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 
 ## Reglas de uso
 
-- **Decisión del autor (2026-10-15):** todas las tecnologías del catálogo llevan su logo oficial, aunque la política de su marca no lo permita. El autor asume el riesgo. La política de cada marca se sigue leyendo y anotando aquí, pero ya no decide si va el logo.
+- **Rediseño v2 (spec §6):** se retiró la rejilla «Mi stack tecnológico», y con ella los logos de tecnologías de `public/tech/` y la copia blanca del chip de AI Agents. Las tecnologías se nombran solo en texto. Los únicos logos de marca que quedan son los de redes (`public/social/`).
+- **Decisión del autor (2026-10-15), sin efecto mientras no vuelvan los logos de tecnologías:** todas las tecnologías del catálogo llevaban su logo oficial, aunque la política de su marca no lo permitiera. El autor asumía el riesgo.
 - **De dónde sale cada logo,** en este orden:
   1. el archivo oficial de la marca, con fondo transparente;
   2. si no lo hay, el glifo de Simple Icons 16.35.0 (CC0 1.0, verificada en su `LICENSE.md`), en el color de marca de sus datos;
   3. un icono genérico solo para lo que no es una marca (AI Agents): propio, o de un conjunto de licencia permisiva (CC0, MIT o ISC) verificada en su repositorio oficial.
 - Un logo de marca se carga con `<img>`, sin modificar el archivo y sin filtros, opacidad, sombras ni mezclas.
   - **Única excepción a «sin modificar»:** los glifos de Simple Icons se publican sin color, y aquí llevan añadido el `fill` de su color de marca. De cada uno se anotan el SHA-256 del original y el del archivo modificado, y un test compara el dibujo con el original.
-  - El fundido de la aparición al hacer scroll es una transición del envoltorio, no un estilo del logo: está permitido (decisión del autor, 2026-10-15).
-- **Cómo se ven:** a su color original, sin fondo ni placa detrás; la ficha que los contiene sí lleva su fondo oscuro. Sin siluetas blancas, salvo GitHub, que en negro no se ve: usa el Invertocat blanco de `public/social/`. Si un logo no se lee sobre el fondo oscuro, se avisa al autor con su color de marca; no se cambia por cuenta propia.
-- **Java:** Duke por ahora. La taza no tiene descarga oficial; si el autor la consigue, se cambia en la Ronda 2 del Hero (`docs/PLAN.md`).
+- **Cómo se ven:** a su color original, sin fondo ni placa detrás. Sin siluetas blancas, salvo GitHub, que en negro no se ve: usa el Invertocat blanco de `public/social/`. Si un logo no se lee sobre el fondo oscuro, se avisa al autor con su color de marca; no se cambia por cuenta propia.
 - Cada archivo nuevo se anota aquí con su origen, su licencia y su SHA-256.
 - **Interpretación del autor, no una cita:** rodear los logos de WhatsApp y LinkedIn con un círculo es la lectura que el autor hace de sus políticas de marca. Ninguna de las tres marcas de la fila de redes publica por escrito un espacio libre ni un tamaño mínimo; GitHub solo distribuye una variante con espacio libre.
 
@@ -25,7 +24,7 @@ Leídas por el autor el 7 y el 8 de octubre de 2026.
 
 ### Marcas cuya política no permite el logo
 
-Se usa igualmente, por la decisión del autor del 2026-10-15 (ver «Reglas de uso»).
+Hoy no se publica ninguno de estos logos: se retiraron con la rejilla del stack (ver «Reglas de uso»). La lectura queda anotada por si vuelven.
 
 | Marca | Motivo anotado |
 |---|---|
@@ -40,13 +39,6 @@ Se usa igualmente, por la decisión del autor del 2026-10-15 (ver «Reglas de us
 ### Sin decidir
 
 - Si la atribución va también visible en el sitio.
-- **Pendiente, Python y TypeScript:** sus políticas de marca no constan aquí; se leen en su fuente oficial y se anotan.
-
-**Git y GitHub** van en una sola ficha, con el logo de Git (decisión del autor, 2026-10-15).
-
-### Dónde irán los que hoy no se muestran
-
-La sección «Servicios», en «Mi stack tecnológico», lista todas las tecnologías del catálogo, cada una con su logo. Ahí van Duke y n8n.
 
 ## Procedencia y SHA-256
 
@@ -64,25 +56,6 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 
 - **Excepción del comprobador de SVG:** el de WhatsApp trae un elemento `style`. Se admite solo en ese archivo y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
 
-### Tecnologías (`public/tech/`)
-
-| Archivo | Origen y licencia, según consta en el archivo | SHA-256 |
-|---|---|---|
-| `duke.svg` | `vector/Wave.svg` de `github.com/openjdk/duke`. El repositorio no publica texto de licencia; Oracle afirma en dev.java/duke que Duke se abrió bajo licencia BSD. | `1f6f7cf2e7695c679ff573f7af605cbac526a9f148dc1ae4360330aa686ddb59` |
-| `git.svg` | Git Logo, de Jason Long, CC BY 3.0. Fuente: git-scm.com/community/logos. | `61b00a713efa52e230f7c139f792e2f0b57947e56af9c7e6e38cc49d1da9a4df` |
-| `html.svg` | HTML5 Logo, del W3C, CC BY 3.0. Fuente: w3.org/html/logo. | `15fee19d76890dfc5deac7e3180e45ab51efa94e5908b235af4a27165fe46815` |
-| `javascript.svg` | Lleva dentro su aviso de licencia MIT, con los correos de sus autores. | `a70a3d8d36ea6b0e614a04ec30d5a4fb2bf36d515492cb84050ded2b84d14393` |
-| `python.svg` | `python-logo-only.svg`, de python.org/community/logos. Idéntico byte a byte al oficial, según `src/data/brandLogos.test.ts`; el archivo no lleva comentario de procedencia. Licencia: no consta. | `baec8662a1461c2cacc326b54d2727cb2f1ce07ba02d00f5b826d035104f649f` |
-| `typescript.svg` | `ts-logo-512.svg`, de typescriptlang.org/branding. Idéntico byte a byte al oficial, según `src/data/brandLogos.test.ts`; el archivo no lleva comentario de procedencia. Licencia: no consta. | `139ae451b37a00251fe24358191699efa665f63f1c8369cb9dad833159e159e2` |
-| `mysql.svg` | Simple Icons 16.35.0, `icons/mysql.svg`, CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#4479A1"`, su color de marca en los datos de Simple Icons. SHA-256 del original: `67c144cc3e44ad14062a3f20ebe29c5e7eeb2c2c9c0f43cf48d87fe6291a8b2d`. | `bbbc657d92a187a219ce5aa016a4b8c115774c52bac7e6510f695da0b7226f7a` |
-| `react.svg` | Simple Icons 16.35.0, `icons/react.svg`, CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#61DAFB"`, su color de marca en los datos de Simple Icons. SHA-256 del original: `ab9136a1a4a8be72ac6743e1bdd1912d878bd68d57787ea7a6c6838e3b23c01c`. | `060d2776249190bc235c9b97fabffb2922c341a1c58b08df713633b6f6ffb60c` |
-| `n8n.svg` | Simple Icons 16.35.0, `icons/n8n.svg` (solo el símbolo), CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#EA4B71"`, su color de marca en los datos de Simple Icons. SHA-256 del original: `f5a606188c78bf134fe7d85ae3d1310f6f4b7beafcd1d2fbdef2af02c92240a8`. | `2e6bba9f08c65aca92e9e59d57341b4171faea5bf375da6d47f180b7402c430f` |
-| `spring-boot.svg` | `https://spring.io/img/projects/spring-boot.svg`, descargado el 2026-10-15. Idéntico byte a byte al oficial. Licencia: no consta. Trae un `<style>` propio, admitido solo en este archivo (`ALLOWED_STYLE` de `src/data/brandLogos.test.ts`). | `8f9ccd66abde74dd74fde03541f4295bf5e55242b502167b38deeb6bee69c145` |
-| `spring-security.svg` | `https://spring.io/img/projects/spring-security.svg`, descargado el 2026-10-15. Idéntico byte a byte al oficial. Licencia: no consta. Trae un `<style>` propio, admitido solo en este archivo (`ALLOWED_STYLE`). | `96afd13b56af0eac6a96fcedcac63d4274fa15655e2b713428041e7cfae9d91b` |
-| `postgresql.svg` | `PostgreSQL_logo.3colors.svg`, de `wiki.postgresql.org` (`/images/a/a4/`), descargado el 2026-10-15. Licencia: no consta (la página del archivo la deja en «?»). El oficial trae CRLF en sus 21 líneas, y el repo no admite CR: aquí va con LF, como HTML5, y nada más cambia. SHA-256 del oficial con CRLF: `51f93e19516081fc7d6fe6ab9bbab07abe5f7819e28016eefacea6dea691bc54`; un test le devuelve el CRLF y obtiene ese hash. Trae un DOCTYPE público de SVG 1.1, sin subconjunto interno, admitido solo en este archivo (`ALLOWED_DOCTYPE`). | `fe85bc84bce23d01bfe7e8c21715a21b5c011f6e2e1b7b431a8079ce6e4765cc` |
-| `docker.svg` | `SVG/docker-mark-ocean-blue.svg` del kit oficial `https://www.docker.com/static/Docker-Logos-1.zip`, descargado el 2026-10-15: solo el símbolo, que la guía de Docker admite como logo secundario. Idéntico byte a byte al oficial. Licencia: no consta. Trae un `<style>` propio, admitido solo en este archivo (`ALLOWED_STYLE`). | `0fd7f9164de13672bb1708ac7cc401ed439eb938ffa7358d5cb278e107904687` |
-| `css.svg` | Simple Icons 16.35.0, `icons/css.svg`, CC0 1.0. Lleva añadidos el comentario de procedencia y `fill="#663399"`, su color de marca en los datos de Simple Icons. No se confirmó que el logo de CSS-Next sea oficial: por la regla de uso, va el de Simple Icons. SHA-256 del original: `9a97b95e3207aa4a6545dbb862e22450a01f37201c00e6b7d9c2958b59ca9ff9`. | `880bbeabbc51125c09d6dd25445f6546ded9f7b334c914bea32bf3af6cfd9084` |
-
 ### Iconos genéricos (`public/icons/`)
 
 Ninguno es un logo de marca.
@@ -92,9 +65,8 @@ Ninguno es un logo de marca.
 | `envelope.svg` | Dibujado para este sitio: un sobre cerrado, de trazo. Trazo en Bone desde el rediseño v2. | Obra propia | `258092ee1ef7f842ae19a39f91051d7214badd9bc4a056dd1ba204a51c533fc2` |
 | `database.svg` | Dibujado para este sitio: un cilindro apilado, de trazo. Trazo en Ink desde el rediseño v2. | Obra propia | `3003f8c7f08d8cd43c08a909909c4f9866b0f5ac06aa23ad94d536fbb832fbf2` |
 | `ai-agents.svg` | `raw-svg/microchip-ai.svg` de `github.com/primefaces/primeicons`, versión 7.0.0. El dibujo no se modificó; solo se le añadió el comentario de procedencia y la licencia. | MIT, © 2018-2021 PrimeTek | `3fc8ee8a861362387f6530aafffee1282bbde09aa145c496c6ec0927cfd6393b` |
-| `ai-agents-white.svg` | Copia del anterior para la ficha de «Servicios», sobre fondo oscuro. Mismo original; el relleno pasa de negro a blanco y el comentario lo dice. El del Hero no se toca. | MIT, © 2018-2021 PrimeTek | `c4c696b5d431a690a1669bc52244b1f12d9e3d66c2526836c4c6012f098244f4` |
 
-- **SHA-256 del original de PrimeIcons,** antes de añadirle el comentario: `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1`. Un test compara el dibujo de cada uno con ese original; en el blanco, devolviéndole el relleno negro.
+- **SHA-256 del original de PrimeIcons,** antes de añadirle el comentario: `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1`. Un test compara el dibujo con ese original.
 - **El repositorio de PrimeIcons está archivado.** Las versiones publicadas bajo MIT siguen siendo MIT.
 
 ### Iconos en línea
@@ -105,12 +77,4 @@ Van dibujados dentro del código, no como archivos de `public/`, así que no lle
 
 ## Créditos pendientes
 
-Falta escribir un archivo de créditos en `docs/` con:
-
-- Git (Jason Long, CC BY 3.0);
-- JavaScript (aviso MIT);
-- HTML5 (W3C, CC BY 3.0);
-- PrimeIcons (MIT, PrimeTek);
-- Duke: citar las dos páginas de Oracle (dev.java/duke y el PDF de marca de Java) y dejar claro que su repositorio no incluye texto de licencia.
-
-**Deuda de Duke:** reintentar la wiki del proyecto y el repositorio Mercurial antiguo para fijar el texto BSD exacto.
+Falta escribir un archivo de créditos en `docs/` con PrimeIcons (MIT, PrimeTek). Los créditos de Git, JavaScript, HTML5 y Duke dejaron de hacer falta al retirarse sus logos.
