@@ -16,7 +16,7 @@ export const es: Dictionary = {
     pauseAnimations: 'Pausar animaciones',
     cta: 'Hablemos',
     main: 'Navegación principal',
-    home: 'Ir al inicio',
+    home: 'inicio',
     openMenu: 'Abrir menú',
     closeMenu: 'Cerrar menú',
   },

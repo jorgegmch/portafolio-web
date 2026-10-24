@@ -24,9 +24,24 @@
   text-decoration: none;
 }
 
-.brand::after {
+/* El texto del logo y, en la misma celda, una copia invisible del más largo
+   de sus dos textos: la caja mide siempre lo mismo y la barra no se mueve al
+   traducirse. Va todo con aria-hidden: el nombre lo lleva el enlace. */
+.logo {
+  display: inline-grid;
+  white-space: pre;
+}
+
+.logo > * {
+  grid-area: 1 / 1;
+}
+
+.logoSizer {
+  visibility: hidden;
+}
+
+.cursor {
   color: var(--color-signal);
-  content: '_';
 }
 
 /* En escritorio, la caja del menú no existe: la píldora y los controles son

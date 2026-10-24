@@ -103,7 +103,7 @@ El orden es único y Certificaciones se elimina (§6). Cada escena es un `<secti
 
 ### 3.0 Navegación (dentro del Hero)
 
-- **Izquierda:** `jorgegmch_`, en mono 600, con el guion bajo en Signal.
+- **Izquierda:** `jorgegmch_`, en mono 600, con el guion bajo en Signal. Se traduce a «Jorge Gómez_» (§4.2).
 - **Centro:** píldora translúcida con los enlaces `01 Perfil`, `02 Servicios`, `03 Proyectos` y `04 Contacto` (número en mono `--color-muted`). En ≤ 900 px se oculta y aparece un botón de menú circular de 48 px.
 - **Derecha:** botón de idioma `ES / EN` (píldora con borde) y CTA «Hablemos» (píldora Signal) que lleva a Contacto.
 - Se mantiene el i18n actual. **Todo texto nuevo lleva su versión en inglés** en `en.ts`.
@@ -187,9 +187,11 @@ Regla dura: **solo se animan `transform` y `opacity`**, sin librerías y con `pr
    - Una vez por sesión, ≤ 2,2 s, con botón «Saltar».
    - Con movimiento reducido no se muestra.
    - Si ya existe una pantalla de carga, se reemplaza por esta.
-2. **El nombre se traduce.** Con `@media (hover: hover) and (pointer: fine)`, al pasar el puntero sobre el nombre las letras se codifican hasta leer `jorgegmch` y vuelven.
-   - Es cambio de texto, no de propiedades CSS.
-   - El nombre accesible del `h1` no cambia: el efecto va en una capa `aria-hidden`.
+2. **El logo se traduce** (antes era el nombre del Hero, que ahora es estático). En reposo, `jorgegmch_`; con un puntero fino encima (`(hover: hover) and (pointer: fine)`) o con el foco del teclado, las letras se codifican hasta leer «Jorge Gómez_», y al salir vuelven. No cambia solo.
+   - Es cambio de texto, no de propiedades CSS. El guion bajo, en Signal, no cambia.
+   - Reserva el ancho del texto más largo: la barra no se desplaza.
+   - Con movimiento reducido o con la pausa global, el texto cambia de golpe, sin efecto.
+   - El nombre accesible no cambia y contiene las dos formas: «Jorge Gómez (jorgegmch), inicio». Lo que se ve va con `aria-hidden`.
 3. **Cortina entre escenas.** Cada panel queda sticky y el siguiente sube encima. El que sale va a `scale(.94)` y se atenúa.
    - Se hace con `animation-timeline: view()` dentro de `@supports (animation-timeline: view())`.
    - Soporte según caniuse: Chrome/Edge 115+, Safari 26+, Firefox solo 161. Sin soporte, los paneles quedan apilados y sin efecto (mejora progresiva).

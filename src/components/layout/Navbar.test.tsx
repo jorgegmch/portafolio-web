@@ -54,7 +54,7 @@ describe('Navbar', () => {
 
       const brand = screen.getByRole('link', { name: new RegExp(site.handle) })
       expect(brand).toHaveAttribute('href', routes.home)
-      expect(brand).toHaveAccessibleName(`${site.handle}: ${es.nav.home}`)
+      expect(brand).toHaveAccessibleName(`${site.shortName} (${site.handle}), ${es.nav.home}`)
       expect(brand).toHaveTextContent(site.handle)
     })
 

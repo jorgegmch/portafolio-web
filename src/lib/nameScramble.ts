@@ -1,8 +1,8 @@
 /**
- * Pasos del nombre que se traduce (spec §4.2): las letras de cada palabra se
- * codifican de izquierda a derecha hasta leer el destino, que se queda un
- * momento, y luego deshacen el camino hasta el nombre. Sin temporizadores ni
- * DOM; el azar llega como parámetro para poder fijarlo.
+ * Pasos de un texto que se traduce a otro (spec §4.2, el logo de la barra):
+ * las letras se codifican de izquierda a derecha hasta leer el destino, y ahí
+ * se quedan. Para volver se piden los pasos al revés, desde lo que se vea.
+ * Sin temporizadores ni DOM; el azar llega como parámetro para poder fijarlo.
  */
 
 /** Caracteres de relleno mientras una letra se codifica. */
@@ -15,8 +15,6 @@ export const SCRAMBLE_WINDOW = 3
 export const SCRAMBLE_TIMING = {
   /** Entre un paso y el siguiente. */
   stepMs: 40,
-  /** Con el destino completo, antes de volver. */
-  holdMs: 900,
 } as const
 
 /** Una palabra a medio traducir: lo ya codificado y lo que queda del original. */
@@ -66,10 +64,10 @@ const scrambleWord = (from: string, to: string, step: number, random: () => numb
 }
 
 /**
- * Lista de pasos de ida y vuelta, sin el nombre en reposo ni al principio ni
- * al final: ese es el texto real, que ya está en pantalla.
+ * Pasos de ida, de `words` (lo que se ve ahora) al destino, sin el texto de
+ * partida: ese ya está en pantalla. El último paso es el destino asentado.
  */
-export function buildNameScramble(
+export function buildScramble(
   words: readonly string[],
   target: string,
   random: () => number = Math.random,
@@ -84,19 +82,12 @@ export function buildNameScramble(
   const total = longest + SCRAMBLE_WINDOW
   if (longest === 0) return []
 
-  const forward: ScrambleStep[] = []
+  const steps: ScrambleStep[] = []
   for (let step = 1; step <= total; step += 1) {
-    forward.push({
+    steps.push({
       words: words.map((word, index) => scrambleWord(word, targets[index] ?? '', step, random)),
-      holdMs: step === total ? SCRAMBLE_TIMING.holdMs : SCRAMBLE_TIMING.stepMs,
+      holdMs: SCRAMBLE_TIMING.stepMs,
     })
   }
-
-  // La vuelta repite la ida al revés, sin repetir el destino.
-  const back = forward
-    .slice(0, -1)
-    .reverse()
-    .map((step) => ({ ...step, holdMs: SCRAMBLE_TIMING.stepMs }))
-
-  return [...forward, ...back]
+  return steps
 }

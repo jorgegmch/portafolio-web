@@ -36,7 +36,10 @@ export interface Dictionary {
     cta: string
     /** Nombre accesible del landmark de navegación. */
     main: string
-    /** Nombre accesible del enlace del logo. */
+    /**
+     * Destino del enlace del logo, al final de su nombre accesible, que va
+     * tras el nombre corto y el alias: «Jorge Gómez (jorgegmch), inicio».
+     */
     home: string
     openMenu: string
     closeMenu: string

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Hero } from '@/components/sections/Hero'
@@ -8,6 +8,7 @@ import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
 import { LANGS } from '@/i18n/types'
 import { splitName } from '@/lib/splitName'
+import { mockMatchMedia } from '@/test/mockMatchMedia'
 
 const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
 
@@ -144,6 +145,22 @@ describe('Hero', () => {
       renderHero()
 
       expect(heading().textContent).toBe(site.shortName)
+    })
+
+    // El efecto de traducir pasó al logo de la barra: el nombre es estático.
+    it('no se traduce al pasar el puntero, ni con puntero fino', () => {
+      mockMatchMedia({ '(hover: hover) and (pointer: fine)': true })
+      vi.useFakeTimers()
+      renderHero()
+
+      fireEvent.pointerEnter(heading(), { pointerType: 'mouse' })
+      act(() => vi.advanceTimersByTime(2000))
+
+      expect(heading().textContent).toBe(site.shortName)
+      expect(heading().querySelector('[aria-hidden="true"]')).toBeNull()
+      expect(heading()).not.toHaveAttribute('data-scrambling')
+      vi.useRealTimers()
+      vi.unstubAllGlobals()
     })
   })
 

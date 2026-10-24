@@ -92,9 +92,6 @@
      en una ventana de 900 px de alto el nombre no se meta bajo los textos
      del pie del Hero. A 1920 × 1080 queda en 302 px. */
   --font-size-hero-name: clamp(7.5rem, min(21.5vw, 28svh), 20.625rem); /* 120 a 330 px */
-  /* Letras ya traducidas del nombre (spec §4.2), en mono y relativas a él:
-     54 px junto a un Anton de 76, como en el guion de movimiento. */
-  --hero-name-code-scale: 0.71em;
   --font-size-scene-title: clamp(4.5rem, 12vw, 11.875rem); /* 72 a 190 px */
   --font-size-profile-phrase: clamp(3.5rem, 8vw, 8rem); /* 56 a 128 px */
   --font-size-contact-title: clamp(5rem, 12.5vw, 13.75rem); /* 80 a 220 px */

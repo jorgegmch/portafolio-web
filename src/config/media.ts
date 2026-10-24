@@ -7,4 +7,6 @@ export const mediaQueries = {
   compactNav: '(max-width: 900px)',
   /** Dispositivos sin puntero que se pose, como los táctiles. */
   noHover: '(hover: none)',
+  /** Un puntero preciso que se pose encima: ratón o lápiz, no un dedo. */
+  finePointer: '(hover: hover) and (pointer: fine)',
 } as const
