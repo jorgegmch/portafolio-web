@@ -101,8 +101,10 @@
   /* Interlineado de los títulos en Anton (spec: 0,84 a 0,92) y del cuerpo
      (1,55 a 1,6), y espaciado apretado de los títulos en Manrope. */
   --leading-display: 0.84;
-  /* Frase de Perfil: más aire, para que las tildes no pisen la línea de arriba. */
-  --leading-phrase: 0.92;
+  /* Frase de Perfil, excepción al 0,84–0,92 de Anton (spec §2): la tilde de
+     «Ó» sube 1,109 em sobre la línea base y las letras de arriba bajan
+     0,016 em; con 1,125 la tilde no pisa la línea de arriba. */
+  --leading-phrase: 1.125;
   --leading-none: 1;
   --leading-body: 1.55;
   --tracking-tight: -0.01em;
