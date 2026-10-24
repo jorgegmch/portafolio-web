@@ -307,11 +307,13 @@
      del skip link y la intro. */
   --grain-opacity: 0.07;
 
-  /* Pie de «créditos finales»: la marca gigante, solo en contorno. */
-  /* La spec pide un mínimo de 80 px, pero así «jorgegmch» no cabe en un
-     teléfono (mide unos 345 px y el panel deja 334 a 390): el mínimo baja a
-     56 px y por encima de unos 330 px de ventana manda el 17vw de la spec. */
-  --font-size-credits-brand: clamp(3.5rem, 17vw, 16.875rem); /* 56 a 270 px */
+  /* Pie de «créditos finales»: la marca gigante, solo en contorno, que ocupa
+     todo el ancho de la rejilla. Su tamaño es el ancho del pie (cqi) entre
+     esta proporción: «JORGEGMCH» mide 4,5298 veces su tamaño en Anton
+     (medido); 4,55 deja sitio al trazo del contorno. Sustituye al
+     clamp(56 px, 17vw, 270 px), que la dejaba entre el 76 y el 91 % del
+     ancho según la ventana. */
+  --credits-brand-ratio: 4.55;
   --leading-credits-brand: 0.8;
   --color-outline: rgba(242, 238, 230, 0.35);
   --outline-width: 1.5px;

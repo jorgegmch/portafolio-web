@@ -1,5 +1,7 @@
-/* El último panel: Ink, con el relleno de los paneles y su límite de ancho. */
+/* El último panel: Ink, con el relleno de los paneles y su límite de ancho.
+   Es contenedor de su ancho: de él sale el tamaño de la marca. */
 .footer {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -48,14 +50,16 @@
   color: var(--color-bone);
 }
 
-/* El alias gigante, solo en contorno. Decorativo: con un interlineado tan
-   corto sus letras suben sobre la fila de créditos, así que no recibe clics
-   para no tapar los enlaces de las redes. */
+/* El alias gigante, solo en contorno, a todo el ancho de la rejilla y con su
+   mismo borde izquierdo: el tamaño es el ancho del pie entre la proporción
+   de la palabra, sin medir nada con JavaScript. Decorativo: con un
+   interlineado tan corto sus letras suben sobre la fila de créditos, así que
+   no recibe clics para no tapar los enlaces de las redes. */
 .brand {
   pointer-events: none;
   color: transparent;
   font-family: var(--font-display);
-  font-size: var(--font-size-credits-brand);
+  font-size: calc(100cqi / var(--credits-brand-ratio));
   line-height: var(--leading-credits-brand);
   text-transform: uppercase;
   white-space: nowrap;
