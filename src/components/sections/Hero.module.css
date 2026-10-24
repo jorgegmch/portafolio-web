@@ -102,6 +102,28 @@
   color: var(--color-signal);
 }
 
+/* Nombre que se traduce (spec §4.2). Mientras dura, el texto real se apaga
+   sin salir del h1 y encima se ve la capa aria-hidden, con las mismas
+   líneas. Es un cambio de estado, no una transición. */
+.name[data-scrambling] > .first,
+.name[data-scrambling] > .last {
+  opacity: 0;
+}
+
+.scramble {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Lo ya traducido va en mono, en minúsculas y en Signal. */
+.code {
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: var(--hero-name-code-scale);
+  text-transform: none;
+}
+
 /* La foto, centrada, anclada abajo y delante del nombre. El tratamiento es
    estático: blanco y negro con contraste y un borde de luz Signal. */
 .portrait {

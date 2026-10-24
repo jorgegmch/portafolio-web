@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { portrait } from '@/assets/hero/portrait'
 import styles from '@/components/sections/Hero.module.css'
@@ -11,6 +11,7 @@ import { cvFilesFor, cvUrl, type CvVersion } from '@/data/cv'
 import { technologies, technologyName } from '@/data/technologies'
 import { useClock } from '@/hooks/useClock'
 import { useLang } from '@/hooks/useLang'
+import { useNameScramble } from '@/hooks/useNameScramble'
 import type { Dictionary } from '@/i18n/types'
 import { splitName } from '@/lib/splitName'
 
@@ -47,14 +48,18 @@ const CV_LABEL_KEYS = {
  * descarga del CV. Cierra la cinta con las tecnologías del catálogo.
  *
  * Lleva el único h1 de la página: el nombre sale de hero.heading y se parte al
- * renderizar, sin guardarlo dos veces. La luz y el anillo tras la foto son
- * decorativos. La cinta es una lista que el lector de pantalla oye una vez.
+ * renderizar, sin guardarlo dos veces. Con puntero fino, al pasar por encima
+ * se traduce a site.handle en una capa aria-hidden (useNameScramble). La luz
+ * y el anillo tras la foto son decorativos. La cinta es una lista que el
+ * lector de pantalla oye una vez.
  */
 export function Hero() {
   const { lang, t } = useLang()
   const headingId = useId()
   const clock = useClock(site.timeZone)
   const { first, last } = splitName(t.hero.heading)
+  const nameWords = useMemo(() => [first, last], [first, last])
+  const { words: scrambled, start: startScramble } = useNameScramble(nameWords, site.handle)
   const cvOptions = cvFilesFor(lang).map((entry) => ({
     label: t.hero[CV_LABEL_KEYS[entry.version]],
     href: cvUrl(entry),
@@ -87,9 +92,27 @@ export function Hero() {
       <div className={styles.stage}>
         <div className={styles.glow} aria-hidden="true" />
         <div className={styles.ring} aria-hidden="true" />
-        <h1 id={headingId} className={styles.name}>
+        {/* Al pasar el puntero, el nombre se traduce a su usuario. El texto
+            real se queda en el h1, que se sigue leyendo igual: lo que se ve
+            cambiar es la capa aria-hidden, que solo existe mientras dura. */}
+        <h1
+          id={headingId}
+          className={styles.name}
+          data-scrambling={scrambled ? '' : undefined}
+          onPointerEnter={startScramble}
+        >
           <span className={styles.first}>{first}</span>{' '}
           <span className={styles.last}>{last}</span>
+          {scrambled && (
+            <span className={styles.scramble} aria-hidden="true">
+              {scrambled.map((word, index) => (
+                <span key={index === 0 ? 'first' : 'last'} className={index === 0 ? styles.first : styles.last}>
+                  <span className={styles.code}>{word.code}</span>
+                  {word.rest}
+                </span>
+              ))}
+            </span>
+          )}
         </h1>
         <div className={styles.portrait}>
           <img
