@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { TRANSLATOR_INTERVAL_MS, Translator, type TranslatorItem } from '@/components/ui/Translator'
 import { IntroPlayingContext } from '@/hooks/IntroPlayingContext'
 import { MotionPauseContext } from '@/hooks/MotionPauseContext'
+import { cssRule, readCss } from '@/test/cssRules'
 import { mockMatchMedia } from '@/test/mockMatchMedia'
 
 // El Traductor (spec §3.2): pestañas con aria-pressed que pasan solas cada
@@ -105,7 +106,58 @@ describe('Translator', () => {
       expect(screen.getByText('Que solo entre el admin')).toBeInTheDocument()
       expect(screen.getByRole('region', { name: 'Lo que escribo' })).toHaveTextContent('b()')
       expect(screen.getByRole('link', { name: /Ver el repo/ })).toHaveAttribute('href', 'https://example.com/b')
-      expect(screen.queryByText('Avísame del stock bajo')).not.toBeInTheDocument()
+      // El anterior sigue en su sitio (reserva el alto), fuera del árbol accesible.
+      expect(screen.getByText('Avísame del stock bajo').closest('[aria-hidden="true"]')).not.toBeNull()
+    })
+  })
+
+  // La rotación no puede cambiar el alto del bloque (medido: el panel Perfil
+  // saltaba 33 px a 1440 y hasta 79 a 390 cada 4,2 s). Todas las variantes
+  // están a la vez, apiladas en la misma celda: el alto es el de la mayor.
+  describe('alto estable', () => {
+    /** Las capas de cada parte que cambia: la frase, el código y el origen. */
+    const layers = () => ({
+      says: ITEMS.map(({ say }) => screen.getByText(say).closest('p')),
+      codes: [...document.querySelectorAll('pre')],
+      sources: ITEMS.map(({ where }) => screen.getByText(where).parentElement),
+    })
+
+    it('están todas las variantes de cada parte, una por ejemplo', () => {
+      renderTranslator()
+      const { says, codes, sources } = layers()
+
+      expect(says.filter(Boolean)).toHaveLength(ITEMS.length)
+      expect(codes).toHaveLength(ITEMS.length)
+      expect(sources.filter(Boolean)).toHaveLength(ITEMS.length)
+    })
+
+    it('solo la del ejemplo activo se lee y se alcanza; las demás, aria-hidden e inert', () => {
+      renderTranslator()
+      const [, second] = tabs()
+      if (!second) throw new Error('Falta la segunda pestaña')
+      fireEvent.click(second)
+
+      Object.values(layers()).forEach((parts) => {
+        parts.forEach((part, index) => {
+          if (index === 1) {
+            expect(part).not.toHaveAttribute('aria-hidden')
+            expect(part).not.toHaveAttribute('inert')
+          } else {
+            expect(part).toHaveAttribute('aria-hidden', 'true')
+            expect(part).toHaveAttribute('inert')
+          }
+        })
+      })
+      expect(screen.getAllByRole('region', { name: 'Lo que escribo' })).toHaveLength(1)
+      expect(screen.getAllByRole('link', { name: /Ver el repo/ })).toHaveLength(1)
+    })
+
+    it('el CSS apila las capas en la misma celda y oculta sin quitarles sitio', () => {
+      const css = readCss('src/components/ui/Translator.module.css')
+
+      expect(cssRule(css, '.stack')).toMatchObject({ display: 'grid' })
+      expect(css).toMatch(/\.stack > \*\s*\{[^}]*grid-area:\s*1 \/ 1/)
+      expect(css).toMatch(/\.stack > :not\(\[data-active\]\)\s*\{\s*visibility:\s*hidden;\s*\}/)
     })
   })
 

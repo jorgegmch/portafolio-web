@@ -45,6 +45,11 @@ const NAME_SEPARATOR = ': '
  * haya elegido uno, haya pausado las animaciones o pida movimiento reducido,
  * o que la animación de carga siga encima. El cambio no se anuncia: un
  * lector de pantalla oye el ejemplo al llegar a él.
+ *
+ * Al rotar, el bloque no cambia de alto: de lo que varía (la frase, el
+ * código y su origen) van todos los ejemplos a la vez, apilados en la misma
+ * celda de una rejilla, y solo el activo se ve. El alto es siempre el del
+ * mayor, sin medir nada. Antes, cada rotación movía la página entera.
  */
 export function Translator({
   label,
@@ -65,9 +70,13 @@ export function Translator({
     paused: picked !== null || paused || reducedMotion || introPlaying,
   })
   const active = picked ?? rotating
-  const current = items[active]
 
-  if (!current) return null
+  if (!items[active]) return null
+
+  // Capa de un ejemplo en las pilas: la activa se ve y se lee; las demás
+  // siguen ocupando su sitio, ocultas, fuera del árbol accesible y del foco.
+  const layer = (index: number) =>
+    index === active ? { 'data-active': '' } : { 'aria-hidden': true as const, inert: true }
 
   return (
     <div className={styles.translator}>
@@ -90,9 +99,13 @@ export function Translator({
 
       <div className={styles.block}>
         <p className={styles.caption}>{saysLabel}</p>
-        <p className={styles.say}>
-          <q>{current.say}</q>
-        </p>
+        <div className={styles.stack}>
+          {items.map((item, index) => (
+            <p key={item.id} className={styles.say} {...layer(index)}>
+              <q>{item.say}</q>
+            </p>
+          ))}
+        </div>
       </div>
 
       <div className={styles.flow} aria-hidden="true">
@@ -111,40 +124,55 @@ export function Translator({
             se desplaza en horizontal. Para que eso también se pueda hacer con
             el teclado, el bloque recibe el foco y se nombra con su rótulo
             (regla scrollable-region-focusable de axe). */}
-        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-        <pre className={styles.code} role="region" aria-labelledby={writesId} tabIndex={0}>
-          <code>
-            {/* Las líneas son fijas por ejemplo: su posición es su identidad. */}
-            {current.code.map((line, lineIndex) => (
-              <span key={lineIndex} className={styles.line}>
-                {line.map((segment, segmentIndex) => (
-                  <span
-                    key={segmentIndex}
-                    className={segment.kind ? styles[segment.kind] : undefined}
-                  >
-                    {segment.text}
+        <div className={styles.stack}>
+          {items.map((item, index) => (
+            <pre
+              key={item.id}
+              className={styles.code}
+              role="region"
+              aria-labelledby={writesId}
+              // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+              tabIndex={0}
+              {...layer(index)}
+            >
+              <code>
+                {/* Las líneas son fijas por ejemplo: su posición es su identidad. */}
+                {item.code.map((line, lineIndex) => (
+                  <span key={lineIndex} className={styles.line}>
+                    {line.map((segment, segmentIndex) => (
+                      <span
+                        key={segmentIndex}
+                        className={segment.kind ? styles[segment.kind] : undefined}
+                      >
+                        {segment.text}
+                      </span>
+                    ))}
                   </span>
                 ))}
-              </span>
-            ))}
-          </code>
-        </pre>
+              </code>
+            </pre>
+          ))}
+        </div>
       </div>
 
-      <div className={styles.source}>
-        <span>{current.where}</span>
-        <a
-          className={styles.repo}
-          href={current.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${viewRepo}${NAME_SEPARATOR}${current.where} (${opensInNewTab})`}
-        >
-          {viewRepo}
-          <svg className={styles.external} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M7 17 17 7M9 7h8v8" />
-          </svg>
-        </a>
+      <div className={styles.stack}>
+        {items.map((item, index) => (
+          <div key={item.id} className={styles.source} {...layer(index)}>
+            <span>{item.where}</span>
+            <a
+              className={styles.repo}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${viewRepo}${NAME_SEPARATOR}${item.where} (${opensInNewTab})`}
+            >
+              {viewRepo}
+              <svg className={styles.external} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M7 17 17 7M9 7h8v8" />
+              </svg>
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   )

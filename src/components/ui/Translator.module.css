@@ -67,10 +67,25 @@
   font-size: var(--font-size-sm);
 }
 
-/* Lo que pide el negocio, entre comillas del idioma. Reserva dos líneas para
-   que el bloque no salte al cambiar de ejemplo. */
+/* Pila de las variantes de una parte (la frase, el código o el origen):
+   todas en la misma celda, así la celda mide lo que la mayor y el bloque no
+   cambia de alto al rotar. Las que no se ven siguen ocupando su sitio. */
+.stack {
+  display: grid;
+  min-width: 0;
+}
+
+.stack > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.stack > :not([data-active]) {
+  visibility: hidden;
+}
+
+/* Lo que pide el negocio, entre comillas del idioma. */
 .say {
-  min-height: calc(2 * var(--leading-tight) * var(--translator-say-size));
   font-size: var(--translator-say-size);
   font-weight: var(--font-weight-bold);
   line-height: var(--leading-tight);
@@ -106,11 +121,9 @@
   stroke-width: var(--icon-stroke-width);
 }
 
-/* El código, con resaltado mínimo. Reserva siete líneas, las del ejemplo más
-   largo, para que el bloque no salte al cambiar de ejemplo. Cada línea del
-   repo es una línea aquí: si no cabe, el bloque se desplaza en horizontal. */
+/* El código, con resaltado mínimo. Cada línea del repo es una línea aquí: si
+   no cabe, el bloque se desplaza en horizontal. */
 .code {
-  min-height: calc(7 * var(--leading-code) * var(--font-size-code) + 2 * var(--space-5));
   margin: 0;
   padding: var(--space-5);
   overflow-x: auto;
