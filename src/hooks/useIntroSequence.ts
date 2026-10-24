@@ -5,8 +5,8 @@ import type { IntroFrame } from '@/lib/introFrames'
 export type IntroPhase = 'playing' | 'leaving'
 
 interface IntroSequence {
-  /** Texto del fotograma actual. */
-  text: string
+  /** Fotograma actual; sin fotogramas, ninguno. */
+  frame: IntroFrame | undefined
   phase: IntroPhase
   /** Pasa a la salida sin esperar al final. */
   skip: () => void
@@ -41,5 +41,5 @@ export function useIntroSequence(frames: readonly IntroFrame[]): IntroSequence {
 
   const skip = useCallback(() => setPhase('leaving'), [])
 
-  return { text: frame?.text ?? '', phase, skip }
+  return { frame, phase, skip }
 }

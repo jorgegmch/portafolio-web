@@ -11,9 +11,9 @@ const LAST_HOLD = 300
 const TOTAL = FIRST_HOLD + SECOND_HOLD + LAST_HOLD
 
 const FRAMES: readonly IntroFrame[] = [
-  { text: '', holdMs: FIRST_HOLD },
-  { text: 'a', holdMs: SECOND_HOLD },
-  { text: 'ab', holdMs: LAST_HOLD },
+  { struck: true, code: '', holdMs: FIRST_HOLD },
+  { struck: true, code: 'a', holdMs: SECOND_HOLD },
+  { struck: true, code: 'ab', holdMs: LAST_HOLD },
 ]
 
 // Milisegundo a milisegundo: React aplica los cambios al salir de act, así que
@@ -50,7 +50,7 @@ describe('useIntroSequence', () => {
     it('al montar muestra el primer fotograma y está en reproducción', () => {
       const { result } = mount()
 
-      expect(result.current.text).toBe('')
+      expect(result.current.frame?.code).toBe('')
       expect(result.current.phase).toBe('playing')
     })
 
@@ -58,20 +58,20 @@ describe('useIntroSequence', () => {
       const { result } = mount()
 
       advance(FIRST_HOLD - 1)
-      expect(result.current.text).toBe('')
+      expect(result.current.frame?.code).toBe('')
 
       advance(1)
-      expect(result.current.text).toBe('a')
+      expect(result.current.frame?.code).toBe('a')
     })
 
     it('cada fotograma espera su propia pausa', () => {
       const { result } = mount()
 
       advance(FIRST_HOLD + SECOND_HOLD - 1)
-      expect(result.current.text).toBe('a')
+      expect(result.current.frame?.code).toBe('a')
 
       advance(1)
-      expect(result.current.text).toBe('ab')
+      expect(result.current.frame?.code).toBe('ab')
     })
 
     it('tras la pausa del último pasa a la salida, y no antes', () => {
@@ -89,19 +89,19 @@ describe('useIntroSequence', () => {
 
       advance(TOTAL)
 
-      expect(result.current.text).toBe('ab')
+      expect(result.current.frame?.code).toBe('ab')
     })
 
     it('avanza aunque dos fotogramas seguidos tengan la misma pausa', () => {
       const { result } = mount([
-        { text: 'x', holdMs: FIRST_HOLD },
-        { text: 'xy', holdMs: FIRST_HOLD },
-        { text: 'xyz', holdMs: FIRST_HOLD },
+        { struck: true, code: 'x', holdMs: FIRST_HOLD },
+        { struck: true, code: 'xy', holdMs: FIRST_HOLD },
+        { struck: true, code: 'xyz', holdMs: FIRST_HOLD },
       ])
 
       advance(FIRST_HOLD * 2)
 
-      expect(result.current.text).toBe('xyz')
+      expect(result.current.frame?.code).toBe('xyz')
     })
 
     it('volver a renderizar con una lista igual no reinicia la pausa en curso', () => {
@@ -111,7 +111,7 @@ describe('useIntroSequence', () => {
       rerender({ list: [...FRAMES] })
       advance(1)
 
-      expect(result.current.text).toBe('a')
+      expect(result.current.frame?.code).toBe('a')
     })
   })
 
@@ -150,7 +150,7 @@ describe('useIntroSequence', () => {
 
       expect(vi.getTimerCount()).toBe(1)
       advance(FIRST_HOLD)
-      expect(result.current.text).toBe('a')
+      expect(result.current.frame?.code).toBe('a')
       expect(vi.getTimerCount()).toBe(1)
     })
   })
@@ -186,7 +186,7 @@ describe('useIntroSequence', () => {
       act(() => result.current.skip())
       advance(TOTAL)
 
-      expect(result.current.text).toBe('a')
+      expect(result.current.frame?.code).toBe('a')
     })
 
     it('llamarlo otra vez, o ya en la salida, no cambia nada', () => {
@@ -207,15 +207,15 @@ describe('useIntroSequence', () => {
       advance(FIRST_HOLD)
 
       // El texto cambió: hubo un render nuevo entre las dos lecturas.
-      expect(result.current.text).toBe('a')
+      expect(result.current.frame?.code).toBe('a')
       expect(result.current.skip).toBe(first)
     })
   })
 
   describe('casos límite', () => {
-    it('sin fotogramas muestra texto vacío y pasa a la salida enseguida', () => {
+    it('sin fotogramas no muestra ninguno y pasa a la salida enseguida', () => {
       const { result } = mount([])
-      expect(result.current.text).toBe('')
+      expect(result.current.frame).toBeUndefined()
 
       flush()
 
@@ -224,14 +224,14 @@ describe('useIntroSequence', () => {
     })
 
     it('con un solo fotograma espera su pausa y pasa a la salida', () => {
-      const { result } = mount([{ text: 'x', holdMs: FIRST_HOLD }])
+      const { result } = mount([{ struck: true, code: 'x', holdMs: FIRST_HOLD }])
 
       advance(FIRST_HOLD - 1)
       expect(result.current.phase).toBe('playing')
 
       advance(1)
       expect(result.current.phase).toBe('leaving')
-      expect(result.current.text).toBe('x')
+      expect(result.current.frame?.code).toBe('x')
     })
   })
 })

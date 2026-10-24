@@ -1,35 +1,34 @@
 /**
- * Fotogramas de la animación de carga: una frase en lenguaje natural que se
- * escribe, se borra hasta donde coincide con el código y se completa como
- * código. Sin temporizadores ni DOM.
+ * Fotogramas de la animación de carga (spec §4.1): la frase de negocio se
+ * muestra, se tacha y debajo se escribe su código, carácter a carácter. Sin
+ * temporizadores ni DOM.
  */
 
 /** Pausas de la animación, en ms. */
 export const INTRO_TIMING = {
-  /** Antes de escribir el primer carácter. */
-  startDelayMs: 200,
-  /** Entre un carácter escrito y el siguiente. */
-  typeMs: 35,
-  /** Entre un carácter borrado y el siguiente. */
-  eraseMs: 12,
-  /** Con la frase completa, antes de empezar a borrarla. */
+  /** Con la frase a la vista, sin tachar, para que dé tiempo a leerla. */
   naturalHoldMs: 400,
-  /** Con el código completo, antes de terminar. */
-  codeHoldMs: 600,
+  /** Con la frase ya tachada, antes de escribir el código. */
+  strikeHoldMs: 250,
+  /** Entre un carácter del código y el siguiente. */
+  typeMs: 18,
+  /** Con el código completo, antes de abrir las barras. */
+  codeHoldMs: 350,
   /**
-   * Espera máxima a que la capa termine de desvanecerse. Debe superar a
-   * --duration-slow, la duración de esa transición en CSS.
+   * Espera máxima a que las barras terminen de abrirse. Debe superar a
+   * --dur-intro-exit, la duración de esa transición en CSS.
    */
-  exitFallbackMs: 1000,
+  exitFallbackMs: 900,
 } as const
 
 /**
- * Límites de la duración total de la intro, del primer fotograma al final del
- * desvanecimiento, en ms. Los vigila introFrames.duration.test.ts con las
- * frases reales de cada idioma.
+ * Límites de la duración total de la intro, del primer fotograma a las barras
+ * abiertas, en ms. El tope es el --dur-intro de la spec (≤ 2,2 s); el mínimo
+ * deja tiempo para leer la frase. Los vigila introFrames.duration.test.ts con
+ * las frases reales de cada idioma.
  */
-export const INTRO_MIN_TOTAL_MS = 3000
-export const INTRO_MAX_TOTAL_MS = 4000
+export const INTRO_MIN_TOTAL_MS = 1600
+export const INTRO_MAX_TOTAL_MS = 2200
 
 /**
  * Margen por fotograma, en ms: cada temporizador encadenado llega algo tarde
@@ -39,46 +38,32 @@ export const INTRO_MAX_TOTAL_MS = 4000
 export const INTRO_FRAME_DRIFT_MS = 7
 
 export interface IntroFrame {
-  readonly text: string
+  /** Si la frase de negocio ya está tachada. */
+  readonly struck: boolean
+  /** Lo que va escrito del código. */
+  readonly code: string
   /** Tiempo que el fotograma queda en pantalla antes del siguiente, en ms. */
   readonly holdMs: number
 }
 
-const commonPrefixLength = (a: readonly string[], b: readonly string[]) => {
-  let length = 0
-  while (length < a.length && length < b.length && a[length] === b[length]) length += 1
-  return length
-}
-
 /**
- * Lista de fotogramas, del texto vacío al código completo. Entre uno y el
- * siguiente cambia un solo carácter: lo que la frase y el código tienen en
- * común al principio no se borra.
+ * Lista de fotogramas: la frase sin tachar, la frase tachada y, desde ahí, el
+ * código con un carácter más en cada uno. El último es siempre el código
+ * completo.
  */
-export function buildIntroFrames(natural: string, code: string): readonly IntroFrame[] {
+export function buildIntroFrames(code: string): readonly IntroFrame[] {
   // Por puntos de código, para no partir un emoji en dos mitades inválidas.
-  const naturalChars = Array.from(natural)
   const codeChars = Array.from(code)
-  const shared = commonPrefixLength(naturalChars, codeChars)
-  const { startDelayMs, typeMs, eraseMs, naturalHoldMs, codeHoldMs } = INTRO_TIMING
+  const { naturalHoldMs, strikeHoldMs, typeMs, codeHoldMs } = INTRO_TIMING
 
-  const frames: IntroFrame[] = [{ text: '', holdMs: startDelayMs }]
-  const add = (chars: readonly string[], length: number, holdMs: number) => {
-    frames.push({ text: chars.slice(0, length).join(''), holdMs })
-  }
-
-  for (let length = 1; length <= naturalChars.length; length += 1) {
-    add(naturalChars, length, length === naturalChars.length ? naturalHoldMs : typeMs)
-  }
-  for (let length = naturalChars.length - 1; length >= shared; length -= 1) {
-    add(naturalChars, length, eraseMs)
-  }
-  for (let length = shared + 1; length <= codeChars.length; length += 1) {
-    add(codeChars, length, typeMs)
+  const frames: IntroFrame[] = [
+    { struck: false, code: '', holdMs: naturalHoldMs },
+    { struck: true, code: '', holdMs: strikeHoldMs },
+  ]
+  for (let length = 1; length <= codeChars.length; length += 1) {
+    frames.push({ struck: true, code: codeChars.slice(0, length).join(''), holdMs: typeMs })
   }
 
-  // El último fotograma es siempre el código completo, sea cual sea el tramo
-  // que lo produjo.
   return frames.map((frame, index) =>
     index === frames.length - 1 ? { ...frame, holdMs: codeHoldMs } : frame,
   )

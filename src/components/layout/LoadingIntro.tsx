@@ -9,29 +9,33 @@ import {
 import styles from '@/components/layout/LoadingIntro.module.css'
 import { useIntroSequence } from '@/hooks/useIntroSequence'
 import { useLang } from '@/hooks/useLang'
+import { useMotionPause } from '@/hooks/useMotionPause'
 import { buildIntroFrames, INTRO_TIMING } from '@/lib/introFrames'
 
 interface LoadingIntroProps {
-  /** Se llama una sola vez, cuando la capa ya terminó de desvanecerse. */
+  /** Se llama una sola vez, cuando las barras ya terminaron de abrirse. */
   onDone: () => void
 }
 
 /**
- * Animación de carga: una frase que se escribe y se transforma en código
- * sobre una capa que tapa la página. Al acabar, o al saltarla, la capa se
- * desvanece y avisa con onDone para que quien la monta la retire.
+ * Animación de carga (spec §4.1): una frase de negocio que se tacha y se
+ * reescribe como código, entre dos barras de cine que tapan la página. Al
+ * acabar, o al saltarla, el texto se desvanece y las barras se abren hacia
+ * arriba y hacia abajo; entonces avisa con onDone para que quien la monta la
+ * retire.
+ *
+ * Si se pausan las animaciones, termina en el acto, sin abrir las barras.
  */
 export function LoadingIntro({ onDone }: LoadingIntroProps) {
   const { t } = useLang()
+  const { paused } = useMotionPause()
   const phrase = t.intro.phrases[0]
-  const frames = useMemo(
-    () => buildIntroFrames(phrase?.natural ?? '', phrase?.code ?? ''),
-    [phrase],
-  )
-  const { text, phase, skip } = useIntroSequence(frames)
+  const frames = useMemo(() => buildIntroFrames(phrase?.code ?? ''), [phrase])
+  const { frame, phase, skip } = useIntroSequence(frames)
   const leaving = phase === 'leaving'
 
   const layerRef = useRef<HTMLDivElement>(null)
+  const topBarRef = useRef<HTMLDivElement>(null)
   const finished = useRef(false)
 
   // La capa tapa la página, así que el foco empieza en ella. No va al botón:
@@ -47,6 +51,11 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
     onDone()
   }, [onDone])
 
+  // Pausar es pedir que nada se mueva: ni la escritura ni las barras.
+  useEffect(() => {
+    if (paused) finish()
+  }, [paused, finish])
+
   // Respaldo: si la transición no llega a terminar (pestaña en segundo plano,
   // transición anulada), la página no puede quedarse tapada.
   useEffect(() => {
@@ -56,9 +65,10 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
     return () => clearTimeout(timer)
   }, [leaving, finish])
 
-  // Solo cuenta la transición de la propia capa, no las de su contenido.
+  // Las dos barras se abren a la vez y con la misma duración: basta con
+  // esperar a la de arriba. Las transiciones del texto no cuentan.
   const handleTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
-    if (leaving && event.target === event.currentTarget) finish()
+    if (leaving && event.target === topBarRef.current) finish()
   }
 
   // Con el foco en la capa, Enter y Espacio saltan sin pasar antes por el
@@ -76,6 +86,8 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
     skip()
   }
 
+  const struck = frame?.struck ?? false
+
   return (
     // La capa no es un control: recibe el foco por código al montar para
     // atender Enter y Espacio, y el elemento accesible es el botón de dentro.
@@ -87,11 +99,18 @@ export function LoadingIntro({ onDone }: LoadingIntroProps) {
       onKeyDown={handleKeyDown}
       onTransitionEnd={handleTransitionEnd}
     >
+      <div ref={topBarRef} className={`${styles.bar} ${styles.barTop}`} aria-hidden="true" />
+      <div className={`${styles.bar} ${styles.barBottom}`} aria-hidden="true" />
       {/* Letras que cambian una a una: para un lector de pantalla son ruido. */}
-      <p className={styles.line} aria-hidden="true">
-        <span>{text}</span>
-        <span className={styles.cursor} />
-      </p>
+      <div className={styles.content} aria-hidden="true">
+        <p className={struck ? `${styles.natural} ${styles.struck}` : styles.natural}>
+          {phrase?.natural}
+        </p>
+        <p className={styles.code}>
+          <span>{frame?.code}</span>
+          <span className={styles.cursor} />
+        </p>
+      </div>
       <button type="button" className={styles.skip} onClick={skip}>
         {t.intro.skip}
       </button>

@@ -14,7 +14,7 @@ const tokensCss = read('src/styles/tokens.css')
 
 /** Declaraciones de la regla que tiene exactamente ese selector. */
 const rule = (css: string, selector: string) => {
-  const escaped = selector.replace('.', '\\.')
+  const escaped = selector.replace(/\./g, '\\.')
   const body = new RegExp(`(?:^|\\})\\s*${escaped}\\s*\\{([^}]*)\\}`).exec(css)?.[1] ?? ''
   return Object.fromEntries(
     body
@@ -27,7 +27,7 @@ const rule = (css: string, selector: string) => {
 /** Primer valor del token en tokens.css: el de :root, antes de los @media. */
 const token = (name: string) => new RegExp(`${name}:\\s*([^;]+);`).exec(tokensCss)?.[1] ?? ''
 
-const FADE_TOKEN = '--duration-slow'
+const EXIT_TOKEN = '--dur-intro-exit'
 
 describe('LoadingIntro: estilos', () => {
   describe('capa', () => {
@@ -40,29 +40,58 @@ describe('LoadingIntro: estilos', () => {
       expect(Number(token('--z-intro'))).toBeGreaterThan(Number(token('--z-skip-link')))
     })
 
-    it('tapa la página con el color de fondo', () => {
-      expect(rule(introCss, '.intro')).toMatchObject({ 'background-color': 'var(--color-bg)' })
+    // Lo que tapa son las barras: si la capa tuviera fondo, al abrirse no
+    // dejarían ver el Hero.
+    it('no tiene fondo propio', () => {
+      expect(rule(introCss, '.intro')).not.toHaveProperty('background-color')
+      expect(rule(introCss, '.intro')).not.toHaveProperty('background')
     })
   })
 
-  describe('desvanecimiento', () => {
-    it('solo transiciona la opacidad, con la duración del token', () => {
-      expect(rule(introCss, '.intro')).toMatchObject({
-        transition: `opacity var(${FADE_TOKEN}) var(--ease-standard)`,
+  describe('barras de cine', () => {
+    it('cada una tapa media ventana con el Void', () => {
+      expect(rule(introCss, '.bar')).toMatchObject({
+        position: 'absolute',
+        height: '50%',
+        'background-color': 'var(--color-void)',
+      })
+      expect(rule(introCss, '.barTop')).toMatchObject({ top: '0' })
+      expect(rule(introCss, '.barBottom')).toMatchObject({ bottom: '0' })
+    })
+
+    it('llevan la franja Ink del encuadre en su borde exterior', () => {
+      expect(rule(introCss, '.barTop')).toMatchObject({
+        'border-top': 'var(--intro-letterbox) solid var(--color-ink)',
+      })
+      expect(rule(introCss, '.barBottom')).toMatchObject({
+        'border-bottom': 'var(--intro-letterbox) solid var(--color-ink)',
       })
     })
 
-    it('la salida la lleva a cero', () => {
-      expect(rule(introCss, '.leaving')).toMatchObject({ opacity: '0' })
+    it('solo transicionan el transform, con la duración del token', () => {
+      expect(rule(introCss, '.bar')).toMatchObject({
+        transition: `transform var(${EXIT_TOKEN}) var(--ease-cine)`,
+      })
+    })
+
+    it('en la salida se abren: la de arriba sube y la de abajo baja', () => {
+      expect(rule(introCss, '.leaving .barTop')).toMatchObject({ transform: 'translateY(-100%)' })
+      expect(rule(introCss, '.leaving .barBottom')).toMatchObject({
+        transform: 'translateY(100%)',
+      })
+    })
+
+    it('en la salida el texto y el botón se desvanecen', () => {
+      expect(introCss).toMatch(/\.leaving \.content,\s*\.leaving \.skip\s*\{\s*opacity:\s*0;\s*\}/)
     })
 
     // El respaldo en JS repite, con margen, una duración que vive en CSS: si
     // alguien alarga el token, este test avisa de que el respaldo se quedó corto.
-    it('el respaldo de JS es mayor que la duración del desvanecimiento', () => {
-      const fadeMs = Number.parseFloat(token(FADE_TOKEN))
+    it('el respaldo de JS es mayor que la apertura de las barras', () => {
+      const exitMs = Number.parseFloat(token(EXIT_TOKEN))
 
-      expect(token(FADE_TOKEN)).toMatch(/^\d+ms$/)
-      expect(INTRO_TIMING.exitFallbackMs).toBeGreaterThan(fadeMs)
+      expect(token(EXIT_TOKEN)).toMatch(/^\d+ms$/)
+      expect(INTRO_TIMING.exitFallbackMs).toBeGreaterThan(exitMs)
     })
   })
 
@@ -77,8 +106,9 @@ describe('LoadingIntro: estilos', () => {
       return { min: Number.parseFloat(min), max: Number.parseFloat(max) }
     }
 
-    it('la línea usa el token de tamaño de la intro', () => {
-      expect(rule(introCss, '.line')).toMatchObject({ 'font-size': `var(${SIZE_TOKEN})` })
+    it('la frase y el código usan el token de tamaño de la intro', () => {
+      expect(rule(introCss, '.natural')).toMatchObject({ 'font-size': `var(${SIZE_TOKEN})` })
+      expect(rule(introCss, '.code')).toMatchObject({ 'font-size': `var(${SIZE_TOKEN})` })
     })
 
     // Su alto es el del texto: si usara otro token, quedaría más bajo que las letras.
@@ -101,10 +131,27 @@ describe('LoadingIntro: estilos', () => {
     it('la intro ya no usa el tamaño anterior', () => {
       expect(introCss).not.toContain(PREVIOUS_TOKEN)
     })
+
+    it('el código va en Signal y en la tipografía mono', () => {
+      expect(rule(introCss, '.code')).toMatchObject({
+        color: 'var(--color-signal)',
+        'font-family': 'var(--font-mono)',
+      })
+    })
+
+    // La raya se escala de cero a uno: no se anima text-decoration.
+    it('tachar la frase la apaga y cruza la raya escalándola', () => {
+      expect(rule(introCss, '.natural::after')).toMatchObject({ transform: 'scaleX(0)' })
+      expect(rule(introCss, '.struck::after')).toMatchObject({ transform: 'scaleX(1)' })
+      expect(rule(introCss, '.struck')).toMatchObject({
+        opacity: 'var(--intro-struck-opacity)',
+      })
+      expect(introCss).not.toContain('text-decoration')
+    })
   })
 
   describe('reglas de estilos', () => {
-    it('ninguna otra transición ni animación toca algo distinto de la opacidad', () => {
+    it('ninguna transición ni animación toca algo distinto de transform y opacity', () => {
       const transitions = [...introCss.matchAll(/transition:\s*([^;]+);/g)].map((match) => match[1])
       const keyframes = [...introCss.matchAll(/@keyframes[^{]*\{((?:[^{}]*\{[^}]*\})*)\s*\}/g)]
       const animated = keyframes.flatMap((match) =>
@@ -112,7 +159,7 @@ describe('LoadingIntro: estilos', () => {
       )
 
       expect(transitions.length).toBeGreaterThan(0)
-      transitions.forEach((value) => expect(value).toMatch(/^opacity\b/))
+      transitions.forEach((value) => expect(value).toMatch(/^(?:opacity|transform)\b[^,]*$/))
       expect(animated.length).toBeGreaterThan(0)
       expect(new Set(animated)).toEqual(new Set(['opacity']))
     })
@@ -147,10 +194,11 @@ describe('LoadingIntro: estilos', () => {
   })
 
   describe('botón de saltar', () => {
-    const BACKGROUND = '--color-bg'
-    const BORDER = '--color-accent'
-    const TEXT = '--color-text-muted'
-    const TEXT_ACTIVE = '--color-accent'
+    // El botón queda sobre la barra de abajo, por encima de su franja Ink.
+    const BACKGROUND = '--color-void'
+    const BORDER = '--color-signal'
+    const TEXT = '--color-muted'
+    const TEXT_ACTIVE = '--color-signal'
     const AA_TEXT = 4.5
     const AA_NON_TEXT = 3
 
@@ -171,21 +219,31 @@ describe('LoadingIntro: estilos', () => {
       contrastRatio(resolvedToken(tokensCss, foreground), resolvedToken(tokensCss, background))
 
     describe('en reposo', () => {
-      it('el borde es del acento de la paleta', () => {
+      it('el borde es Signal', () => {
         expect(rule(introCss, '.skip')).toMatchObject({ border: `1px solid var(${BORDER})` })
       })
 
       it('el texto es gris claro', () => {
         expect(rule(introCss, '.skip')).toMatchObject({ color: `var(${TEXT})` })
       })
+
+      it('queda encima de la franja de la barra de abajo', () => {
+        expect(rule(introCss, '.skip')).toMatchObject({
+          bottom: 'calc(var(--intro-letterbox) + var(--space-5))',
+        })
+      })
+
+      it('se pulsa con el dedo: mide al menos el alto táctil', () => {
+        expect(rule(introCss, '.skip')).toMatchObject({ 'min-height': 'var(--touch-target)' })
+      })
     })
 
     describe('con el puntero encima o con el foco del teclado', () => {
-      it('el texto pasa al acento', () => {
+      it('el texto pasa a Signal', () => {
         expect(hoverAndFocus()).toMatchObject({ color: `var(${TEXT_ACTIVE})` })
       })
 
-      it('el borde no cambia: ya es del acento', () => {
+      it('el borde no cambia: ya es Signal', () => {
         expect(hoverAndFocus()).not.toHaveProperty('border-color')
         expect(hoverAndFocus()).not.toHaveProperty('border')
       })
@@ -203,7 +261,7 @@ describe('LoadingIntro: estilos', () => {
         })
       })
 
-      // El anillo y el borde son del mismo acento: se distinguen por el hueco.
+      // El anillo y el borde son del mismo Signal: se distinguen por el hueco.
       it('queda más separado que el anillo global', () => {
         const offset = Number.parseFloat(token('--space-1'))
         const globalOffset = Number.parseFloat(token('--focus-ring-offset'))
@@ -219,9 +277,9 @@ describe('LoadingIntro: estilos', () => {
       })
     })
 
-    describe('contraste sobre el fondo de la capa', () => {
-      it('el fondo de la capa es el token contra el que se mide', () => {
-        expect(rule(introCss, '.intro')).toMatchObject({
+    describe('contraste sobre la barra de abajo', () => {
+      it('el fondo de las barras es el token contra el que se mide', () => {
+        expect(rule(introCss, '.bar')).toMatchObject({
           'background-color': `var(${BACKGROUND})`,
         })
       })

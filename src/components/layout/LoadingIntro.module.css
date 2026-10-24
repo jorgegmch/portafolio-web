@@ -1,4 +1,6 @@
-/* Capa de la animación de carga: tapa la página hasta que termina. */
+/* Capa de la animación de carga: tapa la página hasta que se abren las barras.
+   Es transparente: lo que tapa son las dos barras, que al abrirse dejan ver
+   el Hero. */
 .intro {
   position: fixed;
   inset: 0;
@@ -7,11 +9,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-7);
-  padding: var(--space-5) var(--container-gutter);
-  background-color: var(--color-bg);
-  opacity: 1;
-  transition: opacity var(--duration-slow) var(--ease-standard);
+  padding: var(--space-5) var(--panel-padding-inline);
+  overflow: hidden;
 }
 
 /*
@@ -26,28 +25,106 @@
   outline: none;
 }
 
-.leaving {
+/* Barras de cine: cada una tapa media ventana, en Void, con la franja Ink del
+   encuadre en su borde exterior. Al salir se abren hacia fuera. */
+.bar {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 50%;
+  background-color: var(--color-void);
+  transition: transform var(--dur-intro-exit) var(--ease-cine);
+}
+
+.barTop {
+  top: 0;
+  border-top: var(--intro-letterbox) solid var(--color-ink);
+}
+
+.barBottom {
+  bottom: 0;
+  border-bottom: var(--intro-letterbox) solid var(--color-ink);
+}
+
+.leaving .barTop {
+  transform: translateY(-100%);
+}
+
+.leaving .barBottom {
+  transform: translateY(100%);
+}
+
+/* La frase y el código, por encima de las barras. */
+.content,
+.skip {
+  position: relative;
+  transition: opacity var(--duration-fast) var(--ease-cine);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.leaving .content,
+.leaving .skip {
   opacity: 0;
 }
 
-/* pre-wrap: el espacio final de una frase a medio escribir ocupa su sitio. */
-.line {
-  color: var(--color-text);
+/* La frase de negocio. Al tacharse se apaga y una raya la cruza de izquierda
+   a derecha: se escala, no se dibuja con text-decoration. */
+.natural {
+  position: relative;
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-intro);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--leading-base);
+  transition: opacity var(--duration-fast) var(--ease-cine);
+}
+
+.natural::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: var(--intro-strike-width);
+  background-color: currentcolor;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-fast) var(--ease-cine);
+}
+
+.struck {
+  opacity: var(--intro-struck-opacity);
+}
+
+.struck::after {
+  transform: scaleX(1);
+}
+
+/* El código, en Signal. pre-wrap: el espacio final de un código a medio
+   escribir ocupa su sitio. */
+.code {
+  color: var(--color-signal);
   font-family: var(--font-mono);
   font-size: var(--font-size-intro);
   line-height: var(--leading-base);
-  text-align: center;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-/* Tiene alto propio: sostiene la línea cuando todavía no hay texto. */
+/* Tiene alto propio: sostiene la línea cuando todavía no hay código. */
 .cursor {
   display: inline-block;
   width: var(--space-2);
   height: var(--font-size-intro);
   margin-left: var(--space-1);
-  background-color: var(--color-accent);
+  background-color: var(--color-signal);
   vertical-align: text-bottom;
   animation: blink calc(var(--duration-slow) * 2) step-end infinite;
 }
@@ -58,12 +135,17 @@
   }
 }
 
+/* «Saltar», abajo a la derecha, sobre la barra inferior. */
 .skip {
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius-sm);
+  position: absolute;
+  right: var(--panel-padding-inline);
+  bottom: calc(var(--intro-letterbox) + var(--space-5));
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-signal);
+  border-radius: var(--radius-full);
   background-color: transparent;
-  color: var(--color-text-muted);
+  color: var(--color-muted);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   letter-spacing: var(--tracking-normal);
@@ -72,11 +154,11 @@
 
 .skip:hover,
 .skip:focus-visible {
-  color: var(--color-accent);
+  color: var(--color-signal);
 }
 
 /*
- * El anillo es el global y del mismo acento que el borde: lo que lo distingue
+ * El anillo es el global y del mismo Signal que el borde: lo que lo distingue
  * es el hueco, así que aquí se separa más que en el resto de la página.
  */
 .skip:focus-visible {

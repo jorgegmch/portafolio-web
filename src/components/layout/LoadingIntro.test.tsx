@@ -11,9 +11,15 @@ import { buildIntroFrames, INTRO_TIMING } from '@/lib/introFrames'
 const { es, en } = dictionaries
 const { exitFallbackMs } = INTRO_TIMING
 
-// Si la clase no existiera, las comprobaciones de la salida pasarían en vacío.
+// Si una clase no existiera, las comprobaciones que dependen de ella pasarían en vacío.
 const LEAVING = styles.leaving ?? ''
 if (!LEAVING) throw new Error('LoadingIntro.module.css no define la clase .leaving')
+const STRUCK = styles.struck ?? ''
+if (!STRUCK) throw new Error('LoadingIntro.module.css no define la clase .struck')
+const BAR_TOP = styles.barTop ?? ''
+if (!BAR_TOP) throw new Error('LoadingIntro.module.css no define la clase .barTop')
+const BAR_BOTTOM = styles.barBottom ?? ''
+if (!BAR_BOTTOM) throw new Error('LoadingIntro.module.css no define la clase .barBottom')
 
 const phraseOf = (t: Dictionary) => {
   const phrase = t.intro.phrases[0]
@@ -21,10 +27,7 @@ const phraseOf = (t: Dictionary) => {
   return phrase
 }
 
-const framesOf = (t: Dictionary) => {
-  const { natural, code } = phraseOf(t)
-  return buildIntroFrames(natural, code)
-}
+const framesOf = (t: Dictionary) => buildIntroFrames(phraseOf(t).code)
 
 const setBrowserLangs = (langs: string[]) =>
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(langs)
@@ -37,7 +40,11 @@ const renderIntro = () => {
       <LoadingIntro onDone={onDone} />
     </LangProvider>,
   )
-  return { ...view, layer: view.container.firstElementChild }
+  const layer = view.container.firstElementChild
+  const barTop = layer?.querySelector(`.${BAR_TOP}`)
+  const barBottom = layer?.querySelector(`.${BAR_BOTTOM}`)
+  if (!layer || !barTop || !barBottom) throw new Error('Falta la capa o una de sus barras')
+  return { ...view, layer, barTop, barBottom }
 }
 
 const skipButton = (t: Dictionary = es) => screen.getByRole('button', { name: t.intro.skip })
@@ -124,45 +131,57 @@ describe('LoadingIntro', () => {
   })
 
   describe('texto animado', () => {
-    it('empieza vacío', () => {
-      const { layer } = renderIntro()
+    it('empieza con la frase del diccionario, sin tachar y sin código', () => {
+      const { natural, code } = phraseOf(es)
+      renderIntro()
 
-      expect(layer).toHaveTextContent(new RegExp(`^${es.intro.skip}$`))
+      expect(screen.getByText(natural)).not.toHaveClass(STRUCK)
+      expect(screen.queryByText(code)).not.toBeInTheDocument()
     })
 
-    it('escribe la frase del diccionario y termina con su código', () => {
+    it('tacha la frase y debajo escribe su código, hasta completarlo', () => {
       const { natural, code } = phraseOf(es)
       const frames = framesOf(es)
-      const naturalAt = frames.findIndex((frame) => frame.text === natural)
-      const { layer } = renderIntro()
+      renderIntro()
 
-      playFrames(naturalAt)
-      expect(layer).toHaveTextContent(natural)
+      playFrames(1)
+      expect(screen.getByText(natural)).toHaveClass(STRUCK)
 
       // El resto, menos la pausa del último: aún no ha entrado en la salida.
-      frames.slice(naturalAt, -1).forEach((frame) => advance(frame.holdMs))
-      expect(layer).toHaveTextContent(code)
-      expect(layer).not.toHaveTextContent(natural)
+      frames.slice(1, -1).forEach((frame) => advance(frame.holdMs))
+      expect(screen.getByText(code)).toBeInTheDocument()
+      // La frase tachada sigue a la vista sobre el código.
+      expect(screen.getByText(natural)).toHaveClass(STRUCK)
     })
 
     it('en inglés usa la frase en inglés', () => {
       setBrowserLangs(['en-US'])
-      const { natural } = phraseOf(en)
-      const frames = framesOf(en).map((frame) => frame.text)
-      const { layer } = renderIntro()
+      const { natural, code } = phraseOf(en)
+      renderIntro()
 
-      playFrames(frames.indexOf(natural), en)
+      expect(screen.getByText(natural)).toBeInTheDocument()
 
-      expect(layer).toHaveTextContent(natural)
+      playToEnd(en)
+      expect(screen.getByText(code)).toBeInTheDocument()
     })
 
     it('queda fuera del árbol de accesibilidad', () => {
-      const { code } = phraseOf(es)
+      const { natural, code } = phraseOf(es)
       renderIntro()
 
       playToEnd()
 
+      expect(screen.getByText(natural).closest('[aria-hidden="true"]')).not.toBeNull()
       expect(screen.getByText(code).closest('[aria-hidden="true"]')).not.toBeNull()
+    })
+  })
+
+  describe('barras de cine', () => {
+    it('son dos, decorativas, y quedan fuera del árbol de accesibilidad', () => {
+      const { barTop, barBottom } = renderIntro()
+
+      expect(barTop).toHaveAttribute('aria-hidden', 'true')
+      expect(barBottom).toHaveAttribute('aria-hidden', 'true')
     })
   })
 
@@ -183,7 +202,7 @@ describe('LoadingIntro', () => {
       expect(layer).toHaveClass(LEAVING)
     })
 
-    it('entrar en la salida todavía no avisa: falta el desvanecimiento', () => {
+    it('entrar en la salida todavía no avisa: faltan las barras por abrirse', () => {
       renderIntro()
 
       playToEnd()
@@ -191,27 +210,30 @@ describe('LoadingIntro', () => {
       expect(onDone).not.toHaveBeenCalled()
     })
 
-    it('avisa cuando termina la transición de la capa', () => {
-      const { layer } = renderIntro()
+    it('avisa cuando la barra de arriba termina de abrirse', () => {
+      const { barTop } = renderIntro()
       playToEnd()
 
-      if (layer) fireEvent.transitionEnd(layer)
+      fireEvent.transitionEnd(barTop)
 
       expect(onDone).toHaveBeenCalledTimes(1)
     })
 
     it('una transición que termina antes de la salida no avisa', () => {
-      const { layer } = renderIntro()
+      const { barTop } = renderIntro()
 
-      if (layer) fireEvent.transitionEnd(layer)
+      fireEvent.transitionEnd(barTop)
 
       expect(onDone).not.toHaveBeenCalled()
     })
 
-    it('la transición de un elemento interior no avisa', () => {
-      renderIntro()
+    // El tachado y el desvanecimiento del texto también son transiciones.
+    it('las transiciones de la capa, del texto o del botón no avisan', () => {
+      const { layer } = renderIntro()
       playToEnd()
 
+      fireEvent.transitionEnd(layer)
+      fireEvent.transitionEnd(screen.getByText(phraseOf(es).natural))
       fireEvent.transitionEnd(skipButton())
 
       expect(onDone).not.toHaveBeenCalled()
@@ -248,13 +270,13 @@ describe('LoadingIntro', () => {
       })
     })
 
-    it('tras saltar avisa al terminar la transición, igual que al acabar', () => {
-      const { layer } = renderIntro()
+    it('tras saltar avisa al abrirse las barras, igual que al acabar', () => {
+      const { layer, barTop } = renderIntro()
       fireEvent.click(skipButton())
       expect(layer).toHaveClass(LEAVING)
       expect(onDone).not.toHaveBeenCalled()
 
-      if (layer) fireEvent.transitionEnd(layer)
+      fireEvent.transitionEnd(barTop)
 
       expect(onDone).toHaveBeenCalledTimes(1)
     })
@@ -294,11 +316,11 @@ describe('LoadingIntro', () => {
     })
 
     it('si la transición sí terminó, el respaldo no avisa otra vez', () => {
-      const { layer } = renderIntro()
+      const { barTop } = renderIntro()
       playToEnd()
 
-      if (layer) fireEvent.transitionEnd(layer)
-      if (layer) fireEvent.transitionEnd(layer)
+      fireEvent.transitionEnd(barTop)
+      fireEvent.transitionEnd(barTop)
       advance(exitFallbackMs)
 
       expect(onDone).toHaveBeenCalledTimes(1)

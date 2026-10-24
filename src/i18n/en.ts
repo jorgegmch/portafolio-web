@@ -21,8 +21,8 @@ export const en: Dictionary = {
     closeMenu: 'Close menu',
   },
   intro: {
-    phrases: [{ natural: 'process optimization', code: 'optimize_workflow()' }],
-    skip: 'Skip animation',
+    phrases: [{ natural: 'optimize processes', code: 'optimize_workflow()' }],
+    skip: 'Skip',
   },
   hero: {
     heading: site.shortName,

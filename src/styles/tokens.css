@@ -163,7 +163,7 @@
   --font-size-title: clamp(1.625rem, 3.5vw, 2.875rem);
   /* Frase grande de «Servicios»: de 28 px en teléfono a 52 px en escritorio. */
   --font-size-phrase: clamp(1.75rem, 4vw, 3.25rem);
-  /* Línea de la animación de carga: de 16 px en teléfono a 24 px en escritorio. */
+  /* Frase y código de la animación de carga: de 16 px en teléfono a 24 px en escritorio. */
   --font-size-intro: clamp(1rem, 2.2vw, 1.5rem);
 
   --leading-tight: 1.1;
@@ -184,9 +184,6 @@
   --space-7: 3rem;
   --space-8: 4rem;
   --space-9: 6rem;
-
-  /* Margen lateral de la pantalla de carga. */
-  --container-gutter: 8vw; /* origen */
 
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
@@ -280,6 +277,13 @@
   --dur-marquee-a: 42s;
   --dur-marquee-b: 54s;
   --dur-intro: 2.2s;
+  /* Intro (spec §4.1): lo que tardan las barras de cine en abrirse, la
+     franja Ink que encuadra cada una (34 px, la del tablero), el grosor de la
+     raya que tacha la frase y lo que se apaga la frase tachada. */
+  --dur-intro-exit: 550ms;
+  --intro-letterbox: 2.125rem;
+  --intro-strike-width: 0.125rem;
+  --intro-struck-opacity: 0.35;
   /* Cortina entre escenas: a qué escala llega el panel que sale cuando el
      siguiente lo ha cubierto, y cuánto lo oscurece su sombra. */
   --curtain-scale: 0.94;
@@ -293,12 +297,6 @@
   --z-curtain-shade: 2;
   --z-skip-link: 200;
   --z-intro: 300;
-}
-
-@media (max-width: 768px) {
-  :root {
-    --container-gutter: 6vw; /* origen */
-  }
 }
 
 /* Paneles en tablet y teléfono: radio menor y menos relleno a los lados. */

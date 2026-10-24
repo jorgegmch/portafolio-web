@@ -153,11 +153,11 @@ describe('App', () => {
     /** El envoltorio de la página, si está inerte. */
     const inertPage = () => main().closest('[inert]')
 
-    /** Salta la intro y da por terminado su desvanecimiento. */
+    /** Salta la intro y da por abiertas sus barras (la de arriba es la primera hija de la capa). */
     const skipAndFadeOut = () => {
-      const layer = skipIntro().parentElement
+      const barTop = skipIntro().parentElement?.firstElementChild
       fireEvent.click(skipIntro())
-      if (layer) fireEvent.transitionEnd(layer)
+      if (barTop) fireEvent.transitionEnd(barTop)
     }
 
     beforeEach(() => {
@@ -270,7 +270,7 @@ describe('App', () => {
       const frames = () => {
         const phrase = es.intro.phrases[0]
         if (!phrase) throw new Error('El diccionario no tiene ninguna frase para la intro')
-        return buildIntroFrames(phrase.natural, phrase.code)
+        return buildIntroFrames(phrase.code)
       }
       const advance = (ms: number) => {
         act(() => {

@@ -147,8 +147,8 @@ describe('useIntroGate', () => {
   describe('con la secuencia', () => {
     const HOLD = 100
     const FRAMES: readonly IntroFrame[] = [
-      { text: '', holdMs: HOLD },
-      { text: 'a', holdMs: HOLD },
+      { struck: false, code: '', holdMs: HOLD },
+      { struck: true, code: 'a', holdMs: HOLD },
     ]
     const TOTAL = HOLD * FRAMES.length
     const SKIP = 'saltar'

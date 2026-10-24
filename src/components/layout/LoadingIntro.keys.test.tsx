@@ -10,7 +10,7 @@ import { LangProvider } from '@/i18n/LangProvider'
 // tiene sus propios tests, y su unión con el componente, los de LoadingIntro.
 const { skip } = vi.hoisted(() => ({ skip: vi.fn() }))
 vi.mock('@/hooks/useIntroSequence', () => ({
-  useIntroSequence: () => ({ text: '', phase: 'playing', skip }),
+  useIntroSequence: () => ({ frame: undefined, phase: 'playing', skip }),
 }))
 
 const { es } = dictionaries

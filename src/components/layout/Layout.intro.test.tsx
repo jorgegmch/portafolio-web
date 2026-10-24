@@ -18,7 +18,7 @@ const INTRO_SEEN = storageKeys.session.introSeen
 const holds = () => {
   const phrase = es.intro.phrases[0]
   if (!phrase) throw new Error('El diccionario no tiene ninguna frase para la intro')
-  return buildIntroFrames(phrase.natural, phrase.code).map((frame) => frame.holdMs)
+  return buildIntroFrames(phrase.code).map((frame) => frame.holdMs)
 }
 
 /** Cada valor que la página recibió, en orden, desde su primer render. */
@@ -108,15 +108,16 @@ describe('Layout: estado de la intro para la página', () => {
       expect(seen.at(-1)).toBe(false)
     })
 
-    it('al saltarla, sigue tapada hasta que la capa termina de desvanecerse', () => {
+    it('al saltarla, sigue tapada hasta que las barras terminan de abrirse', () => {
       renderLayout()
-      const layer = skipIntro().parentElement
-      if (!layer) throw new Error('El botón de saltar no tiene capa')
+      // La barra de arriba es la primera hija de la capa, como el botón.
+      const barTop = skipIntro().parentElement?.firstElementChild
+      if (!barTop) throw new Error('La capa de la intro no tiene barras')
 
       fireEvent.click(skipIntro())
       expect(screen.getByText('tapada')).toBeInTheDocument()
 
-      fireEvent.transitionEnd(layer)
+      fireEvent.transitionEnd(barTop)
 
       expect(querySkipIntro()).not.toBeInTheDocument()
       expect(screen.getByText('a la vista')).toBeInTheDocument()
