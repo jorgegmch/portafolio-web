@@ -377,6 +377,37 @@
   --font-size-pill: 0.9375rem;
   --pill-border-width: 1.5px;
 
+  /* Diálogo del formulario (spec §5, tablero contact-form-desktop): hoja de
+     920 px a 40 px de los bordes, con sombra, sobre un fondo Void al 55 %.
+     Entra subiendo 48 px. Título de 72 px, X de 52 px, campos de 56 px (el
+     mensaje, de 140), chips de 44 y botón de enviar de 60 px con texto de
+     17. Recibido: círculo y título de 88 px. El giro de «Enviando» dura
+     0,9 s. En teléfono, hoja inferior a 40 px del borde de arriba, con un
+     asa de 44 × 5 px. */
+  --color-backdrop: rgba(6, 6, 7, 0.55);
+  --color-shadow: rgba(0, 0, 0, 0.6);
+  --shadow-dialog: 0 2.5rem 7.5rem var(--color-shadow);
+  --dialog-width: 57.5rem;
+  --dialog-inset: 2.5rem;
+  --dialog-padding-top: 2.5rem;
+  --dialog-padding-x: 3rem;
+  --sheet-enter: 3rem;
+  --font-size-dialog-title: 4.5rem;
+  --leading-dialog-title: 0.9;
+  --dialog-close-size: 3.25rem;
+  --field-height: 3.5rem;
+  --field-padding-x: 1.125rem;
+  --field-textarea-height: 8.75rem;
+  --chip-padding-x: 1.125rem;
+  --submit-height: 3.75rem;
+  --font-size-submit: 1.0625rem;
+  --dur-spin: 0.9s;
+  --sent-check-size: 5.5rem;
+  --font-size-sent-title: 5.5rem;
+  --sheet-top: 2.5rem;
+  --sheet-handle-width: 2.75rem;
+  --sheet-handle-height: 0.3125rem;
+
   /* Capas */
   --z-background: -1;
   --z-nav: 100; /* origen */
@@ -452,6 +483,14 @@
     --font-size-contact-title: 4.75rem; /* 76px */
     --contact-padding-bottom: 3rem; /* 48px */
     --contact-pill-height: 3rem; /* 48px */
+    /* Formulario en teléfono (tablero contact-form-mobile): título de 44 px,
+       X de 48 y campos de 52. */
+    --font-size-dialog-title: 2.75rem; /* 44px */
+    --leading-dialog-title: 0.92;
+    --dialog-close-size: 3rem; /* 48px */
+    --field-height: 3.25rem; /* 52px */
+    --sent-check-size: 4.5rem; /* 72px */
+    --font-size-sent-title: 3.5rem; /* 56px */
   }
 }
 

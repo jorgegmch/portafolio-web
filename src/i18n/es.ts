@@ -218,6 +218,48 @@ export const es: Dictionary = {
       es: { short: 'CV · ES', name: 'Descargar el CV en español (PDF)' },
       en: { short: 'CV · EN', name: 'Descargar el CV en inglés (PDF)' },
     },
+    form: {
+      tag: 'nuevo_mensaje()',
+      title: 'Cuéntame tu idea',
+      close: 'Cerrar formulario',
+      required: 'obligatorio',
+      optional: 'opcional',
+      pickSeveral: 'puedes marcar varias',
+      name: { label: 'Nombre', placeholder: 'Cómo te llamas', error: 'Escribe tu nombre.' },
+      email: {
+        label: 'Correo',
+        placeholder: 'Donde te respondo',
+        error: 'Revisa el correo: falta algo.',
+      },
+      company: { label: 'Empresa', placeholder: 'Si escribes en nombre de una empresa' },
+      needs: {
+        legend: '¿Qué necesitas?',
+        options: {
+          backend: 'Backend',
+          frontend: 'Frontend',
+          'full-stack': 'Full-Stack',
+          databases: 'Bases de datos',
+          'automation-ai': 'Automatización e IA',
+          other: 'Otra cosa',
+        },
+      },
+      message: {
+        label: 'Mensaje',
+        placeholder: 'Qué quieres construir, para cuándo y cualquier detalle que sirva',
+        error: 'Cuéntame al menos en una frase qué necesitas.',
+      },
+      submit: 'Enviar mensaje',
+      sending: 'Enviando…',
+      failed:
+        'No se pudo enviar ahora mismo. Tu mensaje sigue aquí: inténtalo de nuevo o escríbeme directo con «Copiar correo».',
+      direct: '¿Prefieres directo?',
+      sent: {
+        title: 'Mensaje recibido',
+        reply: 'te respondo a',
+        back: 'Volver al portafolio',
+        again: 'Enviar otro',
+      },
+    },
   },
   footer: {
     credits: {

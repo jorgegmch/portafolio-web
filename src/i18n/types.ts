@@ -1,3 +1,4 @@
+import type { ContactNeedId } from '@/data/contactNeeds'
 import type { EducationId } from '@/data/education'
 import type { ProjectId } from '@/data/projects'
 import type { ServiceId } from '@/data/services'
@@ -157,6 +158,36 @@ export interface Dictionary {
     linksLabel: string
     /** Píldoras del CV: el texto corto y el nombre accesible, que dice qué descarga. */
     cv: Record<Lang, { short: string; name: string }>
+    /** Formulario del diálogo «Escríbeme» (spec §5). */
+    form: {
+      /** Rótulo en código sobre el título: no se traduce, pero vive con los textos. */
+      tag: string
+      title: string
+      close: string
+      /** Marcas tras la etiqueta de cada campo. */
+      required: string
+      optional: string
+      /** Marca tras «¿Qué necesitas?». */
+      pickSeveral: string
+      name: { label: string; placeholder: string; error: string }
+      email: { label: string; placeholder: string; error: string }
+      company: { label: string; placeholder: string }
+      needs: { legend: string; options: Record<ContactNeedId, string> }
+      message: { label: string; placeholder: string; error: string }
+      submit: string
+      sending: string
+      /** Aviso si el envío no sale; el mensaje se conserva. */
+      failed: string
+      /** Frase antes de «Copiar correo» y WhatsApp, siempre visible. */
+      direct: string
+      sent: {
+        title: string
+        /** Va tras «status: 200 · » y antes del correo de quien escribe. */
+        reply: string
+        back: string
+        again: string
+      }
+    }
   }
   footer: {
     /** Rótulos de las cuatro columnas de «créditos finales». */

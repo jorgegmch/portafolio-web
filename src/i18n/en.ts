@@ -218,6 +218,48 @@ export const en: Dictionary = {
       es: { short: 'CV · ES', name: 'Download the CV in Spanish (PDF)' },
       en: { short: 'CV · EN', name: 'Download the CV in English (PDF)' },
     },
+    form: {
+      tag: 'new_message()',
+      title: 'Tell me your idea',
+      close: 'Close form',
+      required: 'required',
+      optional: 'optional',
+      pickSeveral: 'you can pick several',
+      name: { label: 'Name', placeholder: 'What is your name', error: 'Write your name.' },
+      email: {
+        label: 'Email',
+        placeholder: 'Where I can reply',
+        error: 'Check the email: something is missing.',
+      },
+      company: { label: 'Company', placeholder: 'If you write on behalf of a company' },
+      needs: {
+        legend: 'What do you need?',
+        options: {
+          backend: 'Backend',
+          frontend: 'Frontend',
+          'full-stack': 'Full-Stack',
+          databases: 'Databases',
+          'automation-ai': 'Automation and AI',
+          other: 'Something else',
+        },
+      },
+      message: {
+        label: 'Message',
+        placeholder: 'What you want to build, by when, and any detail that helps',
+        error: 'Tell me in at least one sentence what you need.',
+      },
+      submit: 'Send message',
+      sending: 'Sending…',
+      failed:
+        'It could not be sent right now. Your message is still here: try again or write to me directly with “Copy email”.',
+      direct: 'Prefer to go direct?',
+      sent: {
+        title: 'Message received',
+        reply: 'I will reply to',
+        back: 'Back to the portfolio',
+        again: 'Send another',
+      },
+    },
   },
   footer: {
     credits: {

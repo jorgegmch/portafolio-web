@@ -12,6 +12,14 @@
   color: var(--color-ink-text);
   /* Al llegar por el ancla, el panel queda a un hueco del borde. */
   scroll-margin-top: var(--panel-gap);
+  transition: transform var(--dur-reveal) var(--ease-cine);
+}
+
+/* Con el formulario abierto, la escena queda detrás, un poco más pequeña
+   (spec §5); el fondo del diálogo la atenúa. El diálogo va en la capa
+   superior del navegador: esta escala no lo toca. */
+.contact[data-form-open] {
+  transform: scale(var(--curtain-scale));
 }
 
 /* Rótulo a un lado y la ciudad con su hora al otro, en mono. */
