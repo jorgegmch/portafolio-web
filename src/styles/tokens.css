@@ -259,8 +259,8 @@
 
   /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
   --measure: 36rem;
-  /* Elevación de las fichas de «Servicios» bajo el puntero. */
-  --lift-scale: 1.03;
+  /* Cuánto crecen las tarjetas de cifras de Perfil bajo el puntero. */
+  --lift-scale: 1.04;
 
 
   /* Alto de la navegación, que va dentro del panel del Hero: su relleno

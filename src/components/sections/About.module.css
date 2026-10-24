@@ -95,6 +95,19 @@
   background-color: var(--color-tile);
 }
 
+/* Al pasar el puntero, la tarjeta crece un poco. Solo con un puntero que se
+   pose y sin movimiento reducido. Va en la tarjeta de dentro: el <li> lo
+   anima Reveal al aparecer, y las dos transformaciones se pisarían. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .stat {
+    transition: transform var(--duration-fast) var(--ease-cine);
+  }
+
+  .stat:hover {
+    transform: scale(var(--lift-scale));
+  }
+}
+
 .statValue {
   color: var(--color-bone);
   font-family: var(--font-display);
