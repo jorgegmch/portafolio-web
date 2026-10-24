@@ -16,12 +16,23 @@ const HEADINGS = {
     tag: 'what_i_build()',
     title: ['Lo que', 'construyo'],
     relatedProject: 'Ver proyecto relacionado',
+    // Verbos de la cinta Signal: los de la spec (§3.3).
+    ribbons: {
+      codeLabel: 'Fragmentos de código de mis repos',
+      verbsLabel: 'Cómo trabajo',
+      verbs: ['Escucho', 'Planifico', 'Programo', 'Documento', 'Explico', 'Entrego'],
+    },
   },
   en: {
     label: 'Services',
     tag: 'what_i_build()',
     title: ['What I', 'build'],
     relatedProject: 'View related project',
+    ribbons: {
+      codeLabel: 'Code snippets from my repos',
+      verbsLabel: 'How I work',
+      verbs: ['I listen', 'I plan', 'I code', 'I document', 'I explain', 'I deliver'],
+    },
   },
 } as const
 

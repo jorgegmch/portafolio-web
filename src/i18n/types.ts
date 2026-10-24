@@ -114,6 +114,12 @@ export interface Dictionary {
     title: readonly [string, string]
     /** Texto del enlace de cada fila al repo que la respalda. */
     relatedProject: string
+    /** Cintas cruzadas al pie de la escena: el nombre de cada lista y los verbos. */
+    ribbons: {
+      codeLabel: string
+      verbsLabel: string
+      verbs: readonly string[]
+    }
     items: Record<ServiceId, { title: string; description: string }>
   }
   projects: {

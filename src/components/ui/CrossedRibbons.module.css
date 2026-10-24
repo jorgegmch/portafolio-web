@@ -1,0 +1,47 @@
+/* Las dos bandas, una sobre otra y cruzadas. Sobresalen por los lados de
+   donde las pongan (el marco recorta lo que sale de la ventana) y no reciben
+   clics. Dónde van lo decide quien las usa, con su clase en la raíz. */
+.ribbons {
+  position: relative;
+  height: var(--crossed-ribbons-height);
+  margin-inline: calc(-1 * var(--crossed-ribbons-bleed));
+  pointer-events: none;
+}
+
+.code,
+.verbs {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+/* Tinta, girada +3°, con código en mono y «/» en Signal entre fragmentos. */
+.code {
+  --ribbon-gap: var(--ribbon-code-gap);
+  --ribbon-separator: '/';
+  --ribbon-separator-color: var(--color-signal);
+  --ribbon-separator-size: var(--ribbon-code-size);
+
+  top: var(--ribbon-code-top);
+  padding: var(--ribbon-code-padding) 0;
+  background-color: var(--color-ink-text);
+  color: var(--color-bone);
+  font-family: var(--font-mono);
+  font-size: var(--ribbon-code-size);
+  transform: rotate(var(--ribbon-code-tilt));
+}
+
+/* Signal, girada -2,5°, con los verbos en Anton y «✦» entre ellos. */
+.verbs {
+  --ribbon-gap: var(--ribbon-verbs-gap);
+  --ribbon-separator-size: var(--ribbon-verbs-separator-size);
+
+  top: var(--ribbon-verbs-top);
+  padding: var(--ribbon-verbs-padding) 0;
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+  font-family: var(--font-display);
+  font-size: var(--ribbon-verbs-size);
+  text-transform: uppercase;
+  transform: rotate(var(--ribbon-verbs-tilt));
+}

@@ -87,6 +87,11 @@ export const en: Dictionary = {
     tag: 'what_i_build()',
     title: ['What I', 'build'],
     relatedProject: 'View related project',
+    ribbons: {
+      codeLabel: 'Code snippets from my repos',
+      verbsLabel: 'How I work',
+      verbs: ['I listen', 'I plan', 'I code', 'I document', 'I explain', 'I deliver'],
+    },
     items: {
       backend: {
         title: 'Backend Development',

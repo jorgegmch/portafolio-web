@@ -196,6 +196,16 @@
   height: var(--services-icon-size);
 }
 
+/* Cintas cruzadas: anchas como el panel y colgando de su borde inferior,
+   que cruzan (spec §3.3). */
+.ribbons {
+  position: absolute;
+  right: 0;
+  bottom: calc(-1 * var(--crossed-ribbons-overhang));
+  left: 0;
+  z-index: var(--z-crossed-ribbons);
+}
+
 /* Tablet y teléfono: la fila abierta en columna, sin sangría. */
 @media (max-width: 900px) {
   .panel {

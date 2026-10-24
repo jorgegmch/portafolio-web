@@ -8,6 +8,10 @@
   gap: var(--panel-gap);
   min-height: 100vh;
   padding: var(--panel-gap);
+  /* Lo que sobresale por los lados (las cintas cruzadas) no da scroll
+     horizontal. clip, no hidden: hidden crearía un contenedor de scroll y los
+     paneles sticky de la cortina dejarían de fijarse a la ventana. */
+  overflow-x: clip;
 }
 
 /* Cada escena es un panel con sus esquinas redondeadas; el fondo y el

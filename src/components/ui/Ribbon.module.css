@@ -17,7 +17,9 @@
 
 /* Cada elemento, seguido del signo que los separa. El signo es adorno: va en
    el CSS, con texto alternativo vacío para que el lector de pantalla no lo
-   lea (la primera declaración queda para quien no admite esa sintaxis). */
+   lea (la primera declaración queda para quien no admite esa sintaxis).
+   Quien usa la cinta puede cambiar el signo y su color con
+   --ribbon-separator y --ribbon-separator-color. */
 .item {
   display: flex;
   align-items: center;
@@ -27,9 +29,10 @@
 }
 
 .item::after {
+  color: var(--ribbon-separator-color, currentcolor);
   font-size: var(--ribbon-separator-size);
-  content: '✦';
-  content: '✦' / '';
+  content: var(--ribbon-separator, '✦');
+  content: var(--ribbon-separator, '✦') / '';
 }
 
 @media (prefers-reduced-motion: no-preference) {

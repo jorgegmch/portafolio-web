@@ -179,6 +179,24 @@
   --ribbon-font-size: 2.5rem; /* 40px */
   --hero-ribbon-tilt: -1.6deg;
   --hero-ribbon-scale: 1.04;
+  /* Cintas cruzadas al pie de Servicios (tablero): banda de 180 px que
+     cuelga 64 px del borde y sobresale 40 px por cada lado. La tinta va a
+     30 px de arriba, girada +3°, con código mono de 18 px; la Signal a 70 px,
+     girada -2,5°, con verbos en Anton de 34 px. */
+  --crossed-ribbons-height: 11.25rem; /* 180px */
+  --crossed-ribbons-overhang: 4rem; /* 64px */
+  --crossed-ribbons-bleed: 2.5rem; /* 40px */
+  --ribbon-code-top: 1.875rem; /* 30px */
+  --ribbon-code-tilt: 3deg;
+  --ribbon-code-size: 1.125rem; /* 18px */
+  --ribbon-code-padding: 1rem; /* 16px */
+  --ribbon-code-gap: 1.75rem; /* 28px */
+  --ribbon-verbs-top: 4.375rem; /* 70px */
+  --ribbon-verbs-tilt: -2.5deg;
+  --ribbon-verbs-size: 2.125rem; /* 34px */
+  --ribbon-verbs-padding: 0.875rem; /* 14px */
+  --ribbon-verbs-gap: 2rem; /* 32px */
+  --ribbon-verbs-separator-size: 1.25rem; /* 20px */
   /* Rótulos en mono: mayúsculas con este espaciado. */
   --tracking-label: 0.08em;
 
@@ -315,6 +333,8 @@
   --z-grain: 150;
   /* Sombra de la cortina, sobre el contenido de un panel (que llega a 1). */
   --z-curtain-shade: 2;
+  /* Cintas cruzadas: por encima de esa sombra y del contenido del panel. */
+  --z-crossed-ribbons: 3;
   --z-skip-link: 200;
   --z-intro: 300;
 }
@@ -360,6 +380,18 @@
     --services-sign-size: 2.75rem; /* 44px */
     --font-size-services-sign: 1.375rem; /* 22px */
     --services-padding-bottom: 8rem; /* 128px */
+    /* Cintas cruzadas en teléfono: más bajas y con letra menor. */
+    --crossed-ribbons-height: 8.75rem; /* 140px */
+    --crossed-ribbons-overhang: 3rem; /* 48px */
+    --ribbon-code-top: 1.5rem; /* 24px */
+    --ribbon-code-size: 0.875rem; /* 14px */
+    --ribbon-code-padding: 0.75rem; /* 12px */
+    --ribbon-code-gap: 1.25rem; /* 20px */
+    --ribbon-verbs-top: 3.75rem; /* 60px */
+    --ribbon-verbs-size: 1.625rem; /* 26px */
+    --ribbon-verbs-padding: 0.625rem; /* 10px */
+    --ribbon-verbs-gap: 1.375rem; /* 22px */
+    --ribbon-verbs-separator-size: 0.875rem; /* 14px */
   }
 }
 

@@ -21,7 +21,10 @@ const renderServices = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   )
   const { services: text, common } = dictionaries[lang]
   const region = screen.getByRole('region', { name: text.label })
-  const rows = within(within(region).getByRole('list')).getAllByRole('listitem')
+  // La primera lista es la de servicios; las otras dos, las de las cintas.
+  const [list] = within(region).getAllByRole('list')
+  if (!list) throw new Error('Falta la lista de servicios')
+  const rows = within(list).getAllByRole('listitem')
   return { region, rows, text, common }
 }
 
@@ -54,10 +57,14 @@ describe('Services', () => {
       )
     })
 
-    it('ya no lleva las tecnologías: la sección tiene una sola lista', () => {
-      const { region } = renderServices()
+    // Tres listas: los servicios y las dos cintas, cada una oída una vez.
+    it.each(LANGS)('en %s, ya no lleva las tecnologías: solo los servicios y las dos cintas', (lang) => {
+      const { region, text } = renderServices(lang)
+      const names = within(region)
+        .getAllByRole('list')
+        .map((list) => list.getAttribute('aria-label'))
 
-      expect(within(region).getAllByRole('list')).toHaveLength(1)
+      expect(names).toEqual([null, text.ribbons.codeLabel, text.ribbons.verbsLabel])
       expect(within(region).queryByRole('img')).not.toBeInTheDocument()
     })
   })
