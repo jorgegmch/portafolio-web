@@ -18,23 +18,9 @@ const LABEL_DASH = ' — '
 /** Separador de la ciudad y la hora: signo, no texto traducible. */
 const SEPARATOR = ' · '
 
-/** Flecha «↗» de lo que se abre fuera; decorativa. */
-function ArrowOut({ className }: { className: string | undefined }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M7 17 17 7M9 7h8v8" />
-    </svg>
-  )
-}
-
-/** Flecha «↓» de las descargas; decorativa. */
-function ArrowDown({ className }: { className: string | undefined }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 5v14M6 13l6 6 6-6" />
-    </svg>
-  )
-}
+/** Trazo de la flecha «↗» de lo que se abre fuera y de la «↓» de las descargas. */
+const ARROW_OUT = 'M7 17 17 7M9 7h8v8'
+const ARROW_DOWN = 'M12 5v14M6 13l6 6 6-6'
 
 /**
  * Escena Contacto (spec §3.5), en el panel Signal. Arriba, el rótulo y la
@@ -92,7 +78,11 @@ export function Contact() {
             reveal={false}
             label={text.writeMe}
             className={styles.writeMe}
-            trailing={<ArrowOut className={styles.writeArrow} />}
+            trailing={
+              <svg className={styles.writeArrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d={ARROW_OUT} />
+              </svg>
+            }
           />
         </div>
       </div>
@@ -114,7 +104,11 @@ export function Contact() {
             label={text.whatsapp}
             accessibleLabel={`${text.whatsapp} (${common.opensInNewTab})`}
             className={styles.pill}
-            trailing={<ArrowOut className={styles.arrow} />}
+            trailing={
+              <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d={ARROW_OUT} />
+              </svg>
+            }
           />
         </li>
         {socialLinks.map(({ id, label, url }) => (
@@ -127,7 +121,9 @@ export function Contact() {
               aria-label={`${label} (${common.opensInNewTab})`}
             >
               {label}
-              <ArrowOut className={styles.arrow} />
+              <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d={ARROW_OUT} />
+              </svg>
             </a>
           </li>
         ))}
@@ -140,7 +136,9 @@ export function Contact() {
               aria-label={`${short}: ${name}`}
             >
               {short}
-              <ArrowDown className={styles.arrow} />
+              <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d={ARROW_DOWN} />
+              </svg>
             </a>
           </li>
         ))}
