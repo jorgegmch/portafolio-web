@@ -381,6 +381,11 @@
      (180 px a 1440); por debajo de unos 490 px, este tope, y en un teléfono
      de 390 el título baja de los 76 px del tablero a unos 54. */
   --contact-title-fit: calc((100vw - 4.5rem) / 5.9);
+  /* Interlineado del título de Contacto, excepción al 0,84–0,92 de Anton
+     (spec §2): el «¿» de «¿CONSTRUIMOS» baja 0,0625 em bajo la línea base y
+     las mayúsculas de «ALGO?» suben 0,875 em (medido en Anton). Con menos de
+     0,9375 el «¿» pisa la «A» y se lee «ÁLGO». */
+  --leading-contact-title: 0.94;
   --font-size-contact-pitch: 1.5rem;
   --leading-contact-pitch: 1.45;
   --contact-pitch-measure: 28.75rem;

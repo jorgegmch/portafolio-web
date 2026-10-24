@@ -39,7 +39,7 @@
   font-family: var(--font-display);
   font-size: min(var(--font-size-contact-title), var(--contact-title-fit));
   font-weight: var(--font-weight-regular);
-  line-height: var(--leading-display);
+  line-height: var(--leading-contact-title);
   text-transform: uppercase;
 }
 

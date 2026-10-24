@@ -60,6 +60,7 @@ Regla vigente: los componentes solo usan colores de `tokens.css`. El acento verd
 Se alojan en el repo (`public/fonts/` o `src/assets/fonts/`), en woff2, con `font-display: swap` y precarga de Anton y Manrope. Cero peticiones a Google Fonts en ejecución.
 
 - **Anton 400:** títulos de escena, nombre, cifras. Siempre en mayúsculas, interlineado 0,84–0,92.
+  - **Excepción:** el título de Contacto («¿Construimos algo?») va a 0,94 (`--leading-contact-title`). Medido en Anton, el «¿» baja 0,0625 em bajo la línea base y las mayúsculas de la línea de abajo suben 0,875 em: con menos de 0,9375 el «¿» pisa la «A» y se lee «ÁLGO». Aprobado por el autor.
   - **Excepción:** la frase de Perfil («Del negocio al código.») va a 1,125 (`--leading-phrase`). Medido en Anton, la tilde de «Ó» sube 1,109 em sobre la línea base y las letras de la línea de arriba bajan 0,016 em: con menos de 1,125 la tilde de «CÓDIGO» pisa «NEGOCIO». Aprobado por el autor.
 - **Manrope 400/500/700/800:** cuerpo de 17–20 px con interlineado 1,55–1,6; títulos secundarios en 800 con `letter-spacing: -0.02em`.
 - **JetBrains Mono 400/600:** rótulos de 12–13 px en mayúsculas con `letter-spacing: 0.08em`, y código.
