@@ -54,6 +54,7 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 | `linkedin.png` | `InBug-White.png`, 840×779 px | `ed22a5ab46c171e3449708ff34923de7298da00ac204c7f85444db05bf888791` |
 | `whatsapp.svg` | `Digital_Glyph_White_RGB_2026.svg` | `7fb054c0f4bea644b4a4a014d6d8581aad7e6dcb639049d17a578dc44f8e6fd4` |
 
+- **Dónde se usa `github.svg`:** delante de «Ver todos en GitHub», en Proyectos, con `<img>` decorativo (`alt=""`) y sin filtros. Hash comprobado el 2026-10-24: coincide con el de la tabla.
 - **Excepción del comprobador de SVG:** el de WhatsApp trae un elemento `style`. Se admite solo en ese archivo y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
 
 ### Iconos genéricos (`public/icons/`)

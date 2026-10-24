@@ -5,7 +5,7 @@ import { ProjectCard } from '@/components/ui/ProjectCard'
 import { Reveal } from '@/components/ui/Reveal'
 import { sections } from '@/config/routes'
 import { codeFragments } from '@/data/codeRibbon'
-import { allProjectsUrl, featuredProjects, projectUrl } from '@/data/projects'
+import { allProjectsUrl, featuredProjects, githubMark, projectUrl } from '@/data/projects'
 import { useCardStack } from '@/hooks/useCardStack'
 import { useLang } from '@/hooks/useLang'
 import { sceneNumber } from '@/lib/sceneNumber'
@@ -73,6 +73,14 @@ export function Projects() {
           rel="noopener noreferrer"
           aria-label={`${text.viewAll} (${common.opensInNewTab})`}
         >
+          {/* Decorativo: el texto ya dice GitHub. */}
+          <img
+            className={styles.mark}
+            src={githubMark.src}
+            width={githubMark.width}
+            height={githubMark.height}
+            alt=""
+          />
           {text.viewAll}
           <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M7 17 17 7M9 7h8v8" />

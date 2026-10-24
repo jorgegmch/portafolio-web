@@ -41,6 +41,9 @@
   color: var(--color-signal);
 }
 
+/* «Ver todos en GitHub», con el logo de GitHub delante. Sin borde: se
+   subraya con el puntero encima y con el foco. Su zona de clic tiene el
+   alto táctil. */
 .viewAll {
   display: inline-flex;
   align-items: center;
@@ -48,6 +51,18 @@
   min-height: var(--touch-target);
   color: var(--color-bone);
   text-decoration: none;
+}
+
+.viewAll:hover,
+.viewAll:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset);
+}
+
+/* El logo oficial, sin filtros ni cambios (docs/LOGOS.md). */
+.mark {
+  width: var(--github-mark-size);
+  height: var(--github-mark-size);
 }
 
 .arrow {

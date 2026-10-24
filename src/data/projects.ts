@@ -139,3 +139,14 @@ export const projectUrl = (id: ProjectId): string => `${site.social.github}/${id
 
 /** Destino del botón "Ver todos en GitHub". */
 export const allProjectsUrl = `${site.social.github}?tab=repositories`
+
+/**
+ * Logo de GitHub del enlace a todos los repos: el Invertocat blanco oficial
+ * de public/social, sin modificar (registrado en docs/LOGOS.md), con su
+ * tamaño natural para reservar el sitio.
+ */
+export const githubMark = {
+  src: `${import.meta.env.BASE_URL}social/github.svg`,
+  width: 98,
+  height: 96,
+} as const
