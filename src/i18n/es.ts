@@ -214,10 +214,7 @@ export const es: Dictionary = {
     copyFailed: 'No se pudo copiar: se abrió tu programa de correo.',
     whatsapp: 'WhatsApp',
     linksLabel: 'Otras formas de contacto',
-    cv: {
-      es: { short: 'CV · ES', name: 'Descargar el CV en español (PDF)' },
-      en: { short: 'CV · EN', name: 'Descargar el CV en inglés (PDF)' },
-    },
+    cv: { short: 'CV · ES', name: 'Descargar el CV en español' },
     form: {
       tag: 'nuevo_mensaje()',
       title: 'Cuéntame tu idea',

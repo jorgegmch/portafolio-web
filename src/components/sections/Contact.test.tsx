@@ -173,18 +173,44 @@ describe('Contact: datos de contacto', () => {
       })
     })
 
-    it('el CV en español y en inglés se descargan, con un nombre que dice qué son', () => {
+    // Un solo botón de CV, en el idioma activo del sitio, que funciona como
+    // «Descargar CV» del Hero: abre las dos versiones de ese idioma.
+    it.each([
+      ['es', ['es-CO'], es],
+      ['en', ['en-US'], dictionaries.en],
+    ] as const)('en %s, un solo botón de CV abre las versiones de ese idioma', async (lang, langs, dict) => {
+      vi.spyOn(navigator, 'languages', 'get').mockReturnValue(langs)
+      const user = userEvent.setup()
       renderContact()
+      const region = screen.getByRole('region', { name: dict.contact.label })
+      const list = within(region).getByRole('list', { name: dict.contact.linksLabel })
+      const { short, name } = dict.contact.cv
+      const button = within(list).getByRole('button', { name: `${short}: ${name}` })
 
-      ;(['es', 'en'] as const).forEach((lang) => {
-        const [file] = cvFilesFor(lang)
-        const { short, name } = es.contact.cv[lang]
-        const link = within(links()).getByRole('link', { name: `${short}: ${name}` })
+      expect(button).toHaveTextContent(short)
+      expect(button).toHaveAttribute('aria-expanded', 'false')
+      expect(within(list).queryAllByRole('link', { name: /CV/ })).toHaveLength(0)
 
-        expect(file).toBeDefined()
-        expect(link).toHaveAttribute('href', file ? cvUrl(file) : '')
-        expect(link).toHaveAttribute('download')
-      })
+      await user.click(button)
+
+      const files = cvFilesFor(lang)
+      const options = within(list).getAllByRole('link', { name: /PDF/ })
+      expect(button).toHaveAttribute('aria-expanded', 'true')
+      expect(options.map((option) => option.getAttribute('href'))).toEqual(files.map((file) => cvUrl(file)))
+      options.forEach((option) => expect(option).toHaveAttribute('download'))
+    })
+
+    it('el menú del CV se cierra con Escape y devuelve el foco a su botón', async () => {
+      const user = userEvent.setup()
+      renderContact()
+      const { short, name } = es.contact.cv
+      const button = within(links()).getByRole('button', { name: `${short}: ${name}` })
+
+      await user.click(button)
+      await user.keyboard('{Escape}')
+
+      expect(button).toHaveAttribute('aria-expanded', 'false')
+      expect(button).toHaveFocus()
     })
 
     it('la escena dice la ciudad del autor', () => {

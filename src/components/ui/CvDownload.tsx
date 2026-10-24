@@ -10,6 +10,15 @@ interface CvDownloadProps {
   shortLabel?: string
   /** Un archivo por versión, con su nombre ya traducido y su URL. */
   options: readonly { label: string; href: string }[]
+  /**
+   * Nombre accesible cuando debe decir más que el texto visible; empieza por
+   * ese texto. Sin él, el nombre es `label`.
+   */
+  accessibleLabel?: string
+  /** Clase del botón, en lugar del enlace subrayado del Hero. */
+  toggleClassName?: string
+  /** Clase de la caja del control: su ancho y su sitio los decide quien lo usa. */
+  className?: string
 }
 
 // Trazo de la flecha del botón: un galón que apunta abajo.
@@ -25,9 +34,20 @@ const ICON_CARET = 'M6 9l6 6 6-6'
  *
  * La lista se abre hacia arriba, alineada al borde derecho del botón: abajo
  * la tapaba la cinta del Hero y a la izquierda se salía de su panel. Si
- * arriba no cabe, se abre hacia abajo (useMenuPlacement).
+ * arriba no cabe, se abre hacia abajo, y si a la derecha se saldría por la
+ * izquierda, se alinea a la izquierda (useMenuPlacement).
+ *
+ * Lo usan «Descargar CV» del Hero y el botón de CV de Contacto: quien lo usa
+ * puede darle otra clase al botón y a su caja.
  */
-export function CvDownload({ label, shortLabel, options }: CvDownloadProps) {
+export function CvDownload({
+  label,
+  shortLabel,
+  options,
+  accessibleLabel,
+  toggleClassName,
+  className,
+}: CvDownloadProps) {
   const { open, setOpen, toggleRef, areaRef } = useDismissibleMenu<HTMLDivElement>()
   const listRef = useRef<HTMLUListElement>(null)
   const placement = useMenuPlacement(listRef, open)
@@ -45,11 +65,12 @@ export function CvDownload({ label, shortLabel, options }: CvDownloadProps) {
     label
   )
   // Con dos textos, el nombre lo fija aria-label: no depende del que se vea.
-  const name = shortLabel ? label : undefined
+  const name = accessibleLabel ?? (shortLabel ? label : undefined)
+  const toggleClass = toggleClassName ?? styles.toggle
 
   if (options.length === 1) {
     return (
-      <a className={styles.toggle} href={only.href} download aria-label={name}>
+      <a className={toggleClass} href={only.href} download aria-label={name}>
         {text}
       </a>
     )
@@ -62,11 +83,11 @@ export function CvDownload({ label, shortLabel, options }: CvDownloadProps) {
   }
 
   return (
-    <div ref={areaRef} className={styles.root}>
+    <div ref={areaRef} className={className ? `${styles.root} ${className}` : styles.root}>
       <button
         ref={toggleRef}
         type="button"
-        className={styles.toggle}
+        className={toggleClass}
         aria-label={name}
         aria-expanded={open}
         aria-controls={listId}
@@ -77,7 +98,14 @@ export function CvDownload({ label, shortLabel, options }: CvDownloadProps) {
           <path d={ICON_CARET} />
         </svg>
       </button>
-      <ul ref={listRef} id={listId} className={styles.list} data-placement={placement} hidden={!open}>
+      <ul
+        ref={listRef}
+        id={listId}
+        className={styles.list}
+        data-placement={placement.block}
+        data-align={placement.inline}
+        hidden={!open}
+      >
         {options.map((option) => (
           <li key={option.href}>
             <a className={styles.option} href={option.href} download onClick={closeAfterChoice}>

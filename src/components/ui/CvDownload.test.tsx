@@ -198,10 +198,22 @@ describe('CvDownload', () => {
   // hay sitio, hasta el borde de la ventana o del panel que la recorta, se
   // abre hacia abajo. jsdom no mide: las cajas se fijan a mano.
   describe('dirección', () => {
-    const place = ({ listHeight, toggleTop }: { listHeight: number; toggleTop: number }) =>
+    const place = ({
+      listHeight,
+      toggleTop,
+      toggleLeft = 300,
+      listWidth = 200,
+    }: {
+      listHeight: number
+      toggleTop: number
+      toggleLeft?: number
+      listWidth?: number
+    }) =>
       vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
-        if (this.tagName === 'UL') return DOMRect.fromRect({ x: 0, y: toggleTop - 8 - listHeight, width: 200, height: listHeight })
-        return DOMRect.fromRect({ x: 0, y: toggleTop, width: 200, height: 44 })
+        if (this.tagName === 'UL') {
+          return DOMRect.fromRect({ x: toggleLeft + 100 - listWidth, y: toggleTop - 8 - listHeight, width: listWidth, height: listHeight })
+        }
+        return DOMRect.fromRect({ x: toggleLeft, y: toggleTop, width: 100, height: 44 })
       })
 
     const list = (toggle: HTMLElement) => document.getElementById(toggle.getAttribute('aria-controls') ?? '')
@@ -222,6 +234,26 @@ describe('CvDownload', () => {
       await user.click(toggle())
 
       expect(list(toggle())).toHaveAttribute('data-placement', 'below')
+    })
+
+    // Alineada a la derecha del botón; si así se sale por la izquierda (botón
+    // pegado al borde izquierdo y lista más ancha que él), a la izquierda.
+    it('se alinea a la derecha del botón si cabe', async () => {
+      place({ listHeight: 100, toggleTop: 400, toggleLeft: 300, listWidth: 200 })
+      const { user, toggle } = setup()
+
+      await user.click(toggle())
+
+      expect(list(toggle())).toHaveAttribute('data-align', 'end')
+    })
+
+    it('si alineada a la derecha se saldría por la izquierda, se alinea a la izquierda', async () => {
+      place({ listHeight: 100, toggleTop: 400, toggleLeft: 20, listWidth: 200 })
+      const { user, toggle } = setup()
+
+      await user.click(toggle())
+
+      expect(list(toggle())).toHaveAttribute('data-align', 'start')
     })
 
     it('lo decide de nuevo cada vez que se abre', async () => {

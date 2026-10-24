@@ -159,8 +159,11 @@ export interface Dictionary {
     whatsapp: string
     /** Nombre accesible de la fila de píldoras. */
     linksLabel: string
-    /** Píldoras del CV: el texto corto y el nombre accesible, que dice qué descarga. */
-    cv: Record<Lang, { short: string; name: string }>
+    /**
+     * Botón del CV, en el idioma del sitio: el texto corto y el nombre
+     * accesible, que empieza por él y dice qué abre.
+     */
+    cv: { short: string; name: string }
     /** Formulario del diálogo «Escríbeme» (spec §5). */
     form: {
       /** Rótulo en código sobre el título: no se traduce, pero vive con los textos. */

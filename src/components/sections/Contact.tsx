@@ -2,14 +2,14 @@ import { useId, useRef, useState } from 'react'
 import styles from '@/components/sections/Contact.module.css'
 import { ContactButton } from '@/components/ui/ContactButton'
 import { ContactDialog } from '@/components/ui/ContactDialog'
+import { CvDownload } from '@/components/ui/CvDownload'
 import { Reveal } from '@/components/ui/Reveal'
 import { sections } from '@/config/routes'
 import { site, socialLinks } from '@/config/site'
-import { cvFilesFor, cvUrl } from '@/data/cv'
 import { useClock } from '@/hooks/useClock'
+import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
 import { useMagnetic } from '@/hooks/useMagnetic'
-import { LANGS } from '@/i18n/types'
 import { sceneNumber } from '@/lib/sceneNumber'
 import { sendContactMessage } from '@/lib/sendContactMessage'
 
@@ -20,9 +20,8 @@ const LABEL_DASH = ' — '
 /** Separador de la ciudad y la hora: signo, no texto traducible. */
 const SEPARATOR = ' · '
 
-/** Trazo de la flecha «↗» de lo que se abre fuera y de la «↓» de las descargas. */
+/** Trazo de la flecha «↗» de lo que se abre fuera. */
 const ARROW_OUT = 'M7 17 17 7M9 7h8v8'
-const ARROW_DOWN = 'M12 5v14M6 13l6 6 6-6'
 
 /**
  * Escena Contacto (spec §3.5), en el panel Signal. Arriba, el rótulo y la
@@ -30,8 +29,8 @@ const ARROW_DOWN = 'M12 5v14M6 13l6 6 6-6'
  * en fila, la frase y el botón circular «Escríbeme», que se acerca al
  * puntero (useMagnetic) y abre el formulario en un diálogo. Mientras está
  * abierto, la escena queda detrás, un poco más pequeña. Al pie, las
- * píldoras: copiar el correo, WhatsApp, LinkedIn, GitHub y el CV en los dos
- * idiomas.
+ * píldoras: copiar el correo, WhatsApp, LinkedIn, GitHub y un botón de CV en
+ * el idioma activo, que abre sus versiones como «Descargar CV» del Hero.
  *
  * El correo y el número no están en la página: los arma ContactButton
  * dentro del clic, y «Copiar correo» lo lleva al portapapeles sin
@@ -53,11 +52,9 @@ export function Contact() {
     setFormOpen(false)
     writeMeRef.current?.focus()
   }
-  // Un PDF por idioma: el primero de su lista, en el orden de CV_VERSIONS.
-  const cvLinks = LANGS.flatMap((lang) => {
-    const [file] = cvFilesFor(lang)
-    return file ? [{ lang, href: cvUrl(file), ...text.cv[lang] }] : []
-  })
+  // El CV del idioma activo del sitio, con sus versiones, como en el Hero.
+  const { cv } = text
+  const cvOptions = useCvOptions()
 
   return (
     <section
@@ -160,21 +157,14 @@ export function Contact() {
             </a>
           </li>
         ))}
-        {cvLinks.map(({ lang, href, short, name }) => (
-          <li key={lang}>
-            <a
-              className={`${styles.pill} ${styles.filled}`}
-              href={href}
-              download
-              aria-label={`${short}: ${name}`}
-            >
-              {short}
-              <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d={ARROW_DOWN} />
-              </svg>
-            </a>
-          </li>
-        ))}
+        <li>
+          <CvDownload
+            label={cv.short}
+            accessibleLabel={`${cv.short}: ${cv.name}`}
+            options={cvOptions}
+            toggleClassName={`${styles.pill} ${styles.filled}`}
+          />
+        </li>
       </ul>
     </section>
   )

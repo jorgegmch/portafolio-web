@@ -112,9 +112,10 @@ describe('CvDownload: estilos', () => {
       expect(css.match(/transition\s*:/g)).toHaveLength(1)
     })
 
+    // Sin depender de la clase del botón: quien lo usa puede darle otra.
     it('gira media vuelta con el menú abierto', () => {
       expect(css).toMatch(
-        /\.toggle\[aria-expanded='true'\] \.caret\s*\{\s*transform:\s*rotate\(180deg\);\s*\}/,
+        /\[aria-expanded='true'\] > \.caret\s*\{\s*transform:\s*rotate\(180deg\);\s*\}/,
       )
     })
 
@@ -151,16 +152,28 @@ describe('CvDownload: estilos', () => {
     expect(css).not.toMatch(/outline\s*:/)
   })
 
-  // En teléfono los botones del Hero van en columna: el control se centra, y
-  // su caja se ciñe al botón para que la lista se alinee a su borde derecho.
-  it('en teléfono el control va centrado, ceñido al botón, y no pierde el alto táctil', () => {
+  // El componente se usa en el Hero y en Contacto: el ancho de su caja lo
+  // decide quien lo usa.
+  it('en teléfono no fija el ancho de su caja ni el alto del control', () => {
     const phone = cssMedia(css, '(max-width: 480px)')
 
-    expect(cssRule(phone, '.root')).toEqual({
+    expect(cssRule(phone, '.root')).toEqual({})
+    expect(cssRule(phone, '.toggle')).toEqual({})
+  })
+
+  // En el Hero los botones van en columna: el control se centra y su caja se
+  // ciñe al botón para que la lista se alinee a su borde derecho.
+  it('en teléfono, en el Hero va centrado y ceñido al botón', () => {
+    const hero = readCss('src/components/sections/Hero.module.css')
+
+    expect(cssRule(cssMedia(hero, '(max-width: 480px)'), '.cv')).toEqual({
       width: 'fit-content',
       'margin-inline': 'auto',
       'text-align': 'center',
     })
-    expect(cssRule(phone, '.toggle')).toEqual({})
+  })
+
+  it('si a la derecha se saldría, se alinea a la izquierda', () => {
+    expect(exactRule(css, ".list[data-align='start']")).toEqual({ right: 'auto', left: '0' })
   })
 })

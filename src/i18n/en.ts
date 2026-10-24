@@ -214,10 +214,7 @@ export const en: Dictionary = {
     copyFailed: 'Could not copy it: your email app opened instead.',
     whatsapp: 'WhatsApp',
     linksLabel: 'Other ways to reach me',
-    cv: {
-      es: { short: 'CV · ES', name: 'Download the CV in Spanish (PDF)' },
-      en: { short: 'CV · EN', name: 'Download the CV in English (PDF)' },
-    },
+    cv: { short: 'CV · EN', name: 'Download the CV in English' },
     form: {
       tag: 'new_message()',
       title: 'Tell me your idea',

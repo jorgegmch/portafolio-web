@@ -46,7 +46,7 @@
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
-.toggle[aria-expanded='true'] .caret {
+[aria-expanded='true'] > .caret {
   transform: rotate(180deg);
 }
 
@@ -72,6 +72,11 @@
   bottom: auto;
 }
 
+.list[data-align='start'] {
+  right: auto;
+  left: 0;
+}
+
 .option {
   display: flex;
   align-items: center;
@@ -88,16 +93,9 @@
   color: var(--color-signal);
 }
 
-/* En teléfono el control va centrado en su fila. La caja se ciñe al botón
-   para que la lista se alinee a su borde derecho; el texto de la lista sigue
-   alineado a la izquierda. */
+/* En teléfono el texto de la lista sigue alineado a la izquierda, aunque
+   quien lo usa centre el control. El ancho de la caja lo decide quien lo usa. */
 @media (max-width: 480px) {
-  .root {
-    width: fit-content;
-    margin-inline: auto;
-    text-align: center;
-  }
-
   .list {
     text-align: left;
   }

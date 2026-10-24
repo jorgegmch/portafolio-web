@@ -7,11 +7,10 @@ import { Ribbon } from '@/components/ui/Ribbon'
 import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
-import { cvFilesFor, cvUrl, type CvVersion } from '@/data/cv'
 import { technologies, technologyName } from '@/data/technologies'
 import { useClock } from '@/hooks/useClock'
+import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
-import type { Dictionary } from '@/i18n/types'
 import { splitName } from '@/lib/splitName'
 
 const [small] = portrait.sources
@@ -32,12 +31,6 @@ const COMMENT_PREFIX = '// '
 /** Las tecnologías del catálogo, en su orden, para la cinta. */
 const STACK_NAMES = technologies.map(({ id }) => technologyName(id))
 
-/** Clave del diccionario con el nombre de cada versión del CV. */
-const CV_LABEL_KEYS = {
-  infographic: 'cvInfographic',
-  ats: 'cvAts',
-} as const satisfies Record<CvVersion, keyof Dictionary['hero']>
-
 /**
  * Primera escena, en el panel Ink (spec §3.1). Arriba, el estado de
  * disponibilidad (si config/availability lo activa) y la ciudad con su hora,
@@ -52,14 +45,11 @@ const CV_LABEL_KEYS = {
  * decorativos. La cinta es una lista que el lector de pantalla oye una vez.
  */
 export function Hero() {
-  const { lang, t } = useLang()
+  const { t } = useLang()
   const headingId = useId()
   const clock = useClock(site.timeZone)
   const { first, last } = splitName(t.hero.heading)
-  const cvOptions = cvFilesFor(lang).map((entry) => ({
-    label: t.hero[CV_LABEL_KEYS[entry.version]],
-    href: cvUrl(entry),
-  }))
+  const cvOptions = useCvOptions()
 
   return (
     <section id={sections.hero} className={styles.hero} aria-labelledby={headingId}>
@@ -124,7 +114,7 @@ export function Hero() {
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </Link>
-              <CvDownload label={t.hero.downloadCv} options={cvOptions} />
+              <CvDownload className={styles.cv} label={t.hero.downloadCv} options={cvOptions} />
             </div>
           </div>
         </div>

@@ -303,4 +303,12 @@
   .primary {
     justify-content: center;
   }
+
+  /* «Descargar CV», centrado en su fila; su caja se ciñe al botón para que
+     la lista se alinee a su borde derecho. */
+  .cv {
+    width: fit-content;
+    margin-inline: auto;
+    text-align: center;
+  }
 }
