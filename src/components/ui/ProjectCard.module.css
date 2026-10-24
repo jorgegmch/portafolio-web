@@ -1,0 +1,153 @@
+/* Tarjeta de proyecto, en Card. El fijado y el escalado de la pila los pone
+   la sección (Projects.module.css), que sabe en qué orden van. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--project-card-padding);
+  border: 1px solid var(--line-08);
+  border-radius: var(--radius-card);
+  background-color: var(--color-card);
+  color: var(--color-bone);
+}
+
+/* Franja de arriba: número, nombre, etiqueta y «Ver código». Es la que se
+   sigue viendo cuando la tarjeta siguiente sube encima. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-5);
+  min-width: 0;
+}
+
+.number {
+  color: var(--color-signal);
+  font-family: var(--font-display);
+  font-size: var(--font-size-project-number);
+  line-height: var(--leading-none);
+}
+
+.title {
+  font-size: var(--font-size-project-title);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-tight);
+}
+
+.badge {
+  align-self: center;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-signal);
+  border-radius: var(--radius-pill);
+  color: var(--color-signal);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+}
+
+/* «Ver código ↗»: píldora con borde translúcido. */
+.code {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--project-link-height);
+  padding: 0 var(--space-5);
+  border: 1px solid var(--line-24);
+  border-radius: var(--radius-pill);
+  color: inherit;
+  font-weight: var(--font-weight-bold);
+  text-decoration: none;
+}
+
+.arrow {
+  width: var(--space-4);
+  height: var(--space-4);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* Texto a un lado y capturas al otro. */
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: var(--space-7);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.description {
+  color: var(--color-bone-soft);
+  font-size: var(--font-size-project-text);
+  line-height: var(--leading-base);
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.tag {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-tile);
+}
+
+/* Capturas: una, o en mosaico (una grande y dos pequeñas) la principal. */
+.shots {
+  display: grid;
+  gap: var(--space-2);
+  height: var(--project-shots-height);
+}
+
+.mosaic {
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.mosaic > :first-child {
+  grid-row: 1 / -1;
+}
+
+/* Marcador de captura pendiente: rayado y con su texto a la vista. */
+.shot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  border-radius: var(--radius-shot);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-tile) 0 var(--shot-stripe),
+    var(--color-card-raised) var(--shot-stripe) calc(2 * var(--shot-stripe))
+  );
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+/* Tablet y teléfono: texto y capturas en columna. */
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

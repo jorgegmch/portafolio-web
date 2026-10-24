@@ -123,9 +123,18 @@ export interface Dictionary {
     items: Record<ServiceId, { title: string; description: string }>
   }
   projects: {
-    heading: string
-    viewRepo: string
+    /** Nombre de la escena, en su rótulo y en el título; las mayúsculas las pone el CSS. */
+    label: string
+    /** Enlace a todos los repos, junto al rótulo. */
     viewAll: string
+    /** Enlace de cada tarjeta a su repo. */
+    viewCode: string
+    /** Etiqueta de la tarjeta del proyecto protagonista. */
+    mainProject: string
+    /** Nombre accesible de la lista de tecnologías de cada tarjeta. */
+    stackLabel: string
+    /** Marcador visible donde todavía no hay captura del proyecto. */
+    screenshotPending: string
     items: Record<ProjectId, { description: string }>
   }
   contact: {

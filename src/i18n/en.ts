@@ -126,9 +126,12 @@ export const en: Dictionary = {
     },
   },
   projects: {
-    heading: 'Featured projects',
-    viewRepo: 'View repository',
+    label: 'Projects',
     viewAll: 'View all on GitHub',
+    viewCode: 'View code',
+    mainProject: 'Main project',
+    stackLabel: 'Technologies',
+    screenshotPending: 'Screenshot pending',
     // Las descripciones coinciden con las de cada repositorio en GitHub.
     items: {
       'logitrack-iq': {

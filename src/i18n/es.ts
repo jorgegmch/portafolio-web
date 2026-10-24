@@ -127,9 +127,12 @@ export const es: Dictionary = {
     },
   },
   projects: {
-    heading: 'Proyectos destacados',
-    viewRepo: 'Ver repositorio',
+    label: 'Proyectos',
     viewAll: 'Ver todos en GitHub',
+    viewCode: 'Ver código',
+    mainProject: 'Proyecto principal',
+    stackLabel: 'Tecnologías',
+    screenshotPending: 'Captura pendiente',
     items: {
       'logitrack-iq': {
         description:

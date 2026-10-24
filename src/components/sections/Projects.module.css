@@ -1,0 +1,211 @@
+/* Panel Proyectos, en Deep. Arriba deja sitio a las cintas cruzadas, que
+   bajan desde el borde con Servicios. */
+.projects {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--projects-padding-top) var(--panel-padding-x) var(--panel-padding-bottom);
+  background-color: var(--color-deep);
+  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
+  scroll-margin-top: var(--panel-gap);
+}
+
+/* Cintas cruzadas: suben por encima del borde con Servicios. Su pie queda
+   a --crossed-ribbons-overhang dentro de este panel, como en el tablero. */
+.ribbons {
+  position: absolute;
+  top: calc(var(--crossed-ribbons-overhang) - var(--crossed-ribbons-height) - var(--panel-gap));
+  right: 0;
+  left: 0;
+  z-index: var(--z-crossed-ribbons);
+}
+
+/* Rótulo a un lado y «Ver todos en GitHub» al otro, en mono. */
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.label {
+  color: var(--color-signal);
+}
+
+.viewAll {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  color: var(--color-bone);
+  text-decoration: none;
+}
+
+.arrow {
+  width: var(--space-4);
+  height: var(--space-4);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* «PROYECTOS» con la cuenta en mono Signal, arriba a la derecha. */
+.title {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  color: var(--color-bone);
+  font-family: var(--font-display);
+  font-size: var(--font-size-scene-title);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-scene-title);
+  text-transform: uppercase;
+}
+
+.count {
+  padding-top: var(--projects-count-offset);
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-projects-count);
+}
+
+/* Las tarjetas, una debajo de otra. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/*
+ * Pila (spec §3.4 y §4.5). Mejora progresiva, como la cortina: sin
+ * animation-timeline (o sin timeline-scope), con movimiento reducido o por
+ * debajo de 901 px, las tarjetas van en columna, sin fijarse.
+ *
+ * - Cada tarjeta se fija --projects-stack-step más abajo que la anterior.
+ *   Ese paso es mayor que su franja de arriba (número, nombre y «Ver
+ *   código»): cuando la siguiente sube encima, esa franja, con el único
+ *   enlace de la tarjeta, sigue a la vista y el foco nunca queda tapado.
+ *   Por debajo de 901 px esa franja puede partirse en dos líneas y ya no
+ *   cabe en el paso: ahí no hay pila.
+ * - La de debajo baja a scale(.965) y se atenúa al 60 % mientras la
+ *   siguiente entra. Como en la cortina, la línea de tiempo es la de la
+ *   tarjeta siguiente (la de una fijada no avanza): cada tarjeta publica la
+ *   suya y timeline-scope la hace visible a su hermana anterior.
+ * - Se atenúa con una sombra (::after del color del panel, cuya opacidad
+ *   sube a 0,4), no con la opacidad de la tarjeta: una tarjeta translúcida
+ *   dejaría ver a través de ella la que tiene debajo.
+ * - Lo mueve el scroll del visitante, no se mueve solo: la pausa global no
+ *   lo congela a medio camino.
+ */
+@supports (animation-timeline: view()) and (timeline-scope: none) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
+    .stack {
+      timeline-scope: --project-2, --project-3, --project-4, --project-5;
+    }
+
+    .stack > * {
+      position: sticky;
+      top: calc(var(--projects-stack-top) + var(--card-index, 0) * var(--projects-stack-step));
+      /* Al final de la pila, el borde del contenedor empuja hacia arriba a
+         las tarjetas fijadas. Sin más, todas acabarían en el mismo sitio, y
+         cada una taparía la franja de la anterior. El límite de una tarjeta
+         fijada cuenta su margen inferior: con un paso por cada tarjeta que
+         queda detrás, más lo que le falta para medir lo que la última
+         (--card-slack, de useCardStack), al salir cada una sigue un paso por
+         encima de la siguiente. El margen superior negativo de la siguiente
+         lo compensa en el flujo, que no cambia. */
+      margin-bottom: calc(
+        (var(--card-count, 1) - 1 - var(--card-index, 0)) * var(--projects-stack-step) +
+          var(--card-slack, 0px)
+      );
+      transform-origin: 50% 0;
+    }
+
+    .stack > * + * {
+      margin-top: calc(
+        -1 *
+          (
+            (var(--card-count, 1) - var(--card-index, 0)) * var(--projects-stack-step) +
+              var(--previous-slack, 0px)
+          )
+      );
+    }
+
+    .stack > :nth-child(1) {
+      --card-timeline: --project-2;
+    }
+
+    .stack > :nth-child(2) {
+      --card-timeline: --project-3;
+
+      view-timeline: --project-2 block;
+    }
+
+    .stack > :nth-child(3) {
+      --card-timeline: --project-4;
+
+      view-timeline: --project-3 block;
+    }
+
+    .stack > :nth-child(4) {
+      --card-timeline: --project-5;
+
+      view-timeline: --project-4 block;
+    }
+
+    .stack > :nth-child(5) {
+      view-timeline: --project-5 block;
+    }
+
+    .stack > :not(:last-child) {
+      animation: card-under linear both;
+      animation-timeline: var(--card-timeline);
+      animation-range: entry;
+    }
+
+    .stack > :not(:last-child)::after {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-color: var(--color-deep);
+      content: '';
+      opacity: 0;
+      pointer-events: none;
+      animation: card-shade linear both;
+      animation-timeline: var(--card-timeline);
+      animation-range: entry;
+    }
+
+    [data-motion] .stack > *,
+    [data-motion] .stack > ::after {
+      animation-play-state: running !important;
+    }
+  }
+}
+
+@keyframes card-under {
+  to {
+    transform: scale(var(--projects-under-scale));
+  }
+}
+
+@keyframes card-shade {
+  to {
+    opacity: var(--projects-under-shade);
+  }
+}
+
+/* Teléfono: la cuenta, más cerca del título. */
+@media (max-width: 480px) {
+  .title {
+    gap: var(--space-2);
+  }
+}

@@ -41,8 +41,8 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
   })
 
-  // «Servicios» va entre «Sobre mí» y Proyectos, que aún no existe.
-  it('las secciones van en orden: Hero, Sobre mí y Servicios', () => {
+  // Contacto, la cuarta escena, llega en la fase siguiente.
+  it('las secciones van en orden: Hero, Perfil, Servicios y Proyectos', () => {
     setBrowserLang('es')
 
     const { container } = renderHome()
@@ -51,6 +51,7 @@ describe('HomePage', () => {
       sections.hero,
       sections.about,
       sections.services,
+      sections.projects,
     ])
   })
 

@@ -1,10 +1,8 @@
 import { useId, useState } from 'react'
 import styles from '@/components/sections/Services.module.css'
-import { CrossedRibbons } from '@/components/ui/CrossedRibbons'
 import { Reveal } from '@/components/ui/Reveal'
 import { ServiceIcon } from '@/components/ui/ServiceIcon'
 import { sections } from '@/config/routes'
-import { codeFragments } from '@/data/codeRibbon'
 import { projectUrl } from '@/data/projects'
 import { type ServiceId, services } from '@/data/services'
 import { useLang } from '@/hooks/useLang'
@@ -30,8 +28,8 @@ const INITIAL_OPEN: ServiceId | null = services[0]?.id ?? null
  * aria-expanded. El nombre accesible de cada enlace es su título, «Ver
  * proyecto relacionado» y el aviso de pestaña nueva.
  *
- * Al pie, las cintas cruzadas (código de los repos y verbos del oficio)
- * cruzan el borde inferior del panel.
+ * El relleno inferior deja sitio a las cintas cruzadas, que cuelgan del
+ * borde superior de Proyectos y suben por encima del pie de este panel.
  */
 export function Services() {
   const { t } = useLang()
@@ -127,14 +125,6 @@ export function Services() {
           )
         })}
       </ul>
-
-      <CrossedRibbons
-        className={styles.ribbons}
-        code={codeFragments}
-        codeLabel={text.ribbons.codeLabel}
-        verbs={text.ribbons.verbs}
-        verbsLabel={text.ribbons.verbsLabel}
-      />
     </section>
   )
 }

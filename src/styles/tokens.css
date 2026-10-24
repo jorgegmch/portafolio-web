@@ -46,6 +46,7 @@
   --line-10: rgba(242, 238, 230, 0.1);
   --line-12: rgba(242, 238, 230, 0.12);
   --line-18: rgba(242, 238, 230, 0.18);
+  --line-24: rgba(242, 238, 230, 0.24);
   --line-ink-16: rgba(10, 10, 11, 0.16);
   --line-ink-28: rgba(10, 10, 11, 0.28);
   --line-ink-30: rgba(10, 10, 11, 0.3);
@@ -171,6 +172,32 @@
   --service-icon-faint: 0.4;
   --service-icon-pulse-low: 0.3;
   --dur-icon-caret: 1.1s;
+
+  /* Proyectos (spec §3.4): relleno de arriba para las cintas cruzadas, la
+     cuenta junto al título y las tarjetas (tablero: relleno de 32 px, número
+     de 64, nombre de 40, enlace de 48, texto de 18 y capturas de 300 de alto
+     con rayado de 14). Número y nombre bajan con la ventana para que la
+     franja de arriba no se parta en dos líneas mientras hay pila. */
+  --projects-padding-top: 10rem; /* 160px */
+  --projects-count-offset: 1.125rem; /* 18px */
+  --font-size-projects-count: 1.375rem; /* 22px */
+  --project-card-padding: 2rem; /* 32px */
+  --font-size-project-number: clamp(2.5rem, 4.45vw, 4rem); /* 40 a 64 px */
+  --font-size-project-title: clamp(1.5rem, 2.8vw, 2.5rem); /* 24 a 40 px */
+  --project-link-height: 3rem; /* 48px */
+  --font-size-project-text: 1.125rem; /* 18px */
+  --project-shots-height: 18.75rem; /* 300px */
+  --radius-shot: 1.375rem; /* 22px */
+  --shot-stripe: 0.875rem; /* 14px */
+  /* Pila: dónde se fija la primera tarjeta, cuánto más abajo cada siguiente
+     (más que la franja de arriba de una tarjeta, unos 96 px, para que esa
+     franja y su enlace sigan a la vista) y cómo queda la de debajo. */
+  --projects-stack-top: 1.5rem; /* 24px */
+  --projects-stack-step: 7rem; /* 112px */
+  --projects-under-scale: 0.965;
+  /* Sombra sobre la de debajo: 0,4 de Deep la deja al 60 %, sin
+     transparentarla. */
+  --projects-under-shade: 0.4;
 
   /* Cintas: hueco y signo entre elementos, tamaño de letra, y el giro de la
      del Hero. */
@@ -392,6 +419,11 @@
     --ribbon-verbs-padding: 0.625rem; /* 10px */
     --ribbon-verbs-gap: 1.375rem; /* 22px */
     --ribbon-verbs-separator-size: 0.875rem; /* 14px */
+    /* Proyectos en teléfono: tarjetas en columna, más compactas. */
+    --projects-padding-top: 7rem; /* 112px */
+    --project-card-padding: 1.25rem; /* 20px */
+    --font-size-project-text: 1rem; /* 16px */
+    --project-shots-height: 12.5rem; /* 200px */
   }
 }
 
