@@ -84,10 +84,9 @@ export const es: Dictionary = {
     },
   },
   services: {
-    kicker: 'Servicios',
-    heading: 'Lo que puedo hacer por ti',
-    stackKicker: 'Mi stack tecnológico',
-    stackHeading: 'Tecnologías con las que trabajo',
+    label: 'Servicios',
+    tag: 'what_i_build()',
+    title: ['Lo que', 'construyo'],
     relatedProject: 'Ver proyecto relacionado',
     items: {
       backend: {

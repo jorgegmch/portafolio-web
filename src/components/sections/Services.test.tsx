@@ -1,31 +1,16 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Services } from '@/components/sections/Services'
-import styles from '@/components/sections/Services.module.css'
-import revealStyles from '@/components/ui/Reveal.module.css'
-import cardStyles from '@/components/ui/ServiceCard.module.css'
 import { sections } from '@/config/routes'
 import { projectUrl } from '@/data/projects'
 import { services } from '@/data/services'
-import { stackIconUrl, technologies, technologyName } from '@/data/technologies'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
 import { LANGS } from '@/i18n/types'
 import { getEmail } from '@/lib/assembleContact'
-import { cssToken, readCss } from '@/test/cssRules'
 
 const BROWSER_LANGS = { es: ['es-CO'], en: ['en-US'] } as const
-
-/** Nombre real de una clase de un módulo; falla si el módulo no la tiene. */
-const classOf = (module: CSSModuleClasses, name: string) => {
-  const value = module[name]
-  if (!value) throw new Error(`El módulo no tiene la clase .${name}`)
-  return value
-}
-
-const REVEAL = classOf(revealStyles, 'reveal')
-const CARD = classOf(cardStyles, 'card')
-const CHIP = classOf(styles, 'chip')
 
 const renderServices = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(BROWSER_LANGS[lang])
@@ -35,15 +20,16 @@ const renderServices = (lang: keyof typeof BROWSER_LANGS = 'es') => {
     </LangProvider>,
   )
   const { services: text, common } = dictionaries[lang]
-  const region = screen.getByRole('region', { name: text.kicker })
-  const [cardList, techList] = within(region).getAllByRole('list')
-  if (!cardList || !techList) throw new Error('Faltan las dos listas')
-  const cards = within(cardList).getAllByRole('listitem')
-  // La tarjeta sin enlace, la de comunicación: la sexta.
-  const unlinked = cards[5]
-  if (!unlinked) throw new Error('Falta la sexta tarjeta')
-  return { region, cardList, techList, cards, unlinked, text, common }
+  const region = screen.getByRole('region', { name: text.label })
+  const rows = within(within(region).getByRole('list')).getAllByRole('listitem')
+  return { region, rows, text, common }
 }
+
+/** El botón de cada fila, en el orden de data/. */
+const toggles = (region: HTMLElement) =>
+  within(region)
+    .getAllByRole('heading', { level: 3 })
+    .map((heading) => within(heading).getByRole('button'))
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -52,229 +38,146 @@ afterEach(() => {
 
 describe('Services', () => {
   describe('estructura', () => {
-    it.each(LANGS)('en %s, es una sección con el nombre de su etiqueta, con el ancla services', (lang) => {
+    it.each(LANGS)('en %s, es una sección con el nombre de la escena, con el ancla services', (lang) => {
       const { region } = renderServices(lang)
 
       expect(region.tagName).toBe('SECTION')
       expect(region).toHaveAttribute('id', sections.services)
     })
 
-    it('la etiqueta es el único h2; las tarjetas y el bloque de tecnologías, h3', () => {
-      const { region, text } = renderServices()
-      const titles = services.map(({ id }) => text.items[id].title)
-
-      expect(within(region).getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
-        text.kicker,
-      ])
-      expect(within(region).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
-        ...titles,
-        text.stackKicker,
-      ])
-      expect(within(region).queryByRole('heading', { level: 1 })).not.toBeInTheDocument()
-    })
-
-    it.each(LANGS)('en %s, las dos frases grandes son párrafos, tras su etiqueta', (lang) => {
+    it.each(LANGS)('en %s, el único h2 es el título, en sus dos líneas', (lang) => {
       const { region, text } = renderServices(lang)
-      const phrase = within(region).getByText(text.heading)
-      const stackPhrase = within(region).getByText(text.stackHeading)
 
-      expect(phrase.tagName).toBe('P')
-      expect(stackPhrase.tagName).toBe('P')
-      expect(
-        within(region).getByRole('heading', { level: 2 }).compareDocumentPosition(phrase) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      ).toBeTruthy()
-      expect(
-        within(region).getByRole('heading', { name: text.stackKicker }).compareDocumentPosition(stackPhrase) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      ).toBeTruthy()
+      expect(within(region).getAllByRole('heading', { level: 2 })).toHaveLength(1)
+      expect(within(region).getByRole('heading', { level: 2 })).toHaveTextContent(
+        `${text.title[0]} ${text.title[1]}`,
+      )
+    })
+
+    it('ya no lleva las tecnologías: la sección tiene una sola lista', () => {
+      const { region } = renderServices()
+
+      expect(within(region).getAllByRole('list')).toHaveLength(1)
+      expect(within(region).queryByRole('img')).not.toBeInTheDocument()
     })
   })
 
-  describe('tarjetas', () => {
-    it.each(LANGS)('en %s, son las seis de data/, en orden, con su título y su descripción', (lang) => {
-      const { cards, text } = renderServices(lang)
+  describe('filas', () => {
+    it.each(LANGS)('en %s, son las seis de data/, en orden, cada título un h3 con su botón', (lang) => {
+      const { region, rows, text } = renderServices(lang)
 
-      expect(cards).toHaveLength(6)
-      cards.forEach((card, index) => {
-        const id = services[index]?.id ?? 'backend'
-
-        expect(within(card).getByRole('heading', { level: 3 })).toHaveTextContent(text.items[id].title)
-        // La visible, en el dorso; la del frente es la copia oculta.
-        expect(within(within(card).getByRole('group')).getByText(text.items[id].description).tagName).toBe('P')
-      })
-    })
-
-    it.each(LANGS)('en %s, las cinco con enlace abren su repo en una pestaña nueva, y lo avisan', (lang) => {
-      const { cardList, text, common } = renderServices(lang)
-      const links = within(cardList).getAllByRole('link')
-
-      expect(links).toHaveLength(5)
-      services
-        .filter(({ project }) => project)
-        .forEach(({ id, project }, index) => {
-          const link = links[index]
-
-          expect(link).toHaveAccessibleName(
-            `${text.items[id].title}: ${text.relatedProject} (${common.opensInNewTab})`,
-          )
-          expect(link).toHaveAttribute('href', project ? projectUrl(project) : '')
-          expect(link).toHaveAttribute('target', '_blank')
-          expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-        })
-    })
-
-    it('las URL son exactamente las de los cinco repos', () => {
-      const { cardList } = renderServices()
-
-      expect(within(cardList).getAllByRole('link').map((link) => link.getAttribute('href'))).toEqual([
-        'https://github.com/jorgegmch/logitrack-api',
-        'https://github.com/jorgegmch/portafolio-web',
-        'https://github.com/jorgegmch/logitrack-iq',
-        'https://github.com/jorgegmch/gaseosas-del-valle-db',
-        'https://github.com/jorgegmch/n8n-daily-news-agent',
-      ])
-    })
-
-    it('cada una con enlace lleva el texto «Ver proyecto relacionado», y la sexta no', () => {
-      const { cards, unlinked, text } = renderServices()
-
-      cards.slice(0, 5).forEach((card) => expect(within(card).getByText(text.relatedProject)).toBeVisible())
-      expect(within(unlinked).queryByText(text.relatedProject)).not.toBeInTheDocument()
-    })
-
-    // La respalda un certificado, no un repo: gira, pero su dorso no enlaza.
-    it('la sexta, la de comunicación, no lleva enlace: solo sus dos botones de girar', () => {
-      const { unlinked, text } = renderServices()
-
-      expect(within(unlinked).getByRole('heading', { level: 3 })).toHaveTextContent(
-        text.items.communication.title,
+      expect(rows).toHaveLength(services.length)
+      expect(toggles(region).map((button) => button.textContent)).toEqual(
+        services.map(({ id }) => text.items[id].title),
       )
-      expect(within(unlinked).queryByRole('link')).not.toBeInTheDocument()
-      expect(unlinked.querySelectorAll('a')).toHaveLength(0)
-      expect(unlinked.querySelectorAll('button')).toHaveLength(2)
     })
 
-    // Cada tarjeta gira: el botón de su título lo dice y, sin girar, ya
-    // ofrece la descripción al lector de pantalla.
-    it.each(LANGS)('en %s, cada título es un botón plegado con la descripción', (lang) => {
-      const { cards, text } = renderServices(lang)
+    it('al cargar está abierta solo la primera, con su descripción a la vista', () => {
+      const { region, text } = renderServices()
+      const [first, ...rest] = toggles(region)
+      const [firstService] = services
+      if (!first || !firstService) throw new Error('Falta la primera fila')
 
-      cards.forEach((card, index) => {
-        const id = services[index]?.id ?? 'backend'
-        const button = within(within(card).getByRole('heading', { level: 3 })).getByRole('button')
+      expect(first).toHaveAttribute('aria-expanded', 'true')
+      rest.forEach((button) => expect(button).toHaveAttribute('aria-expanded', 'false'))
+      expect(screen.getByText(text.items[firstService.id].description)).toBeVisible()
+    })
 
-        expect(button).toHaveTextContent(text.items[id].title)
-        expect(button).toHaveAttribute('aria-expanded', 'false')
-        expect(button).toHaveAccessibleDescription(text.items[id].description)
+    it('cada botón controla el panel de su fila, que se nombra con el título', () => {
+      const { region } = renderServices()
+
+      toggles(region).forEach((button) => {
+        const panel = document.getElementById(button.getAttribute('aria-controls') ?? '')
+
+        expect(panel).not.toBeNull()
+        expect(panel).toHaveAttribute('aria-labelledby', button.id)
       })
     })
 
-    // Condición de PLAN.md: lo que aparece no es lo que se mueve. El <li>
-    // aparece; la tarjeta que gira va dentro.
-    it('el <li> es el que aparece; la tarjeta que gira va dentro y no aparece', () => {
-      const { cards } = renderServices()
+    it('abrir otra fila cierra la abierta, y volver a pulsarla la cierra', async () => {
+      const user = userEvent.setup()
+      const { region } = renderServices()
+      const [first, second] = toggles(region)
+      if (!first || !second) throw new Error('Faltan filas')
 
-      cards.forEach((card) => {
-        expect(card).toHaveClass(REVEAL)
-        expect(card.children).toHaveLength(1)
-        expect(card.firstElementChild).toHaveClass(CARD)
-        expect(card.firstElementChild).not.toHaveClass(REVEAL)
-        expect(card.firstElementChild?.querySelector(`.${REVEAL}`)).toBeNull()
-      })
+      await user.click(second)
+      expect(second).toHaveAttribute('aria-expanded', 'true')
+      expect(first).toHaveAttribute('aria-expanded', 'false')
+
+      await user.click(second)
+      expect(second).toHaveAttribute('aria-expanded', 'false')
     })
 
-    // Dos filas de tres en escritorio: cada fila entra en escalonado 0, 1, 2.
-    it('cada tarjeta lleva su puesto en el escalonado, y ninguna se queda sin él', () => {
-      const { cards } = renderServices()
-      const orders = cards.map((card) =>
-        [0, 1, 2, 3].find((order) => card.classList.contains(classOf(revealStyles, `order${order}`))),
-      )
+    it.each(['{Enter}', ' '])('con el teclado (%s) se abre y se cierra', async (key) => {
+      const user = userEvent.setup()
+      const { region } = renderServices()
+      const [, second] = toggles(region)
+      if (!second) throw new Error('Falta la segunda fila')
 
-      expect(orders).toEqual([0, 1, 2, 0, 1, 2])
+      second.focus()
+      await user.keyboard(key)
+      expect(second).toHaveAttribute('aria-expanded', 'true')
+
+      await user.keyboard(key)
+      expect(second).toHaveAttribute('aria-expanded', 'false')
     })
 
-    it('el icono de cada tarjeta es decorativo', () => {
-      const { cards } = renderServices()
+    it('el número y el signo de cada fila son decorativos', () => {
+      const { rows } = renderServices()
 
-      cards.forEach((card) => {
-        expect(card.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+      rows.forEach((row) => {
+        const decorative = row.querySelectorAll('[aria-hidden="true"]')
+        expect(decorative.length).toBeGreaterThanOrEqual(2)
       })
     })
   })
 
-  describe('tecnologías', () => {
-    it('son las del catálogo, en su orden, con el nombre en texto', () => {
-      const { techList } = renderServices()
-      const items = within(techList).getAllByRole('listitem')
+  describe('enlaces', () => {
+    /** Abre cada fila por turno y devuelve su enlace, si lo tiene. */
+    const linkOfEachRow = async (lang: keyof typeof BROWSER_LANGS = 'es') => {
+      const user = userEvent.setup()
+      const rendered = renderServices(lang)
+      const links: (HTMLElement | null)[] = []
+      for (const [index, button] of toggles(rendered.region).entries()) {
+        if (button.getAttribute('aria-expanded') !== 'true') await user.click(button)
+        const row = rendered.rows[index]
+        links.push(row ? within(row).queryByRole('link') : null)
+      }
+      return { ...rendered, links }
+    }
 
-      expect(items).toHaveLength(technologies.length)
-      expect(items.map((item) => item.textContent)).toEqual(
-        technologies.map(({ id }) => technologyName(id)),
-      )
-    })
+    it.each(LANGS)('en %s, las cinco con repo lo abren en una pestaña nueva, y lo avisan', async (lang) => {
+      const { links, text, common } = await linkOfEachRow(lang)
 
-    // El nombre ya va escrito al lado: el logo no se lee dos veces.
-    it('cada logo es el de su tecnología, con alt vacío', () => {
-      const { techList } = renderServices()
-      const images = [...techList.querySelectorAll('img')]
+      services.forEach(({ id, project }, index) => {
+        const link = links[index]
+        if (!project) return
 
-      expect(images).toHaveLength(technologies.length)
-      images.forEach((image, index) => {
-        const technology = technologies[index]
-
-        expect(image).toHaveAttribute('alt', '')
-        expect(image).toHaveAttribute('src', technology ? stackIconUrl(technology) : '')
+        expect(link).toHaveAttribute('href', projectUrl(project))
+        expect(link).toHaveAttribute('target', '_blank')
+        expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+        expect(link).toHaveAccessibleName(
+          `${text.items[id].title}: ${text.relatedProject} (${common.opensInNewTab})`,
+        )
+        expect(link).toHaveTextContent(text.relatedProject)
       })
     })
 
-    // El <img> reserva el mismo sitio que le da el CSS: si se desincronizan,
-    // la ficha cambia de alto al cargar el logo.
-    it('el width y el height de cada logo son los del token --stack-logo-size', () => {
-      const { techList } = renderServices()
-      const token = cssToken(readCss('src/styles/tokens.css'), '--stack-logo-size')
-      const px = String(parseFloat(token) * 16)
+    it('la de comunicación, la sexta, no lleva enlace', async () => {
+      const { links } = await linkOfEachRow()
 
-      expect(token).toMatch(/^[\d.]+rem$/)
-      techList.querySelectorAll('img').forEach((image) => {
-        expect(image).toHaveAttribute('width', px)
-        expect(image).toHaveAttribute('height', px)
-      })
-    })
-
-    it('ninguna ficha enlaza ni se puede enfocar', () => {
-      const { techList } = renderServices()
-
-      expect(within(techList).queryAllByRole('link')).toHaveLength(0)
-      expect(techList.querySelectorAll('a, button, [tabindex]')).toHaveLength(0)
-    })
-
-    it('el <li> es el que aparece; la ficha que escala va dentro', () => {
-      const { techList } = renderServices()
-
-      within(techList)
-        .getAllByRole('listitem')
-        .forEach((item) => {
-          expect(item).toHaveClass(REVEAL)
-          expect(item.firstElementChild).toHaveClass(CHIP)
-          expect(item.firstElementChild).not.toHaveClass(REVEAL)
-        })
-    })
-
-    // Decisión del autor (2026-10-15): SQLite no entra; sin niveles ni porcentajes.
-    it('no hay SQLite, ni cifras ni porcentajes', () => {
-      const { techList } = renderServices()
-
-      expect(techList.textContent).not.toMatch(/sqlite/i)
-      expect(techList.textContent).not.toMatch(/\b\d+\b|%/)
+      expect(services[5]?.project).toBeNull()
+      expect(links[5]).toBeNull()
+      expect(links.filter(Boolean)).toHaveLength(5)
     })
   })
 
   it.each(LANGS)('en %s, no lleva el correo ni enlaces de contacto', (lang) => {
     const { region } = renderServices(lang)
+    const email = getEmail()
 
-    expect(region.textContent).not.toContain('@')
-    expect(region.innerHTML).not.toContain(getEmail())
+    expect(email).toContain('@')
+    expect(region.innerHTML).not.toContain(email)
     expect(region.innerHTML).not.toMatch(/mailto:|wa\.me/)
   })
 })

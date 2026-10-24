@@ -1,151 +1,221 @@
-/* Panel Servicios, con el relleno de los paneles. Va en Deep mientras la
-   escena conserva su diseño oscuro; la escena clara (Paper) llega con su
-   rediseño. */
+/* Panel Servicios, la escena clara: Paper con tinta encima. El anillo de
+   foco global es Signal, que sobre Paper no llega a 3:1; aquí va en tinta. */
 .services {
-  padding: var(--panel-padding-top) var(--panel-padding-x) var(--panel-padding-bottom);
-  background-color: var(--color-deep);
+  --color-focus: var(--color-ink-text);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--panel-padding-top) var(--panel-padding-x) var(--services-padding-bottom);
+  background-color: var(--color-paper);
+  color: var(--color-ink-text);
   /* Al llegar por el ancla, el panel queda a un hueco del borde. */
   scroll-margin-top: var(--panel-gap);
 }
 
-/* La etiqueta, como la de «Sobre mí»: el diccionario guarda el texto normal
-   y las mayúsculas son solo visuales. */
-.heading,
-.stackHeading {
-  color: var(--color-accent-alt);
+/* Rótulos en mono, a los dos lados: mayúsculas solo visuales. */
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  color: var(--color-paper-muted);
   font-family: var(--font-mono);
-  font-size: var(--font-size-lead);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: var(--tracking-wide);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
-/* Las frases grandes, como la de «Sobre mí». */
-.phrase,
-.stackPhrase {
-  margin-top: var(--space-4);
-  color: var(--color-text);
-  font-size: var(--font-size-phrase);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--leading-tight);
-  text-wrap: balance;
+.tag {
+  text-transform: none;
 }
 
-/* Seis tarjetas, en filas completas: tres columnas desde 1024 px (3 + 3),
-   dos hasta 1023 (2 + 2 + 2) y una en teléfono. */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-4);
-  margin-top: var(--space-7);
+/* «Lo que / construyo», en dos líneas. */
+.title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-scene-title);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-scene-title);
+  text-transform: uppercase;
+}
+
+.titleLine {
+  display: block;
+}
+
+.list {
   list-style: none;
 }
 
-/* El <li> es el que aparece al entrar en pantalla; la tarjeta que gira va
-   dentro (ServiceCard). Como rejilla de una sola celda, la estira a su alto. */
-.cardItem {
+/* Cada servicio, separado del anterior por una línea. */
+.row {
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--line-ink-16);
+}
+
+/* Número, y el título con su signo. */
+.head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: var(--services-number-column) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: center;
 }
 
-.stack {
-  margin-top: var(--space-9);
+/* Cerrada, el número se apaga; abierta, va en tinta. */
+.number {
+  color: var(--color-services-number);
+  font-family: var(--font-display);
+  font-size: var(--font-size-services-number);
+  line-height: var(--leading-none);
 }
 
-/* Filas que se envuelven y se centran: la última, incompleta, queda en medio,
-   como las tarjetas de arriba. */
-.techList {
+.open .number {
+  color: var(--color-ink-text);
+}
+
+/* El botón ocupa el ancho: el título a un lado y el signo al otro, y toda la
+   fila responde al clic. */
+.toggle {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-7);
-  list-style: none;
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-services-title);
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-tight);
+  text-align: left;
+  cursor: pointer;
 }
 
-/* Por encima de 1280 px, ocho por fila (8 + 7). El ancho es un porcentaje
-   del contenedor menos los huecos, con el mismo hueco que la lista: sin
-   anchos fijos que un redondeo pueda desbordar. Cada tramo baja n para que
-   la ficha no pase de unos 120 px (nombres como «Spring Security» en una
-   línea). Como rejilla de una celda, estira la ficha al alto de la fila. */
-.techItem {
+/* Círculo «+/−»: adorno, el estado lo dice aria-expanded. El signo va en el
+   CSS con texto alternativo vacío (la primera declaración queda para quien
+   no admite esa sintaxis). */
+.sign {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--services-sign-size);
+  height: var(--services-sign-size);
+  border: var(--services-sign-border) solid var(--line-ink-30);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-services-sign);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-none);
+}
+
+.sign::before {
+  content: '+';
+  content: '+' / '';
+}
+
+.open .sign {
+  border-color: var(--color-ink-text);
+  background-color: var(--color-ink-text);
+  color: var(--color-paper);
+}
+
+.open .sign::before {
+  content: '−';
+  content: '−' / '';
+}
+
+/* La fila abierta: el texto alineado con el título y, al lado, el icono. */
+.panel {
   display: grid;
-  flex: 0 0 calc((100% - 7 * var(--space-4)) / 8);
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--services-icon-column);
+  gap: var(--space-7);
+  padding: var(--space-5) 0 var(--space-2)
+    calc(var(--services-number-column) + var(--space-5));
 }
 
-/* La ficha: fondo oscuro, sin placa detrás del logo. */
-.chip {
+.panel[hidden] {
+  display: none;
+}
+
+.body {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-5);
+}
+
+.description {
+  max-width: var(--services-text-measure);
+  color: var(--color-paper-text);
+  font-size: var(--font-size-bio);
+  line-height: var(--leading-base);
+}
+
+/* «Ver proyecto relacionado ↗»: píldora con borde de tinta. */
+.related {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-2);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background-color: var(--color-surface);
-  transition: transform var(--duration-fast) var(--ease-standard);
+  gap: var(--space-2);
+  min-height: var(--services-link-height);
+  padding: 0 var(--space-5);
+  border: var(--services-sign-border) solid var(--color-ink-text);
+  border-radius: var(--radius-pill);
+  color: inherit;
+  font-weight: var(--font-weight-extrabold);
+  text-decoration: none;
 }
 
-/* Logo oficial, a su tamaño y sin tocar: object-fit encaja los que no son
-   cuadrados sin deformarlos. */
-.chipLogo {
-  width: var(--stack-logo-size);
-  height: var(--stack-logo-size);
-  object-fit: contain;
+.arrow {
+  width: var(--space-4);
+  height: var(--space-4);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
 }
 
-.chipName {
-  color: var(--color-text);
-  font-size: var(--font-size-md);
-  text-align: center;
+/* Bloque Ink con el icono grande en Signal. */
+.iconBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--services-icon-block-height);
+  border-radius: var(--radius-block);
+  background-color: var(--color-ink-text);
+  color: var(--color-signal);
 }
 
-/* De 1024 a 1280 px, seis fichas por fila (6 + 6 + 3): ocho bajarían de
-   120 px. */
-@media (max-width: 1280px) {
-  .techItem {
-    flex: 0 0 calc((100% - 5 * var(--space-4)) / 6);
-  }
+.icon {
+  width: var(--services-icon-size);
+  height: var(--services-icon-size);
 }
 
-/* De 481 a 1023 px: dos tarjetas por fila (2 + 2 + 2). Fichas: cuatro por
-   fila (4 + 4 + 4 + 3). */
-@media (max-width: 1023px) {
-  .cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .techItem {
-    flex: 0 0 calc((100% - 3 * var(--space-4)) / 4);
-  }
-}
-
-/* De 481 a 768 px, tres fichas por fila (5 × 3). */
-@media (max-width: 768px) {
-  .techItem {
-    flex: 0 0 calc((100% - 2 * var(--space-4)) / 3);
-  }
-}
-
-/* En teléfono, dos por fila; la última ficha queda sola y centrada. */
-@media (max-width: 480px) {
-  .cards {
+/* Tablet y teléfono: la fila abierta en columna, sin sangría. */
+@media (max-width: 900px) {
+  .panel {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .techItem {
-    flex: 0 0 calc((100% - 1 * var(--space-4)) / 2);
+    padding-left: 0;
   }
 }
 
-/* Las fichas se elevan bajo el puntero, como las tarjetas de «Sobre mí»,
-   pero solo donde hay puntero de verdad: en táctil, :hover se queda pegado
-   tras tocar. Con movimiento reducido el cambio es instantáneo, porque la
-   duración es la de --duration-fast. Las tarjetas de servicios no escalan:
-   giran. */
-@media (hover: hover) {
-  .chip:hover {
-    transform: scale(var(--lift-scale));
+/* Teléfono: filas más juntas y, como en el tablero móvil, sin el bloque del
+   icono, que es adorno. */
+@media (max-width: 480px) {
+  .row {
+    padding: var(--space-3) 0;
+  }
+
+  .head {
+    gap: var(--space-3);
+  }
+
+  .iconBlock {
+    display: none;
   }
 }

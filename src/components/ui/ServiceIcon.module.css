@@ -1,12 +1,48 @@
-/* De trazo, en el color de quien lo usa. Mismo tamaño y trazo que los iconos
-   de las tarjetas de «Sobre mí». */
+/* De trazo, en el color de quien lo usa; el tamaño lo pone quien lo usa. */
 .icon {
   flex-shrink: 0;
-  width: var(--stat-icon-size);
-  height: var(--stat-icon-size);
   fill: none;
-  stroke: currentColor;
+  stroke: currentcolor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: var(--icon-stroke-width);
+  stroke-width: var(--service-icon-stroke);
+}
+
+/* Las luces son puntos rellenos. */
+.light {
+  fill: currentcolor;
+}
+
+/* Partes en segundo plano, y luces apagadas. */
+.dim {
+  opacity: var(--service-icon-dim);
+}
+
+.faint {
+  opacity: var(--service-icon-faint);
+}
+
+/* Las luces laten y el cursor parpadea, solo en opacidad (spec §3.3). Se
+   paran con la pausa global (global.css) y con movimiento reducido no hay
+   animación. */
+@media (prefers-reduced-motion: no-preference) {
+  .pulse {
+    animation: icon-pulse var(--dur-pulse) ease-in-out infinite;
+  }
+
+  .caret {
+    animation: icon-caret var(--dur-icon-caret) step-end infinite;
+  }
+}
+
+@keyframes icon-pulse {
+  50% {
+    opacity: var(--service-icon-pulse-low);
+  }
+}
+
+@keyframes icon-caret {
+  50% {
+    opacity: 0;
+  }
 }

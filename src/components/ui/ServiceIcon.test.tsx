@@ -51,11 +51,12 @@ describe('ServiceIcon', () => {
     expect(markup).not.toMatch(/href|url\(|<image|<use/i)
   })
 
-  it.each(NAMES)('%s se dibuja en un cuadro de 24, con trazos', (name) => {
+  // Los dibujos del tablero del rediseño (spec §3.3).
+  it.each(NAMES)('%s se dibuja en un cuadro de 64, con trazos', (name) => {
     const svg = renderIcon(name).querySelector('svg')
 
-    expect(svg).toHaveAttribute('viewBox', '0 0 24 24')
-    expect(svg?.querySelectorAll('path').length).toBeGreaterThan(0)
+    expect(svg).toHaveAttribute('viewBox', '0 0 64 64')
+    expect(svg?.querySelectorAll('path, rect, circle, ellipse').length).toBeGreaterThan(0)
   })
 
   it('los seis dibujos son distintos', () => {

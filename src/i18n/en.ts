@@ -83,10 +83,9 @@ export const en: Dictionary = {
     },
   },
   services: {
-    kicker: 'Services',
-    heading: 'What I can do for you',
-    stackKicker: 'My tech stack',
-    stackHeading: 'Technologies I work with',
+    label: 'Services',
+    tag: 'what_i_build()',
+    title: ['What I', 'build'],
     relatedProject: 'View related project',
     items: {
       backend: {

@@ -106,13 +106,13 @@ export interface Dictionary {
     }
   }
   services: {
-    /** Etiqueta del bloque de tarjetas; las mayúsculas las pone el CSS. */
-    kicker: string
-    heading: string
-    /** Etiqueta del bloque de tecnologías; las mayúsculas las pone el CSS. */
-    stackKicker: string
-    stackHeading: string
-    /** Texto del enlace de cada tarjeta al repo que la respalda. */
+    /** Nombre de la escena, en su rótulo; las mayúsculas las pone el CSS. */
+    label: string
+    /** Rótulo en código del otro lado: no se traduce, pero vive con los textos. */
+    tag: string
+    /** Título grande, en sus dos líneas; las mayúsculas las pone el CSS. */
+    title: readonly [string, string]
+    /** Texto del enlace de cada fila al repo que la respalda. */
     relatedProject: string
     items: Record<ServiceId, { title: string; description: string }>
   }

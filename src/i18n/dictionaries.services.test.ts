@@ -8,19 +8,19 @@ import { LANGS } from '@/i18n/types'
 // minúsculas normales; las mayúsculas las pone el CSS.
 const NAV = { es: 'Servicios', en: 'Services' } as const
 
+// Rótulos y título de la spec del rediseño v2 (§3.3); el título en inglés es
+// la traducción. El texto del enlace sigue siendo el aprobado.
 const HEADINGS = {
   es: {
-    kicker: 'Servicios',
-    heading: 'Lo que puedo hacer por ti',
-    stackKicker: 'Mi stack tecnológico',
-    stackHeading: 'Tecnologías con las que trabajo',
+    label: 'Servicios',
+    tag: 'what_i_build()',
+    title: ['Lo que', 'construyo'],
     relatedProject: 'Ver proyecto relacionado',
   },
   en: {
-    kicker: 'Services',
-    heading: 'What I can do for you',
-    stackKicker: 'My tech stack',
-    stackHeading: 'Technologies I work with',
+    label: 'Services',
+    tag: 'what_i_build()',
+    title: ['What I', 'build'],
     relatedProject: 'View related project',
   },
 } as const

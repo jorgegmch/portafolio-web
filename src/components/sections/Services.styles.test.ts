@@ -1,12 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { cssMedia, readCss } from '@/test/cssRules'
+import { readCss } from '@/test/cssRules'
 
 const css = readCss('src/components/sections/Services.module.css')
 const tokensCss = readCss('src/styles/tokens.css')
-
-const HOVER = '(hover: hover)'
-const TABLET = '(max-width: 1023px)'
-const PHONE = '(max-width: 480px)'
 
 /** Declaraciones de la regla con exactamente ese selector (escapado entero). */
 const rule = (source: string, selector: string) => {
@@ -20,112 +16,29 @@ const rule = (source: string, selector: string) => {
   )
 }
 
-/** El CSS sin los bloques @media. */
-const outsideMedia = () => css.replace(/@media[^{]*\{(?:[^{}]*\{[^}]*\})*\s*\}/g, '')
-
-const LIFT = 'scale(var(--lift-scale))'
-
 describe('Services: estilos', () => {
   it('al llegar por el ancla, el panel queda a un hueco del borde', () => {
     expect(rule(css, '.services')).toMatchObject({ 'scroll-margin-top': 'var(--panel-gap)' })
   })
 
-  // Seis tarjetas: filas completas en los tres tramos, sin nada que centrar.
-  describe('rejilla de tarjetas', () => {
-    it('desde 1024 px, tres columnas (3 + 3)', () => {
-      expect(rule(css, '.cards')).toMatchObject({ 'grid-template-columns': 'repeat(3, minmax(0, 1fr))' })
-    })
-
-    it('de 481 a 1023 px, dos columnas (2 + 2 + 2)', () => {
-      expect(rule(cssMedia(css, TABLET), '.cards')).toMatchObject({
-        'grid-template-columns': 'repeat(2, minmax(0, 1fr))',
-      })
-    })
-
-    it('en teléfono, una columna', () => {
-      expect(rule(cssMedia(css, PHONE), '.cards')).toMatchObject({ 'grid-template-columns': 'minmax(0, 1fr)' })
-    })
-
-    it('sin :nth-child ni span en las tarjetas', () => {
-      expect(css).not.toMatch(/\.cardItem:nth-child/)
-      expect(css).not.toMatch(/grid-column\s*:[^;]*span/)
+  it('es la escena clara: Paper con tinta encima', () => {
+    expect(rule(css, '.services')).toMatchObject({
+      'background-color': 'var(--color-paper)',
+      color: 'var(--color-ink-text)',
     })
   })
 
-  describe('fichas de tecnologías', () => {
-    const DESKTOP_SMALL = '(max-width: 1280px)'
-    const TABLET_PORTRAIT = '(max-width: 768px)'
-
-    /** Ancho de ficha para n columnas: (100% - (n-1) huecos) / n. */
-    const basis = (columns: number) => `0 0 calc((100% - ${columns - 1} * var(--space-4)) / ${columns})`
-
-    // Filas que se envuelven y se centran: la última, incompleta, queda en
-    // medio, como las tarjetas de arriba.
-    it('van en filas que se envuelven y se centran, sin rejilla auto-fill', () => {
-      expect(rule(css, '.techList')).toMatchObject({
-        display: 'flex',
-        'flex-wrap': 'wrap',
-        'justify-content': 'center',
-        gap: 'var(--space-4)',
-      })
-      expect(css).not.toMatch(/auto-fill|auto-fit/)
-    })
-
-    // El ancho es un porcentaje del contenedor menos los huecos, con el mismo
-    // hueco que la lista: no hay anchos fijos que un redondeo pueda desbordar.
-    it.each([
-      { tramo: 'escritorio, por encima de 1280 px', source: css, columns: 8 },
-      { tramo: 'hasta 1280 px', source: cssMedia(css, DESKTOP_SMALL), columns: 6 },
-      { tramo: 'hasta 1023 px', source: cssMedia(css, TABLET), columns: 4 },
-      { tramo: 'hasta 768 px', source: cssMedia(css, TABLET_PORTRAIT), columns: 3 },
-      { tramo: 'teléfono, hasta 480 px', source: cssMedia(css, PHONE), columns: 2 },
-    ])('$tramo: $columns columnas', ({ source, columns }) => {
-      expect(rule(source, '.techItem')).toMatchObject({ flex: basis(columns) })
-    })
+  // El Signal del anillo global no llega a 3:1 sobre Paper.
+  it('el anillo de foco va en tinta dentro de la escena', () => {
+    expect(rule(css, '.services')).toMatchObject({ '--color-focus': 'var(--color-ink-text)' })
   })
 
-  describe('hover y foco', () => {
-    // En táctil, :hover se queda pegado tras tocar. Las tarjetas de servicios
-    // ya no escalan (giran, en ServiceCard); las fichas, sí.
-    it('las fichas escalan solo con puntero de verdad', () => {
-      expect(rule(cssMedia(css, HOVER), '.chip:hover')).toEqual({ transform: LIFT })
-    })
-
-    // Los estilos de la tarjeta viven en ServiceCard.module.css.
-    it('las tarjetas de servicios no tienen estilos aquí, ni escalan', () => {
-      expect(css).not.toMatch(/\.card\b/)
-      expect(css).not.toMatch(/scale\([^)]*\)[^}]*\}[^.]*\.card/)
-    })
-
-    it('fuera de (hover: hover) no hay ningún :hover', () => {
-      expect(outsideMedia()).not.toMatch(/:hover/)
-      expect(cssMedia(css, TABLET)).not.toMatch(/:hover/)
-      expect(cssMedia(css, PHONE)).not.toMatch(/:hover/)
-    })
-
-    it('solo se transiciona transform, nunca all', () => {
-      const transitions = [...css.matchAll(/transition:\s*([^;]+);/g)].map(([, value]) => value)
-
-      expect(transitions.length).toBeGreaterThan(0)
-      transitions.forEach((value) => {
-        expect(value).toMatch(/^transform\s/)
-        expect(value).not.toMatch(/\ball\b/)
-      })
-    })
-
-    it('no declara animaciones propias', () => {
-      expect(css).not.toMatch(/@keyframes|animation\s*:/)
-    })
+  it('una fila cerrada no ocupa sitio', () => {
+    expect(rule(css, '.panel[hidden]')).toMatchObject({ display: 'none' })
   })
 
-  describe('logos de las fichas', () => {
-    it('miden lo que dice su propio token, sin filtros, opacidad ni mezclas', () => {
-      const logo = rule(css, '.chipLogo')
-
-      expect(logo).toMatchObject({ width: 'var(--stack-logo-size)', height: 'var(--stack-logo-size)' })
-      expect(Object.keys(logo)).not.toEqual(expect.arrayContaining(['filter']))
-      expect(css).not.toMatch(/\bfilter\s*:|\bopacity\s*:|mix-blend-mode/)
-    })
+  it('no declara animaciones ni transiciones propias', () => {
+    expect(css).not.toMatch(/\banimation\s*:|\btransition\s*:|@keyframes/)
   })
 
   describe('tokens', () => {
@@ -140,11 +53,12 @@ describe('Services: estilos', () => {
       expect(css).not.toMatch(/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i)
     })
 
+    // inherit no es un color nuevo: toma el de la escena.
     it('cada color sale de un token', () => {
       const colors = [...css.matchAll(/(?:^|[\s;{])(?:color|background-color|border-color)\s*:\s*([^;]+);/g)]
 
       expect(colors.length).toBeGreaterThan(0)
-      colors.forEach(([, value]) => expect(value).toMatch(/^var\(--color-[\w-]+\)$/))
+      colors.forEach(([, value]) => expect(value).toMatch(/^(?:var\(--color-[\w-]+\)|inherit)$/))
     })
   })
 })
