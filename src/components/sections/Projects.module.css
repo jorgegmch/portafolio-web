@@ -19,6 +19,9 @@
   right: 0;
   left: 0;
   z-index: var(--z-crossed-ribbons);
+  /* Las cintas no reciben clics, y su caja tampoco: lo que hay debajo, al
+     pie de Servicios, sigue respondiendo al puntero. */
+  pointer-events: none;
 }
 
 /* Rótulo a un lado y «Ver todos en GitHub» al otro, en mono. */
