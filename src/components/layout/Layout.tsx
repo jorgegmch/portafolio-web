@@ -5,7 +5,7 @@ import styles from '@/components/layout/Layout.module.css'
 import { LoadingIntro } from '@/components/layout/LoadingIntro'
 import { Navbar } from '@/components/layout/Navbar'
 import { SkipLink } from '@/components/ui/SkipLink'
-import { MAIN_CONTENT_ID } from '@/config/routes'
+import { MAIN_CONTENT_ID, PAGE_START_ID } from '@/config/routes'
 import { IntroPlayingContext } from '@/hooks/IntroPlayingContext'
 import { MotionPauseContext } from '@/hooks/MotionPauseContext'
 import { useCurtain } from '@/hooks/useCurtain'
@@ -52,7 +52,7 @@ export function Layout({ children }: { children: ReactNode }) {
           inert={introPlaying}
           data-motion={motionPaused ? 'paused' : 'running'}
         >
-          <SkipLink targetId={MAIN_CONTENT_ID} label={t.nav.skipToContent} />
+          <SkipLink id={PAGE_START_ID} targetId={MAIN_CONTENT_ID} label={t.nav.skipToContent} />
           <FilmGrain />
           <Navbar />
           {/* tabIndex -1: el skip link puede llevar el foco aquí sin que entre en el orden de tabulación. */}

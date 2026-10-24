@@ -5,15 +5,17 @@ interface SkipLinkProps {
   targetId: string
   /** Texto visible del enlace; lo aporta quien lo usa, ya traducido. */
   label: string
+  /** Id propio, para llevarle el foco desde otro sitio. */
+  id?: string
 }
 
 /**
  * Enlace para saltar la navegación con el teclado. Va primero en la página y
- * solo se ve al recibir el foco.
+ * solo se ve con el foco del teclado.
  */
-export function SkipLink({ targetId, label }: SkipLinkProps) {
+export function SkipLink({ targetId, label, id }: SkipLinkProps) {
   return (
-    <a className={styles.skipLink} href={`#${targetId}`}>
+    <a id={id} className={styles.skipLink} href={`#${targetId}`}>
       {label}
     </a>
   )

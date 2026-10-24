@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import type { MouseEvent } from 'react'
 import styles from '@/components/layout/Footer.module.css'
-import { routes, sections } from '@/config/routes'
+import { PAGE_START_ID, sections } from '@/config/routes'
 import { site, socialLinks } from '@/config/site'
 import { useLang } from '@/hooks/useLang'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 /** Signos de la frase de derechos y de las listas; no son texto traducible. */
 const COPYRIGHT_SYMBOL = '©'
@@ -15,10 +16,24 @@ const SEPARATOR = ' · '
  * gigante solo en contorno, que es decorativo y queda fuera del árbol
  * accesible, y una línea final con el aviso de derechos y «Volver arriba».
  * No lleva datos de contacto; esos solo salen por ContactButton.
+ *
+ * «Volver arriba» sube al inicio de la página y lleva el foco a lo primero
+ * de ella, el skip link, para que el teclado y el lector de pantalla sigan
+ * desde arriba. No salta al ancla del Hero: con la cortina el Hero está fijo
+ * y el navegador solo subía hasta donde estaba fijado (desde el pie quedaba
+ * en Contacto). Sin JavaScript, el ancla sigue llevando al Hero.
  */
 export function Footer() {
   const { t } = useLang()
   const { credits } = t.footer
+  const reducedMotion = useReducedMotion()
+
+  const backToTop = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    window.scrollTo({ top: 0, left: 0, behavior: reducedMotion ? 'instant' : 'smooth' })
+    // Sin mover la página: el desplazamiento suave ya va hacia allí.
+    document.getElementById(PAGE_START_ID)?.focus({ preventScroll: true })
+  }
 
   return (
     <footer className={styles.footer}>
@@ -65,12 +80,12 @@ export function Footer() {
           {SENTENCE_END} {t.footer.rights}
           {SENTENCE_END}
         </p>
-        <Link className={styles.top} to={{ pathname: routes.home, hash: `#${sections.hero}` }}>
+        <a className={styles.top} href={`#${sections.hero}`} onClick={backToTop}>
           {t.footer.backToTop}
           <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M12 19V5M6 11l6-6 6 6" />
           </svg>
-        </Link>
+        </a>
       </div>
     </footer>
   )

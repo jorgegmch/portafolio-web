@@ -1,5 +1,7 @@
-/* Fuera de la pantalla hasta recibir el foco. Se desplaza con transform para
-   seguir siendo alcanzable con el teclado y por lectores de pantalla. */
+/* Fuera de la pantalla hasta recibir el foco del teclado. Se desplaza con
+   transform para seguir siendo alcanzable con el teclado y por lectores de
+   pantalla. Con :focus-visible y no :focus, «Volver arriba» le lleva el foco
+   sin que aparezca si se pulsó con el ratón. */
 .skipLink {
   position: fixed;
   top: var(--space-2);
@@ -18,6 +20,6 @@
   transition: transform var(--duration-fast) var(--ease-standard);
 }
 
-.skipLink:focus {
+.skipLink:focus-visible {
   transform: translateY(0);
 }
