@@ -1,11 +1,12 @@
 import { About } from '@/components/sections/About'
+import { Contact } from '@/components/sections/Contact'
 import { Hero } from '@/components/sections/Hero'
 import { Projects } from '@/components/sections/Projects'
 import { Services } from '@/components/sections/Services'
 
 /**
- * Página de inicio. Por ahora lleva el Hero, Perfil, Servicios y Proyectos;
- * Contacto llega en la fase siguiente. El <main> lo pone el layout, no la
+ * Página de inicio: las cinco escenas, en el orden de la spec (Hero, Perfil,
+ * Servicios, Proyectos y Contacto). El <main> lo pone el layout, no la
  * página.
  */
 export function HomePage() {
@@ -15,6 +16,7 @@ export function HomePage() {
       <About />
       <Services />
       <Projects />
+      <Contact />
     </>
   )
 }

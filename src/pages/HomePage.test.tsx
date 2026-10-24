@@ -41,8 +41,7 @@ describe('HomePage', () => {
     ).toBeInTheDocument()
   })
 
-  // Contacto, la cuarta escena, llega en la fase siguiente.
-  it('las secciones van en orden: Hero, Perfil, Servicios y Proyectos', () => {
+  it('las secciones van en orden: Hero, Perfil, Servicios, Proyectos y Contacto', () => {
     setBrowserLang('es')
 
     const { container } = renderHome()
@@ -52,6 +51,7 @@ describe('HomePage', () => {
       sections.about,
       sections.services,
       sections.projects,
+      sections.contact,
     ])
   })
 

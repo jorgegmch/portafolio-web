@@ -205,8 +205,19 @@ export const en: Dictionary = {
     },
   },
   contact: {
-    heading: 'Contact',
-    email: 'Email',
+    label: 'Contact',
+    title: ['Shall we build', 'something?'],
+    pitch: 'Tell me what your business needs. I will translate it into code.',
+    writeMe: 'Write to me',
+    copyEmail: 'Copy email',
+    emailCopied: 'Email copied.',
+    copyFailed: 'Could not copy it: your email app opened instead.',
+    whatsapp: 'WhatsApp',
+    linksLabel: 'Other ways to reach me',
+    cv: {
+      es: { short: 'CV · ES', name: 'Download the CV in Spanish (PDF)' },
+      en: { short: 'CV · EN', name: 'Download the CV in English (PDF)' },
+    },
   },
   footer: {
     credits: {

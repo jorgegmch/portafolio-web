@@ -356,6 +356,27 @@
   --curtain-scale: 0.94;
   --curtain-dim: 0.5;
 
+  /* Contacto (spec §3.5): relleno inferior de 88 px; frase de 24 px en
+     460 px de ancho; botón circular de 200 px con texto de 20 px y flecha de
+     26 px; píldoras de 52 px con texto de 15 px y borde de 1,5 px. */
+  --contact-padding-bottom: 5.5rem;
+  /* Tope del título de Contacto para que su palabra más larga quepa en el
+     panel: «¿Construimos» mide 5,68 veces el tamaño de letra (medido en
+     Anton). Con 4,5 rem de huecos y relleno y 5,9 de divisor queda margen
+     también con barra de scroll. En escritorio manda la escala de la spec
+     (180 px a 1440); por debajo de unos 490 px, este tope, y en un teléfono
+     de 390 el título baja de los 76 px del tablero a unos 54. */
+  --contact-title-fit: calc((100vw - 4.5rem) / 5.9);
+  --font-size-contact-pitch: 1.5rem;
+  --leading-contact-pitch: 1.45;
+  --contact-pitch-measure: 28.75rem;
+  --contact-write-size: 12.5rem;
+  --font-size-contact-write: 1.25rem;
+  --contact-write-arrow: 1.625rem;
+  --contact-pill-height: 3.25rem;
+  --font-size-pill: 0.9375rem;
+  --pill-border-width: 1.5px;
+
   /* Capas */
   --z-background: -1;
   --z-nav: 100; /* origen */
@@ -426,6 +447,11 @@
     --project-card-padding: 1.25rem; /* 20px */
     --font-size-project-text: 1rem; /* 16px */
     --project-shots-height: 12.5rem; /* 200px */
+    /* Contacto en teléfono (tablero móvil): título de 76 px y píldoras de
+       48 px. */
+    --font-size-contact-title: 4.75rem; /* 76px */
+    --contact-padding-bottom: 3rem; /* 48px */
+    --contact-pill-height: 3rem; /* 48px */
   }
 }
 

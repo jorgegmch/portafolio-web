@@ -1,0 +1,198 @@
+/* Panel Contacto, en Signal: la escena de acento. Todo el texto va en tinta,
+   y el anillo de foco también: el Signal de siempre no se vería encima. */
+.contact {
+  --color-focus: var(--color-ink-text);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+  padding: var(--panel-padding-top) var(--panel-padding-x) var(--contact-padding-bottom);
+  overflow: hidden;
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
+  scroll-margin-top: var(--panel-gap);
+}
+
+/* Rótulo a un lado y la ciudad con su hora al otro, en mono. */
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+/* «¿CONSTRUIMOS / ALGO?» a todo el ancho, una línea por palabra clave. */
+.title {
+  font-family: var(--font-display);
+  font-size: min(var(--font-size-contact-title), var(--contact-title-fit));
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-display);
+  text-transform: uppercase;
+}
+
+.line {
+  display: block;
+}
+
+/* La frase y el botón circular, en fila. */
+.pitchRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.pitch {
+  max-width: var(--contact-pitch-measure);
+  font-size: var(--font-size-contact-pitch);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-contact-pitch);
+}
+
+/* Envoltorio que se acerca al puntero (useMagnetic): el botón va dentro,
+   así su propio aspecto no se mezcla con el desplazamiento. La vuelta a su
+   sitio, al salir el puntero, es la transición. */
+.magnet {
+  display: flex;
+  transition: transform var(--duration-slow) var(--ease-cine);
+}
+
+.writeMe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: var(--contact-write-size);
+  height: var(--contact-write-size);
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-ink-text);
+  color: var(--color-bone);
+  font-size: var(--font-size-contact-write);
+  font-weight: var(--font-weight-extrabold);
+  cursor: pointer;
+}
+
+.writeArrow {
+  width: var(--contact-write-arrow);
+  height: var(--contact-write-arrow);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* Fila de píldoras: con borde de tinta, y las del CV rellenas. */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.copyItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--contact-pill-height);
+  padding: 0 var(--space-5);
+  border: var(--pill-border-width) solid var(--color-ink-text);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-ink-text);
+  font-size: var(--font-size-pill);
+  font-weight: var(--font-weight-extrabold);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.filled {
+  background-color: var(--color-ink-text);
+  color: var(--color-bone);
+}
+
+.arrow {
+  width: var(--space-4);
+  height: var(--space-4);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+/* Aviso tras copiar: texto en tinta junto a la píldora. Vacío no ocupa. */
+.status {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.status:empty {
+  display: none;
+}
+
+/* Tablet y teléfono: la frase sobre el botón. */
+@media (max-width: 900px) {
+  .pitchRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+/* Teléfono (tablero móvil): «Escríbeme» pasa a ser una píldora a todo el
+   ancho, y las píldoras van de dos en dos. */
+@media (max-width: 480px) {
+  .contact {
+    gap: var(--space-5);
+  }
+
+  .magnet {
+    display: block;
+  }
+
+  .writeMe {
+    flex-direction: row;
+    width: 100%;
+    height: var(--hero-cta-height);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-base);
+  }
+
+  .writeArrow {
+    width: var(--space-4);
+    height: var(--space-4);
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+
+  /* El aviso, bajo su píldora y no al lado: la columna es estrecha. */
+  .copyItem {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pill {
+    width: 100%;
+    padding: 0 var(--space-3);
+  }
+}

@@ -138,8 +138,25 @@ export interface Dictionary {
     items: Record<ProjectId, { description: string }>
   }
   contact: {
-    heading: string
-    email: string
+    /** Nombre de la escena, en su rótulo; las mayúsculas las pone el CSS. */
+    label: string
+    /** Título grande, en sus dos líneas; las mayúsculas las pone el CSS. */
+    title: readonly [string, string]
+    /** Frase junto al botón «Escríbeme». */
+    pitch: string
+    /** Botón circular que abre el formulario. */
+    writeMe: string
+    /** Píldora que copia el correo sin mostrarlo. */
+    copyEmail: string
+    /** Aviso tras copiar el correo; no lo muestra. */
+    emailCopied: string
+    /** Aviso si el navegador no deja copiar: se abre el programa de correo. */
+    copyFailed: string
+    whatsapp: string
+    /** Nombre accesible de la fila de píldoras. */
+    linksLabel: string
+    /** Píldoras del CV: el texto corto y el nombre accesible, que dice qué descarga. */
+    cv: Record<Lang, { short: string; name: string }>
   }
   footer: {
     /** Rótulos de las cuatro columnas de «créditos finales». */
