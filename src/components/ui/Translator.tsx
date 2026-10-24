@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import styles from '@/components/ui/Translator.module.css'
 import type { CodeSegment } from '@/data/translator'
 import { useIntroPlaying } from '@/hooks/useIntroPlaying'
@@ -59,6 +59,7 @@ export function Translator({
   const reducedMotion = useReducedMotion()
   const introPlaying = useIntroPlaying()
   const { paused } = useMotionPause()
+  const writesId = useId()
   const rotating = useRotatingIndex(items.length, {
     intervalMs: TRANSLATOR_INTERVAL_MS,
     paused: picked !== null || paused || reducedMotion || introPlaying,
@@ -103,8 +104,15 @@ export function Translator({
       </div>
 
       <div className={styles.block}>
-        <p className={styles.caption}>{writesLabel}</p>
-        <pre className={styles.code}>
+        <p id={writesId} className={styles.caption}>
+          {writesLabel}
+        </p>
+        {/* Las líneas de código no se parten: en pantallas estrechas el bloque
+            se desplaza en horizontal. Para que eso también se pueda hacer con
+            el teclado, el bloque recibe el foco y se nombra con su rótulo
+            (regla scrollable-region-focusable de axe). */}
+        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+        <pre className={styles.code} role="region" aria-labelledby={writesId} tabIndex={0}>
           <code>
             {/* Las líneas son fijas por ejemplo: su posición es su identidad. */}
             {current.code.map((line, lineIndex) => (

@@ -107,7 +107,8 @@
 }
 
 /* El código, con resaltado mínimo. Reserva siete líneas, las del ejemplo más
-   largo, para que el bloque no salte al cambiar de ejemplo. */
+   largo, para que el bloque no salte al cambiar de ejemplo. Cada línea del
+   repo es una línea aquí: si no cabe, el bloque se desplaza en horizontal. */
 .code {
   min-height: calc(7 * var(--leading-code) * var(--font-size-code) + 2 * var(--space-5));
   margin: 0;
@@ -119,7 +120,7 @@
   font-family: var(--font-mono);
   font-size: var(--font-size-code);
   line-height: var(--leading-code);
-  white-space: pre-wrap;
+  white-space: pre;
 }
 
 .line {
