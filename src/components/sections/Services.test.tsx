@@ -123,6 +123,64 @@ describe('Services', () => {
       expect(second).toHaveAttribute('aria-expanded', 'false')
     })
 
+    it('el panel de una fila cerrada está oculto, y solo se ve el de la abierta', () => {
+      const { region } = renderServices()
+
+      toggles(region).forEach((button) => {
+        const panel = document.getElementById(button.getAttribute('aria-controls') ?? '')
+        const open = button.getAttribute('aria-expanded') === 'true'
+
+        expect(panel?.hidden).toBe(!open)
+        if (open) expect(panel).toBeVisible()
+        else expect(panel).not.toBeVisible()
+      })
+    })
+
+    it('al abrir otra fila, la descripción de la anterior deja de verse', async () => {
+      const user = userEvent.setup()
+      const { region, text } = renderServices()
+      const [first, second] = toggles(region)
+      const [firstService, secondService] = services
+      if (!first || !second || !firstService || !secondService) throw new Error('Faltan filas')
+
+      await user.click(second)
+
+      expect(screen.getByText(text.items[secondService.id].description)).toBeVisible()
+      expect(screen.getByText(text.items[firstService.id].description)).not.toBeVisible()
+    })
+
+    it('el foco se queda en el botón al abrir y al cerrar', async () => {
+      const user = userEvent.setup()
+      const { region } = renderServices()
+      const [, , third] = toggles(region)
+      if (!third) throw new Error('Falta la tercera fila')
+
+      third.focus()
+      await user.keyboard('{Enter}')
+      expect(third).toHaveFocus()
+      await user.keyboard('{Enter}')
+      expect(third).toHaveFocus()
+    })
+
+    it('con todas cerradas, ningún panel se ve', async () => {
+      const user = userEvent.setup()
+      const { region } = renderServices()
+      const [first] = toggles(region)
+      if (!first) throw new Error('Falta la primera fila')
+
+      await user.click(first)
+
+      expect(within(region).queryAllByRole('region')).toHaveLength(0)
+      toggles(region).forEach((button) => expect(button).toHaveAttribute('aria-expanded', 'false'))
+    })
+
+    it('el enlace de una fila cerrada no se alcanza con el teclado', () => {
+      const { region } = renderServices()
+
+      // Solo la primera está abierta: un único enlace a la vista.
+      expect(within(region).getAllByRole('link')).toHaveLength(1)
+    })
+
     it('el número y el signo de cada fila son decorativos', () => {
       const { rows } = renderServices()
 
