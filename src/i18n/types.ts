@@ -2,7 +2,6 @@ import type { ContactNeedId } from '@/data/contactNeeds'
 import type { EducationId } from '@/data/education'
 import type { ProjectId } from '@/data/projects'
 import type { ServiceId } from '@/data/services'
-import type { HeroSocialId } from '@/data/social'
 import type { TranslatorExampleId } from '@/data/translator'
 import type { CodingTime } from '@/lib/codingTime'
 
@@ -73,10 +72,6 @@ export interface Dictionary {
     cvInfographic: string
     cvAts: string
     photoAlt: string
-    /** Nombre accesible de la fila de redes y contacto. */
-    socialLabel: string
-    /** Nombre accesible de cada icono de la fila; los de marca no se traducen. */
-    social: Record<HeroSocialId, string>
   }
   about: {
     /** Nombre de la escena: su rótulo, tras el número, y el de la navegación. */

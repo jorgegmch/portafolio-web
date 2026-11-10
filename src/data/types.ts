@@ -27,8 +27,6 @@ export interface Technology<Id extends string = string> {
   id: Id
   name: string
   group: TechnologyGroup
-  /** Parte del stack principal (tarjeta de estadísticas). */
-  primary?: boolean
 }
 
 export interface Project<Id extends string = string> {

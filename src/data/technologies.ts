@@ -3,10 +3,10 @@ import type { Technology } from '@/data/types'
 // Sin porcentajes ni niveles: solo qué tecnologías y a qué grupo pertenecen.
 // Los nombres de los grupos (traducibles) viven en i18n/.
 const technologyList = [
-  { id: 'java', name: 'Java', group: 'backend', primary: true },
-  { id: 'spring-boot', name: 'Spring Boot', group: 'backend', primary: true },
+  { id: 'java', name: 'Java', group: 'backend' },
+  { id: 'spring-boot', name: 'Spring Boot', group: 'backend' },
   { id: 'spring-security', name: 'Spring Security', group: 'backend' },
-  { id: 'postgresql', name: 'PostgreSQL', group: 'databases', primary: true },
+  { id: 'postgresql', name: 'PostgreSQL', group: 'databases' },
   { id: 'mysql', name: 'MySQL', group: 'databases' },
   { id: 'python', name: 'Python', group: 'languages' },
   { id: 'javascript', name: 'JavaScript', group: 'languages' },
@@ -28,8 +28,6 @@ const technologyList = [
 export type TechnologyId = (typeof technologyList)[number]['id']
 
 export const technologies: readonly Technology<TechnologyId>[] = technologyList
-
-export const primaryStack = technologies.filter((tech) => tech.primary)
 
 /** Nombre propio de una tecnología del catálogo; no se traduce. */
 export const technologyName = (id: TechnologyId): string =>

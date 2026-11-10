@@ -95,14 +95,6 @@ describe('LoadingIntro: estilos', () => {
 
   describe('texto animado', () => {
     const SIZE_TOKEN = '--font-size-intro'
-    const PREVIOUS_TOKEN = '--font-size-lead'
-
-    /** Mínimo y máximo, en rem, de un token escrito como clamp(mín, fluido, máx). */
-    const clampBounds = (name: string) => {
-      const [, min = '', max = ''] =
-        /^clamp\(\s*([\d.]+)rem\s*,[^,]+,\s*([\d.]+)rem\s*\)$/.exec(token(name)) ?? []
-      return { min: Number.parseFloat(min), max: Number.parseFloat(max) }
-    }
 
     it('la frase y el código usan el token de tamaño de la intro', () => {
       expect(rule(introCss, '.natural')).toMatchObject({ 'font-size': `var(${SIZE_TOKEN})` })
@@ -116,18 +108,6 @@ describe('LoadingIntro: estilos', () => {
 
     it('el token existe y es fluido: 16 px en pantallas estrechas y 24 px en anchas', () => {
       expect(token(SIZE_TOKEN)).toBe('clamp(1rem, 2.2vw, 1.5rem)')
-    })
-
-    it('es mayor que el tamaño anterior en los dos extremos', () => {
-      const size = clampBounds(SIZE_TOKEN)
-      const previous = clampBounds(PREVIOUS_TOKEN)
-
-      expect(size.min).toBeGreaterThan(previous.min)
-      expect(size.max).toBeGreaterThan(previous.max)
-    })
-
-    it('la intro ya no usa el tamaño anterior', () => {
-      expect(introCss).not.toContain(PREVIOUS_TOKEN)
     })
 
     it('el código va en Signal y en la tipografía mono', () => {

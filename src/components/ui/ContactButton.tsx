@@ -3,10 +3,10 @@ import { getEmail, getEmailUrl, getWhatsappUrl } from '@/lib/assembleContact'
 
 interface ContactButtonProps {
   /**
-   * email: abre el programa de correo; whatsapp: abre el chat en una pestaña
-   * nueva; copy-email: copia el correo al portapapeles sin mostrarlo.
+   * whatsapp: abre el chat en una pestaña nueva; copy-email: copia el correo
+   * al portapapeles sin mostrarlo.
    */
-  kind: 'email' | 'whatsapp' | 'copy-email'
+  kind: 'whatsapp' | 'copy-email'
   /**
    * Nombre del botón, ya traducido; lo aporta quien lo usa. Es su texto
    * visible o, si lleva icono, su nombre accesible.
@@ -23,11 +23,6 @@ interface ContactButtonProps {
   accessibleLabel?: string
   /** Clase del botón: el aspecto lo decide quien lo usa. */
   className?: string
-  /**
-   * Solo para el de email: con `false` abre el cliente de correo sin mostrar
-   * el correo como texto, para donde ese texto no tiene sitio.
-   */
-  reveal?: boolean
   /** Solo para copy-email: avisos tras copiar o si el navegador no deja. */
   copiedMessage?: string
   copyFailedMessage?: string
@@ -37,13 +32,11 @@ interface ContactButtonProps {
 
 /**
  * Botón de contacto que arma el dato al hacer clic. Antes de la interacción
- * ni el correo ni el número existen en el DOM. El de email además muestra el
- * correo como texto, para quien no tenga cliente de correo y quiera copiarlo,
- * salvo que se pida no revelarlo; el de WhatsApp solo abre el enlace.
+ * ni el correo ni el número existen en el DOM. El de WhatsApp abre el chat.
  *
  * El de copiar lleva el correo al portapapeles y avisa de que lo hizo, sin
  * escribirlo en la página. Si el navegador no deja copiar (sin permiso o
- * fuera de HTTPS), abre el programa de correo, como el de email.
+ * fuera de HTTPS), abre el programa de correo.
  */
 export function ContactButton({
   kind,
@@ -52,14 +45,11 @@ export function ContactButton({
   trailing,
   accessibleLabel,
   className,
-  reveal = true,
   copiedMessage,
   copyFailedMessage,
   statusClassName,
 }: ContactButtonProps) {
-  const [revealedEmail, setRevealedEmail] = useState<string | null>(null)
   const [copyStatus, setCopyStatus] = useState<string | null>(null)
-  const revealsEmail = kind === 'email' && reveal
 
   const copyEmail = async () => {
     try {
@@ -74,9 +64,6 @@ export function ContactButton({
   const handleClick = () => {
     if (kind === 'copy-email') {
       void copyEmail()
-    } else if (kind === 'email') {
-      if (revealsEmail) setRevealedEmail(getEmail())
-      window.open(getEmailUrl(), '_self')
     } else {
       window.open(getWhatsappUrl(), '_blank', 'noopener,noreferrer')
     }
@@ -93,7 +80,6 @@ export function ContactButton({
         {icon ?? label}
         {!icon && trailing}
       </button>
-      {revealsEmail && <span role="status">{revealedEmail}</span>}
       {/* La zona de aviso existe desde el render, vacía: así el lector de
           pantalla anuncia el cambio. */}
       {kind === 'copy-email' && (

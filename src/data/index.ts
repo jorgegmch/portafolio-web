@@ -10,14 +10,6 @@ export {
 } from '@/data/projects'
 export { services, type ServiceId } from '@/data/services'
 export {
-  HERO_SOCIAL_LIMIT,
-  heroSocial,
-  heroSocialIconUrl,
-  heroSocialUrl,
-  type HeroSocialId,
-} from '@/data/social'
-export {
-  primaryStack,
   technologies,
   technologyName,
   type TechnologyId,

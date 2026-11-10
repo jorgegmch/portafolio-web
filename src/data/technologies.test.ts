@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { projects } from '@/data/projects'
-import { primaryStack, technologies } from '@/data/technologies'
+import { technologies } from '@/data/technologies'
 import { en } from '@/i18n/en'
 
 const byId = (id: string) => technologies.find((technology) => technology.id === id)
@@ -90,13 +90,5 @@ describe('catálogo de tecnologías', () => {
   // Decisión del autor (2026-10-15): SQLite no entra en el catálogo.
   it('SQLite no está en el catálogo', () => {
     expect(technologies.some((technology) => /sqlite/i.test(technology.id))).toBe(false)
-  })
-
-  it('el stack principal es Java, Spring Boot y PostgreSQL', () => {
-    expect(primaryStack.map((technology) => technology.id)).toEqual([
-      'java',
-      'spring-boot',
-      'postgresql',
-    ])
   })
 })

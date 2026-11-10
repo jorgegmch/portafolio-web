@@ -41,9 +41,8 @@ interface Row {
 
 /**
  * Filas de las tablas del registro. Solo cuentan las filas de tabla: un hash
- * citado en una línea suelta no es el de ningún archivo del repo. Es el caso
- * del original de PrimeIcons, que va en una nota bajo la tabla de iconos; el
- * hash de `ai-agents.svg` que se compara es el de su fila.
+ * citado en una línea suelta (por ejemplo, el de un original antes de
+ * modificarlo) no es el de ningún archivo del repo.
  */
 const parseRecord = (markdown: string) => {
   const rows: Row[] = []
@@ -89,7 +88,7 @@ const sha256Of = async (path: string) => {
 const { rows, malformed } = parseRecord(readFileSync(RECORD, 'utf8'))
 
 /**
- * Imágenes que hay en las carpetas de public/, las dos de hoy y cualquiera
+ * Imágenes que hay en las carpetas de public/, la de hoy y cualquiera
  * que se añada. Vite resuelve el patrón al transformar el test, así que la
  * lista es la del disco; no se importa ningún archivo.
  */
@@ -101,10 +100,10 @@ const published = Object.keys(import.meta.glob('/public/**/*.{svg,png,webp,jpg,j
 describe('registro de logos e iconos (docs/LOGOS.md)', () => {
   // Control positivo: si el documento cambiara de forma y no saliera ninguna
   // fila, los demás tests pasarían sin comprobar nada.
-  it('tiene filas para las dos carpetas de logos e iconos', () => {
+  it('tiene filas para la carpeta de logos, la de redes', () => {
     const folders = new Set(rows.map(({ path }) => path.slice(0, path.lastIndexOf('/') + 1)))
 
-    expect([...folders].sort(), FORMAT).toEqual(['public/icons/', 'public/social/'])
+    expect([...folders].sort(), FORMAT).toEqual(['public/social/'])
   })
 
   it('la búsqueda en disco encuentra las imágenes de public/', () => {

@@ -234,8 +234,7 @@
   --font-size-md: 0.875rem;
   --font-size-base: 1rem;
   --font-size-lg: 1.1875rem;
-  /* Tamaños fluidos (origen): tagline y título de sección. */
-  --font-size-lead: clamp(0.875rem, 1.9vw, 1.3125rem);
+  /* Tamaño fluido (origen): título de sección. */
   --font-size-title: clamp(1.625rem, 3.5vw, 2.875rem);
   /* Frase y código de la animación de carga: de 16 px en teléfono a 24 px en escritorio. */
   --font-size-intro: clamp(1rem, 2.2vw, 1.5rem);

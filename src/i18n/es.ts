@@ -38,13 +38,6 @@ export const es: Dictionary = {
     cvInfographic: 'Versión infográfica (PDF)',
     cvAts: 'Versión ATS (PDF)',
     photoAlt: `Foto de ${site.shortName}`,
-    socialLabel: 'Redes y contacto',
-    social: {
-      github: 'GitHub',
-      linkedin: 'LinkedIn',
-      email: 'Enviar un correo',
-      whatsapp: 'Escribir por WhatsApp',
-    },
   },
   about: {
     label: 'Perfil',

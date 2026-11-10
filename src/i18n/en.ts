@@ -37,13 +37,6 @@ export const en: Dictionary = {
     cvInfographic: 'Infographic version (PDF)',
     cvAts: 'ATS version (PDF)',
     photoAlt: `Photo of ${site.shortName}`,
-    socialLabel: 'Social and contact',
-    social: {
-      github: 'GitHub',
-      linkedin: 'LinkedIn',
-      email: 'Send an email',
-      whatsapp: 'Message on WhatsApp',
-    },
   },
   about: {
     label: 'Profile',

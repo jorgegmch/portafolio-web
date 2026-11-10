@@ -7,6 +7,7 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 ## Reglas de uso
 
 - **Rediseño v2 (spec §6):** se retiró la rejilla «Mi stack tecnológico», y con ella los logos de tecnologías de `public/tech/` y la copia blanca del chip de AI Agents. Las tecnologías se nombran solo en texto. Los únicos logos de marca que quedan son los de redes (`public/social/`).
+- **Rediseño v2, limpieza (2026-11-10):** se retiraron los iconos genéricos de `public/icons/` (el sobre, la base de datos y el chip de AI Agents), que usaban la fila de redes y las pastillas del Hero, ya retiradas. De `public/social/` solo se usa `github.svg`; `linkedin.png` y `whatsapp.svg` siguen en el repo sin uso, pendientes de decisión del autor.
 - **Decisión del autor (2026-10-15), sin efecto mientras no vuelvan los logos de tecnologías:** todas las tecnologías del catálogo llevaban su logo oficial, aunque la política de su marca no lo permitiera. El autor asumía el riesgo.
 - **De dónde sale cada logo,** en este orden:
   1. el archivo oficial de la marca, con fondo transparente;
@@ -57,25 +58,12 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 - **Dónde se usa `github.svg`:** delante de «Ver todos en GitHub», en Proyectos, con `<img>` decorativo (`alt=""`) y sin filtros. Hash comprobado el 2026-10-24: coincide con el de la tabla.
 - **Excepción del comprobador de SVG:** el de WhatsApp trae un elemento `style`. Se admite solo en ese archivo y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
 
-### Iconos genéricos (`public/icons/`)
-
-Ninguno es un logo de marca.
-
-| Archivo | Origen | Licencia | SHA-256 |
-|---|---|---|---|
-| `envelope.svg` | Dibujado para este sitio: un sobre cerrado, de trazo. Trazo en Bone desde el rediseño v2. | Obra propia | `258092ee1ef7f842ae19a39f91051d7214badd9bc4a056dd1ba204a51c533fc2` |
-| `database.svg` | Dibujado para este sitio: un cilindro apilado, de trazo. Trazo en Ink desde el rediseño v2. | Obra propia | `3003f8c7f08d8cd43c08a909909c4f9866b0f5ac06aa23ad94d536fbb832fbf2` |
-| `ai-agents.svg` | `raw-svg/microchip-ai.svg` de `github.com/primefaces/primeicons`, versión 7.0.0. El dibujo no se modificó; solo se le añadió el comentario de procedencia y la licencia. | MIT, © 2018-2021 PrimeTek | `3fc8ee8a861362387f6530aafffee1282bbde09aa145c496c6ec0927cfd6393b` |
-
-- **SHA-256 del original de PrimeIcons,** antes de añadirle el comentario: `6d1c4d3c14d6a55d8126f35daa3016e1d54da26a5bb3ece1a66688d9ebd88bf1`. Un test compara el dibujo con ese original.
-- **El repositorio de PrimeIcons está archivado.** Las versiones publicadas bajo MIT siguen siendo MIT.
-
 ### Iconos en línea
 
 Van dibujados dentro del código, no como archivos de `public/`, así que no llevan SHA-256.
 
-- `src/components/ui/StatIcon.tsx`: el reloj, la carpeta y las capas de las tarjetas de «Sobre mí». Obra propia, de trazo.
+- `src/components/ui/ServiceIcon.tsx`: los dibujos de las filas de Servicios (spec §3.3). Obra propia, de trazo.
 
 ## Créditos pendientes
 
-Falta escribir un archivo de créditos en `docs/` con PrimeIcons (MIT, PrimeTek). Los créditos de Git, JavaScript, HTML5 y Duke dejaron de hacer falta al retirarse sus logos.
+Ninguno. Los de Git, JavaScript, HTML5, Duke y PrimeIcons dejaron de hacer falta al retirarse sus logos e iconos.
