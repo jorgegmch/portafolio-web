@@ -27,6 +27,11 @@ export interface Technology<Id extends string = string> {
   id: Id
   name: string
   group: TechnologyGroup
+  /**
+   * Logo, como ruta dentro de public/: los de marca en tech/ y el icono
+   * genérico de lo que no es una marca en icons/. Procedencia en docs/LOGOS.md.
+   */
+  logo: string
 }
 
 export interface Project<Id extends string = string> {

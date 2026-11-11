@@ -1,7 +1,7 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { projects } from '@/data/projects'
-import { technologies } from '@/data/technologies'
+import { technologies, technologyLogoUrl } from '@/data/technologies'
 import { en } from '@/i18n/en'
 
 const byId = (id: string) => technologies.find((technology) => technology.id === id)
@@ -42,7 +42,7 @@ describe('catálogo de tecnologías', () => {
 
   describe('agentes de IA', () => {
     it('la entrada se llama «AI Agents», en el grupo de IA', () => {
-      expect(byId('ai-agents')).toEqual({ id: 'ai-agents', name: 'AI Agents', group: 'ai' })
+      expect(byId('ai-agents')).toMatchObject({ id: 'ai-agents', name: 'AI Agents', group: 'ai' })
     })
 
     it('sustituye a la entrada anterior, no se suma a ella', () => {
@@ -69,7 +69,7 @@ describe('catálogo de tecnologías', () => {
 
   describe('React', () => {
     it('es una tecnología de frontend', () => {
-      expect(byId('react')).toEqual({ id: 'react', name: 'React', group: 'frontend' })
+      expect(byId('react')).toMatchObject({ id: 'react', name: 'React', group: 'frontend' })
     })
 
     // Regla de contenido veraz: la etiqueta sale de la descripción de un repo
@@ -84,6 +84,49 @@ describe('catálogo de tecnologías', () => {
       expect(comment).toContain(SOURCE)
       expect(projects.map((project) => project.id)).toContain(SOURCE)
       expect(en.projects.items[SOURCE].description).toContain('React')
+    })
+  })
+
+  // Spec v2.1: los logos de tecnología van solo en «Mi stack» y en las fichas
+  // del Hero. Cada tecnología nombra su archivo de public/; los de marca, en
+  // public/tech, y el icono genérico de lo que no es marca, en public/icons.
+  describe('logos', () => {
+    it('cada tecnología tiene un logo, y el archivo existe en public/', () => {
+      technologies.forEach(({ id, logo }) => {
+        expect(logo, id).toMatch(/^(tech|icons)\/[a-z0-9-]+\.svg$/)
+        expect(existsSync(`public/${logo}`), id).toBe(true)
+      })
+    })
+
+    it('ningún logo se repite', () => {
+      const logos = technologies.map(({ logo }) => logo)
+
+      expect(new Set(logos).size).toBe(logos.length)
+    })
+
+    // Una sola fuente: no se publica un logo que el catálogo no asigne.
+    it('cada archivo de public/tech es el logo de una tecnología del catálogo', () => {
+      // Vite resuelve el patrón al transformar el test: la lista es la del disco.
+      const files = Object.keys(import.meta.glob('/public/tech/*')).map((path) =>
+        path.replace('/public/', ''),
+      )
+
+      expect(files.length).toBeGreaterThan(0)
+      expect(files.sort()).toEqual(
+        technologies.map(({ logo }) => logo).filter((logo) => logo.startsWith('tech/')).sort(),
+      )
+    })
+
+    it('Java lleva a Duke; Git/GitHub, el logo de Git; los agentes de IA, el chip genérico en blanco', () => {
+      expect(byId('java')?.logo).toBe('tech/duke.svg')
+      expect(byId('git-github')?.logo).toBe('tech/git.svg')
+      expect(byId('ai-agents')?.logo).toBe('icons/ai-agents-white.svg')
+    })
+
+    it('la URL pública del logo cuelga de la base del sitio', () => {
+      const java = byId('java')
+
+      expect(java && technologyLogoUrl(java)).toBe(`${import.meta.env.BASE_URL}tech/duke.svg`)
     })
   })
 
