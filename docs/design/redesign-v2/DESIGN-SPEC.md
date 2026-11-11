@@ -4,7 +4,7 @@ Especificación de traspaso del rediseño del portafolio. Es la **fuente de verd
 
 **v2.1** sustituye a la v2. Parte de lo que ya está implementado en la rama `redesign/v2` y añade: voz de código con color propio, señales visuales de programador, Contacto con el formulario a la vista, barra de navegación que acompaña al scroll, pie con llamado a redes y los textos definitivos de Hero, Perfil y Contacto. Las correcciones que el agente ya aplicó (intro sin «Saltar», logo que se traduce, menú del CV, rotación del Traductor sin saltos, etc.) quedan recogidas aquí como vigentes.
 
-**Logos de tecnología:** solo en «Mi stack» (§3.2) y en las fichas del Hero (§3.1). Ni en la cinta ni en los chips de Proyectos. Los logos de GitHub, LinkedIn y WhatsApp no son de tecnología y van en sus botones.
+**Logos de tecnología:** solo en «Mi stack» (§3.2) y en las fichas del Hero (§3.1). Ni en la cinta ni en los chips de Proyectos. Los logos de GitHub, LinkedIn y WhatsApp no son de tecnología: van en las píldoras de canales de Contacto (§3.5) y en «Ver todos en GitHub» (GitHub), y **no** en los botones «Ver código».
 
 **Regla de alcance:** no se elimina ni se mueve ninguna sección existente. Todo lo nuevo se **añade** a la sección que se indica, y solo cambian los textos que este documento cita.
 
@@ -101,7 +101,7 @@ Sin cambios: panel 40 px (28 en ≤ 900 px), tarjeta 32, bloque 24 (campos 18, 1
 
 Orden único: Hero · 01 Perfil · 02 Servicios · 03 Proyectos · 04 Contacto · pie.
 
-**i18n:** todo texto nuevo lleva su versión en inglés en `en.ts`. Las versiones en inglés de §3.1, §3.2 y §3.5 son las definitivas: úsalas tal cual.
+**i18n:** todo texto nuevo lleva su versión en inglés en `en.ts`. Las versiones en inglés de §3.1, §3.2, §3.3 y §3.5 son las definitivas: úsalas tal cual.
 
 ### 3.0 Navegación (`navbar-states.dc.html`)
 
@@ -122,6 +122,12 @@ Orden único: Hero · 01 Perfil · 02 Servicios · 03 Proyectos · 04 Contacto �
   - **Izquierda:** ventana de código girada -3° (barra con tres puntos, nombre de archivo y líneas abstractas en Code / Bone / `#E8C9A0`). **El archivo debe ser real:** usa un controlador de `logitrack-api` que exista y su nombre de archivo verdadero (en el tablero, «AuthController.java» es un marcador). Si no puedes verificarlo en el repo, para y pregunta.
   - **Derecha:** rótulo `// stack principal` y 6 fichas con logo (Java, Spring Boot, PostgreSQL, Docker, n8n, Python), giradas 2,5°.
   - Por debajo de 1280 px se ocultan (no caben junto al nombre).
+  - **Hover (nuevo), solo con `(hover: hover) and (pointer: fine)`:** siguen siendo decorativos, no focusables y sin `role`.
+    - Ventana de código: al pasar el puntero se endereza (de -3° a 0°) y sube con `translateY`. Transición ~300 ms con `--ease-cine`.
+    - Fichas del stack: solo la ficha bajo el puntero sube `translateY(-4px)` con `scale(1.04)`; el resto no se mueve.
+    - Realce teal (`--color-code`): borde y brillo en un **pseudo-elemento superpuesto** cuyo `opacity` pasa de 0 a 1. No se anima `border-color` ni `box-shadow`.
+    - Con `prefers-reduced-motion`: sin movimiento; como mucho, el cambio de `opacity` del realce.
+    - No altera el layout ni tapa el nombre o la foto; respeta el `z-index` actual.
 - **Lema nuevo, centrado al pie de la foto**, sobre un velo que funde la foto con el panel (`linear-gradient` de Ink a transparente, 190 px de alto):
   - ES: «EL CÓDIGO RESUELVE.» (Bone) / «EL CRITERIO MARCA LA DIFERENCIA.» (Signal).
   - EN: «CODE SOLVES.» / «JUDGMENT MAKES THE DIFFERENCE.»
@@ -154,13 +160,16 @@ Orden único: Hero · 01 Perfil · 02 Servicios · 03 Proyectos · 04 Contacto �
 
 ### 3.3 Servicios (Paper)
 
-Sin cambios, salvo que los separadores «/» de la cinta de código pasan a Code.
+Sin cambios, salvo que los separadores «/» de la cinta de código pasan a Code y el texto de **06 Comunicación estratégica**:
+
+- ES: «Analizo necesidades, alineo objetivos y convierto ideas en requerimientos técnicos claros. Busco que cada solución tenga sentido para el negocio, el equipo y las personas que la usan.»
+- EN: «I analyze needs, align goals and turn ideas into clear technical requirements. I aim for every solution to make sense for the business, the team and the people who use it.»
 
 ### 3.4 Proyectos (Deep)
 
 - «Ver todos en GitHub ↗» como píldora con borde y logo de GitHub (ya implementado).
 - **Etiquetas de stack:** sin cambios y **sin logos** (solo texto).
-- «Ver código ↗» con logo de GitHub delante.
+- «Ver código ↗» de cada tarjeta: **solo texto, sin logo** (desktop y móvil). Nombre accesible con el proyecto, p. ej. «Ver código de LogiTrack IQ en GitHub». El logo de GitHub queda únicamente en «Ver todos en GitHub ↗».
 - El resto, sin cambios.
 
 ### 3.5 Contacto: dos paneles, formulario a la vista
@@ -174,7 +183,7 @@ La escena se parte en **dos paneles** con 12 px de separación (columnas 1,15 fr
     - ES (22 px, 700): «¿Tienes un proyecto, un problema por resolver o buscas a alguien que aporte a tu equipo?»
     - ES (18 px, 500): «Hablemos de tus objetivos, lo que necesitas y cómo puedo aportar desde el desarrollo de software.»
     - EN: «Do you have a project, a problem to solve, or are you looking for someone to strengthen your team?» / «Let's talk about your goals, what you need and how I can contribute through software development.»
-  - Al pie, rótulo «O por el canal que prefieras» y píldoras **con icono o logo**: Copiar correo (icono de sobre), WhatsApp, GitHub, LinkedIn (logos oficiales) y **un solo** menú «CV · ES ⌄» / «CV · EN ⌄» según el idioma (ya implementado). Se mantienen los mecanismos actuales de correo y WhatsApp: el dato nunca aparece en el HTML.
+  - Al pie, rótulo «O por el canal que prefieras» y píldoras **con icono o logo**: Copiar correo (icono de sobre), WhatsApp, GitHub, LinkedIn (logos oficiales **de un solo color, en el color del texto del panel**: tinta `#0A0A0B` sobre Signal; nunca blancos ni recoloreados con filtros. En los tableros siguen como marcador «logo») y **un solo** menú «CV · ES ⌄» / «CV · EN ⌄» según el idioma (ya implementado). Se mantienen los mecanismos actuales de correo y WhatsApp: el dato nunca aparece en el HTML.
 - **Panel derecho (Ink): el formulario, siempre visible.**
   - Rótulo `nuevo_mensaje()` en Code y título «CUÉNTAME TU IDEA» (EN «TELL ME YOUR IDEA»).
   - Campos, validación, estados y textos de error: los actuales del modal, sin cambios de lógica. Las opciones de «¿Qué necesitas?» son las que ya tiene el código (el tablero las muestra de forma ilustrativa).
