@@ -1,8 +1,10 @@
 # Formulario de contacto: estado y requisitos del backend
 
-El diálogo «Escríbeme» de la escena Contacto (spec §5) tiene la interfaz completa, pero **todavía no envía nada**. Cómo se enviará (una función propia en el hosting o un servicio externo) está **pendiente de decisión del autor**.
+El formulario de la escena Contacto, siempre a la vista en su panel derecho (spec v2.1 §3.5), tiene la interfaz completa, pero **todavía no envía nada**. Cómo se enviará está **pendiente de decisión del autor**, junto con el hosting: la propuesta en estudio es una función propia en `api/` del mismo repo (Vercel Functions) y un servicio de correo transaccional, pero antes hay que resolver si el plan gratuito de Vercel admite este sitio, porque sus reglas limitan el plan Hobby a uso personal no comercial (spec §5).
 
 ## Cómo está montado hoy
+
+- `src/components/ui/ContactForm.tsx` es el formulario; sustituyó al diálogo «Escríbeme» del rediseño v2, que se retiró con su efecto magnético. No tiene autofocus: ya está a la vista.
 
 - `src/lib/sendContactMessage.ts` define la interfaz del envío: `sendContactMessage(payload: ContactMessage): Promise<SendResult>`.
   - `ContactMessage`: `name`, `email`, `company` (puede ir vacío), `needs` (ids de `src/data/contactNeeds.ts`) y `message`, todos sin espacios en los extremos.
@@ -10,6 +12,7 @@ El diálogo «Escríbeme» de la escena Contacto (spec §5) tiene la interfaz co
 - El adaptador actual **no hace ninguna petición de red ni lleva claves**: devuelve `{ ok: false, reason: 'not-configured' }`. El formulario muestra entonces el aviso de error (`role="alert"`), conserva lo escrito y ofrece «Copiar correo».
 - El estado «Mensaje recibido» existe en la interfaz y está probado con un adaptador simulado, pero con el adaptador actual no se alcanza.
 - La validación del navegador (`src/lib/contactForm.ts`) solo ayuda a quien escribe: nombre obligatorio, correo con forma de correo y mensaje de al menos 10 caracteres.
+- Lo que pidió la auditoría de Vercel y ya está: cada campo con su `name`, el correo sin corrector ortográfico, placeholders de ejemplo acabados en «…» y ⌘/Ctrl + Enter para enviar desde el mensaje. Mientras envía, el botón lleva `aria-disabled` (no `disabled`, para no perder el foco) y una guarda contra el doble envío; falta una clave de idempotencia, que es cosa del backend.
 
 ## Requisitos de seguridad del futuro backend
 

@@ -1,16 +1,16 @@
 # Comandos del Hero
 
-Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano sus comprobaciones. Este documento dice qué hace cada uno y fija lo que comparten: los requisitos, el protocolo de medición y lo que es normal encontrar al verificar el contacto.
+Tres comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano sus comprobaciones. Este documento dice qué hace cada uno y fija lo que comparten: los requisitos, el protocolo de medición y lo que es normal encontrar al verificar el contacto.
 
 | Comando | Cambia |
 |---|---|
 | `/update-hero-cv` | Los cuatro PDFs del CV |
 | `/update-hero-photo` | El retrato |
 | `/update-hero-intro` | El párrafo de presentación |
-| `/update-hero-social` | La fila de redes y contacto |
-| `/update-hero-badge` | Una de las cinco pastillas |
 
-> **Estado:** los cinco comandos existen. Su invocación real (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) está pendiente de probar, tras reiniciar Claude Code; lo que falle se arregla en un commit `fix` aparte. Esta nota se borra cuando esa prueba esté hecha.
+**Retirados el 2026-11-11, porque las piezas que cambiaban se fueron con el rediseño v2:** `/update-hero-social` (la fila de redes y contacto del Hero) y `/update-hero-badge` (las cinco pastillas flotantes). El Hero v2.1 ya no tiene ninguna de las dos piezas: las redes van en la escena Contacto y en el pie, y las tecnologías en las seis fichas «// stack principal» y en «Mi stack» de Perfil, todas con datos de `src/data/`. Los dos comandos siguen en el historial de git.
+
+> **Estado:** su invocación real (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) está pendiente de probar, tras reiniciar Claude Code; lo que falle se arregla en un commit `fix` aparte. Esta nota se borra cuando esa prueba esté hecha. El párrafo del Hero se cambió en el rediseño v2.1 siguiendo los pasos de `/update-hero-intro` sin invocarlo, con la autorización del autor (`214f876`).
 >
 > Lección de las pruebas: cada escenario de prueba se ejecuta con su propio permiso de copia, y los escenarios de parada nunca copian. Una prueba que copia a `public/cv/` o a `src/assets/hero/` se restaura desde la copia de seguridad, y se comprueban los SHA-256 antes de seguir.
 
@@ -26,11 +26,11 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
 
 ## Requisitos
 
-- **Playwright MCP.** Los comandos que miden (foto, párrafo, redes y pastilla) lo necesitan. Es una herramienta local y no está versionada: `.mcp.json` y `.playwright-mcp/` van en `.git/info/exclude`. **Si no está disponible, el comando informa «no se pudo comprobar» en cada medida y no da nada por bueno.**
+- **Playwright MCP.** Los comandos que miden (foto y párrafo) lo necesitan. Es una herramienta local y no está versionada: `.mcp.json` y `.playwright-mcp/` van en `.git/info/exclude`. **Si no está disponible, el comando informa «no se pudo comprobar» en cada medida y no da nada por bueno.**
 - **`pdftotext` y Pillow** son herramientas de esta máquina, no del repo. Si falta la que el comando necesita, el comando se detiene y lo dice; no la instala ni la sustituye por otra.
 - **Archivos de fuera del repo.** Antes de leer nada fuera del repo, el comando avisa de la ruta exacta que va a leer. No copia nada al repo antes de verificarlo.
 - **Capturas y trazas:** pueden contener el contacto ya ensamblado. No se commitean.
-- **Quién actualiza `docs/LOGOS.md`:** todo comando que añada o cambie un archivo de logo o de icono actualiza su fila (origen, licencia y SHA-256) en el mismo cambio. Hoy son `/update-hero-social` y `/update-hero-badge`.
+- **Quién actualiza `docs/LOGOS.md`:** todo cambio que añada o cambie un archivo de logo o de icono actualiza su fila (origen, licencia y SHA-256) en el mismo commit. Ninguno de los tres comandos toca logos.
 
 ## Fichas
 
@@ -66,12 +66,11 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
   - que los WebP salen sin EXIF, sin XMP y sin perfil ICC, leyendo sus fragmentos RIFF. La exportación vacía los metadatos a propósito;
   - el protocolo de medición completo, antes y después.
 - **Qué cambia:** los cuatro archivos de `src/assets/hero/` (576, 800, 1152 y 1472 px de ancho), tras guardar fuera del repo una copia de los actuales con sus SHA-256.
-- **Qué tests toca:** `src/components/sections/Hero.badges.test.tsx`: vuelve a medir la silueta y actualiza solo `left` y `sha256` de la constante `SILHOUETTE`. Ese test falla a propósito en cuanto cambia el archivo. `src/assets/hero/portrait.test.ts` ya comprueba las dimensiones, la proporción, la transparencia y que ningún archivo lleva EXIF, XMP ni perfil de color: no se toca, se ejecuta.
-- **Qué depende de la foto, además de la silueta:** la franja de la cara (del 14 % al 45 % del alto, que los tests dan por hecha) y los porcentajes de las pastillas. El comando mide dónde quedan sobre la foto nueva; si una pastilla pasa a tapar la cara, a tocar la silueta o a incumplir los 20 puntos, no la mueve: da las cifras y ofrece opciones.
-- **Margen de Java:** informa, antes y después, de los puntos porcentuales que hay entre el borde derecho de la pastilla de Java y la silueta; si es negativo, Java queda dentro de la silueta. No es lo mismo que el hueco horizontal a la figura, que va en píxeles: cada cifra dice cuál de las dos es.
-- **Qué no hace:** no recorta, no retoca ni quita el fondo; no mueve pastillas; no cambia `hero.photoAlt`; no versiona un script de exportación.
+- **Qué tests toca:** ninguno. `src/assets/hero/portrait.test.ts` ya comprueba las dimensiones, la proporción, la transparencia y que ningún archivo lleva EXIF, XMP ni perfil de color, y `src/components/sections/Hero.portrait.test.tsx`, cómo se carga: se ejecutan, no se tocan. El test de la silueta (`Hero.badges.test.tsx`) se retiró con las pastillas en el rediseño v2.
+- **Qué depende de la foto:** el lema y su velo van al pie de la foto, y el nombre detrás. El comando mide con el protocolo si el lema sigue leyéndose sobre el velo y si la cara queda tapada por el lema o cortada en la primera pantalla; si algo empeora, da las cifras y ofrece opciones.
+- **Qué no hace:** no recorta, no retoca ni quita el fondo; no mueve el lema ni los paneles; no cambia `hero.photoAlt`; no versiona un script de exportación.
 - **Avisa** de que el historial conserva la foto anterior si la rama ya se subió, y de que la rama se sube con la foto provisional.
-- **Prueba real:** un PNG derivado del WebP actual, fuera del repo. Se anota cuánto cambia la silueta y se confirma que el test del hash falla; después se restaura desde la copia y se comprueba que los hashes vuelven a ser los de antes.
+- **Prueba real:** un PNG derivado del WebP actual, fuera del repo. Se mide con el protocolo; después se restaura desde la copia y se comprueba que los hashes vuelven a ser los de antes.
 
 ### `/update-hero-intro`
 
@@ -83,55 +82,12 @@ Cinco comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano s
   - `.claude/rules/contenido-veraz.md`: nada de años de experiencia, clientes, métricas ni producción real, y cada tecnología nombrada debe estar en `src/data/technologies.ts` o en la descripción de un repo. Lo que no tiene respaldo no lo corrige: lo señala;
   - que el texto no lleva datos personales; si los lleva, se detiene sin imprimirlos;
   - tras escribir, desde disco: sin «Ã», sin CR, sin caracteres de control, y con las tildes, la «ñ» y las comillas intactas;
-  - antes y después, en español e inglés: las líneas que ocupa el párrafo, su tamaño por idioma, el equilibrado, el alto del Hero, el pelo a la barra, figura–párrafo, Python al texto, las distancias de Java y la cara cortada. Avisa con cifras si pasa de cuatro líneas en algún ancho o si algo empeora, y ofrece opciones sin decidir: acortar, ancho o tamaño;
+  - antes y después, en español e inglés: las líneas que ocupa el párrafo, su tamaño por idioma, el alto del Hero, y si el párrafo pisa el apellido, el lema o los paneles laterales (protocolo de medición). Avisa con cifras si pasa de cuatro líneas en algún ancho o si algo empeora, y ofrece opciones sin decidir: acortar, ancho o tamaño;
   - si la descripción del documento dejó de coincidir con el párrafo. La informa; no la toca.
 - **Qué cambia:** `hero.intro` en `src/i18n/es.ts` y `src/i18n/en.ts`, con la herramienta de edición, tras guardar fuera del repo una copia de los tres archivos con sus SHA-256.
 - **Qué tests toca:** la constante `INTRO` de `src/i18n/dictionaries.hero.test.ts`, que fija el texto palabra por palabra.
 - **Qué no hace:** no toca la descripción del documento, el rol ni los tokens de tamaño; no retoca el español recibido. Si el texto nuevo pide otro tamaño, lo dice con cifras y ofrece opciones.
 - **Prueba real:** un texto de prueba, medido y revertido desde la copia.
-
-### `/update-hero-social`
-
-- **Para qué sirve:** añadir una red a la fila, reemplazar una o cambiar su icono.
-- **Qué recibe:** nada; pregunta.
-- **Qué pregunta:** si se añade o se reemplaza (quitar, solo si el autor lo pide); si es reemplazar, cuál y si entera o solo el icono; el nombre de la red y el enlace de su perfil. El pie de página se pregunta cada vez, antes de tocarlo.
-- **Cómo es el registro** (`src/data/social.ts`): cada entrada tiene cuatro campos, `id`, `kind`, `icon` y `brand`, y ninguna guarda una URL ni un dato de contacto. Las de enlace toman su URL de `site.social`, en `src/config/site.ts`, la misma del pie; un test exige que toda red con enlace del Hero esté también en el pie. El tope es `HERO_SOCIAL_LIMIT`.
-- **Qué comprueba:**
-  - primero la política de marca vigente, leída ese día en su fuente oficial; no se fía de `docs/LOGOS.md`. Si no permite el uso, propone un icono genérico, propio o de licencia CC0, MIT o ISC, con candidatos y capturas;
-  - si la política se leyó con una herramienta que devuelve un resumen y no el texto literal, lo dice, cita solo lo que vio palabra por palabra y no da por seguro que la marca permite el logo. Antes de usar un logo de marca, el autor abre el enlace y lo confirma;
-  - después busca el logo en esa fuente. Avisa de la URL exacta antes de descargar y lo guarda fuera del repo; si no puede, da el enlace y espera a que el autor lo traiga;
-  - el tope y el orden: los enlaces primero, después el correo y WhatsApp, y la red nueva al final de los enlaces; pregunta si el autor quiere otro orden;
-  - el comprobador de SVG antes de copiar el archivo. Si lo bloquea, lo dice y no relaja el comprobador sin preguntar;
-  - la verificación de `.claude/rules/contacto.md`, con su control positivo;
-  - el protocolo de medición, en la parte que afecta a la fila, con 320 px de ancho incluido: es donde antes se parte.
-- **Dato medido, 11 de octubre de 2026:** con cinco controles la fila mide 268 px, y a 320 px de ancho caben 267, así que se parte en dos filas: el Hero pasa de 863 a 919 px y la cara cortada, de 112 a 168 px, en español. El tope se queda en 5; el comando mide a 320 px y avisa con cifras, sin decidir.
-- **Qué cambia:** `src/data/social.ts`; la URL en `site.social` y, con confirmación, la lista del pie (`src/config/site.ts`); los nombres accesibles en `es.ts` y `en.ts`; el archivo en `public/social/` o `public/icons/`, y su fila en `docs/LOGOS.md`, con la fecha de lectura de la política. Antes guarda fuera del repo una copia de todo lo que toca, con sus SHA-256.
-- **Qué tests toca:** `src/data/social.test.ts`, `src/components/sections/Hero.social.test.tsx` y la constante `SOCIAL` de `src/i18n/dictionaries.hero.test.ts`; `src/data/socialLogos.test.ts` solo si entra o sale un logo de marca. `src/data/logoRecord.test.ts` no se toca y debe seguir pasando. Los lista antes de tocarlos y no debilita ninguno.
-- **Qué no hace, y es su garantía:** nunca pide ni acepta un correo o un teléfono. El correo y WhatsApp son entradas cuyo `kind` dice que salen por `ContactButton`; su valor no está en el registro, sino codificado en `src/config/contact.ts`, que el comando no toca. De esas dos entradas solo se puede cambiar el icono. Si el autor pide cambiar el correo o el número, se detiene; si pega uno, se niega a escribirlo y a repetirlo.
-- **Prueba real:** añadir una red de prueba y revertirla desde la copia.
-
-### `/update-hero-badge`
-
-- **Para qué sirve:** reemplazar una de las cinco pastillas por otra tecnología.
-- **Qué recibe:** nada; pregunta.
-- **Qué pregunta:** cuál se reemplaza, por qué tecnología y de dónde sale la etiqueta. Toda etiqueta de stack nueva se justifica citando de dónde sale (`.claude/rules/contenido-veraz.md`), y sale de la descripción de un repo en GitHub (`AGENTS.md`). Una certificación solo cuenta si el autor lo dice. Antes de renombrar cualquier cosa ligada a un puesto, pregunta.
-- **Cómo son las pastillas:** `heroBadges`, en `src/data/technologies.ts`, da el orden y, de cada una, `technology`, `icon` y `brand`. La posición no va ahí: va en una regla por puesto, `.float:nth-child(n)`, en `Hero.module.css`. El puesto es el lugar de la pastilla en la lista.
-- **Qué comprueba:**
-  - si la tecnología no está en `src/data/technologies.ts`, propone la entrada;
-  - primero la política de marca vigente, leída ese día en su fuente oficial; las de Python y TypeScript no constan en `docs/LOGOS.md` y se leen si entran en juego;
-  - si la política se leyó con una herramienta que devuelve un resumen y no el texto literal, lo dice, cita solo lo que vio palabra por palabra y no da por seguro que la marca permite el logo. Antes de usar un logo de marca, el autor abre el enlace y lo confirma;
-  - el icono, por este orden: el oficial si la marca lo permite, avisando de la URL exacta y guardándolo fuera del repo; si no puede descargarlo, el enlace para el autor; si no se permite o no se consigue, tres o cuatro candidatos genéricos de licencia CC0, MIT o ISC, verificada en el `LICENSE` del repositorio oficial, con capturas a tamaño real y ampliadas;
-  - mide la tinta del icono y propone el menor factor de compensación que la iguala, con su test y con capturas a factor 1 y al propuesto. Da el margen de la caja a la placa en los tres tramos de letra y avisa si solo cabe con el tope ×1,27, donde el margen es de menos de 0,1 px;
-  - el comprobador de SVG, antes de copiar el archivo; si lo bloquea, no lo relaja;
-  - el protocolo de medición completo, antes y después.
-- **Qué cambia:** el registro de pastillas, el icono, su token de compensación si lo necesita y su fila en `docs/LOGOS.md`, con la fecha de lectura de la política. La pastilla nueva conserva el puesto y el lado de la que sustituye. Antes guarda fuera del repo una copia de todo lo que toca, con sus SHA-256.
-- **Qué tests toca:** `src/data/heroBadges.test.ts`, `src/data/badgeIcons.test.ts` o `src/data/brandLogos.test.ts`, y los de `Hero.badges.test.tsx` que nombran la pastilla. Los lista antes de tocarlos. `src/data/logoRecord.test.ts` no se toca y debe seguir pasando.
-- **Qué pertenece al puesto y qué a la tecnología:**
-  - **al puesto,** y lo hereda la pastilla nueva: el lado, la altura y la posición en todos los tramos; en el que va junto a la cabeza, `--hero-java-right`, el test de la silueta y el hash de la foto; y los tests de reparto, como el de los 20 puntos. El hash y `SILHOUETTE` no se tocan;
-  - **a la tecnología,** y sale con ella: el icono, su entrada del catálogo, su factor de compensación, su fila de `docs/LOGOS.md` y los tests del propio archivo;
-  - **nombres que mezclan las dos cosas:** `--hero-java-right` y el bloque de tests «Java» son del puesto; los factores `--badge-icon-scale-…` son del icono; y el bloque «todas miden lo mismo que TypeScript» usa esa pastilla como referencia de tamaño: si TypeScript sale, ese test deja de compilar y el build falla hasta elegir otra referencia. El comando pregunta si esos nombres pasan a ser neutros, dice cuántos archivos y tests cambian, y espera.
-- **Qué no hace:** nunca añade una sexta pastilla; no cambia posiciones; no renombra nada en silencio; no borra el icono ni los tests de la tecnología que sale sin que el autor apruebe la lista exacta; no decide si un límite que empeora es aceptable.
-- **Prueba real:** reemplazar una pastilla por una de prueba, medir y revertir desde la copia.
 
 ## Protocolo de medición
 
@@ -142,41 +98,27 @@ Lo aplican los comandos que cambian algo visible. No depende de ningún otro doc
 - Contra la compilación (`npm run build` y la vista previa de Vite), no contra el servidor de desarrollo. El comando usa un puerto propio y no toca el servidor del autor.
 - En Chrome, con Playwright MCP. Safari, Firefox y un dispositivo físico no se comprueban: se dice.
 - **En español y en inglés.** El idioma se fija a propósito antes de cada medida, porque el navegador lo recuerda de una a otra.
-- **En reposo y con la flotación.** Las pastillas suben 8 px al flotar: cada distancia de una pastilla se mide en reposo y en lo más alto.
 - **La curva completa, no puntos sueltos:** un barrido de anchos y, en cada breakpoint y en cada tope de tamaño, un píxel a cada lado.
+- **Las letras, no las cajas:** los `span` del nombre van a todo el ancho; lo que choca se mide con la caja de las letras (un `Range` del texto). Esa caja incluye el descendente de Anton, así que un solape pequeño con el apellido se confirma en una captura antes de darlo por choque.
 
 ### Anchos y alturas
 
 | Tramo | Ventanas |
 |---|---|
-| Dos columnas | 1024×768, 1034×768, 1040, 1056, 1072, 1088, 1104, 1152×768, 1280×800, 1281×800, 1440×900 y 1920×1080 |
-| Dos columnas, ventana baja | 1024×600, 1034×600, 1152×600, 1280×600, 1281×600 y 1312×600 |
-| Apilado | 1023×768, 1023×600, 820, 768×1024, 769, 644, 643 y 481×800 |
-| Teléfono | 480×800, 390×844, 381, 380, 360×740 y 320×640 |
-| Teléfono en horizontal | 844×390, 740×360, 667×375 y 568×320 |
+| Dos columnas, con paneles laterales (desde 1281 px) | 1281×800, 1281×720, 1290×800, 1312×800, 1366×768, 1440×900, 1520×900, 1600×900 y 1920×1080 |
+| Apilado (hasta 1280 px) | 1280×800, 1279×800, 1152×768, 1104, 1056, 1024×768, 1023×768, 900×1000, 768×1024 y 644×900 |
+| Teléfono | 481×800, 480×800, 390×844, 360×740 y 320×640 |
 
-**La tabla es un mínimo.** Lo que manda es el barrido de anchos, más un píxel a cada lado de cada breakpoint y de cada tope de tamaño.
-
-Donde no se da el alto, vale 768 en dos columnas y 800 en el resto. Los breakpoints son los de `src/styles/tokens.css`.
-
-Los valores sueltos de la tabla (1034, 643 y 644) no son una regla: son los anchos donde hoy cambia algo, con el texto y la foto actuales. Si el barrido encuentra otros, se miden esos y se actualiza la tabla.
+**La tabla es un mínimo.** Lo que manda es el barrido de anchos, más un píxel a cada lado de cada breakpoint y de cada tope de tamaño. Los breakpoints son los de `src/styles/tokens.css`; el Hero pasa de dos columnas a apilado en 1280 px.
 
 ### Qué se mide
 
 - **Scroll horizontal:** ninguno, en ningún tamaño.
 - **Párrafo:** líneas que ocupa, tamaño de letra y alto del Hero, por idioma.
-- **A la barra de navegación:** el pelo de la figura y el saludo.
-- **Figura–párrafo:** la distancia mínima entre el texto y la silueta.
-- **Cara cortada en la primera pantalla,** apilado y en teléfono: cuántos píxeles de la cara quedan bajo el borde de la ventana.
-- **Cada pastilla:** su ancho; su distancia al texto, a la figura, a las otras pastillas, a la barra y al borde de la ventana; y qué parte de su caja tapa la silueta y la franja de la cara.
-- **El test de los 20 puntos:** las pastillas del mismo lado distan al menos 20 puntos de alto en todos los tramos (`src/components/sections/Hero.badges.test.tsx`).
-
-### Las dos medidas de «a la figura»
-
-- **Hueco horizontal:** en las filas que ocupa la pastilla, la distancia horizontal entre su caja y el primer píxel opaco de la figura.
-- **Píxel opaco más cercano:** la distancia de la caja al píxel opaco más próximo, en cualquier dirección.
-
-**No son comparables entre sí.** La segunda es siempre menor o igual que la primera. Cada cifra dice cuál de las dos es, y un «antes» solo se compara con un «después» de la misma medida.
+- **El nombre:** su tamaño (`clamp(120px, 17.5vw, 252px)`, 112 en teléfono) y si el párrafo o el rol lo pisan.
+- **El lema:** sus líneas, y que no choca con el apellido, con los bloques laterales ni con la cinta.
+- **Paneles laterales (desde 1281 px):** que no chocan con el nombre ni con los bloques, entre 1281 y 1600 px como mínimo.
+- **Cara cortada en la primera pantalla,** apilado y en teléfono: cuántos píxeles de la cara quedan bajo el borde de la ventana o bajo el lema.
 
 ### Cómo se comparan
 

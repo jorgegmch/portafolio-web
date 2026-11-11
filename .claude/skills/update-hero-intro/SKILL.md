@@ -27,8 +27,8 @@ autor aparte, dentro del comando.
 - No toques nada más que `hero.intro` en los dos diccionarios y la
   constante `INTRO` del test: ni la descripción del documento, ni el rol,
   ni los tokens de tamaño, ni ningún otro test.
-- No toques `hero.tagline`: es otra clave, sigue en los diccionarios sin
-  mostrarse y su destino lo decide el autor.
+- No toques el lema (`hero.motto`) ni la línea de stack (`hero.stackLine`):
+  son otras claves, con sus propios textos aprobados.
 - No edites con `Get-Content` ni `Set-Content` de PowerShell: corrompen la
   codificación. Usa la herramienta de edición.
 - No escribas datos personales en ningún sitio, tampoco en tu respuesta ni
@@ -95,15 +95,13 @@ autor aparte, dentro del comando.
     esas líneas.
 11. **Medir el «después».** Compila y aplica otra vez el protocolo, en
     español e inglés. Además de lo que el protocolo pide:
-    - las líneas del párrafo en cada ancho, con un barrido de 1024 a 1152
-      píxel a píxel donde cambie el número de líneas;
-    - el tamaño de letra por idioma. El máximo, `--hero-intro-size-max`,
-      está calibrado para el texto anterior; léelo en
-      `src/styles/tokens.css` y di si sigue sirviendo;
-    - el equilibrado de las líneas en dos columnas;
-    - el alto del Hero, el pelo a la barra, figura–párrafo, Python al
-      texto, las distancias de Java y la cara cortada en la primera
-      pantalla.
+    - las líneas del párrafo en cada ancho, con un barrido de 1281 a 1440
+      (dos columnas) píxel a píxel donde cambie el número de líneas;
+    - el tamaño de letra por idioma (`--hero-intro-size` en
+      `src/styles/tokens.css`) y si sigue sirviendo con el texto nuevo;
+    - el alto del Hero, si el párrafo pisa el apellido (en dos columnas el
+      párrafo crece hacia arriba, desde los 132 px del pie del escenario) y
+      la cara cortada en la primera pantalla.
     Avisa con cifras si el párrafo pasa de cuatro líneas en algún ancho, o
     si algo empeora, y ofrece opciones sin decidir: acortar el texto,
     cambiar el ancho del párrafo o cambiar su tamaño.

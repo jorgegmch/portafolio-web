@@ -6,7 +6,7 @@ El encargo 1 (Hero) ya está hecho: su texto queda en el historial de `docs/PLAN
 
 ### Encargo 2 — Transición de idioma
 
-(en PLAN.md corresponde a la Fase 7)
+(en PLAN.md correspondía a la Fase 7, cuya página de certificaciones retiró el rediseño v2; el encargo sigue aprobado, sin fase asignada)
 
 > Commit propio: feat(i18n): add language switch transition. Al cambiar de idioma, Navbar, main y Footer se apagan (opacidad a 0) y vuelven, en 1 s en total: unos 450 ms de salida, el cambio de idioma exactamente en el punto oscuro (el atributo lang de html se actualiza ahí), y unos 450 ms de entrada. El canvas de partículas y el skip link quedan fuera del efecto. Duraciones como constantes nombradas o tokens, sin números sueltos. Con prefers-reduced-motion el cambio es instantáneo, sin animación. Un solo ciclo, sin parpadeos. El foco debe quedarse en el botón del selector. Si el usuario elige otro idioma durante la transición, dime qué harías antes de implementar y espera mi respuesta. Los tests del LangSwitcher y LangProvider que asuman cambio síncrono tendrán que actualizarse: lista cuáles y por qué antes de tocarlos. Tests con temporizadores falsos, rojo real y mutación de control en el momento del cambio de idioma. Confirma sin Ã ni CR desde disco. Después: git show --stat HEAD y espera mi aprobación. Sin push.
 

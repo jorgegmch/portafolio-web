@@ -4,7 +4,7 @@ Guía para agentes de código que trabajan en este repositorio.
 
 ## Qué es
 
-Portafolio personal en reconstrucción: SPA con Vite + React 19 + TypeScript estricto, con i18n ES/EN, que se desplegará en Vercel. El trabajo va por fases en la rama `rebuild/vite-react`.
+Portafolio personal en reconstrucción: SPA con Vite + React 19 + TypeScript estricto, con i18n ES/EN. El hosting y el backend del formulario están pendientes de decisión del autor (Vercel en estudio; ver `docs/PLAN.md`). Las fases 1 a 5 se hicieron en la rama `rebuild/vite-react`; el rediseño v2 y v2.1, que sustituyó a la Fase 6, sigue en `redesign/v2`. Su fuente de verdad es `docs/design/redesign-v2/DESIGN-SPEC.md`.
 
 `docs/PLAN.md` contiene las fases, los pendientes de decisión y los riesgos; léelo al empezar cada fase y actualízalo al cerrarla, en un commit `docs` propio. `docs/MEMORY.md` contiene la memoria entre sesiones: estado actual, decisiones con su porqué, aprendizajes y próximos pasos.
 
@@ -26,7 +26,7 @@ npx vitest run -t "medianoche"                # tests cuyo nombre coincide
 Un módulo solo importa de su propia capa o de las inferiores. Lo hace cumplir `no-restricted-imports` en `eslint.config.js`, así que una violación rompe el lint. Detalle en `.claude/rules/arquitectura.md`.
 
 ```
-config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layout · components/sections  <-  pages  <-  App
+assets · config · data · i18n · lib · styles  <-  hooks  <-  components/ui  <-  components/layout · components/sections  <-  pages  <-  App
 ```
 
 - Los imports hacia carpetas padre (`../`) están prohibidos: usa el alias `@/` (apunta a `src/`).
@@ -36,8 +36,8 @@ config · data · i18n · lib  <-  hooks  <-  components/ui  <-  components/layo
 ### Contacto
 
 - No escribas el email ni el teléfono como texto literal en ningún archivo de texto del repo: viven codificados en `src/config/contact.ts`.
-- Se publican en claro solo en dos sitios: la sección de contacto, que los decodifica al renderizar y los muestra como texto, y el contenido de los PDFs del CV.
-- En el resto de la aplicación se ensamblan con `assembleContact` solo dentro de un manejador de clic, mediante `ContactButton`. Detalle y verificación en `.claude/rules/contacto.md`.
+- Se publican en claro solo en el contenido de los PDFs del CV. La página no los muestra como texto en ninguna parte.
+- Se ensamblan con `assembleContact` solo dentro de un manejador de clic, mediante `ContactButton`, que hoy solo está en la escena Contacto. Detalle y verificación en `.claude/rules/contacto.md`.
 
 ## Reglas del proyecto
 
@@ -55,7 +55,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 - **Nombre:** completo «Jorge Alberto Gómez Chaparro» y corto «Jorge Gómez», con tilde en todo texto visible. Se definen una vez en `config/site.ts`. Los nombres de archivo, slugs y URLs van en ASCII, sin tilde.
 - **Sin inventar datos:** las etiquetas de stack salen de la descripción de cada repo en GitHub; tecnologías sin niveles ni porcentajes.
 - **DRY con regla de tres:** no extraigas una abstracción hasta la tercera repetición real.
-- **Datos del Hero:** para cambiar el CV, la foto, el párrafo, las redes o una pastilla del Hero se usa `/update-hero-cv`, `/update-hero-photo`, `/update-hero-intro`, `/update-hero-social` o `/update-hero-badge` (detalle en `docs/COMANDOS-HERO.md`); no edites esos datos a mano. Son comandos manuales: los invoca el autor; si te piden uno de esos cambios, pídele que lo invoque.
+- **Datos del Hero:** para cambiar el CV, la foto o el párrafo del Hero se usa `/update-hero-cv`, `/update-hero-photo` o `/update-hero-intro` (detalle en `docs/COMANDOS-HERO.md`); no edites esos datos a mano. Son comandos manuales: los invoca el autor; si te piden uno de esos cambios, pídele que lo invoque.
 
 ## Flujo de trabajo
 
@@ -88,7 +88,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 - ⚠️ Pregunta antes: añadir dependencias (con `npm audit` antes y después) y cualquier petición a terceros en runtime (Google Fonts, analítica, CDN, iframes).
 - ⚠️ Pregunta antes: editar archivos fuera del repo (memoria automática, configuración de usuario).
 - 🚫 Nunca: cédula ni fecha de nacimiento en claro en ningún archivo ni en el sitio publicado.
-- 🚫 Nunca: email ni teléfono en claro en código, tests, docs, comentarios, logs, capturas ni metadatos de PDF o imágenes (en documentos se nombra el campo, no su valor). Solo se publican en la sección de contacto renderizada y en el contenido de los PDFs del CV; su origen es `src/config/contact.ts`, codificado.
+- 🚫 Nunca: email ni teléfono en claro en código, tests, docs, comentarios, logs, capturas ni metadatos de PDF o imágenes (en documentos se nombra el campo, no su valor). Solo se publican en el contenido de los PDFs del CV; en la página, `ContactButton` los arma dentro del clic sin escribirlos. Su origen es `src/config/contact.ts`, codificado.
 - 🚫 Nunca: `dangerouslySetInnerHTML`, `innerHTML`, `eval` ni `new Function`.
 - 🚫 Nunca: secretos en variables `VITE_*` (son públicas), ni tokens o claves en archivos del repo o en workflows; usar GitHub Secrets.
 - 🚫 Nunca: `git add .` ni `git add -A`; `--no-verify`; force push; push sin que se pida; commitear `.claude/settings.local.json`. `permissions.deny` en `.claude/settings.json` bloquea al agente push, `git add .`/`-A` y `--no-verify`; no cubre variantes como `git commit -nm` ni `git -c k=v push`.

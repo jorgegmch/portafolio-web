@@ -5,6 +5,7 @@
 - Prohibido inventar o insinuar años de experiencia, clientes o métricas de impacto.
 - No afirmar ni insinuar uso en producción real. Si hace falta matizar un proyecto, usar exactamente la formulación del LinkedIn del autor: «siguiendo los mismos estándares que exigiría un entorno de producción real».
 - Cada etiqueta de stack nueva se justifica citando de dónde sale.
+- El código que muestra el sitio (los fragmentos del Traductor de Perfil y la ventana de código del Hero) es real: copiado de un repo público, sin retocar salvo la sangría común, con «// …» donde se saltan líneas. En `data/` se anotan junto a cada fragmento el repo, el commit, la ruta y las líneas.
 
 ## Proyectos
 
@@ -22,6 +23,8 @@
 - Marcar o desmarcar un proyecto lo decide el autor.
 
 ## Certificaciones
+
+El rediseño v2 retiró la página de certificaciones: del registro de `data/certifications.ts` hoy solo se muestra la Formación de Perfil.
 
 - Solo texto: sin imágenes ni enlaces a los documentos.
 - Los títulos oficiales conservan el original, con la traducción entre paréntesis.
