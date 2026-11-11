@@ -34,6 +34,11 @@
   --color-muted: #a29e97; /* rótulos y secundarios sobre oscuro · 7,1:1 sobre Ink */
   --color-ink-text: #0a0a0b; /* texto sobre Paper y sobre Signal */
   --color-error: #ff8a6b; /* errores del formulario sobre Ink */
+  /* Voz de código (spec v2.1 §1 y §2): sintaxis, cursores, rótulos tipo
+     funcion(), guion bajo del logo y punto de «Disponible». Nunca en botones,
+     fondos, bordes de acción ni títulos: eso es Signal. */
+  --color-code: #45d9c8; /* 10,8:1 sobre Ink · tinta encima 11,3:1 */
+  --color-code-deep: #0a5f54; /* voz de código sobre Paper · 6,1:1 */
   /* Tonos que la spec nombra por su uso. */
   --color-tile-text: #bdb8af; /* etiquetas de las cifras, sobre Tile */
   --color-paper-muted: #5b5750; /* rótulos sobre Paper */
@@ -45,11 +50,16 @@
   --line-08: rgba(242, 238, 230, 0.08);
   --line-10: rgba(242, 238, 230, 0.1);
   --line-12: rgba(242, 238, 230, 0.12);
+  --line-14: rgba(242, 238, 230, 0.14); /* borde de la barra fija */
   --line-18: rgba(242, 238, 230, 0.18);
   --line-24: rgba(242, 238, 230, 0.24);
+  /* Borde de los campos del formulario: 4,05:1 sobre Ink, cumple el 3:1 de
+     los componentes (spec v2.1 §2). */
+  --line-45: rgba(242, 238, 230, 0.45);
   --line-ink-16: rgba(10, 10, 11, 0.16);
   --line-ink-28: rgba(10, 10, 11, 0.28);
   --line-ink-30: rgba(10, 10, 11, 0.3);
+  --line-ink-60: rgba(10, 10, 11, 0.6);
   /* Relleno de la píldora translúcida de la navegación. */
   --color-glass: rgba(242, 238, 230, 0.06);
 

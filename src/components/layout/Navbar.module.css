@@ -14,7 +14,7 @@
   padding: var(--nav-padding-block) var(--nav-padding-inline);
 }
 
-/* El alias en mono, con el guion bajo en el acento. */
+/* El alias en mono, con el guion bajo en la voz de código. */
 .brand {
   color: var(--color-bone);
   font-family: var(--font-mono);
@@ -40,8 +40,9 @@
   visibility: hidden;
 }
 
+/* El guion bajo, en la voz de código. */
 .cursor {
-  color: var(--color-signal);
+  color: var(--color-code);
 }
 
 /* En escritorio, la caja del menú no existe: la píldora y los controles son

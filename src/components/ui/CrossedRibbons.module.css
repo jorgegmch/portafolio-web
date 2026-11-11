@@ -15,11 +15,12 @@
   left: 0;
 }
 
-/* Tinta, girada +3°, con código en mono y «/» en Signal entre fragmentos. */
+/* Tinta, girada +3°, con código en mono y «/» en la voz de código entre
+   fragmentos (spec v2.1 §3.3). */
 .code {
   --ribbon-gap: var(--ribbon-code-gap);
   --ribbon-separator: '/';
-  --ribbon-separator-color: var(--color-signal);
+  --ribbon-separator-color: var(--color-code);
   --ribbon-separator-size: var(--ribbon-code-size);
 
   top: var(--ribbon-code-top);

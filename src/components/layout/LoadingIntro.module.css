@@ -150,10 +150,10 @@
   }
 }
 
-/* El código, en Signal. pre-wrap: el espacio final de un código a medio
-   escribir ocupa su sitio. */
+/* El código, en la voz de código (spec v2.1 §4.1). pre-wrap: el espacio
+   final de un código a medio escribir ocupa su sitio. */
 .code {
-  color: var(--color-signal);
+  color: var(--color-code);
   font-family: var(--font-mono);
   font-size: var(--font-size-intro);
   line-height: var(--leading-base);
@@ -167,7 +167,7 @@
   width: var(--space-2);
   height: var(--font-size-intro);
   margin-left: var(--space-1);
-  background-color: var(--color-signal);
+  background-color: var(--color-code);
   vertical-align: text-bottom;
   animation: blink calc(var(--duration-slow) * 2) step-end infinite;
 }

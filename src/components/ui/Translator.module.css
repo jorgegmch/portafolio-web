@@ -140,8 +140,9 @@
   display: block;
 }
 
+/* La sintaxis, en la voz de código (spec v2.1 §3.2). */
 .keyword {
-  color: var(--color-signal);
+  color: var(--color-code);
 }
 
 .comment {

@@ -1,7 +1,7 @@
 import type { ProjectId } from '@/data/projects'
 
 /**
- * Tramo de una línea de código del Traductor. `keyword` va en el acento y
+ * Tramo de una línea de código del Traductor. `keyword` va en la voz de código y
  * `comment` en el gris de los comentarios; el resto, en el color del texto.
  */
 export interface CodeSegment {

@@ -98,7 +98,7 @@ export function Hero() {
           <div className={styles.identity}>
             <p className={styles.role}>{site.role}</p>
             <p className={styles.stackLine}>
-              {COMMENT_PREFIX}
+              <span className={styles.comment}>{COMMENT_PREFIX}</span>
               {t.hero.stackLine}
             </p>
           </div>

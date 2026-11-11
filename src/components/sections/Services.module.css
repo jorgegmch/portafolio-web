@@ -27,7 +27,9 @@
   text-transform: uppercase;
 }
 
+/* Rótulo tipo funcion(): voz de código sobre Paper. */
 .tag {
+  color: var(--color-code-deep);
   text-transform: none;
 }
 

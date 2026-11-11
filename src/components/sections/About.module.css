@@ -25,8 +25,9 @@
   color: var(--color-signal);
 }
 
+/* Rótulo tipo funcion(), en la voz de código. */
 .tag {
-  color: var(--color-muted);
+  color: var(--color-code);
   text-transform: none;
 }
 

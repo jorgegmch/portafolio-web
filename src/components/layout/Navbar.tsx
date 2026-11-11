@@ -27,7 +27,7 @@ const SECTION_LINKS = [
 const ICON_OPEN = 'M4 9h16M4 15h16'
 const ICON_CLOSE = 'M6 6l12 12M18 6L6 18'
 
-/** Guion bajo del logo, en el acento: signo, no texto traducible. */
+/** Guion bajo del logo, en la voz de código: signo, no texto traducible. */
 const LOGO_CURSOR = '_'
 
 /** El más largo de los dos textos del logo, para reservarle el sitio. */

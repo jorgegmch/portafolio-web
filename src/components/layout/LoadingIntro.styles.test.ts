@@ -110,9 +110,9 @@ describe('LoadingIntro: estilos', () => {
       expect(token(SIZE_TOKEN)).toBe('clamp(1rem, 2.2vw, 1.5rem)')
     })
 
-    it('el código va en Signal y en la tipografía mono', () => {
+    it('el código va en la voz de código y en la tipografía mono', () => {
       expect(rule(introCss, '.code')).toMatchObject({
-        color: 'var(--color-signal)',
+        color: 'var(--color-code)',
         'font-family': 'var(--font-mono)',
       })
     })
