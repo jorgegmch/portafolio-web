@@ -2,9 +2,9 @@
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte. El checklist de fases y los pendientes están en docs/PLAN.md.
 
 ## Estado actual
-- Fases 1 a 5 en rebuild/vite-react (la local va 9 commits por delante de origin, sin subir). La Fase 6 se hizo con el rediseño v2 y v2.1 en redesign/v2, solo en local; la Fase 7 (/certificaciones) se retiró.
+- Fases 1 a 5 en rebuild/vite-react (al día con origin). La Fase 6 se hizo con el rediseño v2 y v2.1 en redesign/v2, ya en origin hasta f7fb1a1; la Fase 7 (/certificaciones) se retiró.
 - Rediseño v2.1 cerrado el 2026-11-11 (hasta b4b681c): fuente de verdad, docs/design/redesign-v2/DESIGN-SPEC.md. Pendientes en PLAN.md, «Pendientes del rediseño v2.1».
-- Para la próxima sesión: logos de redes en negro oficial en el panel Signal de Contacto, y «Ver código» sin logo de GitHub (spec §3.4 y tableros incluidos).
+- Correcciones del 2026-11-11 (7b58543 a db7adbe, solo en local hasta que el autor haga push): spec nueva, logos negros oficiales en Contacto, «Ver código» sin logo, hover del Hero con realce Signal y texto nuevo de «Comunicación estratégica».
 - Hosting y backend del formulario sin decidir (Vercel Hobby es solo para uso personal no comercial); el adaptador del formulario no envía nada.
 
 ## Decisiones (y por qué)
@@ -28,6 +28,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Intro: el foco inicial va a la capa (un foco puesto por código al cargar muestra el anillo sin teclado); dura menos de 5 s, el límite de WCAG 2.2.2, y se cierra con Esc, clic, Enter o Espacio, sin botón.
 - Aparición al hacer scroll: una vez por carga de página, con el registro en el módulo. Lo que aparece no es lo que escala (el <li> aparece, la caja de dentro escala), para que dos transform no choquen en un elemento.
 - Atrás/Adelante: las entradas del historial con ancla las coloca useScrollToHash (con la cortina, el navegador acababa en otro sitio); las demás las restaura el navegador.
+- Logos de redes en el color del texto de su panel: negros oficiales sobre Signal y blancos sobre Graphite (Contacto a ≤ 900 px), con <picture>; un logo negro sobre fondo oscuro no se lee.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
@@ -44,7 +45,8 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - La pausa global congela toda animación: lo que entra una sola vez (la barra fija) necesita su excepción o se queda invisible.
 - TaskStop cierra npx pero no el proceso de Vite: comprobar los puertos al terminar y cerrar solo los propios (el 5173 es del autor).
 - En el servidor de desarrollo, un selector `[class*="_x_"]` coincide con la clase de igual nombre de otro módulo.
+- Un clon nuevo con core.autocrlf=true sale en CRLF y rompe los tests byte a byte de los logos: en este clon, core.autocrlf=input y pasar los archivos a LF; después, git status los marca hasta refrescar el índice (git add de los idénticos, por ruta).
+- Un <picture> con display: contents deja que su <source> cuente como elemento flexible y sume un hueco: el <picture> va como un solo elemento (display: flex).
 
 ## Próximos pasos
-1. Las dos correcciones de la próxima sesión (ver «Estado actual»).
-2. Los pendientes del autor y las comprobaciones de PLAN.md; después, las fases 8 a 10.
+1. Los pendientes del autor y las comprobaciones de PLAN.md; después, las fases 8 a 10.

@@ -8,9 +8,9 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 ## Cómo retomar
 
 1. Leer este archivo, `docs/MEMORY.md` y `AGENTS.md`, y contrastar con git (`git status -sb`, `git branch -vv`, `git log --oneline -3`).
-2. **Rama de trabajo: `redesign/v2`,** solo en local (no está en `origin`). Sale de `rebuild/vite-react` en `4f17b9c`; la `rebuild/vite-react` local va 9 commits por delante de `origin/rebuild/vite-react`, sin subir. Nada se sube sin que el autor lo pida.
+2. **Rama de trabajo: `redesign/v2`,** ya en `origin` (`origin/redesign/v2`, subida hasta `f7fb1a1`). Sale de `rebuild/vite-react` en `4f17b9c`; `rebuild/vite-react` está al día con su `origin`. Los commits del 2026-11-11 posteriores a `f7fb1a1` están solo en local hasta que el autor los suba: el push lo hace siempre el autor.
 3. **Fuente de verdad del diseño:** `docs/design/redesign-v2/DESIGN-SPEC.md` (v2.1) y sus tableros. Si discrepan, manda la spec.
-4. **Siguiente paso:** las dos correcciones de «Pendientes del rediseño v2.1» marcadas para la próxima sesión (logos de redes en negro y «Ver código» sin logo).
+4. **Siguiente paso:** los pendientes del autor y las comprobaciones de «Pendientes del rediseño v2.1»; después, las fases 8 a 10.
 5. Los encargos 2 (transición de idioma) y 3 (cursor glitch) están en `docs/ENCARGOS.md`. No se ejecutan sin que el autor lo pida.
 6. Antes de cada push: `/pre-push-check`. Al cerrar una fase: `/close-phase <fase>`.
 
@@ -30,7 +30,13 @@ Lo que hicieron las fases 1 a 5 se describe como quedó entonces; el rediseño v
 
 - [x] **Rediseño v2** (`6dfeb8d` a `2d9d512`, del 2026-10-19 al 2026-10-24) y **ajustes de diseño** (hasta `a244556`, 2026-11-10): paneles con cortina entre escenas, intro de cine con tachado a lápiz (sin botón, ≤ 5 s), Hero, Perfil con Traductor, Servicios en acordeón numerado, cintas cruzadas, Proyectos apilados, Contacto y pie de «créditos finales». Retiró la página `/certificaciones`, el fondo de partículas, la terminal de `java Developer` con la edad, el mapa, las pastillas del Hero y su fila de redes, y la fecha de nacimiento del código.
 - [x] **Rediseño v2.1** (`26ae3c0` a `b4b681c`, 2026-11-11): voz de código (color Code), barra que acompaña (píldora fija con la escena actual), Hero con lema, ventana de código real y fichas «// stack principal», textos nuevos de Hero, Perfil y Contacto, «Mi stack» con los logos oficiales, Contacto en dos paneles con el formulario a la vista (sin el diálogo «Escríbeme» ni el efecto magnético) y pie con «Sígueme en redes» y la marca en SVG. Corrigió dos fallos de la auditoría de Vercel: la restauración del scroll con Atrás/Adelante y los objetivos táctiles de menos de 44 px.
-- [x] Verificación de `.claude/rules/contacto.md` con la escena Contacto montada: cero coincidencias en `dist/` y en `src/`, con control positivo; solo la excepción documentada del dominio en `javascript.svg`. Los PDFs del CV no cambiaron.
+- [x] **Correcciones del 2026-11-11** (`7b58543` a `db7adbe`), con la spec actualizada por el autor:
+  - spec y tableros nuevos (`7b58543`);
+  - logos negros oficiales de un solo color en las píldoras de canales de Contacto, sobre Signal; a 900 px o menos, donde los canales pasan a Graphite, las blancas, con un `<picture>` (`9e044b3`);
+  - «Ver código» sin logo, con nombre accesible «Ver código de {proyecto} en GitHub» (`f389ea4`);
+  - hover de la ventana de código y de las fichas del Hero, solo con puntero fino, con realce en Signal sobre un pseudo-elemento que solo anima su opacidad (`114ac23`);
+  - texto nuevo de «Comunicación estratégica» en ES y EN (`db7adbe`).
+- [x] Verificación de `.claude/rules/contacto.md` con la escena Contacto montada: cero coincidencias en `dist/` y en `src/`, con control positivo; solo la excepción documentada del dominio en `javascript.svg`. Los PDFs del CV no cambiaron. Repetida el 2026-11-11 tras los logos negros, con el mismo resultado.
 - El detalle de cada lote está en los mensajes de sus commits; las medidas y capturas de la verificación se tomaron con scripts locales de `.playwright-mcp/`, que no se versionan.
 
 ### Fase 7 — Página `/certificaciones`: retirada
@@ -63,10 +69,10 @@ Depende de la decisión de hosting.
 
 ## Pendientes del rediseño v2.1
 
-Para la próxima sesión, por decisión del autor:
+Hechas el 2026-11-11:
 
-- [ ] **Logos de redes en negro oficial en el panel Signal de Contacto.** El autor pasará las variantes negras oficiales de GitHub, LinkedIn y WhatsApp; si una marca no tiene variante negra oficial, se queda la blanca. Registrar los archivos nuevos en `docs/LOGOS.md`.
-- [ ] **«Ver código» sin logo de GitHub** en las tarjetas de Proyectos: el logo va solo en «Ver todos en GitHub». Actualizar también la spec (§3.4) y los dos tableros (`desktop-page` y `mobile-home`).
+- [x] **Logos de redes en negro oficial en el panel Signal de Contacto** (`9e044b3`), registrados en `docs/LOGOS.md`. LinkedIn va en PNG: su paquete oficial no trae SVG.
+- [x] **«Ver código» sin logo de GitHub** (`f389ea4`); la spec y los tableros ya venían actualizados por el autor (`7b58543`).
 
 Material y decisiones del autor:
 
@@ -134,6 +140,8 @@ Cada pieza nueva exige su excepción en el `.gitignore` del repo, en el mismo co
 - **Aviso «Todos los derechos reservados»** del pie frente a la licencia del repo.
 - **Meta description:** usa `legalName`; el `alt` de la foto ya usa `shortName`.
 - **Trazo superior de la G** en la variante simplificada del favicon: posible retoque si en la pestaña real molesta.
+- **`.gitattributes` con `* text=auto eol=lf`:** el repo exige LF (los tests comparan los SVG oficiales byte a byte) y un clon nuevo con `core.autocrlf=true` sale con CRLF y 65 tests en rojo. Hoy lo evita `core.autocrlf=input` en la configuración local de este clon; el archivo lo evitaría en cualquier clon. Propuesto el 2026-11-11, sin decidir.
+- **Espacio libre y tamaño mínimo de los logos de redes:** los paquetes descargados el 2026-11-11 no traen guía; GitHub incluye variantes `_Clearspace` sin decir cuánto espacio exige. Comprobarlo en las guías de marca publicadas.
 - **Favicon sin hash registrado:** `apple-touch-icon.png`, `favicon.svg` y `favicon.ico`, en la raíz de `public/`, no tienen su SHA-256 anotado en ningún documento; `docs/LOGOS.md` y su test solo cubren las carpetas.
 
 ## Riesgos conocidos
