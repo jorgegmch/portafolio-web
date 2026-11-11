@@ -68,7 +68,7 @@ const ITEMS = {
     communication: {
       title: 'Comunicación estratégica',
       description:
-        'Convierto los objetivos del negocio en soluciones tecnológicas. Escucho, los traduzco a requerimientos técnicos claros y los comunico al equipo.',
+        'Analizo necesidades, alineo objetivos y convierto ideas en requerimientos técnicos claros. Busco que cada solución tenga sentido para el negocio, el equipo y las personas que la usan.',
     },
   },
   en: {
@@ -100,7 +100,7 @@ const ITEMS = {
     communication: {
       title: 'Strategic communication',
       description:
-        'I turn business goals into technology solutions. I listen, translate them into clear technical requirements and communicate them to the team.',
+        'I analyze needs, align goals and turn ideas into clear technical requirements. I aim for every solution to make sense for the business, the team and the people who use it.',
     },
   },
 } as const

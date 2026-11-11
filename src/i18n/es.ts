@@ -133,7 +133,7 @@ export const es: Dictionary = {
       communication: {
         title: 'Comunicación estratégica',
         description:
-          'Convierto los objetivos del negocio en soluciones tecnológicas. Escucho, los traduzco a requerimientos técnicos claros y los comunico al equipo.',
+          'Analizo necesidades, alineo objetivos y convierto ideas en requerimientos técnicos claros. Busco que cada solución tenga sentido para el negocio, el equipo y las personas que la usan.',
       },
     },
   },

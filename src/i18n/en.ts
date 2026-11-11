@@ -133,7 +133,7 @@ export const en: Dictionary = {
       communication: {
         title: 'Strategic communication',
         description:
-          'I turn business goals into technology solutions. I listen, translate them into clear technical requirements and communicate them to the team.',
+          'I analyze needs, align goals and turn ideas into clear technical requirements. I aim for every solution to make sense for the business, the team and the people who use it.',
       },
     },
   },
