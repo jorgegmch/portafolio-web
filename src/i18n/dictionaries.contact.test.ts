@@ -26,6 +26,23 @@ const CHANNELS = { es: 'O por el canal que prefieras', en: 'Or pick the channel 
 
 const FORM_TITLE = { es: 'Cuéntame tu idea', en: 'Tell me your idea' } as const
 
+// Placeholders con ejemplo y «…» (auditoría de Vercel), aprobados por el
+// autor el 2026-11-11. Los nombres y el dominio son de ejemplo.
+const PLACEHOLDERS = {
+  es: {
+    name: 'Ana Pérez…',
+    email: 'ana@empresa.com…',
+    company: 'Dónde trabajas…',
+    message: 'Qué quieres construir y para cuándo…',
+  },
+  en: {
+    name: 'Jane Doe…',
+    email: 'jane@company.com…',
+    company: 'Where you work…',
+    message: 'What you want to build and by when…',
+  },
+} as const
+
 describe('textos de Contacto', () => {
   it.each(LANGS)('en %s, el título es el de la spec v2.1', (lang) => {
     expect(dictionaries[lang].contact.title).toBe(TITLE[lang])
@@ -41,6 +58,17 @@ describe('textos de Contacto', () => {
 
   it.each(LANGS)('en %s, el título del formulario es el de la spec v2.1', (lang) => {
     expect(dictionaries[lang].contact.form.title).toBe(FORM_TITLE[lang])
+  })
+
+  it.each(LANGS)('en %s, los placeholders son los aprobados', (lang) => {
+    const { form } = dictionaries[lang].contact
+
+    expect({
+      name: form.name.placeholder,
+      email: form.email.placeholder,
+      company: form.company.placeholder,
+      message: form.message.placeholder,
+    }).toEqual(PLACEHOLDERS[lang])
   })
 
   it('en inglés, sin apóstrofos rectos', () => {

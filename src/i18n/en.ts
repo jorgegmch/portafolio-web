@@ -236,13 +236,13 @@ export const en: Dictionary = {
       required: 'required',
       optional: 'optional',
       pickSeveral: 'you can pick several',
-      name: { label: 'Name', placeholder: 'What is your name', error: 'Write your name.' },
+      name: { label: 'Name', placeholder: 'Jane Doe…', error: 'Write your name.' },
       email: {
         label: 'Email',
-        placeholder: 'Where I can reply',
+        placeholder: 'jane@company.com…',
         error: 'Check the email: something is missing.',
       },
-      company: { label: 'Company', placeholder: 'If you write on behalf of a company' },
+      company: { label: 'Company', placeholder: 'Where you work…' },
       needs: {
         legend: 'What do you need?',
         options: {
@@ -256,7 +256,7 @@ export const en: Dictionary = {
       },
       message: {
         label: 'Message',
-        placeholder: 'What you want to build, by when, and any detail that helps',
+        placeholder: 'What you want to build and by when…',
         error: 'Tell me in at least one sentence what you need.',
       },
       submit: 'Send message',

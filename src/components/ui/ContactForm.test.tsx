@@ -140,6 +140,78 @@ describe('ContactForm', () => {
     })
   })
 
+  // Mejoras de la auditoría de Vercel que pide la spec v2.1 (§3.5).
+  describe('campos según la auditoría', () => {
+    it('cada campo lleva su name, para el autocompletado y los gestores', () => {
+      renderForm()
+
+      expect(field(text.name.label)).toHaveAttribute('name', 'name')
+      expect(field(text.email.label)).toHaveAttribute('name', 'email')
+      expect(field(text.company.label)).toHaveAttribute('name', 'company')
+      expect(field(text.message.label)).toHaveAttribute('name', 'message')
+    })
+
+    it('el correo no pasa por el corrector ortográfico', () => {
+      renderForm()
+
+      expect(field(text.email.label)).toHaveAttribute('spellcheck', 'false')
+      expect(field(text.name.label)).not.toHaveAttribute('spellcheck')
+    })
+
+    it('los placeholders son un ejemplo, acabado en «…»', () => {
+      renderForm()
+
+      for (const label of [text.name.label, text.email.label, text.company.label, text.message.label]) {
+        expect(field(label).getAttribute('placeholder')).toMatch(/…$/)
+      }
+    })
+
+    it('⌘ o Ctrl + Enter en el mensaje envía', async () => {
+      const user = userEvent.setup()
+      const { send } = renderForm(vi.fn<SendContactMessage>().mockResolvedValue({ ok: true }))
+      await user.type(field(text.name.label), 'Ana')
+      await user.type(field(text.email.label), 'ana@empresa.co')
+      await user.type(field(text.message.label), 'Necesito una API.')
+
+      await user.keyboard('{Control>}{Enter}{/Control}')
+
+      expect(send).toHaveBeenCalledOnce()
+      expect(await within(panel()).findByText(text.sent.title)).toBeInTheDocument()
+    })
+
+    it('con ⌘ también', async () => {
+      const user = userEvent.setup()
+      const { send } = renderForm(vi.fn<SendContactMessage>().mockResolvedValue({ ok: true }))
+      await user.type(field(text.name.label), 'Ana')
+      await user.type(field(text.email.label), 'ana@empresa.co')
+      await user.type(field(text.message.label), 'Necesito una API.')
+
+      await user.keyboard('{Meta>}{Enter}{/Meta}')
+
+      expect(send).toHaveBeenCalledOnce()
+    })
+
+    it('Enter solo, en el mensaje, sigue siendo un salto de línea', async () => {
+      const user = userEvent.setup()
+      const { send } = renderForm()
+      await user.type(field(text.message.label), 'Hola{Enter}mundo')
+
+      expect(field(text.message.label)).toHaveValue('Hola\nmundo')
+      expect(send).not.toHaveBeenCalled()
+    })
+
+    it('⌘/Ctrl + Enter con campos vacíos valida y lleva el foco al primer error', async () => {
+      const user = userEvent.setup()
+      const { send } = renderForm()
+      await user.click(field(text.message.label))
+
+      await user.keyboard('{Control>}{Enter}{/Control}')
+
+      expect(send).not.toHaveBeenCalled()
+      expect(field(text.name.label)).toHaveFocus()
+    })
+  })
+
   describe('¿Qué necesitas?', () => {
     it('es un grupo con sus opciones, que se marcan y desmarcan con aria-pressed', async () => {
       const user = userEvent.setup()

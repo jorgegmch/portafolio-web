@@ -235,13 +235,13 @@ export const es: Dictionary = {
       required: 'obligatorio',
       optional: 'opcional',
       pickSeveral: 'puedes marcar varias',
-      name: { label: 'Nombre', placeholder: 'Cómo te llamas', error: 'Escribe tu nombre.' },
+      name: { label: 'Nombre', placeholder: 'Ana Pérez…', error: 'Escribe tu nombre.' },
       email: {
         label: 'Correo',
-        placeholder: 'Donde te respondo',
+        placeholder: 'ana@empresa.com…',
         error: 'Revisa el correo: falta algo.',
       },
-      company: { label: 'Empresa', placeholder: 'Si escribes en nombre de una empresa' },
+      company: { label: 'Empresa', placeholder: 'Dónde trabajas…' },
       needs: {
         legend: '¿Qué necesitas?',
         options: {
@@ -255,7 +255,7 @@ export const es: Dictionary = {
       },
       message: {
         label: 'Mensaje',
-        placeholder: 'Qué quieres construir, para cuándo y cualquier detalle que sirva',
+        placeholder: 'Qué quieres construir y para cuándo…',
         error: 'Cuéntame al menos en una frase qué necesitas.',
       },
       submit: 'Enviar mensaje',

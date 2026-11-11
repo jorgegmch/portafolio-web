@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useId, useRef, useState } from 'react'
+import { type FormEvent, type KeyboardEvent, useEffect, useId, useRef, useState } from 'react'
 import { ContactButton } from '@/components/ui/ContactButton'
 import styles from '@/components/ui/ContactForm.module.css'
 import { contactNeeds } from '@/data/contactNeeds'
@@ -35,6 +35,10 @@ interface ContactFormProps {
  * recibido, que sustituye a los campos y se lleva el foco; y error, que
  * conserva lo escrito y ofrece «Copiar correo». «Enviar otro» vuelve al
  * formulario vacío con el foco en el nombre.
+ *
+ * Lo que pide la auditoría de Vercel (spec v2.1 §3.5): cada campo con su
+ * name, el correo sin corrector ortográfico, placeholders de ejemplo
+ * acabados en «…» y ⌘/Ctrl + Enter para enviar desde el mensaje.
  */
 export function ContactForm({ text, copy, send }: ContactFormProps) {
   const nameRef = useRef<HTMLInputElement>(null)
@@ -74,6 +78,15 @@ export function ContactForm({ text, copy, send }: ContactFormProps) {
     event.preventDefault()
     const invalid = await submit()
     if (invalid) setFocusRequest({ field: invalid })
+  }
+
+  // ⌘ o Ctrl + Enter envía desde el mensaje (auditoría de Vercel); Enter
+  // solo sigue siendo un salto de línea. Pasa por el envío del formulario,
+  // con su validación.
+  const submitOnModifierEnter = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key !== 'Enter' || !(event.metaKey || event.ctrlKey)) return
+    event.preventDefault()
+    event.currentTarget.form?.requestSubmit()
   }
 
   const sendAnother = () => {
@@ -133,6 +146,7 @@ export function ContactForm({ text, copy, send }: ContactFormProps) {
               <input
                 ref={nameRef}
                 id={ids.name}
+                name="name"
                 className={styles.input}
                 type="text"
                 autoComplete="name"
@@ -156,9 +170,11 @@ export function ContactForm({ text, copy, send }: ContactFormProps) {
               <input
                 ref={emailRef}
                 id={ids.email}
+                name="email"
                 className={styles.input}
                 type="email"
                 autoComplete="email"
+                spellCheck={false}
                 required
                 placeholder={text.email.placeholder}
                 value={values.email}
@@ -180,6 +196,7 @@ export function ContactForm({ text, copy, send }: ContactFormProps) {
             </label>
             <input
               id={ids.company}
+              name="company"
               className={styles.input}
               type="text"
               autoComplete="organization"
@@ -217,6 +234,7 @@ export function ContactForm({ text, copy, send }: ContactFormProps) {
             <textarea
               ref={messageRef}
               id={ids.message}
+              name="message"
               className={`${styles.input} ${styles.textarea}`}
               rows={5}
               autoComplete="off"
@@ -224,6 +242,7 @@ export function ContactForm({ text, copy, send }: ContactFormProps) {
               placeholder={text.message.placeholder}
               value={values.message}
               onChange={(event) => setField('message', event.target.value)}
+              onKeyDown={submitOnModifierEnter}
               {...validation('message')}
             />
             {errors.message && (
