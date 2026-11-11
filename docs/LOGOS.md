@@ -20,9 +20,9 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 - **CSS sobre la ficha Tile (decisión del autor, 2026-11-11):** el glifo de CSS (`#663399`) da 1,9:1 sobre Tile (`#222024`), por debajo del 3:1 de los gráficos. Se deja así: el nombre va al lado de la ficha y lleva la información; el logo es apoyo. Los demás medidos sobre Tile: MySQL 3,5:1 y Docker 3,2:1; el resto, por encima.
 - **Java:** Duke por ahora. La taza no tiene descarga oficial; si el autor la consigue, se cambia.
 - **Git y GitHub** van en una sola ficha, con el logo de Git (decisión del autor, 2026-10-15).
-- **Redes sobre el panel Signal de Contacto (decisión del autor, 2026-11-11):** el autor pasará las variantes negras oficiales de GitHub, LinkedIn y WhatsApp. Mientras tanto, los botones llevan las blancas de `public/social/` (3,1:1 sobre Signal). Si una marca no tiene variante negra oficial, se queda la blanca.
+- **Redes sobre el panel Signal de Contacto (spec v2.1 §3.5, 2026-11-11):** las píldoras de canales llevan las variantes negras oficiales de un solo color de GitHub, LinkedIn y WhatsApp, tal como vienen en sus paquetes: sin recolorear ni cambiar su `fill`. Contraste sobre Signal (`#FF5B24`): GitHub y LinkedIn (`#000000`) 6,8:1; WhatsApp (`#111B21`, el negro de su archivo) 5,6:1. Las blancas daban 3,1:1. Hasta 900 px la escena se apila y los canales pasan a Graphite con texto Bone: ahí, por la misma regla del color del texto del panel, van las blancas (un `<picture>` elige una u otra y el navegador descarga solo una). Las blancas siguen también en el pie y en «Ver todos en GitHub», sobre paneles oscuros.
 - Cada archivo nuevo se anota aquí con su origen, su licencia y su SHA-256.
-- **Interpretación del autor, no una cita:** rodear los logos de WhatsApp y LinkedIn con un círculo es la lectura que el autor hace de sus políticas de marca. Ninguna de las tres marcas de la fila de redes publica por escrito un espacio libre ni un tamaño mínimo; GitHub solo distribuye una variante con espacio libre.
+- **Interpretación del autor, no una cita:** rodear los logos de WhatsApp y LinkedIn con un círculo es la lectura que el autor hace de sus políticas de marca. Ninguna de las tres marcas de la fila de redes publica por escrito un espacio libre ni un tamaño mínimo; GitHub solo distribuye una variante con espacio libre. Los paquetes descargados el 2026-11-11 tampoco traen guía, licencia ni README: solo los archivos de logo.
 
 ## Política por marca
 
@@ -60,13 +60,18 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 | `github.svg` | Invertocat blanco del paquete de GitHub | `ccd84c89b1056345608fc3489357f8acc7397e49a3cdc2d418b6c8016911d47b` |
 | `linkedin.png` | `InBug-White.png`, 840×779 px | `ed22a5ab46c171e3449708ff34923de7298da00ac204c7f85444db05bf888791` |
 | `whatsapp.svg` | `Digital_Glyph_White_RGB_2026.svg` | `7fb054c0f4bea644b4a4a014d6d8581aad7e6dcb639049d17a578dc44f8e6fd4` |
+| `github-black.svg` | `SVG/GitHub_Invertocat_Black.svg` del paquete de logos de GitHub (brand.github.com), descargado el 2026-11-11. Gemelo del blanco: mismo lienzo de 98×96 y mismo dibujo, en `black`. | `693d7abe6f899646cc2e96856723b45e95f71885a54910b2749f6decdf7e1ee1` |
+| `linkedin-black.png` | `InBug-Black.png`, 840×779 px, del paquete `in-logo` de brand.linkedin.com/downloads, descargado el 2026-11-11. **El paquete oficial no trae SVG** de ninguna variante: se usa el PNG, como el blanco. Todos sus píxeles opacos son `#000000`. | `b80ab65537aad1b5013da98fe82d1c36c1bb4ca896fe7829a880cc5f307693ca` |
+| `whatsapp-black.svg` | `01_Glyph/01_Digital RGB/03_SVG/Digital_Glyph_Black_RGB_2026.svg` del centro de recursos de marca de WhatsApp, descargado el 2026-11-11 (la URL de la página no está anotada). Pinta en `#111b21` desde su `<style>` interno. | `dea0d50de5d2e53320246d7172a2b8e84a999caa7798cd91681e63831cba6ed9` |
 
 - **Dónde se usan:** siempre con `<img>` decorativo (`alt=""`), sin filtros, delante del texto que nombra la red. Los tamaños naturales están en `src/data/socialMarks.ts`.
-  - `github.svg`: «Ver todos en GitHub» y «Ver código» de cada tarjeta, en Proyectos; la píldora de GitHub de los canales de Contacto y la de «Sígueme en redes» del pie. Hash comprobado el 2026-10-24: coincide con el de la tabla.
-  - `linkedin.png`: la píldora de LinkedIn de los canales de Contacto y la de «Sígueme en redes» del pie.
-  - `whatsapp.svg`: la píldora de WhatsApp de los canales de Contacto.
+  - `github.svg`: «Ver todos en GitHub» y «Ver código» de cada tarjeta, en Proyectos; la píldora de GitHub de los canales de Contacto hasta 900 px, sobre Graphite, y la de «Sígueme en redes» del pie. Hash comprobado el 2026-10-24: coincide con el de la tabla.
+  - `linkedin.png`: la píldora de LinkedIn de los canales de Contacto hasta 900 px y la de «Sígueme en redes» del pie.
+  - `whatsapp.svg`: la píldora de WhatsApp de los canales de Contacto hasta 900 px.
+  - `github-black.svg`, `linkedin-black.png` y `whatsapp-black.svg`: las píldoras de GitHub, LinkedIn y WhatsApp de los canales de Contacto por encima de 900 px, sobre Signal (`socialMarksBlack`).
+- **Condiciones de uso:** los paquetes no incluyen texto de licencia ni guía de marca. La lectura de sus políticas es la de octubre (ver «Interpretación del autor» en «Reglas de uso»); no se ha vuelto a leer.
 - **Sobre de «Copiar correo»:** no es un logo: va dibujado en línea en `src/components/sections/Contact.tsx`, con la forma del tablero.
-- **Excepción del comprobador de SVG:** el de WhatsApp trae un elemento `style`. Se admite solo en ese archivo y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
+- **Excepción del comprobador de SVG:** los dos glifos de WhatsApp (blanco y negro) traen un elemento `style`. Se admite solo en esos dos archivos y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
 
 ### Tecnologías (`public/tech/`)
 

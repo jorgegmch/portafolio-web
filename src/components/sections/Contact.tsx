@@ -5,8 +5,9 @@ import { ContactForm } from '@/components/ui/ContactForm'
 import { CvDownload } from '@/components/ui/CvDownload'
 import { Reveal } from '@/components/ui/Reveal'
 import { sections } from '@/config/routes'
+import { mediaQueries } from '@/config/media'
 import { site, socialLinks } from '@/config/site'
-import { socialMarks } from '@/data/socialMarks'
+import { socialMarks, socialMarksBlack } from '@/data/socialMarks'
 import { useClock } from '@/hooks/useClock'
 import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
@@ -26,9 +27,25 @@ const ARROW_OUT = 'M7 17 17 7M9 7h8v8'
 /** Sobre de «Copiar correo» (tablero desktop-page): un icono, no un logo. */
 const ENVELOPE = 'M6 5h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3zM4 8l8 6 8-6'
 
-/** Logo oficial delante del texto de un canal; decorativo, el texto ya lo nombra. */
-function ChannelMark({ mark }: { mark: (typeof socialMarks)[keyof typeof socialMarks] }) {
-  return <img className={styles.mark} src={mark.src} width={mark.width} height={mark.height} alt="" />
+/**
+ * Logo oficial delante del texto de un canal, en el color del texto de su
+ * panel (spec v2.1 §3.5): la variante negra sobre Signal y, con la escena
+ * apilada, la blanca sobre Graphite. El navegador descarga solo una.
+ * Decorativo: el texto ya nombra el canal.
+ */
+function ChannelMark({ id }: { id: keyof typeof socialMarksBlack }) {
+  const black = socialMarksBlack[id]
+  return (
+    <picture className={styles.markPicture}>
+      <source
+        media={mediaQueries.stackedContact}
+        srcSet={socialMarks[id].src}
+        width={socialMarks[id].width}
+        height={socialMarks[id].height}
+      />
+      <img className={styles.mark} src={black.src} width={black.width} height={black.height} alt="" />
+    </picture>
+  )
 }
 
 /**
@@ -114,7 +131,7 @@ export function Contact() {
               label={text.whatsapp}
               accessibleLabel={whatsappName}
               className={styles.pill}
-              leading={<ChannelMark mark={socialMarks.whatsapp} />}
+              leading={<ChannelMark id="whatsapp" />}
               trailing={
                 <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d={ARROW_OUT} />
@@ -131,7 +148,7 @@ export function Contact() {
                 rel="noopener noreferrer"
                 aria-label={`${label} (${common.opensInNewTab})`}
               >
-                <ChannelMark mark={socialMarks[id]} />
+                <ChannelMark id={id} />
                 {label}
                 <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d={ARROW_OUT} />

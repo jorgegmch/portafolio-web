@@ -149,8 +149,9 @@ section.contact {
   color: var(--color-bone);
 }
 
-/* Icono y logos de los canales: 24 px, delante del texto. Los logos van a su
-   color original (blancos): el autor pasará las variantes negras. */
+/* Icono y logos de los canales: 24 px, delante del texto. Los logos son las
+   variantes oficiales en el color del texto del panel: negras sobre Signal,
+   blancas sobre Graphite (ver ChannelMark). */
 .icon,
 .mark {
   flex: none;
@@ -168,6 +169,13 @@ section.contact {
 
 .mark {
   object-fit: contain;
+}
+
+/* El <picture> es un solo elemento de la píldora, del tamaño de su imagen: con
+   display: contents, el <source> contaría como otro y sumaría un hueco. */
+.markPicture {
+  display: flex;
+  flex: none;
 }
 
 .arrow {

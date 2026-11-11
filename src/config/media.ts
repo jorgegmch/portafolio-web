@@ -9,4 +9,6 @@ export const mediaQueries = {
   noHover: '(hover: none)',
   /** Un puntero preciso que se pose encima: ratón o lápiz, no un dedo. */
   finePointer: '(hover: hover) and (pointer: fine)',
+  /** Ancho al que Contacto apila sus paneles y los canales pasan de Signal a Graphite. */
+  stackedContact: '(max-width: 900px)',
 } as const
