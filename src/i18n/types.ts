@@ -58,6 +58,11 @@ export interface Dictionary {
     intro: string
     /** Línea en mono bajo el rol; el «//» lo pone el componente. */
     stackLine: string
+    /**
+     * Lema al pie de la foto, en dos frases: la primera en Bone y la segunda
+     * en Signal. Las mayúsculas las pone el CSS.
+     */
+    motto: { first: string; second: string }
     /** Nombre accesible de la lista de tecnologías de la cinta. */
     stackLabel: string
     viewProjects: string

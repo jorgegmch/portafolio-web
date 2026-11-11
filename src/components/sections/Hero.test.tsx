@@ -61,6 +61,54 @@ describe('Hero', () => {
     })
   })
 
+  // Lema al pie de la foto (spec v2.1 §3.1): texto real, no decorativo, en
+  // dos frases; el velo que lo separa de la foto sí es decorativo.
+  describe('lema', () => {
+    const motto = (lang: keyof typeof BROWSER_LANGS) => {
+      const { first, second } = dictionaries[lang].hero.motto
+      return screen.getByText(
+        (_content, element) =>
+          element?.tagName === 'P' && element.textContent === `${first} ${second}`,
+      )
+    }
+
+    it.each(LANGS)('en %s, es un párrafo con sus dos frases, que se lee', (lang) => {
+      renderHero(lang)
+
+      const paragraph = motto(lang)
+      expect(paragraph.closest('[aria-hidden="true"]')).toBeNull()
+      expect([...paragraph.children].map((line) => line.textContent)).toEqual([
+        dictionaries[lang].hero.motto.first,
+        dictionaries[lang].hero.motto.second,
+      ])
+    })
+
+    it('va detrás del nombre y antes de la presentación', () => {
+      renderHero()
+
+      expect(precedes(heading(), motto('es'))).toBe(true)
+      expect(precedes(motto('es'), screen.getByText(dictionaries.es.hero.intro))).toBe(true)
+    })
+
+    it('el velo que lo funde con la foto es decorativo', () => {
+      const { container } = renderHero()
+
+      const veil = container.querySelector('[data-hero-veil]')
+      expect(veil).toHaveAttribute('aria-hidden', 'true')
+      expect(veil).toBeEmptyDOMElement()
+    })
+  })
+
+  describe('línea de stack', () => {
+    it.each(LANGS)('en %s, va con las «//» delante, en su propio elemento', (lang) => {
+      renderHero(lang)
+
+      const line = screen.getByText(dictionaries[lang].hero.stackLine, { exact: false })
+      expect(line.textContent).toBe(`// ${dictionaries[lang].hero.stackLine}`)
+      expect(line.firstElementChild?.textContent).toBe('// ')
+    })
+  })
+
   describe('botón «Ver proyectos»', () => {
     const link = (lang: keyof typeof BROWSER_LANGS = 'es') =>
       screen.getByRole('link', { name: dictionaries[lang].hero.viewProjects })

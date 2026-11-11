@@ -28,8 +28,9 @@ export const es: Dictionary = {
   hero: {
     heading: site.shortName,
     intro:
-      'Traduzco lo que tu negocio necesita en software que funciona, y te lo explico sin tecnicismos.',
-    stackLine: 'Java · Spring Boot · Agentes de IA',
+      'Combino desarrollo de software, comunicación y pensamiento estratégico para crear soluciones que respondan a necesidades reales y tengan sentido para quienes las usan.',
+    stackLine: 'Java · Spring Boot · IA y automatización',
+    motto: { first: 'El código resuelve.', second: 'El criterio marca la diferencia.' },
     stackLabel: 'Tecnologías',
     viewProjects: 'Ver proyectos',
     availability: 'Disponible para proyectos freelance',

@@ -83,7 +83,7 @@
    visuales: el h1 se lee con el texto del diccionario. */
 .name {
   position: absolute;
-  inset: var(--space-5) 0 auto;
+  inset: var(--hero-name-top) 0 auto;
   z-index: 1;
   color: var(--color-bone);
   font-family: var(--font-display);
@@ -121,6 +121,49 @@
   aspect-ratio: 4 / 5;
   filter: grayscale(1) contrast(var(--hero-photo-contrast)) drop-shadow(0 0 1px var(--color-signal))
     drop-shadow(0 0 var(--hero-photo-light) var(--color-signal-glow));
+}
+
+/* Velo al pie de la foto: la funde con el panel para que el lema se lea
+   encima. Decorativo. */
+.veil {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 4;
+  width: var(--hero-veil-width);
+  max-width: 100%;
+  height: var(--hero-veil-height);
+  background: linear-gradient(to top, var(--color-ink) 0%, var(--color-hero-veil-mid) 45%, transparent 100%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Lema (spec v2.1 §3.1), centrado al pie de la foto: la primera frase en
+   Bone y la segunda en Signal. Es texto real; las mayúsculas son visuales. */
+.motto {
+  position: absolute;
+  bottom: var(--hero-motto-bottom);
+  left: 50%;
+  z-index: 5;
+  width: var(--hero-motto-width);
+  max-width: calc(100% - 2 * var(--nav-padding-inline));
+  color: var(--color-bone);
+  font-family: var(--font-display);
+  font-size: var(--hero-motto-size);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-none);
+  text-align: center;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
+
+.mottoFirst {
+  display: block;
+}
+
+.mottoSecond {
+  display: block;
+  color: var(--color-signal);
 }
 
 /* Bloques inferiores, a los dos lados de la foto y por encima de ella. */
@@ -243,15 +286,19 @@
 }
 
 /* Hasta 1280 px todo va en columna: los textos a los lados de la foto piden
-   unos 1180 px y, más estrechos, la pisarían. El nombre arriba, la foto
-   delante de su pie y los textos en una tarjeta translúcida sobre el pie de
-   la foto. Las letras de Anton sobresalen de su interlineado: el escenario
-   les deja aire arriba. */
+   unos 1180 px y, más estrechos, la pisarían. El nombre arriba; la foto
+   delante de su pie, con el velo y el lema al pie de la foto en su misma
+   celda (tablero mobile-home); y debajo, los textos en una tarjeta. Las
+   letras de Anton sobresalen de su interlineado: el escenario les deja aire
+   arriba. */
 @media (max-width: 1280px) {
   .stage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-areas:
+      'name'
+      'photo'
+      'blocks';
+    justify-items: center;
     min-height: 0;
     padding: var(--space-6) var(--nav-padding-inline) var(--space-6);
   }
@@ -259,13 +306,49 @@
   .name {
     position: relative;
     inset: auto;
+    grid-area: name;
+  }
+
+  /* La luz y el anillo se centran en la celda de la foto, no en todo el
+     escenario (que ahora incluye la tarjeta). */
+  .glow,
+  .ring {
+    grid-area: photo;
   }
 
   .portrait {
     position: relative;
     bottom: auto;
     left: auto;
+    grid-area: photo;
     margin-top: calc(-1 * var(--space-7));
+    transform: none;
+  }
+
+  /* A todo el ancho del panel: cubre también el relleno del escenario. */
+  .veil {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    grid-area: photo;
+    align-self: end;
+    justify-self: stretch;
+    width: auto;
+    max-width: none;
+    margin-inline: calc(-1 * var(--nav-padding-inline));
+    transform: none;
+  }
+
+  .motto {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    grid-area: photo;
+    align-self: end;
+    width: 100%;
+    max-width: var(--hero-motto-width);
+    margin-bottom: var(--space-2);
+    text-wrap: balance;
     transform: none;
   }
 
@@ -274,15 +357,16 @@
     right: auto;
     bottom: auto;
     left: auto;
+    grid-area: blocks;
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-4);
     width: 100%;
-    margin-top: calc(-1 * var(--space-9));
+    margin-top: var(--space-5);
     padding: var(--space-5);
     border: 1px solid var(--line-08);
     border-radius: var(--radius-block);
-    background-color: var(--color-ink-veil);
+    background-color: var(--color-graphite);
   }
 
   .pitch {

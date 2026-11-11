@@ -118,7 +118,11 @@
 
   /* Hero (spec §3.1). Alto del panel: la ventana menos los huecos. */
   --hero-min-height: calc(100svh - 2 * var(--panel-gap));
-  --hero-stage-min: 43.75rem; /* 700px */
+  /* Escenario de 760 px y nombre a 4 px de su borde, los del tablero
+     desktop-page (v2.1): con el lema, los bloques suben a 132 px del pie y el
+     párrafo de cuatro líneas necesita ese alto para no pisar el apellido. */
+  --hero-stage-min: 47.5rem; /* 760px */
+  --hero-name-top: var(--space-1); /* 4px */
   /* Luz radial Signal y anillo detrás de la foto. */
   --hero-glow-size: 47.5rem; /* 760px */
   --hero-ring-size: 35rem; /* 560px */
@@ -128,8 +132,18 @@
      borde de luz Signal. */
   --hero-photo-contrast: 1.15;
   --hero-photo-light: 1.25rem;
-  /* Bloques inferiores: distancia al pie del escenario, rol y párrafo. */
-  --hero-blocks-bottom: 7rem; /* 112px */
+  /* Bloques inferiores: distancia al pie del escenario, rol y párrafo. Suben
+     a 132 px para dejar sitio al lema (spec v2.1 §3.1). */
+  --hero-blocks-bottom: 8.25rem; /* 132px */
+  /* Lema al pie de la foto: Anton de 46 px (34 en teléfono) en un ancho de
+     720 px, a 36 px del pie, sobre un velo de 760 × 190 px que va de Ink a
+     transparente pasando por Ink al 92 % (tablero desktop-page). */
+  --hero-motto-size: 2.875rem; /* 46px */
+  --hero-motto-width: 45rem; /* 720px */
+  --hero-motto-bottom: 2.25rem; /* 36px */
+  --hero-veil-width: 47.5rem; /* 760px */
+  --hero-veil-height: 11.875rem; /* 190px */
+  --color-hero-veil-mid: rgba(17, 17, 19, 0.92);
   --hero-role-size: 1.75rem; /* 28px */
   --hero-intro-size: 1.0625rem; /* 17px */
   --hero-intro-measure: 23.75rem; /* 380px */
@@ -139,8 +153,6 @@
   --hero-status-dot: 0.5rem; /* 8px */
   /* Pulso del punto de disponibilidad. */
   --dur-pulse: 2.2s;
-  /* Velo de la tarjeta del Hero en pantallas estrechas: Ink al 82 %. */
-  --color-ink-veil: rgba(17, 17, 19, 0.82);
 
   /* Perfil (spec §3.2): bio, cifras de las tarjetas y Traductor. El fondo
      del Traductor y el de su bloque de código son dos tonos de Ink. */
@@ -486,6 +498,7 @@
     /* Hero en teléfono (tablero móvil): nombre de 112 px, textos y cinta
        más pequeños, y una luz menor tras la foto. */
     --font-size-hero-name: 7rem;
+    --hero-motto-size: 2.125rem; /* 34px */
     --hero-role-size: 1.375rem; /* 22px */
     --hero-intro-size: 0.9375rem; /* 15px */
     --ribbon-font-size: 1.625rem; /* 26px */

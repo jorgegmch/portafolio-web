@@ -35,9 +35,10 @@ const STACK_NAMES = technologies.map(({ id }) => technologyName(id))
  * Primera escena, en el panel Ink (spec §3.1). Arriba, el estado de
  * disponibilidad (si config/availability lo activa) y la ciudad con su hora,
  * que avanza sola. En el centro, el nombre gigante, detrás de la foto, que
- * va anclada abajo en blanco y negro con un borde de luz. Abajo, el rol con
- * su línea de stack y, al otro lado, la presentación con «Ver proyectos» y la
- * descarga del CV. Cierra la cinta con las tecnologías del catálogo.
+ * va anclada abajo en blanco y negro con un borde de luz. Al pie de la foto,
+ * sobre un velo que la funde con el panel, el lema (spec v2.1 §3.1). A los
+ * lados, el rol con su línea de stack y la presentación con «Ver proyectos»
+ * y la descarga del CV. Cierra la cinta con las tecnologías del catálogo.
  *
  * Lleva el único h1 de la página: el nombre sale de hero.heading y se parte al
  * renderizar, sin guardarlo dos veces. Es estático: el efecto de traducirse
@@ -94,6 +95,12 @@ export function Hero() {
             decoding="async"
           />
         </div>
+        {/* El velo funde el pie de la foto con el panel, para que el lema se lea encima. */}
+        <div className={styles.veil} aria-hidden="true" data-hero-veil="" />
+        <p className={styles.motto}>
+          <span className={styles.mottoFirst}>{t.hero.motto.first}</span>{' '}
+          <span className={styles.mottoSecond}>{t.hero.motto.second}</span>
+        </p>
         <div className={styles.blocks}>
           <div className={styles.identity}>
             <p className={styles.role}>{site.role}</p>
