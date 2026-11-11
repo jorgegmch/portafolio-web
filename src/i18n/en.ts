@@ -51,6 +51,18 @@ export const en: Dictionary = {
       'I’m a Full-Stack developer focused on Java and Spring Boot. My background in Social Communication and Journalism also shapes how I approach technology: it leads me to listen, analyze context and understand the needs behind each problem.',
       'I want to build software that doesn’t just work, but makes sense to the people who use it. That’s why I connect technical decisions with business goals, a clear experience and the purpose of each solution.',
     ],
+    stack: {
+      tag: 'stack.list()',
+      title: 'My stack',
+      count: (count) => `${count} ${count === 1 ? 'technology' : 'technologies'}`,
+      groups: {
+        languages: 'Languages',
+        backend: 'Backend',
+        data: 'Data',
+        frontend: 'Frontend',
+        'ai-tools': 'AI & tools',
+      },
+    },
     stats: {
       codingTime: {
         months: (count) => (count === 1 ? 'Month of coding' : 'Months of coding'),

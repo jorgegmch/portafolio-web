@@ -3,6 +3,7 @@ import type { EducationId } from '@/data/education'
 import type { ProjectId } from '@/data/projects'
 import type { ServiceId } from '@/data/services'
 import type { TechnologyId } from '@/data/technologies'
+import type { TechnologyGroup } from '@/data/types'
 import type { TranslatorExampleId } from '@/data/translator'
 import type { CodingTime } from '@/lib/codingTime'
 
@@ -90,6 +91,17 @@ export interface Dictionary {
     phrase: { filled: string; outline: string }
     /** Bio en dos párrafos. */
     bio: readonly [string, string]
+    /** Bloque «Mi stack», al final de la escena (spec v2.1 §3.2). */
+    stack: {
+      /** Rótulo en mono, con forma de llamada a método. */
+      tag: string
+      /** Título; las mayúsculas las pone el CSS. */
+      title: string
+      /** Cuántas tecnologías hay; la cifra sale del catálogo. */
+      count: (count: number) => string
+      /** Nombre de cada columna. */
+      groups: Record<TechnologyGroup, string>
+    }
     /** Etiqueta de cada tarjeta según su cifra, que la tarjeta muestra aparte. */
     stats: {
       codingTime: Record<CodingTime['unit'], (count: number) => string>

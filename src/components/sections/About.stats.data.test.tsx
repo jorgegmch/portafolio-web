@@ -26,10 +26,15 @@ vi.mock('@/data/projects', () => ({
   // El Traductor enlaza a sus repos: la URL no importa en este archivo.
   projectUrl: (id: string) => `https://example.test/${id}`,
 }))
+// Las tecnologías simuladas no tienen grupo: «Mi stack» sale vacío y solo
+// cuenta la tarjeta de cifras.
 vi.mock('@/data/technologies', () => ({
   get technologies() {
     return data.technologies
   },
+  technologyGroups: [],
+  technologyName: (id: string) => id,
+  technologyLogoUrl: ({ logo }: { logo: string }) => logo,
 }))
 
 /** Proyectos simulados: de los construidos, los primeros son además destacados. */

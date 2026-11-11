@@ -1,15 +1,17 @@
 import { useId, useState } from 'react'
 import styles from '@/components/sections/About.module.css'
 import { Reveal, type RevealOrder } from '@/components/ui/Reveal'
+import { StackList, type StackGroup } from '@/components/ui/StackList'
 import { Translator, type TranslatorItem } from '@/components/ui/Translator'
 import { sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { certifications } from '@/data/certifications'
 import { education } from '@/data/education'
 import { builtProjects, type ProjectId, projects, projectUrl } from '@/data/projects'
-import { technologies } from '@/data/technologies'
+import { technologies, technologyGroups, technologyLogoUrl } from '@/data/technologies'
 import { translatorExamples } from '@/data/translator'
 import { useLang } from '@/hooks/useLang'
+import { useTechnologyName } from '@/hooks/useTechnologyName'
 import { codingTime } from '@/lib/codingTime'
 import { toDateParts } from '@/lib/dateParts'
 import { formatCount } from '@/lib/formatCount'
@@ -34,7 +36,8 @@ const projectTitle = (id: ProjectId) => projects.find((project) => project.id ==
  * numerado y una etiqueta en mono; luego la frase grande, rellena en su
  * primera línea y en contorno en la segunda (el h2). Debajo, a la izquierda,
  * la bio en dos párrafos, tres tarjetas con cifras y la formación; a la
- * derecha, el Traductor.
+ * derecha, el Traductor. Cierra la escena «Mi stack» (spec v2.1 §3.2): el
+ * catálogo de tecnologías en sus cinco grupos, cada una con su logo.
  *
  * Las cifras salen de config y de data/, nunca escritas a mano, y aparecen ya
  * con su valor final. El tiempo programando se calcula con la fecha del día
@@ -49,6 +52,7 @@ const projectTitle = (id: ProjectId) => projects.find((project) => project.id ==
  */
 export function About() {
   const { t } = useLang()
+  const technologyName = useTechnologyName()
   const labelId = useId()
   const { phrase, translator } = t.about
   const [today] = useState(() => toDateParts(new Date()))
@@ -71,6 +75,19 @@ export function About() {
       entity: record?.entity ?? '',
     }
   })
+  // «Mi stack»: el catálogo en sus grupos, en el orden de las columnas.
+  const { stack } = t.about
+  const stackGroups: StackGroup[] = technologyGroups.map((group) => ({
+    id: group,
+    label: stack.groups[group],
+    items: technologies
+      .filter((technology) => technology.group === group)
+      .map((technology) => ({
+        id: technology.id,
+        name: technologyName(technology.id),
+        logoUrl: technologyLogoUrl(technology),
+      })),
+  }))
   const examples: TranslatorItem[] = translatorExamples.map((example) => ({
     id: example.id,
     tab: translator.items[example.id].tab,
@@ -150,6 +167,13 @@ export function About() {
           items={examples}
         />
       </div>
+
+      <StackList
+        tag={stack.tag}
+        title={stack.title}
+        count={stack.count(technologies.length)}
+        groups={stackGroups}
+      />
     </section>
   )
 }

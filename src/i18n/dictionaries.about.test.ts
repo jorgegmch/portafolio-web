@@ -25,6 +25,35 @@ const BIO = {
   ],
 } as const
 
+// «Mi stack» (spec v2.1 §3.2): el título y la cuenta los da la spec; los
+// nombres de los grupos en inglés los aprobó el autor el 2026-11-11.
+const STACK = {
+  es: {
+    tag: 'stack.list()',
+    title: 'Mi stack',
+    count: ['0 tecnologías', '1 tecnología', '15 tecnologías'],
+    groups: {
+      languages: 'Lenguajes',
+      backend: 'Backend',
+      data: 'Datos',
+      frontend: 'Frontend',
+      'ai-tools': 'IA y herramientas',
+    },
+  },
+  en: {
+    tag: 'stack.list()',
+    title: 'My stack',
+    count: ['0 technologies', '1 technology', '15 technologies'],
+    groups: {
+      languages: 'Languages',
+      backend: 'Backend',
+      data: 'Data',
+      frontend: 'Frontend',
+      'ai-tools': 'AI & tools',
+    },
+  },
+} as const
+
 /** Etiqueta de cada tarjeta con 0, con 1 y con varios. */
 const STATS = {
   es: {
@@ -71,6 +100,27 @@ describe('textos de Perfil', () => {
         expect(paragraph).not.toContain('@')
         expect(paragraph).not.toMatch(/\d{5,}/)
       }
+    })
+  })
+
+  describe('«Mi stack»', () => {
+    it.each(LANGS)('en %s, rótulo, título y nombres de los grupos', (lang) => {
+      const { stack } = dictionaries[lang].about
+
+      expect(stack.tag).toBe(STACK[lang].tag)
+      expect(stack.title).toBe(STACK[lang].title)
+      expect(stack.groups).toEqual(STACK[lang].groups)
+    })
+
+    it.each(LANGS)('en %s, la cuenta de tecnologías, con 0, 1 y varias', (lang) => {
+      expect([0, 1, 15].map(dictionaries[lang].about.stack.count)).toEqual(STACK[lang].count)
+    })
+
+    // Las mayúsculas sostenidas del título las pone el CSS.
+    it.each(LANGS)('en %s, el título no se guarda en mayúsculas sostenidas', (lang) => {
+      const { title } = dictionaries[lang].about.stack
+
+      expect(title).not.toBe(title.toUpperCase())
     })
   })
 
