@@ -1,5 +1,6 @@
 import { type CSSProperties, useId } from 'react'
 import styles from '@/components/ui/ProjectCard.module.css'
+import { githubMark } from '@/data/projects'
 
 interface ProjectCardProps {
   /** Número de la tarjeta, ya a dos cifras. */
@@ -24,7 +25,8 @@ interface ProjectCardProps {
 
 /**
  * Tarjeta de un proyecto en la pila (spec §3.4). Arriba, el número, el
- * nombre (h3), la etiqueta de protagonista si la lleva y «Ver código ↗»; ese
+ * nombre (h3), la etiqueta de protagonista si la lleva y «Ver código ↗»,
+ * con el logo de GitHub delante; ese
  * enlace es lo único que se enfoca, y va en la franja de arriba, la que
  * queda a la vista cuando la tarjeta siguiente sube encima. Debajo, la
  * descripción, las tecnologías y las capturas en mosaico.
@@ -69,6 +71,14 @@ export function ProjectCard({
           rel="noopener noreferrer"
           aria-label={`${viewCode}: ${title} (${opensInNewTab})`}
         >
+          {/* Decorativo: el enlace ya dice adónde lleva (spec v2.1 §3.4). */}
+          <img
+            className={styles.mark}
+            src={githubMark.src}
+            width={githubMark.width}
+            height={githubMark.height}
+            alt=""
+          />
           {viewCode}
           <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M7 17 17 7M9 7h8v8" />

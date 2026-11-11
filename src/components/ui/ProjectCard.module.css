@@ -67,6 +67,12 @@
   text-decoration: none;
 }
 
+/* Logo de GitHub, del mismo tamaño que el de «Ver todos en GitHub». */
+.mark {
+  width: var(--github-mark-size);
+  height: var(--github-mark-size);
+}
+
 .arrow {
   width: var(--space-4);
   height: var(--space-4);
