@@ -22,24 +22,30 @@ a{color:inherit}a:hover{opacity:.8}
 @keyframes caret{50%{opacity:0}}
 .flow{animation:flow 2.6s ease-in-out infinite}
 @keyframes flow{0%{transform:translateX(-6px);opacity:.4}50%{transform:translateX(6px);opacity:1}100%{transform:translateX(-6px);opacity:.4}}
-.hero-name{font-size:clamp(120px,21.5vw,330px)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;gap:520px}
+.hero-name{font-size:clamp(120px,17.5vw,252px)}
+.hero-side{display:block}
 .svc-pad{padding:20px 0 8px 144px}
 .two-col{display:flex;gap:56px;align-items:stretch}
 .svc-row{display:grid;grid-template-columns:120px minmax(0,1fr) 64px;gap:24px;align-items:center}
 .svc-open{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:40px}
 .proj-body{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:32px}
-.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center}
-#perfil,#servicios,#proyectos,#contacto,footer{padding-left:max(64px,calc((100% - 1600px) / 2))!important;padding-right:max(64px,calc((100% - 1600px) / 2))!important}
-@media (max-width:900px){#perfil,#servicios,#proyectos,#contacto,footer{padding-left:24px!important;padding-right:24px!important}}
-.credits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px}
+.stack-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.contact-split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px}
+.form-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{width:100%;box-sizing:border-box;min-height:56px;padding:16px 18px;border-radius:18px;border:1.5px solid rgba(242,238,230,0.45);background:#1A1A1D;color:#F2EEE6;font-family:Manrope,sans-serif;font-size:16px;outline:none}
+.field:focus{border-color:#FF5B24;box-shadow:0 0 0 4px rgba(255,91,36,0.22)}
+.field::placeholder{color:#8F8B84}
+#perfil,#servicios,#proyectos,footer{padding-left:max(64px,calc((100% - 1600px) / 2))!important;padding-right:max(64px,calc((100% - 1600px) / 2))!important}
+.credits{display:flex;justify-content:space-between;align-items:flex-start;gap:32px}
 .nav-links{display:flex}
+@media (max-width:1279px){.hero-side{display:none}}
 @media (max-width:900px){
-.hero-grid,.two-col,.svc-open,.proj-body,.contact-grid{grid-template-columns:minmax(0,1fr);display:flex;flex-direction:column}
+#perfil,#servicios,#proyectos,footer{padding-left:24px!important;padding-right:24px!important}
+.two-col,.svc-open,.proj-body,.contact-split{grid-template-columns:minmax(0,1fr);display:flex;flex-direction:column}
 .svc-row{grid-template-columns:64px minmax(0,1fr) 52px}
-.hero-grid{gap:24px}
 .svc-pad{padding:16px 0 8px 0}
-.credits{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stack-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.credits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
 .nav-links{display:none}
 }
 @media (prefers-reduced-motion:reduce){.marq,.pulse,.caret,.flow{animation:none}}
@@ -57,8 +63,9 @@ a{color:inherit}a:hover{opacity:.8}
 <!-- ============ 00 · HERO ============ -->
 <section id="inicio" style="position: relative; border-radius: 40px; background: #111113; min-height: 900px; overflow: hidden; display: flex; flex-direction: column">
 
+<!-- barra en su estado inicial; al bajar se vuelve la píldora fija (tablero «Barra de navegación») -->
 <header style="position: relative; z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 32px">
-<a href="#inicio" style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px; text-decoration: none; letter-spacing: 0.02em">jorgegmch<span style="color: {{accent}}">_</span></a>
+<a href="#inicio" aria-label="Jorge Gómez (jorgegmch), inicio" style="display: flex; align-items: center; min-height: 44px; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px; text-decoration: none; letter-spacing: 0.02em">jorgegmch<span style="color: {{code}}">_</span></a>
 <nav aria-label="Secciones" class="nav-links" style="gap: 4px; padding: 6px; border-radius: 999px; background: rgba(242,238,230,0.06); border: 1px solid rgba(242,238,230,0.10)">
 <a href="#perfil" style="display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-radius: 999px; font-size: 14px; text-decoration: none"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #A29E97">01</span>Perfil</a>
 <a href="#servicios" style="display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-radius: 999px; font-size: 14px; text-decoration: none"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #A29E97">02</span>Servicios</a>
@@ -66,62 +73,101 @@ a{color:inherit}a:hover{opacity:.8}
 <a href="#contacto" style="display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-radius: 999px; font-size: 14px; text-decoration: none"><span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #A29E97">04</span>Contacto</a>
 </nav>
 <div style="display: flex; align-items: center; gap: 10px">
-<button type="button" aria-label="Cambiar idioma a inglés" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.18); background: transparent; color: #F2EEE6; font-family: 'JetBrains Mono', monospace; font-size: 13px; cursor: pointer">ES / <span style="color: #A29E97">EN</span></button>
-<a href="#contacto" style="display: flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: {{accent}}; color: #0A0A0B; font-weight: 800; font-size: 14px; text-decoration: none">Hablemos</a>
+<button type="button" aria-label="Pausar animaciones" aria-pressed="false" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(242,238,230,0.18); background: transparent; color: #F2EEE6; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 5v14M15 5v14"></path></svg></button>
+<button type="button" aria-label="Cambiar idioma a inglés" style="display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.18); background: transparent; color: #F2EEE6; font-family: 'JetBrains Mono', monospace; font-size: 13px; cursor: pointer">ES <span style="color: #A29E97">/ EN</span></button>
+<a href="#contacto" style="display: flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: #FF5B24; color: #0A0A0B; font-weight: 800; font-size: 14px; text-decoration: none">Hablemos</a>
 </div>
 </header>
 
 <div style="position: relative; z-index: 6; display: flex; justify-content: space-between; gap: 16px; padding: 0 32px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">
-<span style="display: flex; align-items: center; gap: 10px"><span class="pulse" style="width: 8px; height: 8px; border-radius: 50%; background: {{accent}}"></span>Disponible para proyectos freelance</span>
+<span style="display: flex; align-items: center; gap: 10px"><span class="pulse" style="width: 8px; height: 8px; border-radius: 50%; background: {{code}}"></span>Disponible para proyectos freelance</span>
 <span>Piedecuesta, CO · {{clock}} GMT-5</span>
 </div>
 
-<div style="position: relative; flex: 1; min-height: 700px">
+<div style="position: relative; flex: 1; min-height: 760px">
 <!-- luz detrás de la foto -->
-<div aria-hidden="true" style="position: absolute; left: 50%; top: 52%; width: 760px; height: 760px; transform: translate(-50%,-50%); border-radius: 50%; background: radial-gradient(circle, {{accentGlow}} 0%, rgba(17,17,19,0) 62%)"></div>
-<div aria-hidden="true" style="position: absolute; left: 50%; top: 50%; width: 560px; height: 560px; transform: translate(-50%,-50%); border-radius: 50%; border: 1px solid rgba(242,238,230,0.10)"></div>
+<div aria-hidden="true" style="position: absolute; left: 50%; top: 52%; width: 720px; height: 720px; transform: translate(-50%,-50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,91,36,0.38) 0%, rgba(17,17,19,0) 62%)"></div>
+<div aria-hidden="true" style="position: absolute; left: 50%; top: 50%; width: 540px; height: 540px; transform: translate(-50%,-50%); border-radius: 50%; border: 1px solid rgba(242,238,230,0.10)"></div>
 
 <!-- nombre gigante: detrás de la foto -->
-<h1 class="hero-name" style="position: absolute; inset: 24px 0 auto 0; margin: 0; z-index: 1; font-family: Anton, Impact, 'Arial Narrow', sans-serif; font-weight: 400; line-height: 0.84; text-align: center; letter-spacing: -0.005em; text-transform: uppercase">
+<h1 class="hero-name" style="position: absolute; inset: 4px 0 auto 0; margin: 0; z-index: 1; font-family: Anton, Impact, 'Arial Narrow', sans-serif; font-weight: 400; line-height: 0.84; text-align: center; letter-spacing: -0.005em; text-transform: uppercase">
 <span style="display: block; color: #F2EEE6">Jorge</span>
-<span style="display: block; color: {{accent}}">Gómez</span>
+<span style="display: block; color: #FF5B24">Gómez</span>
 </h1>
 
+<!-- ventana de código (izquierda): decorativa; se oculta por debajo de 1280 px -->
+<div class="hero-side" aria-hidden="true" style="position: absolute; left: 44px; top: 56px; width: 304px; z-index: 2; transform: rotate(-3deg); border-radius: 20px; background: #17171A; border: 1px solid rgba(242,238,230,0.12); box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 24px 48px rgba(0,0,0,0.45); overflow: hidden">
+<div style="display: flex; align-items: center; gap: 7px; padding: 12px 16px; border-bottom: 1px solid rgba(242,238,230,0.08)">
+<span style="width: 8px; height: 8px; border-radius: 50%; background: #3A3936"></span>
+<span style="width: 8px; height: 8px; border-radius: 50%; background: #3A3936"></span>
+<span style="width: 8px; height: 8px; border-radius: 50%; background: #3A3936"></span>
+<span style="margin-left: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">AuthController.java</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 11px; padding: 16px 16px 18px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.3">
+<span style="color: {{code}}">@RestController</span>
+<span style="display: flex; gap: 8px; align-items: center"><span style="width: 44px; height: 8px; border-radius: 4px; background: {{code}}"></span><span style="width: 36px; height: 8px; border-radius: 4px; background: {{code}}"></span><span style="width: 118px; height: 8px; border-radius: 4px; background: #D9D4CB"></span></span>
+<span style="display: flex; gap: 8px; align-items: center; padding-left: 18px"><span style="width: 52px; height: 8px; border-radius: 4px; background: {{code}}"></span><span style="width: 86px; height: 8px; border-radius: 4px; background: #D9D4CB"></span><span style="width: 60px; height: 8px; border-radius: 4px; background: #E8C9A0"></span></span>
+<span style="display: flex; gap: 8px; align-items: center; padding-left: 36px"><span style="width: 44px; height: 8px; border-radius: 4px; background: {{code}}"></span><span style="width: 132px; height: 8px; border-radius: 4px; background: #D9D4CB"></span></span>
+<span style="display: flex; gap: 8px; align-items: center; padding-left: 18px"><span style="width: 150px; height: 8px; border-radius: 4px; background: #5E5B56"></span></span>
+<span style="color: #A29E97; font-size: 11px">[ fragmento real de logitrack-api ]</span>
+</div>
+</div>
+
+<!-- fichas de stack con logo (derecha): decorativas; se ocultan por debajo de 1280 px -->
+<div class="hero-side" aria-hidden="true" style="position: absolute; right: 44px; top: 48px; width: 304px; z-index: 2; transform: rotate(2.5deg)">
+<span style="display: block; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97"><span style="color: {{code}}">//</span> stack principal</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{tiles}}" as="t" hint-placeholder-count="6">
+<div style="height: 92px; border-radius: 20px; background: #17171A; border: 1px solid rgba(242,238,230,0.12); box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 16px 32px rgba(0,0,0,0.35); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+<span style="width: 34px; height: 34px; border-radius: 9px; border: 1.5px dashed rgba(242,238,230,0.4); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #A29E97">logo</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #D9D4CB">{{t}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
 <!-- foto (marcador): recorte, B/N, luz de acento al borde -->
-<figure style="position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); margin: 0; z-index: 3; width: 470px; height: 640px">
+<figure style="position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); margin: 0; z-index: 3; width: 430px; height: 588px">
 <svg viewBox="0 0 470 640" role="img" aria-label="Marcador: foto recortada de Jorge, en blanco y negro con luz de acento" style="width: 100%; height: 100%; display: block">
 <defs>
 <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A3936"></stop><stop offset="1" stop-color="#1B1B1D"></stop></linearGradient>
 </defs>
 <path d="M235 52c62 0 104 46 104 112 0 46-18 86-46 108l6 46c76 18 136 56 158 126 10 34 13 120 13 196H0c0-76 3-162 13-196 22-70 82-108 158-126l6-46c-28-22-46-62-46-108 0-66 42-112 104-112z" fill="url(#skin)"></path>
-<path d="M339 164c0 46-18 86-46 108l6 46c76 18 136 56 158 126 10 34 13 120 13 196" fill="none" stroke="{{accent}}" stroke-width="3" opacity="0.9"></path>
-<path d="M150 470c40-30 130-30 170 0" fill="none" stroke="#4A4945" stroke-width="2"></path>
+<path d="M339 164c0 46-18 86-46 108l6 46c76 18 136 56 158 126 10 34 13 120 13 196" fill="none" stroke="#FF5B24" stroke-width="3" opacity="0.9"></path>
 </svg>
-<figcaption style="position: absolute; left: 0; right: 0; bottom: 40px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">[ Tu foto definitiva · brazos cruzados ]</figcaption>
+<figcaption style="position: absolute; left: 0; right: 0; top: 300px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">[ tu foto ]</figcaption>
 </figure>
 
-<!-- bloques inferiores -->
-<div class="hero-grid" style="position: absolute; left: 32px; right: 32px; bottom: 112px; z-index: 4">
+<!-- lema: centrado bajo la foto, sobre un velo que funde la foto con el panel -->
+<div aria-hidden="true" style="position: absolute; left: 50%; bottom: 0; z-index: 4; width: 760px; height: 190px; transform: translateX(-50%); background: linear-gradient(to top, #111113 0%, rgba(17,17,19,0.92) 45%, rgba(17,17,19,0) 100%)"></div>
+<p style="position: absolute; left: 50%; bottom: 36px; z-index: 5; width: 720px; margin: 0; transform: translateX(-50%); font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 46px; line-height: 1; text-align: center; text-transform: uppercase; letter-spacing: 0.005em">
+<span style="display: block; color: #F2EEE6">El código resuelve.</span>
+<span style="display: block; color: #FF5B24">El criterio marca la diferencia.</span>
+</p>
+
+<!-- bloques laterales -->
+<div style="position: absolute; left: 40px; right: 40px; bottom: 132px; z-index: 4; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px">
 <div style="display: flex; flex-direction: column; gap: 10px">
 <p style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.01em">Full-Stack Developer</p>
-<p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A29E97">// Java · Spring Boot · Agentes de IA</p>
+<p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #A29E97"><span style="color: {{code}}">//</span> Java · Spring Boot · IA y automatización</p>
 </div>
-<div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
-<p style="margin: 0; max-width: 380px; font-size: 17px; line-height: 1.55; color: #D9D4CB">Traduzco lo que tu negocio necesita en software que funciona, y te lo explico sin tecnicismos.</p>
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px">
-<a href="#proyectos" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 28px; border-radius: 999px; background: {{accent}}; color: #0A0A0B; font-weight: 800; font-size: 16px; text-decoration: none">Ver proyectos
+<div style="display: flex; flex-direction: column; gap: 22px; align-items: flex-start; width: 400px">
+<p style="margin: 0; font-size: 17px; line-height: 1.55; color: #D9D4CB">Combino desarrollo de software, comunicación y pensamiento estratégico para crear soluciones que respondan a necesidades reales y tengan sentido para quienes las usan.</p>
+<div style="display: flex; align-items: center; gap: 20px">
+<a href="#proyectos" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 28px; border-radius: 999px; background: #FF5B24; color: #0A0A0B; font-weight: 800; font-size: 16px; text-decoration: none">Ver proyectos
 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-<a href="#contacto" style="display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 6px">Descargar CV
-<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"></path></svg></a>
+<button type="button" aria-expanded="false" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0; border: 0; background: transparent; color: #F2EEE6; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 6px; cursor: pointer">Descargar CV
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg></button>
 </div>
 </div>
 </div>
 </div>
 
-<!-- cinta de stack: cruza el pie del hero -->
-<div aria-label="Tecnologías: Java, Spring Boot, Spring Security, PostgreSQL, MySQL, Python, JavaScript, TypeScript, React, HTML, CSS, Git, Docker, n8n, agentes de IA" role="img" style="position: relative; z-index: 5; background: {{accent}}; color: #0A0A0B; padding: 18px 0; overflow: hidden; transform: rotate(-1.6deg) scale(1.04); margin-bottom: 18px">
-<div class="marq" aria-hidden="true" style="gap: 36px; font-family: Anton, Impact, sans-serif; font-size: 40px; text-transform: uppercase; white-space: nowrap">
-<sc-for list="{{stackTwice}}" as="t" hint-placeholder-count="30"><span style="display: flex; align-items: center; gap: 36px">{{t}}<span style="font-size: 22px">✦</span></span></sc-for>
+<!-- cinta de stack: solo nombres, sin logos; cruza el pie del hero -->
+<div aria-label="Tecnologías: Java, Spring Boot, Spring Security, PostgreSQL, MySQL, Python, JavaScript, TypeScript, React, HTML, CSS, Git, Docker, n8n, agentes de IA" role="img" style="position: relative; z-index: 6; background: #FF5B24; color: #0A0A0B; padding: 15px 0; overflow: hidden; transform: rotate(-1.6deg) scale(1.04); margin-bottom: 18px">
+<div class="marq" aria-hidden="true" style="gap: 30px; font-family: Anton, Impact, sans-serif; font-size: 36px; text-transform: uppercase; white-space: nowrap">
+<sc-for list="{{stackTwice}}" as="t" hint-placeholder-count="30"><span style="display: flex; align-items: center; gap: 30px">{{t}}<span style="font-size: 20px">✦</span></span></sc-for>
 </div>
 </div>
 </section>
@@ -129,43 +175,46 @@ a{color:inherit}a:hover{opacity:.8}
 <!-- ============ 01 · PERFIL ============ -->
 <section id="perfil" style="border-radius: 40px; background: #19171A; padding: 104px 64px 96px; display: flex; flex-direction: column; gap: 64px">
 <div style="display: flex; justify-content: space-between; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase">
-<span style="color: {{accent}}">01 — Perfil</span>
-<span style="color: #A29E97">del_negocio_al_codigo()</span>
+<span style="color: #FF5B24">01 — Perfil</span>
+<span style="color: #A29E97; text-transform: none">del_negocio_al_codigo()</span>
 </div>
 
-<h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(56px, 8vw, 128px); line-height: 0.92; text-transform: uppercase; letter-spacing: -0.005em; text-wrap: balance">
-<span style="display: block">Del negocio al código.</span>
-<span style="display: block; color: transparent; -webkit-text-stroke: 1.5px #F2EEE6">Y del código a palabras claras.</span>
+<h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(56px, 8vw, 128px); line-height: 0.96; text-transform: uppercase; letter-spacing: -0.005em; text-wrap: balance">
+<span style="display: block">Entender el reto.</span>
+<span style="display: block; color: transparent; -webkit-text-stroke: 1.5px #F2EEE6">Construir la respuesta.</span>
 </h2>
 
 <div class="two-col">
 <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 40px; min-width: 0">
-<p style="margin: 0; max-width: 520px; font-size: 20px; line-height: 1.6; color: #D9D4CB">Desarrollador Full-Stack con base en Java y Spring Boot. Vengo de la Comunicación Social: escucho antes de programar y explico lo que construyo.</p>
+<div style="display: flex; flex-direction: column; gap: 18px; max-width: 600px">
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #D9D4CB">Soy desarrollador Full-Stack con enfoque en Java y Spring Boot. Mi formación en Comunicación Social y Periodismo también influye en cómo abordo la tecnología: me lleva a escuchar, analizar contextos y comprender las necesidades detrás de cada problema.</p>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #D9D4CB">Me interesa construir software que no solo funcione, sino que tenga sentido para quienes lo utilizan. Por eso busco conectar las decisiones técnicas con los objetivos del negocio, la claridad de la experiencia y el propósito de cada solución.</p>
+</div>
 
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
 <div style="border-radius: 24px; background: #222024; padding: 24px; display: flex; flex-direction: column; gap: 6px">
-<span style="font-family: Anton, Impact, sans-serif; font-size: 56px; line-height: 1; color: {{accent}}">+1</span>
-<span style="font-size: 14px; color: #BDB8AF">año programando</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 56px; line-height: 1; color: #FF5B24">+1</span>
+<span style="font-size: 14px; color: #BDB8AF">Año programando</span>
 </div>
 <div style="border-radius: 24px; background: #222024; padding: 24px; display: flex; flex-direction: column; gap: 6px">
 <span style="font-family: Anton, Impact, sans-serif; font-size: 56px; line-height: 1">14</span>
-<span style="font-size: 14px; color: #BDB8AF">proyectos construidos</span>
+<span style="font-size: 14px; color: #BDB8AF">Proyectos construidos</span>
 </div>
 <div style="border-radius: 24px; background: #222024; padding: 24px; display: flex; flex-direction: column; gap: 6px">
 <span style="font-family: Anton, Impact, sans-serif; font-size: 56px; line-height: 1">15</span>
-<span style="font-size: 14px; color: #BDB8AF">tecnologías</span>
+<span style="font-size: 14px; color: #BDB8AF">Tecnologías</span>
 </div>
 </div>
 
 <div style="display: flex; flex-direction: column; gap: 14px; border-top: 1px solid rgba(242,238,230,0.12); padding-top: 24px">
 <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Formación</span>
-<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 16px"><span style="font-weight: 700">Técnico en Programación de Software</span><span style="color: #A29E97">Campuslands</span></div>
-<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 16px"><span style="font-weight: 700">Comunicación Social y Periodismo</span><span style="color: #A29E97">U. Sergio Arboleda</span></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 16px"><span style="font-weight: 700">Técnico Laboral en Programación de Software</span><span style="color: #A29E97">Campuslands</span></div>
+<div style="display: flex; justify-content: space-between; gap: 16px; font-size: 16px"><span style="font-weight: 700">Comunicador Social y Periodista</span><span style="color: #A29E97">Universidad Sergio Arboleda</span></div>
 </div>
 </div>
 
-<!-- traductor negocio ⇄ código: el momento de firma -->
-<div style="flex: 1.1 1 0; min-width: 0; border-radius: 32px; background: #0E0E10; border: 1px solid rgba(242,238,230,0.08); padding: 28px; display: flex; flex-direction: column; gap: 24px">
+<!-- traductor negocio ⇄ código: el momento de firma (fragmentos reales del código actual) -->
+<div style="flex: 1.1 1 0; min-width: 0; align-self: flex-start; border-radius: 32px; background: #0E0E10; border: 1px solid rgba(242,238,230,0.08); padding: 28px; display: flex; flex-direction: column; gap: 24px">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
 <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Traductor</span>
 <div role="group" aria-label="Ejemplos" style="display: flex; gap: 6px">
@@ -176,21 +225,44 @@ a{color:inherit}a:hover{opacity:.8}
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px">
 <span style="font-size: 13px; color: #A29E97">Lo que dice el negocio</span>
-<p style="margin: 0; font-size: 30px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; min-height: 76px">«{{current.say}}»</p>
+<p style="margin: 0; font-size: 28px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; min-height: 70px">«{{current.say}}»</p>
 </div>
-<div aria-hidden="true" style="display: flex; align-items: center; gap: 12px; color: {{accent}}">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 12px; color: #FF5B24">
 <span style="flex: 1; height: 1px; background: rgba(242,238,230,0.12)"></span>
 <svg class="flow" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v16M6 14l6 6 6-6"></path></svg>
 <span style="flex: 1; height: 1px; background: rgba(242,238,230,0.12)"></span>
 </div>
 <div style="display: flex; flex-direction: column; gap: 10px">
 <span style="font-size: 13px; color: #A29E97">Lo que escribo</span>
-<pre style="margin: 0; border-radius: 20px; background: #141416; padding: 20px 22px; font-family: 'JetBrains Mono', monospace; font-size: 15px; line-height: 1.75; white-space: pre-wrap; min-height: 132px"><sc-for list="{{current.code}}" as="ln" hint-placeholder-count="3"><span style="display: block"><sc-for list="{{ln}}" as="seg"><span style="{{seg.style}}">{{seg.t}}</span></sc-for></span></sc-for><span class="caret" style="color: {{accent}}">▍</span></pre>
+<pre style="margin: 0; border-radius: 20px; background: #141416; padding: 20px 22px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.75; white-space: pre-wrap; min-height: 160px"><sc-for list="{{current.code}}" as="ln" hint-placeholder-count="3"><span style="display: block"><sc-for list="{{ln}}" as="seg"><span style="{{seg.style}}">{{seg.t}}</span></sc-for></span></sc-for><span class="caret" style="color: {{code}}">▍</span></pre>
 </div>
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; color: #A29E97">
 <span>{{current.where}}</span>
 <a href="{{current.href}}" style="display: flex; align-items: center; min-height: 44px; font-weight: 700; color: #F2EEE6">Ver el repo ↗</a>
 </div>
+</div>
+</div>
+
+<!-- bloque nuevo dentro de Perfil: el stack con sus logos (no reemplaza nada) -->
+<div style="display: flex; flex-direction: column; gap: 28px; border-top: 1px solid rgba(242,238,230,0.12); padding-top: 48px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{code}}">stack.list()</span>
+<h3 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 64px; line-height: 0.92; text-transform: uppercase">Mi stack</h3>
+</div>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A29E97">15 tecnologías</span>
+</div>
+<div class="stack-grid">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+<div style="{{g.colStyle}}">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">{{g.name}}</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+<li style="display: flex; align-items: center; gap: 14px; font-size: 17px; font-weight: 700"><span aria-hidden="true" style="flex: none; width: 38px; height: 38px; border-radius: 10px; background: #222024; border: 1.5px dashed rgba(242,238,230,0.4); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 400; color: #A29E97">logo</span>{{it}}</li>
+</sc-for>
+</ul>
+</div>
+</sc-for>
 </div>
 </div>
 </section>
@@ -199,7 +271,7 @@ a{color:inherit}a:hover{opacity:.8}
 <section id="servicios" style="position: relative; border-radius: 40px; background: #ECE7DD; color: #0A0A0B; padding: 104px 64px 160px; display: flex; flex-direction: column; gap: 56px">
 <div style="display: flex; justify-content: space-between; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase">
 <span style="color: #5B5750">02 — Servicios</span>
-<span style="color: #5B5750">what_i_build()</span>
+<span style="color: #5B5750; text-transform: none">what_i_build()</span>
 </div>
 <h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(72px, 12vw, 190px); line-height: 0.86; text-transform: uppercase">Lo que<br>construyo</h2>
 
@@ -219,7 +291,7 @@ a{color:inherit}a:hover{opacity:.8}
 <a href="{{s.href}}" style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-weight: 800; text-decoration: none">Ver proyecto relacionado ↗</a>
 </sc-if>
 </div>
-<div aria-hidden="true" style="height: 200px; border-radius: 28px; background: #0A0A0B; display: flex; align-items: center; justify-content: center; color: {{accent}}">
+<div aria-hidden="true" style="height: 200px; border-radius: 28px; background: #0A0A0B; display: flex; align-items: center; justify-content: center; color: #FF5B24">
 <sc-if value="{{s.isServer}}" hint-placeholder-val="{{true}}"><svg width="112" height="112" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="8" width="44" height="13" rx="3"></rect><rect x="10" y="25" width="44" height="13" rx="3"></rect><rect x="10" y="42" width="44" height="13" rx="3"></rect><circle class="pulse" cx="46" cy="14.5" r="2" fill="currentColor"></circle><circle cx="46" cy="31.5" r="2" fill="currentColor" opacity="0.4"></circle><circle cx="46" cy="48.5" r="2" fill="currentColor" opacity="0.4"></circle><path d="M17 14.5h14M17 31.5h14M17 48.5h14" opacity="0.5"></path></svg></sc-if>
 <sc-if value="{{s.isWindow}}"><svg width="112" height="112" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="10" width="52" height="44" rx="4"></rect><path d="M6 20h52"></path><path class="pulse" d="M14 30h20M18 37h26M18 44h14"></path><path class="caret" d="M38 41v7"></path></svg></sc-if>
 <sc-if value="{{s.isLayers}}"><svg width="112" height="112" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M32 8 56 20 32 32 8 20Z"></path><path class="pulse" d="M8 32l24 12 24-12"></path><path d="M8 44l24 12 24-12" opacity="0.5"></path></svg></sc-if>
@@ -237,10 +309,10 @@ a{color:inherit}a:hover{opacity:.8}
 <div aria-hidden="true" style="position: absolute; left: -40px; right: -40px; bottom: -64px; height: 180px; z-index: 5; pointer-events: none">
 <div style="position: absolute; left: 0; right: 0; top: 30px; background: #0A0A0B; color: #F2EEE6; padding: 16px 0; overflow: hidden; transform: rotate(3deg)">
 <div class="marq rev" style="gap: 28px; font-family: 'JetBrains Mono', monospace; font-size: 18px; white-space: nowrap">
-<sc-for list="{{codeTwice}}" as="t" hint-placeholder-count="20"><span style="display: flex; gap: 28px">{{t}}<span style="color: {{accent}}">/</span></span></sc-for>
+<sc-for list="{{codeTwice}}" as="t" hint-placeholder-count="20"><span style="display: flex; gap: 28px">{{t}}<span style="color: {{code}}">/</span></span></sc-for>
 </div>
 </div>
-<div style="position: absolute; left: 0; right: 0; top: 70px; background: {{accent}}; color: #0A0A0B; padding: 14px 0; overflow: hidden; transform: rotate(-2.5deg)">
+<div style="position: absolute; left: 0; right: 0; top: 70px; background: #FF5B24; color: #0A0A0B; padding: 14px 0; overflow: hidden; transform: rotate(-2.5deg)">
 <div class="marq" style="gap: 32px; font-family: Anton, Impact, sans-serif; font-size: 34px; text-transform: uppercase; white-space: nowrap">
 <sc-for list="{{wordsTwice}}" as="t" hint-placeholder-count="20"><span style="display: flex; gap: 32px">{{t}}<span style="font-size: 20px">✦</span></span></sc-for>
 </div>
@@ -250,27 +322,29 @@ a{color:inherit}a:hover{opacity:.8}
 
 <!-- ============ 03 · PROYECTOS ============ -->
 <section id="proyectos" style="border-radius: 40px; background: #0F0F11; padding: 160px 64px 96px; display: flex; flex-direction: column; gap: 56px">
-<div style="display: flex; justify-content: space-between; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase">
-<span style="color: {{accent}}">03 — Proyectos</span>
-<a href="https://github.com/jorgegmch" style="color: #F2EEE6; text-decoration: none; display: flex; align-items: center; min-height: 44px">Ver todos en GitHub ↗</a>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase">
+<span style="color: #FF5B24">03 — Proyectos</span>
+<a href="https://github.com/jorgegmch" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 18px 0 10px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); color: #F2EEE6; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(242,238,230,0.45); display: flex; align-items: center; justify-content: center; font-size: 7px; letter-spacing: 0; text-transform: none; color: #A29E97">logo</span>Ver todos en GitHub ↗</a>
 </div>
-<h2 style="margin: 0; display: flex; align-items: flex-start; gap: 16px; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(72px, 12vw, 190px); line-height: 0.86; text-transform: uppercase">Proyectos<span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; color: {{accent}}; padding-top: 18px">(05)</span></h2>
+<h2 style="margin: 0; display: flex; align-items: flex-start; gap: 16px; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(72px, 12vw, 190px); line-height: 0.86; text-transform: uppercase">Proyectos<span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; color: #FF5B24; padding-top: 18px">(05)</span></h2>
 
 <div style="display: flex; flex-direction: column">
 <!-- tarjeta 01: queda atrás, escalada y atenuada, mientras la 02 sube -->
 <article style="border-radius: 32px; background: #1A1A1D; border: 1px solid rgba(242,238,230,0.08); padding: 32px; display: flex; flex-direction: column; gap: 28px; transform: scale(0.965); transform-origin: top center; opacity: 0.6">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
 <div style="display: flex; align-items: baseline; gap: 20px">
-<span style="font-family: Anton, Impact, sans-serif; font-size: 64px; line-height: 1; color: {{accent}}">01</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 64px; line-height: 1; color: #FF5B24">01</span>
 <h3 style="margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -0.02em">LogiTrack IQ</h3>
-<span style="padding: 6px 12px; border-radius: 999px; border: 1px solid {{accent}}; color: {{accent}}; font-size: 12px; font-weight: 700">Proyecto principal</span>
+<span style="padding: 6px 12px; border-radius: 999px; border: 1px solid #FF5B24; color: #FF5B24; font-size: 12px; font-weight: 700">Proyecto principal</span>
 </div>
-<a href="https://github.com/jorgegmch/logitrack-iq" style="display: flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); font-weight: 700; text-decoration: none">Ver código ↗</a>
+<a href="https://github.com/jorgegmch/logitrack-iq" style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px 0 14px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); font-weight: 700; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(242,238,230,0.4); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400; color: #A29E97">logo</span>Ver código ↗</a>
 </div>
 <div class="proj-body">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #D9D4CB">Plataforma logística con un agente de IA: n8n y un servidor MCP detectan productos bajo el punto de reorden y generan órdenes de compra en borrador que un administrador aprueba.</p>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px"><span style="padding: 8px 12px; border-radius: 999px; background: #242428">Java</span><span style="padding: 8px 12px; border-radius: 999px; background: #242428">Spring Boot</span><span style="padding: 8px 12px; border-radius: 999px; background: #242428">PostgreSQL</span><span style="padding: 8px 12px; border-radius: 999px; background: #242428">Docker</span><span style="padding: 8px 12px; border-radius: 999px; background: #242428">n8n</span><span style="padding: 8px 12px; border-radius: 999px; background: #242428">MCP</span></div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px">
+<sc-for list="{{chips1}}" as="c" hint-placeholder-count="6"><li style="padding: 8px 12px; border-radius: 999px; background: #242428">{{c}}</li></sc-for>
+</ul>
 </div>
 <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 10px; height: 300px">
 <div style="border-radius: 22px; background: repeating-linear-gradient(135deg, #222226 0 14px, #1E1E22 14px 28px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">[ Captura: panel ]</div>
@@ -286,15 +360,17 @@ a{color:inherit}a:hover{opacity:.8}
 <article style="position: relative; margin-top: -230px; border-radius: 32px; background: #1E1E22; border: 1px solid rgba(242,238,230,0.12); padding: 32px; display: flex; flex-direction: column; gap: 28px; box-shadow: 0 -30px 60px rgba(0,0,0,0.55)">
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
 <div style="display: flex; align-items: baseline; gap: 20px">
-<span style="font-family: Anton, Impact, sans-serif; font-size: 64px; line-height: 1; color: {{accent}}">02</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 64px; line-height: 1; color: #FF5B24">02</span>
 <h3 style="margin: 0; font-size: 40px; font-weight: 800; letter-spacing: -0.02em">LogiTrack API</h3>
 </div>
-<a href="https://github.com/jorgegmch/logitrack-api" style="display: flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); font-weight: 700; text-decoration: none">Ver código ↗</a>
+<a href="https://github.com/jorgegmch/logitrack-api" style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px 0 14px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); font-weight: 700; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(242,238,230,0.4); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400; color: #A29E97">logo</span>Ver código ↗</a>
 </div>
 <div class="proj-body">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #D9D4CB">API REST con Java y Spring Boot: autenticación JWT, roles y permisos, y documentación OpenAPI.</p>
-<div style="display: flex; flex-wrap: wrap; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px"><span style="padding: 8px 12px; border-radius: 999px; background: #2A2A2F">Java</span><span style="padding: 8px 12px; border-radius: 999px; background: #2A2A2F">Spring Boot</span><span style="padding: 8px 12px; border-radius: 999px; background: #2A2A2F">Spring Security</span><span style="padding: 8px 12px; border-radius: 999px; background: #2A2A2F">OpenAPI</span></div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 13px">
+<sc-for list="{{chips2}}" as="c" hint-placeholder-count="4"><li style="padding: 8px 12px; border-radius: 999px; background: #2A2A2F">{{c}}</li></sc-for>
+</ul>
 </div>
 <div style="height: 300px; border-radius: 22px; background: repeating-linear-gradient(135deg, #26262B 0 14px, #222226 14px 28px); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">[ Captura: documentación OpenAPI ]</div>
 </div>
@@ -304,7 +380,7 @@ a{color:inherit}a:hover{opacity:.8}
 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px">
 <sc-for list="{{moreProjects}}" as="p" hint-placeholder-count="3">
 <a href="{{p.href}}" style="display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 20px; align-items: center; min-height: 88px; padding: 0 28px; border-radius: 28px; background: #18181B; border: 1px solid rgba(242,238,230,0.08); text-decoration: none">
-<span style="font-family: Anton, Impact, sans-serif; font-size: 40px; color: {{accent}}">{{p.n}}</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 40px; color: #FF5B24">{{p.n}}</span>
 <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0"><span style="font-size: 22px; font-weight: 800">{{p.name}}</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A29E97">{{p.stack}}</span></span>
 <span style="font-weight: 700">Ver código ↗</span>
 </a>
@@ -313,47 +389,103 @@ a{color:inherit}a:hover{opacity:.8}
 </div>
 </section>
 
-<!-- ============ 04 · CONTACTO (escena de acento) ============ -->
-<section id="contacto" style="border-radius: 40px; background: {{accent}}; color: #0A0A0B; padding: 104px 64px 88px; display: flex; flex-direction: column; gap: 48px; overflow: hidden">
+<!-- ============ 04 · CONTACTO: mensaje a la izquierda, formulario a la vista a la derecha ============ -->
+<section id="contacto" class="contact-split" aria-labelledby="contacto-titulo">
+
+<!-- panel del mensaje (Signal) -->
+<div style="box-sizing: border-box; border-radius: 40px; background: #FF5B24; color: #0A0A0B; padding: 104px 48px 48px; display: flex; flex-direction: column; gap: 28px">
 <div style="display: flex; justify-content: space-between; gap: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase">
 <span>04 — Contacto</span>
 <span>Piedecuesta, Colombia · {{clock}} GMT-5</span>
 </div>
-<h2 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(80px, 12.5vw, 220px); line-height: 0.84; text-transform: uppercase">¿Construimos<br>algo?</h2>
-<div class="contact-grid">
-<p style="margin: 0; max-width: 460px; font-size: 24px; line-height: 1.45; font-weight: 600">Cuéntame qué necesita tu negocio. Yo lo traduzco a código.</p>
-<div style="display: flex">
-<a href="contact-form-desktop.dc.html" style="width: 200px; height: 200px; border-radius: 50%; background: #0A0A0B; color: #F2EEE6; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 20px; font-weight: 800; text-decoration: none">Escríbeme
-<svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"></path></svg></a>
+<h2 id="contacto-titulo" style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: clamp(56px, 6.4vw, 92px); line-height: 0.94; text-transform: uppercase; text-wrap: balance">Las buenas ideas merecen construirse bien.</h2>
+<div style="display: flex; flex-direction: column; gap: 14px; max-width: 560px">
+<p style="margin: 0; font-size: 22px; line-height: 1.4; font-weight: 700">¿Tienes un proyecto, un problema por resolver o buscas a alguien que aporte a tu equipo?</p>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; font-weight: 500">Hablemos de tus objetivos, lo que necesitas y cómo puedo aportar desde el desarrollo de software.</p>
 </div>
-</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">O por el canal que prefieras</span>
 <div style="display: flex; flex-wrap: wrap; gap: 10px">
-<button type="button" style="min-height: 52px; padding: 0 22px; border-radius: 999px; border: 1.5px solid #0A0A0B; background: transparent; color: #0A0A0B; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; cursor: pointer">Copiar correo</button>
-<a href="#contacto" style="display: flex; align-items: center; min-height: 52px; padding: 0 22px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-weight: 800; text-decoration: none">WhatsApp ↗</a>
-<a href="#contacto" style="display: flex; align-items: center; min-height: 52px; padding: 0 22px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-weight: 800; text-decoration: none">LinkedIn ↗</a>
-<a href="https://github.com/jorgegmch" style="display: flex; align-items: center; min-height: 52px; padding: 0 22px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-weight: 800; text-decoration: none">GitHub ↗</a>
-<a href="#contacto" style="display: flex; align-items: center; min-height: 52px; padding: 0 22px; border-radius: 999px; background: #0A0A0B; color: #F2EEE6; font-weight: 800; text-decoration: none">CV · ES ↓</a>
-<a href="#contacto" style="display: flex; align-items: center; min-height: 52px; padding: 0 22px; border-radius: 999px; background: #0A0A0B; color: #F2EEE6; font-weight: 800; text-decoration: none">CV · EN ↓</a>
+<button type="button" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px 0 16px; border-radius: 999px; border: 1.5px solid #0A0A0B; background: transparent; color: inherit; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; cursor: pointer">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="M4 8l8 6 8-6"></path></svg>Copiar correo</button>
+<a href="#contacto" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px 0 14px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-size: 15px; font-weight: 800; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(10,10,11,0.6); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400">logo</span>WhatsApp</a>
+<a href="https://github.com/jorgegmch" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px 0 14px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-size: 15px; font-weight: 800; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(10,10,11,0.6); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400">logo</span>GitHub</a>
+<a href="#contacto" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px 0 14px; border-radius: 999px; border: 1.5px solid #0A0A0B; font-size: 15px; font-weight: 800; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(10,10,11,0.6); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400">logo</span>LinkedIn</a>
+<button type="button" aria-expanded="false" style="display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 18px 0 16px; border-radius: 999px; border: 1.5px solid #0A0A0B; background: #0A0A0B; color: #F2EEE6; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; cursor: pointer">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"></path><path d="M14 3v5h5M10 14h6M10 17h4"></path></svg>CV · ES
+<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+</div>
+</div>
+</div>
+
+<!-- panel del formulario (Ink): ya no hay que abrir nada -->
+<div style="box-sizing: border-box; border-radius: 40px; background: #111113; padding: 104px 48px 44px; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: {{code}}">nuevo_mensaje()</span>
+<h3 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 56px; line-height: 0.92; text-transform: uppercase">Cuéntame tu idea</h3>
+</div>
+<form style="flex: 1; display: flex; flex-direction: column; gap: 18px">
+<div class="form-row">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="c-name" style="font-size: 14px; font-weight: 700">Nombre</label>
+<input id="c-name" name="name" class="field" type="text" autocomplete="name" placeholder="Ana Pérez…">
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="c-mail" style="font-size: 14px; font-weight: 700">Correo</label>
+<input id="c-mail" name="email" class="field" type="email" autocomplete="email" spellcheck="false" placeholder="ana@empresa.com…">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<label for="c-company" style="font-size: 14px; font-weight: 700">Empresa <span style="color: #A29E97; font-weight: 500">· opcional</span></label>
+<input id="c-company" name="company" class="field" type="text" autocomplete="organization" placeholder="Dónde trabajas…">
+</div>
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 10px">
+<legend style="padding: 0; margin-bottom: 10px; font-size: 14px; font-weight: 700">¿Qué necesitas?</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{needs}}" as="n" hint-placeholder-count="5"><button type="button" aria-pressed="{{n.pressed}}" style="{{n.style}}">{{n.label}}</button></sc-for>
+</div>
+</fieldset>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+<label for="c-msg" style="font-size: 14px; font-weight: 700">Mensaje</label>
+<textarea id="c-msg" name="message" class="field" placeholder="Qué quieres construir y para cuándo…" style="flex: 1; min-height: 140px; resize: none; line-height: 1.5"></textarea>
+</div>
+<button type="submit" style="display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 60px; border-radius: 999px; border: 0; background: #FF5B24; color: #0A0A0B; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; cursor: pointer">Enviar mensaje
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+</form>
 </div>
 </section>
 
 <!-- ============ CRÉDITOS FINALES (pie) ============ -->
-<footer style="border-radius: 40px; background: #111113; padding: 72px 64px 40px; display: flex; flex-direction: column; gap: 56px; overflow: hidden">
+<footer style="border-radius: 40px; background: #111113; padding: 64px 64px 36px; display: flex; flex-direction: column; gap: 40px; overflow: hidden">
+<!-- créditos: el primero pegado a la izquierda y el último a la derecha, como la palabra de abajo -->
 <div class="credits">
 <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Diseño y código</span><span style="font-size: 18px; font-weight: 700">Jorge Gómez</span></div>
 <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Construido con</span><span style="font-size: 18px; font-weight: 700">React · TypeScript · Vite</span></div>
 <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Desde</span><span style="font-size: 18px; font-weight: 700">Piedecuesta, Colombia</span></div>
-<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">En la red</span><span style="display: flex; gap: 16px; font-size: 18px; font-weight: 700"><a href="https://github.com/jorgegmch">GitHub</a><a href="#contacto">LinkedIn</a></span></div>
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #FF5B24">Sígueme en redes</span>
+<div style="display: flex; gap: 8px">
+<a href="https://github.com/jorgegmch" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px 0 10px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); font-size: 15px; font-weight: 700; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(242,238,230,0.45); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400; color: #A29E97">logo</span>GitHub ↗</a>
+<a href="#contacto" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px 0 10px; border-radius: 999px; border: 1px solid rgba(242,238,230,0.24); font-size: 15px; font-weight: 700; text-decoration: none"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed rgba(242,238,230,0.45); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 7px; font-weight: 400; color: #A29E97">logo</span>LinkedIn ↗</a>
 </div>
-<p aria-hidden="true" style="margin: 0; font-family: Anton, Impact, sans-serif; font-size: clamp(80px, 17vw, 270px); line-height: 0.8; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1.5px rgba(242,238,230,0.35); white-space: nowrap">jorgegmch</p>
+</div>
+</div>
+
+<!-- la palabra ocupa el ancho exacto de la rejilla -->
+<svg aria-hidden="true" viewBox="0 0 1288 316" style="display: block; width: 100%; height: auto">
+<text x="0" y="312" textLength="1288" lengthAdjust="spacingAndGlyphs" fill="none" stroke="rgba(242,238,230,0.35)" stroke-width="1.5" style="font-family: Anton, Impact, 'Arial Narrow', sans-serif; font-size: 357px">JORGEGMCH</text>
+</svg>
+
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 14px; color: #A29E97">
 <span>© 2026 Jorge Gómez. Todos los derechos reservados.</span>
-<a href="#inicio" style="display: flex; align-items: center; min-height: 44px; color: #F2EEE6; font-weight: 700; text-decoration: none">Volver arriba ↑</a>
+<a href="#inicio" style="display: flex; align-items: center; gap: 8px; min-height: 44px; color: #F2EEE6; font-weight: 700; text-decoration: none">Volver arriba
+<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 19V5M6 11l6-6 6 6"></path></svg></a>
 </div>
 </footer>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF5B24","options":["#FF5B24","#2EE58A","#9B8CFF","#E9FF4A"]},"$preview":{"width":1440,"height":7000}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":7330}}'>
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -379,39 +511,30 @@ class Component extends DCLogic {
       this.setState({ clock: '--:--' });
     }
   }
-  hexToGlow(hex) {
-    var h = (hex || '#FF5B24').replace('#', '');
-    var r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
-    return 'rgba(' + r + ',' + g + ',' + b + ',0.38)';
-  }
   renderVals() {
-    var accent = this.props.accent ?? '#FF5B24';
     var self = this;
-    var K = 'color: ' + accent;
+    var code = '#45D9C8';
+    var K = 'color: ' + code;
     var T = 'color: #F2EEE6';
     var M = 'color: #8C8880';
     var S = 'color: #E8C9A0';
+    // Inventario: fragmento real que hoy muestra el sitio (LogiTrack IQ · KpiService.java).
+    // Permisos y Noticias: el sitio ya tiene sus fragmentos reales; el agente los conserva tal cual.
     var exData = [
-      { tab: 'Inventario', say: 'Avísame cuando un producto esté por agotarse.', where: 'LogiTrack IQ · n8n + servidor MCP', href: 'https://github.com/jorgegmch/logitrack-iq',
+      { tab: 'Inventario', say: 'Avísame cuando un producto esté por agotarse.', where: 'LogiTrack IQ · KpiService.java', href: 'https://github.com/jorgegmch/logitrack-iq',
         code: [
-          [{ t: 'if ', s: K }, { t: '(stock < reorderPoint) {', s: T }],
-          [{ t: '  agent', s: T }, { t: '.draft', s: K }, { t: '(purchaseOrder);', s: T }],
-          [{ t: '  // un administrador la aprueba', s: M }],
+          [{ t: 'BigDecimal ', s: K }, { t: 'puntoReorden = consumoDiarioPromedio', s: T }],
+          [{ t: '        .multiply', s: K }, { t: '(BigDecimal.valueOf(diasEntrega))', s: T }],
+          [{ t: '        .multiply', s: K }, { t: '(FACTOR_SEGURIDAD);', s: T }],
+          [{ t: '// …', s: M }],
+          [{ t: 'if ', s: K }, { t: '(stockTotalDecimal.compareTo(puntoReorden) >= 0) {', s: T }],
+          [{ t: '    return ', s: K }, { t: 'null;', s: T }],
           [{ t: '}', s: T }]
         ] },
-      { tab: 'Permisos', say: 'Solo un administrador puede aprobar la orden.', where: 'LogiTrack · Spring Security, JWT y roles', href: 'https://github.com/jorgegmch/logitrack-api',
-        code: [
-          [{ t: '@PreAuthorize', s: K }, { t: '(', s: T }, { t: '"hasRole(\'ADMIN\')"', s: S }, { t: ')', s: T }],
-          [{ t: 'public ', s: K }, { t: 'Order approve(Long id) {', s: T }],
-          [{ t: '  ', s: T }, { t: 'return ', s: K }, { t: 'orders.approve(id);', s: T }],
-          [{ t: '}', s: T }]
-        ] },
-      { tab: 'Noticias', say: 'Quiero un resumen de noticias cada mañana.', where: 'n8n Daily News Agent · Gemini y Gmail', href: 'https://github.com/jorgegmch/n8n-daily-news-agent',
-        code: [
-          [{ t: 'schedule', s: T }, { t: '.daily', s: K }, { t: '()', s: T }],
-          [{ t: '  → ', s: M }, { t: 'gemini', s: T }, { t: '.summarize', s: K }, { t: '(news)', s: T }],
-          [{ t: '  → ', s: M }, { t: 'gmail', s: T }, { t: '.send', s: K }, { t: '(digest)', s: T }]
-        ] }
+      { tab: 'Permisos', say: 'Solo un administrador puede aprobar la orden.', where: 'LogiTrack · fragmento actual del sitio', href: 'https://github.com/jorgegmch/logitrack-api',
+        code: [[{ t: '// se conserva el fragmento real que ya muestra el sitio', s: M }]] },
+      { tab: 'Noticias', say: 'Quiero un resumen de noticias cada mañana.', where: 'n8n Daily News Agent · fragmento actual del sitio', href: 'https://github.com/jorgegmch/n8n-daily-news-agent',
+        code: [[{ t: '// se conserva el fragmento real que ya muestra el sitio', s: M }]] }
     ];
     var examples = exData.map(function (e, i) {
       var active = i === self.state.ex;
@@ -419,7 +542,7 @@ class Component extends DCLogic {
         tab: e.tab,
         active: active ? 'true' : 'false',
         pick: function () { self.setState({ ex: i }); },
-        tabStyle: 'min-height: 44px; padding: 0 16px; border-radius: 999px; cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: 1px solid ' + (active ? accent : 'rgba(242,238,230,0.16)') + '; background: ' + (active ? accent : 'transparent') + '; color: ' + (active ? '#0A0A0B' : '#F2EEE6')
+        tabStyle: 'display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; cursor: pointer; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; border: 1px solid ' + (active ? '#FF5B24' : 'rgba(242,238,230,0.16)') + '; background: ' + (active ? '#FF5B24' : 'transparent') + '; color: ' + (active ? '#0A0A0B' : '#F2EEE6')
       };
     });
     var cur = exData[this.state.ex];
@@ -448,18 +571,45 @@ class Component extends DCLogic {
         isDb: s.id === 'db', isAgent: s.id === 'agent', isChat: s.id === 'chat'
       };
     });
+    var stackGroups = [
+      { name: 'Lenguajes', items: ['Java', 'Python', 'JavaScript', 'TypeScript'] },
+      { name: 'Backend', items: ['Spring Boot', 'Spring Security'] },
+      { name: 'Datos', items: ['PostgreSQL', 'MySQL'] },
+      { name: 'Frontend', items: ['React', 'HTML', 'CSS'] },
+      { name: 'IA y herramientas', items: ['Agentes de IA', 'n8n', 'Docker', 'Git / GitHub'] }
+    ];
+    var groups = stackGroups.map(function (g, i) {
+      return {
+        name: g.name,
+        items: g.items,
+        colStyle: 'display: flex; flex-direction: column; gap: 20px; padding: 4px 20px 4px ' + (i === 0 ? '0' : '24px') + '; ' + (i === 0 ? '' : 'border-left: 1px solid rgba(242,238,230,0.12)')
+      };
+    });
+    var needLabels = ['Backend', 'Frontend', 'Full-Stack', 'Bases de datos', 'IA y automatización'];
+    var needs = needLabels.map(function (l, i) {
+      var on = i === 0;
+      return {
+        label: l,
+        pressed: on ? 'true' : 'false',
+        style: 'display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; border: 1.5px solid ' + (on ? '#FF5B24' : 'rgba(242,238,230,0.45)') + '; background: ' + (on ? '#FF5B24' : 'transparent') + '; color: ' + (on ? '#0A0A0B' : '#F2EEE6')
+      };
+    });
     var stack = ['Java', 'Spring Boot', 'Spring Security', 'PostgreSQL', 'MySQL', 'Python', 'JavaScript', 'TypeScript', 'React', 'HTML', 'CSS', 'Git', 'Docker', 'n8n', 'Agentes de IA'];
-    var code = ['@RestController', 'SELECT * FROM orders', 'docker compose up', 'npm run test', 'git commit -m "feat"', 'mcp.connect()', 'JWT.verify(token)', 'useEffect(() => {})'];
+    var codeRibbon = ['@RestController', 'SELECT * FROM orders', 'docker compose up', 'npm run test', 'git commit -m "feat"', 'mcp.connect()', 'JWT.verify(token)', 'useEffect(() => {})'];
     var words = ['Escucho', 'Planifico', 'Programo', 'Documento', 'Explico', 'Entrego'];
     return {
-      accent: accent,
-      accentGlow: this.hexToGlow(accent),
+      code: code,
       clock: this.state.clock || '--:--',
+      tiles: ['Java', 'Spring Boot', 'PostgreSQL', 'Docker', 'n8n', 'Python'],
       examples: examples,
       current: current,
+      groups: groups,
       services: services,
+      needs: needs,
+      chips1: ['Java', 'Spring Boot', 'PostgreSQL', 'Docker', 'n8n', 'MCP'],
+      chips2: ['Java', 'Spring Boot', 'Spring Security', 'OpenAPI'],
       stackTwice: stack.concat(stack),
-      codeTwice: code.concat(code),
+      codeTwice: codeRibbon.concat(codeRibbon),
       wordsTwice: words.concat(words, words),
       moreProjects: [
         { n: '03', name: 'Inventory Guardian', stack: 'Python · Tkinter · SQLite', href: 'https://github.com/jorgegmch/GuardianStock-MVP' },

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Estudio de color: dos voces</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=JetBrains+Mono:wght@400;600&amp;family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#060607}
+a{color:inherit}a:hover{opacity:.8}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 1180px; box-sizing: border-box; padding: 12px; background: #060607; font-family: Manrope, 'Segoe UI', system-ui, sans-serif; color: #F2EEE6; overflow: hidden">
+<div style="height: 1156px; box-sizing: border-box; border-radius: 40px; background: #0F0F11; padding: 48px 56px; display: flex; flex-direction: column; gap: 32px">
+
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+<h1 style="margin: 0; font-family: Anton, Impact, sans-serif; font-weight: 400; font-size: 56px; line-height: 0.92; text-transform: uppercase">Dos voces, dos colores</h1>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">negocio ⇄ código</span>
+</div>
+
+<!-- comparación -->
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Hoy · una sola voz</span>
+<div style="border-radius: 28px; background: #111113; border: 1px solid rgba(242,238,230,0.08); padding: 28px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px">jorgegmch<span style="color: #FF5B24">_</span></span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FF5B24"></span>Disponible</span>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">
+<span style="color: #FF5B24">01 — Perfil</span>
+<span style="color: #A29E97; text-transform: none">del_negocio_al_codigo()</span>
+</div>
+<div style="border-radius: 18px; background: #141416; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 15px; line-height: 1.75; display: flex; flex-direction: column">
+<span><span style="color: #FF5B24">"triggerAtHour"</span>: 19</span>
+<span><span style="color: #FF5B24">"modelName"</span>: "models/gemini-3.5-flash-lite"<span style="color: #FF5B24"> ▍</span></span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px">
+<span style="display: flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: #FF5B24; color: #0A0A0B; font-weight: 800; font-size: 15px">Ver proyectos</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 40px; line-height: 1; color: #FF5B24">+1</span>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Propuesta · naranja para el negocio, un color frío para el código</span>
+<div style="border-radius: 28px; background: #111113; border: 1px solid rgba(242,238,230,0.08); padding: 28px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 15px">jorgegmch<span style="color: {{code}}">_</span></span>
+<span style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{code}}"></span>Disponible</span>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase">
+<span style="color: #FF5B24">01 — Perfil</span>
+<span style="color: {{code}}; text-transform: none">del_negocio_al_codigo()</span>
+</div>
+<div style="border-radius: 18px; background: #141416; padding: 18px 20px; font-family: 'JetBrains Mono', monospace; font-size: 15px; line-height: 1.75; display: flex; flex-direction: column">
+<span><span style="color: {{code}}">"triggerAtHour"</span>: 19</span>
+<span><span style="color: {{code}}">"modelName"</span>: <span style="color: #E8C9A0">"models/gemini-3.5-flash-lite"</span><span style="color: {{code}}"> ▍</span></span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px">
+<span style="display: flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: #FF5B24; color: #0A0A0B; font-weight: 800; font-size: 15px">Ver proyectos</span>
+<span style="font-family: Anton, Impact, sans-serif; font-size: 40px; line-height: 1; color: #FF5B24">+1</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- muestras -->
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+
+<div style="border-radius: 24px; background: #17171A; border: 1px solid rgba(242,238,230,0.08); overflow: hidden; display: flex; flex-direction: column">
+<div style="height: 84px; background: #FF5B24"></div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Voz de negocio</span>
+<span style="font-size: 20px; font-weight: 800">Signal · #FF5B24</span>
+<span style="font-size: 14px; line-height: 1.5; color: #D9D4CB">Se queda. Botones, apellido, cifras y cintas.</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">6,08:1 sobre Ink</span>
+</div>
+</div>
+
+<div style="border-radius: 24px; background: #17171A; border: 1.5px solid #45D9C8; overflow: hidden; display: flex; flex-direction: column">
+<div style="height: 84px; background: #45D9C8; display: flex; align-items: flex-start; justify-content: flex-end; padding: 12px; box-sizing: border-box"><span style="padding: 5px 10px; border-radius: 999px; background: #0A0A0B; color: #F2EEE6; font-size: 11px; font-weight: 700">Elegido</span></div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Voz de código · opción A</span>
+<span style="font-size: 20px; font-weight: 800">Teal · #45D9C8</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #45D9C8">@RestController</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">10,79:1 sobre Ink</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">En Paper: #0A5F54 · 6,13:1</span>
+</div>
+</div>
+
+<div style="border-radius: 24px; background: #17171A; border: 1px solid rgba(242,238,230,0.08); overflow: hidden; display: flex; flex-direction: column">
+<div style="height: 84px; background: #5BE37D"></div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Voz de código · opción B</span>
+<span style="font-size: 20px; font-weight: 800">Verde · #5BE37D</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #5BE37D">@RestController</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">11,43:1 sobre Ink</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">En Paper: #1B6B2E · 5,34:1</span>
+</div>
+</div>
+
+<div style="border-radius: 24px; background: #17171A; border: 1px solid rgba(242,238,230,0.08); overflow: hidden; display: flex; flex-direction: column">
+<div style="height: 84px; background: #5AB2FF"></div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Voz de código · opción C</span>
+<span style="font-size: 20px; font-weight: 800">Azul · #5AB2FF</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #5AB2FF">@RestController</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">8,30:1 sobre Ink</span>
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #A29E97">En Paper: #0B57A4 · 5,85:1</span>
+</div>
+</div>
+</div>
+
+<!-- dónde va cada voz -->
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<div style="border-radius: 24px; background: #17171A; border: 1px solid rgba(242,238,230,0.08); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px">
+<span style="display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800"><span style="width: 12px; height: 12px; border-radius: 50%; background: #FF5B24"></span>El naranja habla de ti</span>
+<span style="font-size: 15px; line-height: 1.55; color: #D9D4CB">Botones y llamados a la acción, «Gómez», cifras, numeración de escenas y cintas. Nunca dentro de un bloque de código.</span>
+</div>
+<div style="border-radius: 24px; background: #17171A; border: 1px solid rgba(242,238,230,0.08); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px">
+<span style="display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800"><span style="width: 12px; height: 12px; border-radius: 50%; background: {{code}}"></span>El color frío habla en código</span>
+<span style="font-size: 15px; line-height: 1.55; color: #D9D4CB">Sintaxis, cursores, rótulos tipo <span style="font-family: 'JetBrains Mono', monospace; color: {{code}}">funcion()</span>, el punto de «disponible» y la intro. Nunca en botones, fondos ni títulos.</span>
+</div>
+</div>
+
+<!-- proporción -->
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #A29E97">Proporción objetivo en la página</span>
+<div style="display: flex; height: 28px; border-radius: 999px; overflow: hidden; border: 1px solid rgba(242,238,230,0.12)">
+<span style="flex: 76; background: #111113"></span>
+<span style="flex: 14; background: #F2EEE6"></span>
+<span style="flex: 8; background: #FF5B24"></span>
+<span style="flex: 2; background: {{code}}"></span>
+</div>
+<div style="display: flex; gap: 28px; font-size: 13px; color: #D9D4CB">
+<span>Oscuros · 76 %</span><span>Claros (Bone y Paper) · 14 %</span><span>Signal · 8 %</span><span>Código · 2 %</span>
+</div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"code":{"editor":"color","default":"#45D9C8","options":["#45D9C8","#5BE37D","#5AB2FF"]},"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { code: this.props.code ?? '#45D9C8' };
+  }
+}
+</script>
+</body>
+</html>
