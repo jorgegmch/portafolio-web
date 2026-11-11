@@ -47,6 +47,13 @@
   animation: nav-enter var(--dur-nav-enter) var(--ease-cine) both;
 }
 
+/* La pausa global congela cada animación donde está: la entrada se quedaría
+   en su primer fotograma, invisible. No es un movimiento continuo, así que
+   no se pausa. */
+[data-motion] .header[data-stuck] {
+  animation-play-state: running !important;
+}
+
 @keyframes nav-enter {
   from {
     opacity: 0;

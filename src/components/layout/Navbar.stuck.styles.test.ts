@@ -43,6 +43,14 @@ describe('Navbar fija: estilos', () => {
     )
   })
 
+  // La pausa global congela toda animación: la entrada se quedaría en su
+  // primer fotograma, invisible. No es un movimiento continuo: sigue.
+  it('con las animaciones en pausa, la entrada sigue: no se queda invisible', () => {
+    expect(navbarCss).toMatch(
+      /\[data-motion\] \.header\[data-stuck\]\s*\{\s*animation-play-state:\s*running !important;\s*\}/,
+    )
+  })
+
   it('con movimiento reducido aparece sin animar', () => {
     expect(cssRule(cssMedia(navbarCss, '(prefers-reduced-motion: reduce)'), STUCK)).toMatchObject({
       animation: 'none',
