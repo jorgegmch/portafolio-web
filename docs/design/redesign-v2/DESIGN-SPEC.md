@@ -125,7 +125,7 @@ Orden único: Hero · 01 Perfil · 02 Servicios · 03 Proyectos · 04 Contacto �
   - **Hover (nuevo), solo con `(hover: hover) and (pointer: fine)`:** siguen siendo decorativos, no focusables y sin `role`.
     - Ventana de código: al pasar el puntero se endereza (de -3° a 0°) y sube con `translateY`. Transición ~300 ms con `--ease-cine`.
     - Fichas del stack: solo la ficha bajo el puntero sube `translateY(-4px)` con `scale(1.04)`; el resto no se mueve.
-    - Realce teal (`--color-code`): borde y brillo en un **pseudo-elemento superpuesto** cuyo `opacity` pasa de 0 a 1. No se anima `border-color` ni `box-shadow`.
+    - Realce en Signal (`--color-signal`, `#FF5B24`): borde de 1,5 px y brillo suave del mismo color a baja opacidad, en un **pseudo-elemento superpuesto** cuyo `opacity` pasa de 0 a 1. No se anima `border-color` ni `box-shadow`. (Cambió de teal a Signal el 2026-11-11, por decisión del autor.)
     - Con `prefers-reduced-motion`: sin movimiento; como mucho, el cambio de `opacity` del realce.
     - No altera el layout ni tapa el nombre o la foto; respeta el `z-index` actual.
 - **Lema nuevo, centrado al pie de la foto**, sobre un velo que funde la foto con el panel (`linear-gradient` de Ink a transparente, 190 px de alto):
