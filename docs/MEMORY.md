@@ -4,7 +4,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 ## Estado actual
 - Fases 1 a 5 en rebuild/vite-react (al día con origin). La Fase 6 se hizo con el rediseño v2 y v2.1 en redesign/v2, ya en origin hasta f7fb1a1; la Fase 7 (/certificaciones) se retiró.
 - Rediseño v2.1 cerrado el 2026-11-11 (hasta b4b681c): fuente de verdad, docs/design/redesign-v2/DESIGN-SPEC.md. Pendientes en PLAN.md, «Pendientes del rediseño v2.1».
-- Correcciones del 2026-11-11 (7b58543 a db7adbe, solo en local hasta que el autor haga push): spec nueva, logos negros oficiales en Contacto, «Ver código» sin logo, hover del Hero con realce Signal y texto nuevo de «Comunicación estratégica».
+- Correcciones del 2026-11-11 (7b58543 a 8e41591, más .gitattributes en f42ec53; solo en local hasta que el autor haga push): spec nueva, logos negros oficiales en Contacto, «Ver código» sin logo, hover del Hero con realce Signal y texto nuevo de «Comunicación estratégica».
 - Hosting y backend del formulario sin decidir (Vercel Hobby es solo para uso personal no comercial); el adaptador del formulario no envía nada.
 
 ## Decisiones (y por qué)
@@ -17,6 +17,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - La tarjeta cuenta los 14 proyectos con `built: true`, portafolio-web incluido; no cuentan el fork (FastCat), learning-path-fundamentals ni los 3 repos de scripts de BD. La cifra sale de `builtProjects.length`.
 - El CRM se presenta con la descripción de su repo (módulo de un MVP hecho en equipo); su README aclara que el CRM completo es privado y que corre solo con JSON Server.
 - Certificaciones solo como texto (los PDFs originales llevan la cédula); hoy solo aparecen en la Formación de Perfil.
+- Finales de línea en LF fijados por .gitattributes, no por la configuración de cada clon: los tests comparan logos oficiales byte a byte.
 - Fuentes alojadas en el repo (public/fonts) y sin librerías de animación: ninguna petición a terceros.
 - Diseño pensado primero para escritorio y adaptado a tablet y teléfono.
 - Commits en inglés: el historial de un repo público lo lee quien lo revise.
@@ -45,7 +46,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - La pausa global congela toda animación: lo que entra una sola vez (la barra fija) necesita su excepción o se queda invisible.
 - TaskStop cierra npx pero no el proceso de Vite: comprobar los puertos al terminar y cerrar solo los propios (el 5173 es del autor).
 - En el servidor de desarrollo, un selector `[class*="_x_"]` coincide con la clase de igual nombre de otro módulo.
-- Un clon nuevo con core.autocrlf=true sale en CRLF y rompe los tests byte a byte de los logos: en este clon, core.autocrlf=input y pasar los archivos a LF; después, git status los marca hasta refrescar el índice (git add de los idénticos, por ruta).
+- Un clon nuevo con core.autocrlf=true salía en CRLF y rompía los tests byte a byte de los logos. Desde f42ec53, .gitattributes (`* text=auto eol=lf`) fuerza LF en cualquier clon; un clon anterior se arregla pasando sus archivos a LF y refrescando el índice (git add de los idénticos, por ruta).
 - Un <picture> con display: contents deja que su <source> cuente como elemento flexible y sume un hueco: el <picture> va como un solo elemento (display: flex).
 
 ## Próximos pasos
