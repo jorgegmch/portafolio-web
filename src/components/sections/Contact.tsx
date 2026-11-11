@@ -6,6 +6,7 @@ import { CvDownload } from '@/components/ui/CvDownload'
 import { Reveal } from '@/components/ui/Reveal'
 import { sections } from '@/config/routes'
 import { site, socialLinks } from '@/config/site'
+import { socialMarks } from '@/data/socialMarks'
 import { useClock } from '@/hooks/useClock'
 import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
@@ -21,6 +22,14 @@ const SEPARATOR = ' · '
 
 /** Trazo de la flecha «↗» de lo que se abre fuera. */
 const ARROW_OUT = 'M7 17 17 7M9 7h8v8'
+
+/** Sobre de «Copiar correo» (tablero desktop-page): un icono, no un logo. */
+const ENVELOPE = 'M6 5h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3zM4 8l8 6 8-6'
+
+/** Logo oficial delante del texto de un canal; decorativo, el texto ya lo nombra. */
+function ChannelMark({ mark }: { mark: (typeof socialMarks)[keyof typeof socialMarks] }) {
+  return <img className={styles.mark} src={mark.src} width={mark.width} height={mark.height} alt="" />
+}
 
 /**
  * Escena Contacto (spec v2.1 §3.5), en dos paneles. A la izquierda, en
@@ -89,6 +98,11 @@ export function Contact() {
               kind="copy-email"
               label={text.copyEmail}
               className={styles.pill}
+              leading={
+                <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d={ENVELOPE} />
+                </svg>
+              }
               copiedMessage={text.emailCopied}
               copyFailedMessage={text.copyFailed}
               statusClassName={styles.status}
@@ -100,6 +114,7 @@ export function Contact() {
               label={text.whatsapp}
               accessibleLabel={whatsappName}
               className={styles.pill}
+              leading={<ChannelMark mark={socialMarks.whatsapp} />}
               trailing={
                 <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d={ARROW_OUT} />
@@ -116,6 +131,7 @@ export function Contact() {
                 rel="noopener noreferrer"
                 aria-label={`${label} (${common.opensInNewTab})`}
               >
+                <ChannelMark mark={socialMarks[id]} />
                 {label}
                 <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path d={ARROW_OUT} />

@@ -149,6 +149,27 @@ section.contact {
   color: var(--color-bone);
 }
 
+/* Icono y logos de los canales: 24 px, delante del texto. Los logos van a su
+   color original (blancos): el autor pasará las variantes negras. */
+.icon,
+.mark {
+  flex: none;
+  width: var(--channel-mark-size);
+  height: var(--channel-mark-size);
+}
+
+.icon {
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+.mark {
+  object-fit: contain;
+}
+
 .arrow {
   width: var(--space-4);
   height: var(--space-4);

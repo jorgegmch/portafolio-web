@@ -143,6 +143,32 @@ describe('ContactButton', () => {
     })
   })
 
+  // Icono o logo delante del texto, que sigue a la vista (spec v2.1 §3.5).
+  describe('con icono delante del texto', () => {
+    const renderLeading = () =>
+      render(
+        <ContactButton
+          kind="copy-email"
+          label="Copiar correo"
+          leading={<svg data-testid="sobre" aria-hidden="true" />}
+        />,
+      )
+
+    it('el icono va primero y el texto sigue a la vista', () => {
+      renderLeading()
+      const button = screen.getByRole('button', { name: 'Copiar correo' })
+
+      expect(button.firstElementChild).toBe(screen.getByTestId('sobre'))
+      expect(button).toHaveTextContent('Copiar correo')
+    })
+
+    it('el nombre accesible sigue siendo el texto: no lleva aria-label', () => {
+      renderLeading()
+
+      expect(screen.getByRole('button', { name: 'Copiar correo' })).not.toHaveAttribute('aria-label')
+    })
+  })
+
   describe('nombre accesible propio', () => {
     it('cuando lo da quien lo usa, empieza por el texto visible', () => {
       render(

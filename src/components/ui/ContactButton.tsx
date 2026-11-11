@@ -14,6 +14,8 @@ interface ContactButtonProps {
   label: string
   /** Icono que sustituye al texto visible. Debe ser decorativo. */
   icon?: ReactNode
+  /** Icono o logo decorativo delante del texto visible, que no cambia el nombre. */
+  leading?: ReactNode
   /** Icono decorativo tras el texto visible (por ejemplo, una flecha). */
   trailing?: ReactNode
   /**
@@ -42,6 +44,7 @@ export function ContactButton({
   kind,
   label,
   icon,
+  leading,
   trailing,
   accessibleLabel,
   className,
@@ -77,6 +80,7 @@ export function ContactButton({
         aria-label={accessibleLabel ?? (icon ? label : undefined)}
         onClick={handleClick}
       >
+        {!icon && leading}
         {icon ?? label}
         {!icon && trailing}
       </button>

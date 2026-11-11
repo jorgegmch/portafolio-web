@@ -456,6 +456,8 @@
   --leading-contact-pitch: 1.4;
   --contact-pitch-measure: 35rem; /* 560px */
   --contact-pill-height: 3.25rem;
+  /* Icono o logo delante del texto de cada canal (tablero: 24 px). */
+  --channel-mark-size: 1.5rem;
   --font-size-pill: 0.9375rem;
   --pill-border-width: 1.5px;
   /* Formulario a la vista (spec v2.1 §3.5): título «Cuéntame tu idea» de

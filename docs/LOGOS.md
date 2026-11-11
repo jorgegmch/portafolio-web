@@ -61,7 +61,11 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 | `linkedin.png` | `InBug-White.png`, 840×779 px | `ed22a5ab46c171e3449708ff34923de7298da00ac204c7f85444db05bf888791` |
 | `whatsapp.svg` | `Digital_Glyph_White_RGB_2026.svg` | `7fb054c0f4bea644b4a4a014d6d8581aad7e6dcb639049d17a578dc44f8e6fd4` |
 
-- **Dónde se usa `github.svg`:** delante de «Ver todos en GitHub», en Proyectos, con `<img>` decorativo (`alt=""`) y sin filtros. Hash comprobado el 2026-10-24: coincide con el de la tabla.
+- **Dónde se usan:** siempre con `<img>` decorativo (`alt=""`), sin filtros, delante del texto que nombra la red. Los tamaños naturales están en `src/data/socialMarks.ts`.
+  - `github.svg`: «Ver todos en GitHub» y «Ver código» de cada tarjeta, en Proyectos; la píldora de GitHub de los canales de Contacto. Hash comprobado el 2026-10-24: coincide con el de la tabla.
+  - `linkedin.png`: la píldora de LinkedIn de los canales de Contacto.
+  - `whatsapp.svg`: la píldora de WhatsApp de los canales de Contacto.
+- **Sobre de «Copiar correo»:** no es un logo: va dibujado en línea en `src/components/sections/Contact.tsx`, con la forma del tablero.
 - **Excepción del comprobador de SVG:** el de WhatsApp trae un elemento `style`. Se admite solo en ese archivo y solo mientras su hash sea el oficial; el comprobador no se relaja para ningún otro.
 
 ### Tecnologías (`public/tech/`)

@@ -1,4 +1,5 @@
 import { site } from '@/config/site'
+import { socialMarks } from '@/data/socialMarks'
 import type { Project } from '@/data/types'
 
 // Las descripciones (traducibles) viven en i18n/, indexadas por id.
@@ -141,12 +142,7 @@ export const projectUrl = (id: ProjectId): string => `${site.social.github}/${id
 export const allProjectsUrl = `${site.social.github}?tab=repositories`
 
 /**
- * Logo de GitHub del enlace a todos los repos: el Invertocat blanco oficial
- * de public/social, sin modificar (registrado en docs/LOGOS.md), con su
- * tamaño natural para reservar el sitio.
+ * Logo de GitHub de «Ver todos en GitHub» y de «Ver código»: el Invertocat
+ * blanco oficial de public/social, el mismo de los canales de Contacto.
  */
-export const githubMark = {
-  src: `${import.meta.env.BASE_URL}social/github.svg`,
-  width: 98,
-  height: 96,
-} as const
+export const githubMark = socialMarks.github
