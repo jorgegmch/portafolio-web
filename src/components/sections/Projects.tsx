@@ -111,6 +111,7 @@ export function Projects() {
             stackLabel={text.stackLabel}
             href={projectUrl(id)}
             viewCode={text.viewCode}
+            viewCodeName={text.viewCodeName(title)}
             opensInNewTab={common.opensInNewTab}
             mainLabel={index === 0 ? text.mainProject : undefined}
             shots={index === 0 ? 3 : 1}

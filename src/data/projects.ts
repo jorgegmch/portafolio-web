@@ -142,7 +142,7 @@ export const projectUrl = (id: ProjectId): string => `${site.social.github}/${id
 export const allProjectsUrl = `${site.social.github}?tab=repositories`
 
 /**
- * Logo de GitHub de «Ver todos en GitHub» y de «Ver código»: el Invertocat
- * blanco oficial de public/social, el mismo de los canales de Contacto.
+ * Logo de GitHub de «Ver todos en GitHub», el único de Proyectos (spec v2.1
+ * §3.4): el Invertocat blanco oficial de public/social.
  */
 export const githubMark = socialMarks.github

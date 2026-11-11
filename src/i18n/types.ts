@@ -151,6 +151,8 @@ export interface Dictionary {
     viewAll: string
     /** Enlace de cada tarjeta a su repo. */
     viewCode: string
+    /** Nombre accesible de ese enlace: empieza por `viewCode` y nombra el proyecto y GitHub. */
+    viewCodeName: (title: string) => string
     /** Etiqueta de la tarjeta del proyecto protagonista. */
     mainProject: string
     /** Nombre accesible de la lista de tecnologías de cada tarjeta. */

@@ -6,7 +6,7 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 
 ## Reglas de uso
 
-- **Rediseño v2.1 (spec §3.1 y §3.2):** los logos de tecnología van **solo** en «Mi stack» (Perfil) y en las fichas «// stack principal» del Hero, cada uno en una ficha Tile. La cinta del Hero y los chips de Proyectos van sin logos, solo con texto. Los logos de GitHub, LinkedIn y WhatsApp no son de tecnología y van en sus botones.
+- **Rediseño v2.1 (spec §3.1 y §3.2):** los logos de tecnología van **solo** en «Mi stack» (Perfil) y en las fichas «// stack principal» del Hero, cada uno en una ficha Tile. La cinta del Hero y los chips de Proyectos van sin logos, solo con texto. Los logos de GitHub, LinkedIn y WhatsApp no son de tecnología: van en las píldoras de canales de Contacto, en «Sígueme en redes» del pie y, el de GitHub, en «Ver todos en GitHub»; no en los botones «Ver código».
 - **Rediseño v2.1 (2026-11-11):** los archivos de `public/tech/` y el chip blanco de AI Agents vuelven del historial (`f52f2c3^`), idénticos byte a byte a los que se retiraron con la rejilla del stack; sus hashes son los de la tabla.
 - **Rediseño v2, limpieza (2026-11-10):** se retiraron los iconos de la fila de redes y de las pastillas del Hero (el sobre, la base de datos y el chip negro de AI Agents). De `public/social/` solo se usaba `github.svg`; `linkedin.png` y `whatsapp.svg` vuelven a usarse en el rediseño v2.1 (Contacto y pie).
 - **Decisión del autor (2026-10-15):** todas las tecnologías del catálogo llevan su logo oficial, aunque la política de su marca no lo permita. El autor asume el riesgo. La política de cada marca se sigue leyendo y anotando aquí, pero ya no decide si va el logo.
@@ -65,7 +65,7 @@ Logos oficiales sin modificar, descargados por el autor de los paquetes oficiale
 | `whatsapp-black.svg` | `01_Glyph/01_Digital RGB/03_SVG/Digital_Glyph_Black_RGB_2026.svg` del centro de recursos de marca de WhatsApp, descargado el 2026-11-11 (la URL de la página no está anotada). Pinta en `#111b21` desde su `<style>` interno. | `dea0d50de5d2e53320246d7172a2b8e84a999caa7798cd91681e63831cba6ed9` |
 
 - **Dónde se usan:** siempre con `<img>` decorativo (`alt=""`), sin filtros, delante del texto que nombra la red. Los tamaños naturales están en `src/data/socialMarks.ts`.
-  - `github.svg`: «Ver todos en GitHub» y «Ver código» de cada tarjeta, en Proyectos; la píldora de GitHub de los canales de Contacto hasta 900 px, sobre Graphite, y la de «Sígueme en redes» del pie. Hash comprobado el 2026-10-24: coincide con el de la tabla.
+  - `github.svg`: «Ver todos en GitHub», en Proyectos (desde el 2026-11-11, «Ver código» de cada tarjeta va solo con texto, spec v2.1 §3.4); la píldora de GitHub de los canales de Contacto hasta 900 px, sobre Graphite, y la de «Sígueme en redes» del pie. Hash comprobado el 2026-10-24: coincide con el de la tabla.
   - `linkedin.png`: la píldora de LinkedIn de los canales de Contacto hasta 900 px y la de «Sígueme en redes» del pie.
   - `whatsapp.svg`: la píldora de WhatsApp de los canales de Contacto hasta 900 px.
   - `github-black.svg`, `linkedin-black.png` y `whatsapp-black.svg`: las píldoras de GitHub, LinkedIn y WhatsApp de los canales de Contacto por encima de 900 px, sobre Signal (`socialMarksBlack`).

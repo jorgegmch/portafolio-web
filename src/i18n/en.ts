@@ -141,6 +141,7 @@ export const en: Dictionary = {
     label: 'Projects',
     viewAll: 'View all on GitHub',
     viewCode: 'View code',
+    viewCodeName: (title) => `View code for ${title} on GitHub`,
     mainProject: 'Main project',
     stackLabel: 'Technologies',
     screenshotPending: 'Screenshot pending',
