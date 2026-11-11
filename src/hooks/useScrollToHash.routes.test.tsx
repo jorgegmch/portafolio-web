@@ -38,19 +38,15 @@ const renderAt = (url: string) => {
   }
 }
 
-// jsdom no implementa ni scrollTo ni scrollIntoView.
+// jsdom no implementa scrollTo.
 let scrollTo: Mock
-let scrollIntoView: Mock<Element['scrollIntoView']>
 
 beforeEach(() => {
   scrollTo = vi.fn()
   vi.stubGlobal('scrollTo', scrollTo)
-  scrollIntoView = vi.fn()
-  Element.prototype.scrollIntoView = scrollIntoView
 })
 
 afterEach(() => {
-  Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
   vi.unstubAllGlobals()
   vi.restoreAllMocks()
 })
@@ -109,11 +105,18 @@ describe('useScrollToHash: cambio de ruta', () => {
   })
 
   it('si la ruta nueva trae ancla, va al ancla y no al inicio', async () => {
+    const DETAIL_TOP = 640
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: Element,
+    ) {
+      return DOMRect.fromRect({ y: this.id === 'detail' ? DETAIL_TOP : 0 })
+    })
     const { goTo } = renderAt(HOME)
 
     await goTo('Otra con ancla')
 
-    expect(scrollTo).not.toHaveBeenCalled()
-    expect(scrollIntoView.mock.contexts).toEqual([screen.getByRole('region', { name: 'Detalle' })])
+    expect(scrollTo).toHaveBeenCalledTimes(1)
+    expect(scrollTo).toHaveBeenLastCalledWith({ top: DETAIL_TOP, left: 0 })
+    expect(scrollTo).not.toHaveBeenCalledWith(TOP_INSTANTLY)
   })
 })
