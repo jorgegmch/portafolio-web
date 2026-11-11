@@ -268,4 +268,6 @@ export const es: Dictionary = {
   common: {
     opensInNewTab: 'se abre en una pestaña nueva',
   },
+  // Decisión del autor (2026-11-11): en español, «Agentes de IA».
+  technologyNames: { 'ai-agents': 'Agentes de IA' },
 }

@@ -268,4 +268,5 @@ export const en: Dictionary = {
   common: {
     opensInNewTab: 'opens in a new tab',
   },
+  technologyNames: { 'ai-agents': 'AI Agents' },
 }

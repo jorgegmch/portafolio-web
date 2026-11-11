@@ -32,13 +32,17 @@ afterEach(() => {
 })
 
 describe('cintas de la página', () => {
+  // Con el nombre del idioma del sitio: en español, «Agentes de IA».
   it('la del Hero lista una vez las tecnologías del catálogo, en su orden', () => {
     renderInPage(<Hero />)
 
     const lists = screen.getAllByRole('list', { name: es.hero.stackLabel })
 
     expect(lists).toHaveLength(1)
-    expect(itemsOf(lists[0] as HTMLElement)).toEqual(technologies.map(({ name }) => name))
+    expect(itemsOf(lists[0] as HTMLElement)).toEqual(
+      technologies.map(({ id, name }) => es.technologyNames[id] ?? name),
+    )
+    expect(itemsOf(lists[0] as HTMLElement)).toContain('Agentes de IA')
   })
 
   it('las cruzadas de Proyectos listan una vez los fragmentos y los verbos', () => {

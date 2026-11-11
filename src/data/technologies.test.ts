@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { projects } from '@/data/projects'
-import { technologies, technologyLogoUrl } from '@/data/technologies'
+import { technologies, technologyGroups, technologyLogoUrl } from '@/data/technologies'
 import { en } from '@/i18n/en'
 
 const byId = (id: string) => technologies.find((technology) => technology.id === id)
@@ -32,7 +32,7 @@ describe('catálogo de tecnologías', () => {
     it('van seguidas, en el lugar de la entrada que sustituyen', () => {
       const ids = technologies.map((technology) => technology.id)
 
-      expect(ids.slice(ids.indexOf('python'), ids.indexOf('html'))).toEqual([
+      expect(ids.slice(ids.indexOf('python'), ids.indexOf('react'))).toEqual([
         'python',
         'javascript',
         'typescript',
@@ -40,14 +40,64 @@ describe('catálogo de tecnologías', () => {
     })
   })
 
+  // Spec v2.1 §3.2 y decisión del autor (2026-11-11): «Mi stack» agrupa el
+  // catálogo en cinco columnas, y el catálogo se reagrupa igual. Dentro de
+  // cada grupo, el orden del catálogo es el de la columna.
+  describe('grupos de «Mi stack»', () => {
+    it('son cinco, en el orden de las columnas', () => {
+      expect(technologyGroups).toEqual(['languages', 'backend', 'data', 'frontend', 'ai-tools'])
+    })
+
+    it('cada grupo tiene sus tecnologías, en su orden', () => {
+      const members = (group: string) =>
+        technologies.filter((technology) => technology.group === group).map(({ id }) => id)
+
+      expect(members('languages')).toEqual(['java', 'python', 'javascript', 'typescript'])
+      expect(members('backend')).toEqual(['spring-boot', 'spring-security'])
+      expect(members('data')).toEqual(['postgresql', 'mysql'])
+      expect(members('frontend')).toEqual(['react', 'html', 'css'])
+      expect(members('ai-tools')).toEqual(['ai-agents', 'n8n', 'docker', 'git-github'])
+    })
+
+    it('ninguna tecnología se queda fuera de un grupo', () => {
+      technologies.forEach(({ id, group }) => expect(technologyGroups, id).toContain(group))
+    })
+
+    // La cinta del Hero sigue el orden del catálogo: el reagrupado solo mueve
+    // React delante de HTML y CSS, e invierte las cuatro últimas.
+    it('el orden del catálogo, el de la cinta, apenas cambia', () => {
+      expect(technologies.map(({ id }) => id)).toEqual([
+        'java',
+        'spring-boot',
+        'spring-security',
+        'postgresql',
+        'mysql',
+        'python',
+        'javascript',
+        'typescript',
+        'react',
+        'html',
+        'css',
+        'ai-agents',
+        'n8n',
+        'docker',
+        'git-github',
+      ])
+    })
+  })
+
+  it('Git y GitHub van en una sola entrada, con espacios alrededor de la barra', () => {
+    expect(byId('git-github')?.name).toBe('Git / GitHub')
+  })
+
   describe('agentes de IA', () => {
-    it('la entrada se llama «AI Agents», en el grupo de IA', () => {
-      expect(byId('ai-agents')).toMatchObject({ id: 'ai-agents', name: 'AI Agents', group: 'ai' })
+    it('la entrada se llama «AI Agents», en el grupo de IA y herramientas', () => {
+      expect(byId('ai-agents')).toMatchObject({ id: 'ai-agents', name: 'AI Agents', group: 'ai-tools' })
     })
 
     it('sustituye a la entrada anterior, no se suma a ella', () => {
       expect(byId('ai-development')).toBeUndefined()
-      expect(technologies.filter((technology) => technology.group === 'ai')).toHaveLength(1)
+      expect(technologies.filter((technology) => technology.id.startsWith('ai'))).toHaveLength(1)
     })
 
     // Regla de contenido veraz: una etiqueta se justifica citando de dónde

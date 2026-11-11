@@ -8,10 +8,11 @@ import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
 import { heroCodeWindow, heroStack } from '@/data/heroSides'
-import { technologies, technologyLogoUrl, technologyName } from '@/data/technologies'
+import { technologies, technologyLogoUrl } from '@/data/technologies'
 import { useClock } from '@/hooks/useClock'
 import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
+import { useTechnologyName } from '@/hooks/useTechnologyName'
 import { splitName } from '@/lib/splitName'
 
 const [small] = portrait.sources
@@ -28,9 +29,6 @@ const PORTRAIT_SIZES = 'clamp(17rem, 36vw, 29.375rem)'
 /** Signos que no son texto traducible: separador de datos y prefijo de comentario. */
 const SEPARATOR = ' · '
 const COMMENT_PREFIX = '// '
-
-/** Las tecnologías del catálogo, en su orden, para la cinta. */
-const STACK_NAMES = technologies.map(({ id }) => technologyName(id))
 
 /** Las seis fichas del panel derecho, en su orden, con su logo del catálogo. */
 const MAIN_STACK = heroStack.flatMap((id) => technologies.filter((technology) => technology.id === id))
@@ -61,6 +59,9 @@ export function Hero() {
   const clock = useClock(site.timeZone)
   const { first, last } = splitName(t.hero.heading)
   const cvOptions = useCvOptions()
+  const technologyName = useTechnologyName()
+  // Las tecnologías del catálogo, en su orden, para la cinta.
+  const stackNames = technologies.map(({ id }) => technologyName(id))
 
   return (
     <section id={sections.hero} className={styles.hero} aria-labelledby={headingId}>
@@ -130,7 +131,7 @@ export function Hero() {
                   alt=""
                   decoding="async"
                 />
-                {technology.name}
+                {technologyName(technology.id)}
               </li>
             ))}
           </ul>
@@ -183,7 +184,7 @@ export function Hero() {
         </div>
       </div>
 
-      <Ribbon className={styles.ribbon} items={STACK_NAMES} label={t.hero.stackLabel} />
+      <Ribbon className={styles.ribbon} items={stackNames} label={t.hero.stackLabel} />
     </section>
   )
 }

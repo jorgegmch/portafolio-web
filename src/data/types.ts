@@ -21,7 +21,8 @@ export interface Certification<Id extends string = string> {
   category: CertificationCategory
 }
 
-export type TechnologyGroup = 'backend' | 'databases' | 'languages' | 'frontend' | 'tools' | 'ai'
+/** Columnas de «Mi stack» (spec v2.1 §3.2); su orden está en data/technologies. */
+export type TechnologyGroup = 'languages' | 'backend' | 'data' | 'frontend' | 'ai-tools'
 
 export interface Technology<Id extends string = string> {
   id: Id

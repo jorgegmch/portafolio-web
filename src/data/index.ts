@@ -12,6 +12,7 @@ export {
 export { services, type ServiceId } from '@/data/services'
 export {
   technologies,
+  technologyGroups,
   technologyLogoUrl,
   technologyName,
   type TechnologyId,

@@ -2,6 +2,7 @@ import type { ContactNeedId } from '@/data/contactNeeds'
 import type { EducationId } from '@/data/education'
 import type { ProjectId } from '@/data/projects'
 import type { ServiceId } from '@/data/services'
+import type { TechnologyId } from '@/data/technologies'
 import type { TranslatorExampleId } from '@/data/translator'
 import type { CodingTime } from '@/lib/codingTime'
 
@@ -218,4 +219,9 @@ export interface Dictionary {
     /** Aviso para lectores de pantalla en enlaces con target="_blank". */
     opensInNewTab: string
   }
+  /**
+   * Nombres de tecnología que el idioma da aparte. Los demás son nombres
+   * propios y salen del catálogo (data/technologies), sin traducir.
+   */
+  technologyNames: Partial<Record<TechnologyId, string>>
 }
