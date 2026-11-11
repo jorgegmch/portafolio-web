@@ -105,7 +105,7 @@
   --font-size-hero-name: clamp(7.5rem, 17.5vw, 15.75rem); /* 120 a 252 px */
   --font-size-scene-title: clamp(4.5rem, 12vw, 11.875rem); /* 72 a 190 px */
   --font-size-profile-phrase: clamp(3.5rem, 8vw, 8rem); /* 56 a 128 px */
-  --font-size-contact-title: clamp(5rem, 12.5vw, 13.75rem); /* 80 a 220 px */
+  --font-size-contact-title: clamp(3.5rem, 6.4vw, 5.75rem); /* 56 a 92 px (spec v2.1) */
   /* Interlineado de los títulos en Anton (spec: 0,84 a 0,92) y del cuerpo
      (1,55 a 1,6), y espaciado apretado de los títulos en Manrope. */
   --leading-display: 0.84;
@@ -446,23 +446,15 @@
   --curtain-scale: 0.94;
   --curtain-dim: 0.5;
 
-  /* Contacto (spec §3.5): frase de 24 px en 460 px de ancho; píldoras de
-     52 px con texto de 15 px y borde de 1,5 px. */
-  /* Tope del título de Contacto para que su palabra más larga quepa en el
-     panel: «¿Construimos» mide 5,68 veces el tamaño de letra (medido en
-     Anton). Con 4,5 rem de huecos y relleno y 5,9 de divisor queda margen
-     también con barra de scroll. En escritorio manda la escala de la spec
-     (180 px a 1440); por debajo de unos 490 px, este tope, y en un teléfono
-     de 390 el título baja de los 76 px del tablero a unos 54. */
-  --contact-title-fit: calc((100vw - 4.5rem) / 5.9);
-  /* Interlineado del título de Contacto, excepción al 0,84–0,92 de Anton
-     (spec §2): el «¿» de «¿CONSTRUIMOS» baja 0,0625 em bajo la línea base y
-     las mayúsculas de «ALGO?» suben 0,875 em (medido en Anton). Con menos de
-     0,9375 el «¿» pisa la «A» y se lee «ÁLGO». */
+  /* Contacto (spec v2.1 §3.5 y tablero desktop-page): bajo el título, la
+     pregunta de 22 px y la invitación de 18 (18 y 16 en teléfono) en 560 px
+     de ancho; píldoras de 52 px con texto de 15 px y borde de 1,5 px. El
+     título usa el interlineado del tablero, 0,94. */
   --leading-contact-title: 0.94;
-  --font-size-contact-pitch: 1.5rem;
-  --leading-contact-pitch: 1.45;
-  --contact-pitch-measure: 28.75rem;
+  --font-size-contact-lead: 1.375rem; /* 22px */
+  --font-size-contact-body: 1.125rem; /* 18px */
+  --leading-contact-pitch: 1.4;
+  --contact-pitch-measure: 35rem; /* 560px */
   --contact-pill-height: 3.25rem;
   --font-size-pill: 0.9375rem;
   --pill-border-width: 1.5px;
@@ -567,9 +559,11 @@
     --project-card-padding: 1.25rem; /* 20px */
     --font-size-project-text: 1rem; /* 16px */
     --project-shots-height: 12.5rem; /* 200px */
-    /* Contacto en teléfono (tablero móvil): título de 76 px y píldoras de
-       48 px. */
-    --font-size-contact-title: 4.75rem; /* 76px */
+    /* Contacto en teléfono (tablero mobile-home): título de 46 px, textos de
+       18 y 16, y píldoras de 48 px. */
+    --font-size-contact-title: 2.875rem; /* 46px */
+    --font-size-contact-lead: 1.125rem; /* 18px */
+    --font-size-contact-body: 1rem; /* 16px */
     --contact-pill-height: 3rem; /* 48px */
     /* Formulario en teléfono (tablero mobile-home): título de 40 px, campos
        de 52 con radio de 16. */

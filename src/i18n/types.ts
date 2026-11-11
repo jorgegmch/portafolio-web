@@ -162,10 +162,12 @@ export interface Dictionary {
   contact: {
     /** Nombre de la escena, en su rótulo; las mayúsculas las pone el CSS. */
     label: string
-    /** Título grande, en sus dos líneas; las mayúsculas las pone el CSS. */
-    title: readonly [string, string]
-    /** Frase bajo el título. */
-    pitch: string
+    /** Título grande; las mayúsculas las pone el CSS y el navegador equilibra sus líneas. */
+    title: string
+    /** Bajo el título: la pregunta, en negrita, y la invitación. */
+    pitch: { lead: string; body: string }
+    /** Rótulo sobre las píldoras de los canales. */
+    channelsLabel: string
     /** Píldora que copia el correo sin mostrarlo. */
     copyEmail: string
     /** Aviso tras copiar el correo; no lo muestra. */

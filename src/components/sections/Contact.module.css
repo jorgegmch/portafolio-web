@@ -74,23 +74,41 @@ section.contact {
   text-transform: uppercase;
 }
 
+/* Título de la spec v2.1: el navegador reparte sus líneas. */
 .title {
   font-family: var(--font-display);
-  font-size: min(var(--font-size-contact-title), var(--contact-title-fit));
+  font-size: var(--font-size-contact-title);
   font-weight: var(--font-weight-regular);
   line-height: var(--leading-contact-title);
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
-.line {
-  display: block;
-}
-
+/* La pregunta, en negrita, y la invitación. */
 .pitch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   max-width: var(--contact-pitch-measure);
-  font-size: var(--font-size-contact-pitch);
+}
+
+.pitchLead {
+  font-size: var(--font-size-contact-lead);
   font-weight: var(--font-weight-bold);
   line-height: var(--leading-contact-pitch);
+}
+
+.pitchBody {
+  font-size: var(--font-size-contact-body);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-body);
+}
+
+.channelsLabel {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 /* Fila de píldoras: con borde de tinta, y la del CV rellena. */

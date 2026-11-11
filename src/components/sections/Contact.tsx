@@ -64,13 +64,13 @@ export function Contact() {
         </div>
 
         <Reveal revealKey="contact-title" order={0}>
-          <h2 className={styles.title}>
-            <span className={styles.line}>{text.title[0]}</span>{' '}
-            <span className={styles.line}>{text.title[1]}</span>
-          </h2>
+          <h2 className={styles.title}>{text.title}</h2>
         </Reveal>
 
-        <p className={styles.pitch}>{text.pitch}</p>
+        <div className={styles.pitch}>
+          <p className={styles.pitchLead}>{text.pitch.lead}</p>
+          <p className={styles.pitchBody}>{text.pitch.body}</p>
+        </div>
       </div>
 
       <div className={styles.formPanel}>
@@ -82,6 +82,7 @@ export function Contact() {
       </div>
 
       <div className={styles.channels}>
+        <p className={styles.channelsLabel}>{text.channelsLabel}</p>
         <ul className={styles.links} aria-label={text.linksLabel}>
           <li className={styles.copyItem}>
             <ContactButton

@@ -218,8 +218,12 @@ export const en: Dictionary = {
   },
   contact: {
     label: 'Contact',
-    title: ['Shall we build', 'something?'],
-    pitch: 'Tell me what your business needs. I will translate it into code.',
+    title: 'Good ideas deserve to be built well.',
+    pitch: {
+      lead: 'Do you have a project, a problem to solve, or are you looking for someone to strengthen your team?',
+      body: 'Let’s talk about your goals, what you need and how I can contribute through software development.',
+    },
+    channelsLabel: 'Or pick the channel you prefer',
     copyEmail: 'Copy email',
     emailCopied: 'Email copied.',
     copyFailed: 'Could not copy it: your email app opened instead.',
