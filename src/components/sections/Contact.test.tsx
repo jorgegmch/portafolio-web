@@ -14,7 +14,6 @@ import { cvFilesFor, cvUrl } from '@/data/cv'
 import { dictionaries } from '@/i18n/index'
 import { LangProvider } from '@/i18n/LangProvider'
 import { getEmail, getEmailUrl, getWhatsappUrl } from '@/lib/assembleContact'
-import { mockDialog } from '@/test/mockDialog'
 
 // Regla de contacto (.claude/rules/contacto.md) y spec §3.5: el correo y el
 // teléfono no están en la página ni en los archivos de src/. Los valores
@@ -36,16 +35,13 @@ const leaks = (text: string) => secrets().filter((secret) => text.includes(secre
 const html = () => document.documentElement.outerHTML
 
 let open: MockInstance<typeof window.open>
-let restoreDialog: () => void
 
 beforeEach(() => {
   open = vi.spyOn(window, 'open').mockImplementation(() => null)
-  restoreDialog = mockDialog()
   vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['es-CO'])
 })
 
 afterEach(() => {
-  restoreDialog()
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
   document.documentElement.removeAttribute('lang')

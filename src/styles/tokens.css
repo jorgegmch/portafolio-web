@@ -446,10 +446,8 @@
   --curtain-scale: 0.94;
   --curtain-dim: 0.5;
 
-  /* Contacto (spec §3.5): relleno inferior de 88 px; frase de 24 px en
-     460 px de ancho; botón circular de 200 px con texto de 20 px y flecha de
-     26 px; píldoras de 52 px con texto de 15 px y borde de 1,5 px. */
-  --contact-padding-bottom: 5.5rem;
+  /* Contacto (spec §3.5): frase de 24 px en 460 px de ancho; píldoras de
+     52 px con texto de 15 px y borde de 1,5 px. */
   /* Tope del título de Contacto para que su palabra más larga quepa en el
      panel: «¿Construimos» mide 5,68 veces el tamaño de letra (medido en
      Anton). Con 4,5 rem de huecos y relleno y 5,9 de divisor queda margen
@@ -465,9 +463,6 @@
   --font-size-contact-pitch: 1.5rem;
   --leading-contact-pitch: 1.45;
   --contact-pitch-measure: 28.75rem;
-  --contact-write-size: 12.5rem;
-  --font-size-contact-write: 1.25rem;
-  --contact-write-arrow: 1.625rem;
   --contact-pill-height: 3.25rem;
   --font-size-pill: 0.9375rem;
   --pill-border-width: 1.5px;
@@ -479,24 +474,10 @@
   --contact-panel-padding-x: 3rem; /* 48px */
   --contact-form-padding-bottom: 2.75rem; /* 44px */
 
-  /* Diálogo del formulario (spec §5, tablero contact-form-desktop): hoja de
-     920 px a 40 px de los bordes, con sombra, sobre un fondo Void al 55 %.
-     Entra subiendo 48 px. Título de 72 px, X de 52 px, campos de 56 px (el
-     mensaje, de 140), chips de 44 y botón de enviar de 60 px con texto de
-     17. Recibido: círculo y título de 88 px. El giro de «Enviando» dura
-     0,9 s. En teléfono, hoja inferior a 40 px del borde de arriba, con un
-     asa de 44 × 5 px. */
-  --color-backdrop: rgba(6, 6, 7, 0.55);
-  --color-shadow: rgba(0, 0, 0, 0.6);
-  --shadow-dialog: 0 2.5rem 7.5rem var(--color-shadow);
-  --dialog-width: 57.5rem;
-  --dialog-inset: 2.5rem;
-  --dialog-padding-top: 2.5rem;
-  --dialog-padding-x: 3rem;
-  --sheet-enter: 3rem;
-  --font-size-dialog-title: 4.5rem;
-  --leading-dialog-title: 0.9;
-  --dialog-close-size: 3.25rem;
+  /* Campos del formulario (spec §5, que siguen del modal retirado): campos
+     de 56 px (el mensaje, de 140), chips de 44 y botón de enviar de 60 px con
+     texto de 17. Recibido: círculo y título de 88 px. El giro de «Enviando»
+     dura 0,9 s. */
   --field-height: 3.5rem;
   --field-padding-x: 1.125rem;
   --field-textarea-height: 8.75rem;
@@ -506,9 +487,6 @@
   --dur-spin: 0.9s;
   --sent-check-size: 5.5rem;
   --font-size-sent-title: 5.5rem;
-  --sheet-top: 2.5rem;
-  --sheet-handle-width: 2.75rem;
-  --sheet-handle-height: 0.3125rem;
 
   /* Capas */
   --z-background: -1;
@@ -592,13 +570,9 @@
     /* Contacto en teléfono (tablero móvil): título de 76 px y píldoras de
        48 px. */
     --font-size-contact-title: 4.75rem; /* 76px */
-    --contact-padding-bottom: 3rem; /* 48px */
     --contact-pill-height: 3rem; /* 48px */
-    /* Formulario en teléfono (tablero contact-form-mobile): título de 44 px,
-       X de 48 y campos de 52. */
-    --font-size-dialog-title: 2.75rem; /* 44px */
-    --leading-dialog-title: 0.92;
-    --dialog-close-size: 3rem; /* 48px */
+    /* Formulario en teléfono (tablero mobile-home): título de 40 px, campos
+       de 52 con radio de 16. */
     --field-height: 3.25rem; /* 52px */
     --radius-field: 1rem; /* 16px */
     --font-size-form-title: 2.5rem; /* 40px */

@@ -164,10 +164,8 @@ export interface Dictionary {
     label: string
     /** Título grande, en sus dos líneas; las mayúsculas las pone el CSS. */
     title: readonly [string, string]
-    /** Frase junto al botón «Escríbeme». */
+    /** Frase bajo el título. */
     pitch: string
-    /** Botón circular que abre el formulario. */
-    writeMe: string
     /** Píldora que copia el correo sin mostrarlo. */
     copyEmail: string
     /** Aviso tras copiar el correo; no lo muestra. */
@@ -182,12 +180,11 @@ export interface Dictionary {
      * accesible, que empieza por él y dice qué abre.
      */
     cv: { short: string; name: string }
-    /** Formulario del diálogo «Escríbeme» (spec §5). */
+    /** Formulario a la vista, en el panel derecho (spec v2.1 §3.5). */
     form: {
       /** Rótulo en código sobre el título: no se traduce, pero vive con los textos. */
       tag: string
       title: string
-      close: string
       /** Marcas tras la etiqueta de cada campo. */
       required: string
       optional: string
@@ -200,15 +197,12 @@ export interface Dictionary {
       message: { label: string; placeholder: string; error: string }
       submit: string
       sending: string
-      /** Aviso si el envío no sale; el mensaje se conserva. */
+      /** Aviso si el envío no sale; el mensaje se conserva y se ofrece «Copiar correo». */
       failed: string
-      /** Frase antes de «Copiar correo» y WhatsApp, siempre visible. */
-      direct: string
       sent: {
         title: string
         /** Va tras «status: 200 · » y antes del correo de quien escribe. */
         reply: string
-        back: string
         again: string
       }
     }

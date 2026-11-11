@@ -220,7 +220,6 @@ export const en: Dictionary = {
     label: 'Contact',
     title: ['Shall we build', 'something?'],
     pitch: 'Tell me what your business needs. I will translate it into code.',
-    writeMe: 'Write to me',
     copyEmail: 'Copy email',
     emailCopied: 'Email copied.',
     copyFailed: 'Could not copy it: your email app opened instead.',
@@ -230,7 +229,6 @@ export const en: Dictionary = {
     form: {
       tag: 'new_message()',
       title: 'Tell me your idea',
-      close: 'Close form',
       required: 'required',
       optional: 'optional',
       pickSeveral: 'you can pick several',
@@ -261,11 +259,9 @@ export const en: Dictionary = {
       sending: 'Sending…',
       failed:
         'It could not be sent right now. Your message is still here: try again or write to me directly with “Copy email”.',
-      direct: 'Prefer to go direct?',
       sent: {
         title: 'Message received',
         reply: 'I will reply to',
-        back: 'Back to the portfolio',
         again: 'Send another',
       },
     },

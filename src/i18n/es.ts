@@ -219,7 +219,6 @@ export const es: Dictionary = {
     label: 'Contacto',
     title: ['¿Construimos', 'algo?'],
     pitch: 'Cuéntame qué necesita tu negocio. Yo lo traduzco a código.',
-    writeMe: 'Escríbeme',
     copyEmail: 'Copiar correo',
     emailCopied: 'Correo copiado.',
     copyFailed: 'No se pudo copiar: se abrió tu programa de correo.',
@@ -229,7 +228,6 @@ export const es: Dictionary = {
     form: {
       tag: 'nuevo_mensaje()',
       title: 'Cuéntame tu idea',
-      close: 'Cerrar formulario',
       required: 'obligatorio',
       optional: 'opcional',
       pickSeveral: 'puedes marcar varias',
@@ -260,11 +258,9 @@ export const es: Dictionary = {
       sending: 'Enviando…',
       failed:
         'No se pudo enviar ahora mismo. Tu mensaje sigue aquí: inténtalo de nuevo o escríbeme directo con «Copiar correo».',
-      direct: '¿Prefieres directo?',
       sent: {
         title: 'Mensaje recibido',
         reply: 'te respondo a',
-        back: 'Volver al portafolio',
         again: 'Enviar otro',
       },
     },

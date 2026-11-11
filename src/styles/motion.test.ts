@@ -79,10 +79,10 @@ describe('movimiento en el CSS', () => {
       ].forEach((path) => expect(cssMedia(readCss(path), NO_PREFERENCE), path).toMatch(/animation:/))
     })
 
-    it('el diálogo del formulario entra sin animación, y el giro de «Enviando» se para', () => {
-      const css = readCss('src/components/ui/ContactDialog.module.css')
+    it('el giro de «Enviando» del formulario se para', () => {
+      const css = readCss('src/components/ui/ContactForm.module.css')
 
-      expect(cssMedia(css, REDUCE)).toMatch(/\.dialog\[open\],\s*\.spinner\s*\{\s*animation:\s*none/)
+      expect(cssMedia(css, REDUCE)).toMatch(/\.spinner\s*\{\s*animation:\s*none/)
     })
 
     it('el botón de pausa se oculta: no hay nada que pausar', () => {
@@ -122,15 +122,15 @@ describe('movimiento en el CSS', () => {
 
     // Lo que mueve el scroll del visitante, o una entrada de una vez, no se
     // congela a medias.
-    it('la cortina, la pila y la entrada del diálogo siguen en marcha', () => {
+    it('la cortina, la pila y la entrada de la barra fija siguen en marcha', () => {
       expect(readCss('src/components/layout/Layout.module.css')).toMatch(
         /\.frame\[data-motion\] > \.main > \*[\s\S]*?animation-play-state:\s*running !important/,
       )
       expect(readCss('src/components/sections/Projects.module.css')).toMatch(
         /\[data-motion\] \.stack > \*[\s\S]*?animation-play-state:\s*running !important/,
       )
-      expect(readCss('src/components/ui/ContactDialog.module.css')).toMatch(
-        /\[data-motion\] \.dialog\[open\]\s*\{\s*animation-play-state:\s*running !important/,
+      expect(readCss('src/components/layout/Navbar.module.css')).toMatch(
+        /\[data-motion\] \.header\[data-stuck\]\s*\{\s*animation-play-state:\s*running !important/,
       )
     })
   })
