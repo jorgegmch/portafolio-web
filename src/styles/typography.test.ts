@@ -127,10 +127,12 @@ describe('tipografía de títulos', () => {
       expect(isLoaded('Anton', '400')).toBe(true)
     })
 
-    // La escala de la spec: de 120 a 330 px.
-    it('el tamaño sale de su token, de 120 a 330 px', () => {
+    // La escala de la spec v2.1: clamp(120px, 17.5vw, 252px). Baja desde los
+    // 330 px de la v2 para dejar sitio a los paneles laterales.
+    it('el tamaño sale de su token: clamp(120px, 17.5vw, 252px)', () => {
       expect(cssRule(heroCss, '.name')).toMatchObject({ 'font-size': `var(${HERO_NAME_SIZE})` })
-      expect(clampBounds(HERO_NAME_SIZE)).toEqual({ min: 7.5, max: 20.625 })
+      expect(cssToken(tokensCss, HERO_NAME_SIZE)).toBe('clamp(7.5rem, 17.5vw, 15.75rem)')
+      expect(clampBounds(HERO_NAME_SIZE)).toEqual({ min: 7.5, max: 15.75 })
     })
 
     it('es mayor que el título de sección en los dos extremos', () => {

@@ -98,10 +98,10 @@
   --font-weight-extrabold: 800;
 
   /* Escala de títulos del rediseño, con clamp (spec §2). */
-  /* La spec solo limita por ancho; aquí también por alto (28svh), para que
-     en una ventana de 900 px de alto el nombre no se meta bajo los textos
-     del pie del Hero. A 1920 × 1080 queda en 302 px. */
-  --font-size-hero-name: clamp(7.5rem, min(21.5vw, 28svh), 20.625rem); /* 120 a 330 px */
+  /* Spec v2.1: baja de 330 a 252 px para dejar sitio a los paneles laterales
+     del Hero. Ya no hace falta limitarlo por alto: a 252 px y con el
+     escenario de 760, el apellido queda por encima de los bloques. */
+  --font-size-hero-name: clamp(7.5rem, 17.5vw, 15.75rem); /* 120 a 252 px */
   --font-size-scene-title: clamp(4.5rem, 12vw, 11.875rem); /* 72 a 190 px */
   --font-size-profile-phrase: clamp(3.5rem, 8vw, 8rem); /* 56 a 128 px */
   --font-size-contact-title: clamp(5rem, 12.5vw, 13.75rem); /* 80 a 220 px */
