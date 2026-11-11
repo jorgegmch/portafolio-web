@@ -274,10 +274,9 @@ export const es: Dictionary = {
       design: 'Diseño y código',
       builtWith: 'Construido con',
       from: 'Desde',
-      online: 'En la red',
     },
+    follow: 'Sígueme en redes',
     rights: 'Todos los derechos reservados',
-    social: 'Redes',
     backToTop: 'Volver arriba',
   },
   common: {

@@ -1,40 +1,61 @@
 import { describe, expect, it } from 'vitest'
-import { cssRule, cssToken, readCss } from '@/test/cssRules'
+import { cssMedia, cssRule, readCss } from '@/test/cssRules'
 
 const css = readCss('src/components/layout/Footer.module.css')
-const tokensCss = readCss('src/styles/tokens.css')
 
-// La marca «JORGEGMCH» ocupa todo el ancho de la rejilla del pie, con su
-// mismo borde izquierdo. Se dimensiona solo con CSS: el pie es contenedor y
-// el tamaño de letra sale de su ancho (cqi), sin medir nada con JavaScript.
-describe('Footer: la marca llena el ancho de la rejilla', () => {
-  it('el pie es contenedor de su ancho', () => {
-    expect(cssRule(css, '.footer')).toMatchObject({ 'container-type': 'inline-size' })
-  })
-
-  it('el tamaño de letra es el ancho del contenedor entre la proporción de la palabra', () => {
-    expect(cssRule(css, '.brand')).toMatchObject({
-      'font-size': 'calc(100cqi / var(--credits-brand-ratio))',
-      'white-space': 'nowrap',
+// Pie (spec v2.1 §3.6 y tablero desktop-page): los créditos, el primero
+// pegado a la izquierda y el último (el llamado a redes) a la derecha; en
+// teléfono, rejilla de dos columnas. La marca es un SVG que ocupa el ancho
+// de la rejilla, con un trazo fino que no cambia al escalar.
+describe('Footer: créditos', () => {
+  it('van de borde a borde, como la palabra de abajo', () => {
+    expect(cssRule(css, '.credits')).toMatchObject({
+      display: 'flex',
+      'justify-content': 'space-between',
     })
   })
 
-  // Medido en Anton: «JORGEGMCH» mide 4,5298 veces su tamaño. Algo más de
-  // divisor deja sitio al trazo del contorno, que sobresale medio grosor.
-  it('la proporción es la medida, con un poco de margen, nunca menos', () => {
-    const ratio = Number(cssToken(tokensCss, '--credits-brand-ratio'))
-
-    expect(ratio).toBeGreaterThan(4.5298)
-    expect(ratio).toBeLessThan(4.6)
-  })
-
-  it('no queda el tamaño anterior, que dependía de la ventana', () => {
-    expect(tokensCss).not.toMatch(/--font-size-credits-brand:/)
-  })
-
-  it('conserva el trazo fino', () => {
-    expect(cssRule(css, '.brand')).toMatchObject({
-      '-webkit-text-stroke': 'var(--outline-width) var(--color-outline)',
+  it('en teléfono, rejilla de dos columnas', () => {
+    expect(cssRule(cssMedia(css, '(max-width: 900px)'), '.credits')).toMatchObject({
+      display: 'grid',
+      'grid-template-columns': 'repeat(2, minmax(0, 1fr))',
     })
+  })
+
+  it('el rótulo del llamado a redes va en Signal', () => {
+    expect(cssRule(css, '.followLabel')).toMatchObject({ color: 'var(--color-signal)' })
+  })
+
+  it('las píldoras de redes miden 44 px y llevan el logo delante', () => {
+    expect(cssRule(css, '.link')).toMatchObject({
+      'min-height': 'var(--touch-target)',
+      'border-radius': 'var(--radius-pill)',
+    })
+    expect(cssRule(css, '.mark')).toMatchObject({ width: 'var(--channel-mark-size)' })
+  })
+})
+
+describe('Footer: la marca', () => {
+  it('el SVG ocupa el ancho de la rejilla y conserva su proporción', () => {
+    expect(cssRule(css, '.brand')).toMatchObject({
+      display: 'block',
+      width: '100%',
+      height: 'auto',
+    })
+  })
+
+  it('la palabra va en Anton, solo en contorno, con el trazo fino a cualquier tamaño', () => {
+    expect(cssRule(css, '.brandText')).toMatchObject({
+      fill: 'none',
+      stroke: 'var(--color-outline)',
+      'stroke-width': 'var(--outline-width)',
+      'vector-effect': 'non-scaling-stroke',
+      'font-family': 'var(--font-display)',
+      'text-transform': 'uppercase',
+    })
+  })
+
+  it('ya no depende del ancho del contenedor (cqi) ni de una proporción medida', () => {
+    expect(css).not.toMatch(/cqi|container-type|credits-brand-ratio/)
   })
 })

@@ -1,7 +1,5 @@
-/* El último panel: Ink, con el relleno de los paneles y su límite de ancho.
-   Es contenedor de su ancho: de él sale el tamaño de la marca. */
+/* El último panel: Ink, con el relleno de los paneles y su límite de ancho. */
 .footer {
-  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -12,11 +10,19 @@
   color: var(--color-bone);
 }
 
-/* Cuatro columnas de créditos; dos desde 900 px. */
+/* Créditos y llamado a redes, de borde a borde: el primero pegado a la
+   izquierda y el último a la derecha, como la palabra de abajo (spec v2.1
+   §3.6). La lista de créditos no tiene caja propia: sus tres entradas son
+   piezas de esta fila. */
 .credits {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--space-6);
+}
+
+.creditList {
+  display: contents;
 }
 
 .credit {
@@ -39,35 +45,69 @@
   font-weight: var(--font-weight-bold);
 }
 
+/* «Sígueme en redes»: el rótulo en Signal y las dos píldoras con su logo. */
+.follow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
+.followLabel {
+  color: var(--color-signal);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
 .social {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--space-2);
   list-style: none;
 }
 
-/* 44 px de alto como mínimo: el texto solo mide 26. */
+/* Píldoras de 44 px con borde translúcido, el logo delante y la flecha. */
 .link {
   display: inline-flex;
   align-items: center;
+  gap: var(--space-3);
   min-height: var(--touch-target);
+  padding: 0 var(--space-4) 0 var(--space-3);
+  border: 1px solid var(--line-24);
+  border-radius: var(--radius-pill);
   color: var(--color-bone);
+  font-size: var(--font-size-pill);
+  font-weight: var(--font-weight-bold);
+  text-decoration: none;
 }
 
-/* El alias gigante, solo en contorno, a todo el ancho de la rejilla y con su
-   mismo borde izquierdo: el tamaño es el ancho del pie entre la proporción
-   de la palabra, sin medir nada con JavaScript. Decorativo: con un
-   interlineado tan corto sus letras suben sobre la fila de créditos, así que
-   no recibe clics para no tapar los enlaces de las redes. */
+.mark {
+  flex: none;
+  width: var(--channel-mark-size);
+  height: var(--channel-mark-size);
+  object-fit: contain;
+}
+
+/* El alias gigante, solo en contorno, como SVG (spec v2.1 §3.6): la palabra
+   se estira hasta el ancho exacto de la rejilla y el SVG escala con ella.
+   El trazo no escala: fino a cualquier tamaño. Decorativo, sin clics. */
 .brand {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
   pointer-events: none;
-  color: transparent;
+}
+
+.brandText {
+  fill: none;
+  stroke: var(--color-outline);
+  stroke-width: var(--outline-width);
+  vector-effect: non-scaling-stroke;
   font-family: var(--font-display);
-  font-size: calc(100cqi / var(--credits-brand-ratio));
-  line-height: var(--leading-credits-brand);
   text-transform: uppercase;
-  white-space: nowrap;
-  -webkit-text-stroke: var(--outline-width) var(--color-outline);
 }
 
 .bottom {
@@ -100,8 +140,21 @@
   stroke-width: var(--icon-stroke-width);
 }
 
+/* Tablet y teléfono (tablero mobile-home): créditos en dos columnas y el
+   llamado a redes debajo, a todo el ancho, con las píldoras de dos en dos. */
 @media (max-width: 900px) {
   .credits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .follow {
+    grid-column: 1 / -1;
+    align-items: stretch;
+  }
+
+  .social {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -20,7 +20,8 @@ const renderFooter = (lang: keyof typeof BROWSER_LANGS = 'es') => {
   return screen.getByRole('contentinfo')
 }
 
-const notice = (footer: HTMLElement) => footer.querySelector('p')
+/** El aviso es el último párrafo del pie, el de la línea final. */
+const notice = (footer: HTMLElement) => [...footer.querySelectorAll('p')].at(-1) ?? null
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -59,7 +60,13 @@ describe('Footer: aviso de derechos', () => {
   it('es una sola frase, y el aviso aparece una sola vez', () => {
     const footer = renderFooter()
 
-    expect(footer.querySelectorAll('p')).toHaveLength(1)
+    // El pie tiene ahora otro párrafo, el rótulo «Sígueme en redes»: el aviso
+    // sigue siendo uno solo, entero en su párrafo.
+    const withNotice = [...footer.querySelectorAll('p')].filter((paragraph) =>
+      paragraph.textContent.includes(dictionaries.es.footer.rights),
+    )
+    expect(withNotice).toHaveLength(1)
+    expect(withNotice[0]?.textContent).toMatch(/^©.*\.$/)
     expect(footer.textContent.split(dictionaries.es.footer.rights)).toHaveLength(2)
   })
 })

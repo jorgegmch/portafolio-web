@@ -275,10 +275,9 @@ export const en: Dictionary = {
       design: 'Design and code',
       builtWith: 'Built with',
       from: 'Based in',
-      online: 'Online',
     },
+    follow: 'Follow me',
     rights: 'All rights reserved',
-    social: 'Social links',
     backToTop: 'Back to top',
   },
   common: {

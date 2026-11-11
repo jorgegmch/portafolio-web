@@ -210,17 +210,16 @@ export interface Dictionary {
     }
   }
   footer: {
-    /** Rótulos de las cuatro columnas de «créditos finales». */
+    /** Rótulos de los tres créditos. */
     credits: {
       design: string
       builtWith: string
       from: string
-      online: string
     }
+    /** Llamado a redes, que también nombra su lista; las mayúsculas las pone el CSS. */
+    follow: string
     /** Aviso de derechos; va tras el año y el nombre. */
     rights: string
-    /** Nombre accesible de la lista de redes. */
-    social: string
     backToTop: string
   }
   common: {
