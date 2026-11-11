@@ -5,17 +5,24 @@ import { LANGS } from '@/i18n/types'
 /** Nombre de la escena: el de su rótulo y el de la navegación. */
 const LABEL = { es: 'Perfil', en: 'Profile' } as const
 
-// Frase y bio de la spec del rediseño v2 (§3.2), escritas por el autor; el
-// inglés es su traducción. Cambiarlas exige su visto bueno y actualizar
-// también estas constantes.
+// Frase y bio de la spec del rediseño v2.1 (§3.2), escritas por el autor,
+// que fija también el inglés y lo aprobó el 2026-11-11. El inglés va con el
+// apóstrofo tipográfico (’), como pide la auditoría de Vercel. Cambiarlas
+// exige su visto bueno y actualizar también estas constantes.
 const PHRASE = {
-  es: { filled: 'Del negocio al código.', outline: 'Y del código a palabras claras.' },
-  en: { filled: 'From business to code.', outline: 'And from code to plain language.' },
+  es: { filled: 'Entender el reto.', outline: 'Construir la respuesta.' },
+  en: { filled: 'Understand the challenge.', outline: 'Build the answer.' },
 } as const
 
 const BIO = {
-  es: 'Desarrollador Full-Stack con base en Java y Spring Boot. Vengo de la Comunicación Social: escucho antes de programar y explico lo que construyo.',
-  en: 'Full-Stack developer grounded in Java and Spring Boot. I come from Social Communication: I listen before I code, and I explain what I build.',
+  es: [
+    'Soy desarrollador Full-Stack con enfoque en Java y Spring Boot. Mi formación en Comunicación Social y Periodismo también influye en cómo abordo la tecnología: me lleva a escuchar, analizar contextos y comprender las necesidades detrás de cada problema.',
+    'Me interesa construir software que no solo funcione, sino que tenga sentido para quienes lo utilizan. Por eso busco conectar las decisiones técnicas con los objetivos del negocio, la claridad de la experiencia y el propósito de cada solución.',
+  ],
+  en: [
+    'I’m a Full-Stack developer focused on Java and Spring Boot. My background in Social Communication and Journalism also shapes how I approach technology: it leads me to listen, analyze context and understand the needs behind each problem.',
+    'I want to build software that doesn’t just work, but makes sense to the people who use it. That’s why I connect technical decisions with business goals, a clear experience and the purpose of each solution.',
+  ],
 } as const
 
 /** Etiqueta de cada tarjeta con 0, con 1 y con varios. */
@@ -50,14 +57,20 @@ describe('textos de Perfil', () => {
   })
 
   describe('bio', () => {
-    it.each(LANGS)('en %s, es la de una línea aprobada, palabra por palabra', (lang) => {
-      expect(dictionaries[lang].about.bio).toBe(BIO[lang])
+    it.each(LANGS)('en %s, son los dos párrafos aprobados, palabra por palabra', (lang) => {
+      expect(dictionaries[lang].about.bio).toEqual(BIO[lang])
+    })
+
+    it('en inglés, sin apóstrofos rectos', () => {
+      expect(dictionaries.en.about.bio.join(' ')).not.toContain("'")
     })
 
     // La escena no muestra contacto: ni un correo ni un número caben aquí.
     it.each(LANGS)('en %s, no lleva datos de contacto', (lang) => {
-      expect(dictionaries[lang].about.bio).not.toContain('@')
-      expect(dictionaries[lang].about.bio).not.toMatch(/\d{5,}/)
+      for (const paragraph of dictionaries[lang].about.bio) {
+        expect(paragraph).not.toContain('@')
+        expect(paragraph).not.toMatch(/\d{5,}/)
+      }
     })
   })
 

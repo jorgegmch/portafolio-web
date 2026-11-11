@@ -53,12 +53,15 @@ describe('About (Perfil)', () => {
       expect(within(heading).getByText(t.phrase.filled)).not.toBe(within(heading).getByText(t.phrase.outline))
     })
 
-    it.each(LANGS)('en %s, la bio es un párrafo, después de la frase', (lang) => {
+    it.each(LANGS)('en %s, la bio son dos párrafos, en orden, después de la frase', (lang) => {
       const { region, t } = renderAbout(lang)
-      const bio = within(region).getByText(t.bio)
+      const paragraphs = t.bio.map((paragraph) => within(region).getByText(paragraph))
+      const [first, second] = paragraphs
+      if (!first || !second) throw new Error('Faltan los párrafos de la bio')
 
-      expect(bio.tagName).toBe('P')
-      expect(precedes(within(region).getByRole('heading', { level: 2 }), bio)).toBe(true)
+      expect(paragraphs.map(({ tagName }) => tagName)).toEqual(['P', 'P'])
+      expect(precedes(within(region).getByRole('heading', { level: 2 }), first)).toBe(true)
+      expect(precedes(first, second)).toBe(true)
     })
 
     it('no lleva el mapa, la terminal ni la edad', () => {

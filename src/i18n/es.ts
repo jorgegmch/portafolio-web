@@ -44,10 +44,13 @@ export const es: Dictionary = {
   about: {
     label: 'Perfil',
     tag: 'del_negocio_al_codigo()',
-    phrase: { filled: 'Del negocio al código.', outline: 'Y del código a palabras claras.' },
-    // Bio de una línea de la spec del rediseño v2 (§3.2), escrita por el
-    // autor: no editar sin su aprobación.
-    bio: 'Desarrollador Full-Stack con base en Java y Spring Boot. Vengo de la Comunicación Social: escucho antes de programar y explico lo que construyo.',
+    phrase: { filled: 'Entender el reto.', outline: 'Construir la respuesta.' },
+    // Bio de dos párrafos de la spec del rediseño v2.1 (§3.2), escrita por
+    // el autor y aprobada el 2026-11-11: no editar sin su aprobación.
+    bio: [
+      'Soy desarrollador Full-Stack con enfoque en Java y Spring Boot. Mi formación en Comunicación Social y Periodismo también influye en cómo abordo la tecnología: me lleva a escuchar, analizar contextos y comprender las necesidades detrás de cada problema.',
+      'Me interesa construir software que no solo funcione, sino que tenga sentido para quienes lo utilizan. Por eso busco conectar las decisiones técnicas con los objetivos del negocio, la claridad de la experiencia y el propósito de cada solución.',
+    ],
     stats: {
       codingTime: {
         months: (count) => (count === 1 ? 'Mes programando' : 'Meses programando'),

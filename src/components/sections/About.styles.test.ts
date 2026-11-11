@@ -7,6 +7,28 @@ const tokensCss = readCss('src/styles/tokens.css')
 /** Solo con un puntero que se pose y sin pedir menos movimiento. */
 const HOVER_QUERY = '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
 
+// Bio de dos párrafos (spec v2.1 §3.2): 19 px con interlineado 1,6 y ancho
+// máximo de 600 px; 16 px en teléfono.
+describe('About: bio', () => {
+  it('19 px en escritorio y 16 en teléfono', () => {
+    expect(cssToken(tokensCss, '--font-size-bio')).toBe('1.1875rem')
+    expect(cssToken(cssMedia(tokensCss, '(max-width: 480px)'), '--font-size-bio')).toBe('1rem')
+  })
+
+  it('interlineado 1,6 y ancho máximo de 600 px, con los párrafos separados', () => {
+    expect(cssRule(css, '.bio')).toMatchObject({
+      display: 'flex',
+      'flex-direction': 'column',
+      gap: 'var(--bio-gap)',
+      'max-width': 'var(--bio-measure)',
+      'font-size': 'var(--font-size-bio)',
+      'line-height': 'var(--leading-base)',
+    })
+    expect(cssToken(tokensCss, '--bio-measure')).toBe('37.5rem')
+    expect(cssToken(tokensCss, '--leading-base')).toBe('1.6')
+  })
+})
+
 describe('About: tarjetas de cifras al pasar el puntero', () => {
   const hover = cssMedia(css, HOVER_QUERY)
 

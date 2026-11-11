@@ -68,8 +68,12 @@
   min-width: 0;
 }
 
+/* Bio en dos párrafos (spec v2.1 §3.2). */
 .bio {
-  max-width: var(--measure);
+  display: flex;
+  flex-direction: column;
+  gap: var(--bio-gap);
+  max-width: var(--bio-measure);
   color: var(--color-bone-soft);
   font-size: var(--font-size-bio);
   line-height: var(--leading-base);

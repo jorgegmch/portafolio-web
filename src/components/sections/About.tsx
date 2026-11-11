@@ -33,7 +33,7 @@ const projectTitle = (id: ProjectId) => projects.find((project) => project.id ==
  * Escena Perfil, en el panel Graphite (spec §3.2). Arriba, su rótulo
  * numerado y una etiqueta en mono; luego la frase grande, rellena en su
  * primera línea y en contorno en la segunda (el h2). Debajo, a la izquierda,
- * la bio de una línea, tres tarjetas con cifras y la formación; a la
+ * la bio en dos párrafos, tres tarjetas con cifras y la formación; a la
  * derecha, el Traductor.
  *
  * Las cifras salen de config y de data/, nunca escritas a mano, y aparecen ya
@@ -102,7 +102,11 @@ export function About() {
 
       <div className={styles.columns}>
         <div className={styles.main}>
-          <p className={styles.bio}>{t.about.bio}</p>
+          <div className={styles.bio}>
+            {t.about.bio.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
 
           <ul className={styles.stats}>
             {stats.map(({ id, count, label }, index) => (

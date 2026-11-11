@@ -99,7 +99,7 @@ describe('About: tarjetas', () => {
       const { region, statsList } = renderAbout()
       const follows = (earlier: Element, later: Element) =>
         Boolean(earlier.compareDocumentPosition(later) & Node.DOCUMENT_POSITION_FOLLOWING)
-      const bio = within(region).getByText(dictionaries.es.about.bio)
+      const bio = within(region).getByText(dictionaries.es.about.bio[1])
       const education = within(region).getByRole('heading', { name: dictionaries.es.about.educationLabel })
 
       expect(follows(bio, statsList())).toBe(true)

@@ -88,8 +88,8 @@ export interface Dictionary {
     tag: string
     /** Frase grande en dos líneas: la primera rellena y la segunda en contorno. */
     phrase: { filled: string; outline: string }
-    /** Bio de una línea. */
-    bio: string
+    /** Bio en dos párrafos. */
+    bio: readonly [string, string]
     /** Etiqueta de cada tarjeta según su cifra, que la tarjeta muestra aparte. */
     stats: {
       codingTime: Record<CodingTime['unit'], (count: number) => string>

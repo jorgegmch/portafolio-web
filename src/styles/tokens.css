@@ -109,9 +109,11 @@
   /* Interlineado de los títulos en Anton (spec: 0,84 a 0,92) y del cuerpo
      (1,55 a 1,6), y espaciado apretado de los títulos en Manrope. */
   --leading-display: 0.84;
-  /* Frase de Perfil, excepción al 0,84–0,92 de Anton (spec §2): la tilde de
-     «Ó» sube 1,109 em sobre la línea base y las letras de arriba bajan
-     0,016 em; con 1,125 la tilde no pisa la línea de arriba. */
+  /* Frase de Perfil, excepción al 0,84–0,92 de Anton (spec §2): en la frase
+     de la v2, la tilde de «Ó» subía 1,109 em sobre la línea base y las
+     letras de arriba bajaban 0,016 em; con 1,125 la tilde no pisaba la línea
+     de arriba. La frase de la v2.1 no lleva mayúsculas con tilde (el tablero
+     usa 0,96): se mantiene «como hoy» hasta que el autor decida. */
   --leading-phrase: 1.125;
   --leading-none: 1;
   --leading-body: 1.55;
@@ -179,7 +181,11 @@
 
   /* Perfil (spec §3.2): bio, cifras de las tarjetas y Traductor. El fondo
      del Traductor y el de su bloque de código son dos tonos de Ink. */
-  --font-size-bio: 1.25rem; /* 20px */
+  /* Bio en dos párrafos (spec v2.1 §3.2): 19 px (16 en teléfono), ancho
+     máximo de 600 px y 18 px entre párrafos (tablero desktop-page). */
+  --font-size-bio: 1.1875rem; /* 19px */
+  --bio-measure: 37.5rem; /* 600px */
+  --bio-gap: 1.125rem; /* 18px */
   --font-size-stat: 3.5rem; /* 56px */
   --color-console: #0e0e10;
   --color-console-code: #141416;
@@ -303,8 +309,6 @@
   --space-8: 4rem;
   --space-9: 6rem;
 
-  /* Ancho máximo de un párrafo, para que la línea no se alargue de más. */
-  --measure: 36rem;
   /* Cuánto crecen las tarjetas de cifras de Perfil bajo el puntero. */
   --lift-scale: 1.04;
 
@@ -531,7 +535,7 @@
     --hero-ring-size: 17.5rem; /* 280px */
     /* Perfil en teléfono (tablero móvil). */
     --font-size-profile-phrase: 3.25rem; /* 52px */
-    --font-size-bio: 1.0625rem; /* 17px */
+    --font-size-bio: 1rem; /* 16px */
     --font-size-stat: 2.25rem; /* 36px */
     --translator-say-size: 1.3125rem; /* 21px */
     --font-size-code: 0.78125rem; /* 12,5px */

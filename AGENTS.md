@@ -51,7 +51,7 @@ Son vinculantes: léelas antes de tocar los archivos que cubren y cúmplelas. Si
 @.claude/rules/estilos-y-animacion.md
 @.claude/rules/accesibilidad.md
 
-- **Texto aprobado:** la bio en `es.ts` y su traducción en `en.ts` están aprobadas palabra por palabra. No las edites sin aprobación explícita.
+- **Texto aprobado:** la bio de Perfil (`about.bio`) son los dos párrafos de la spec v2.1 (§3.2), en `es.ts` y `en.ts`. El autor fijó los dos idiomas y los aprobó palabra por palabra el 2026-11-11; el inglés va con apóstrofo tipográfico (’). No la edites sin aprobación explícita.
 - **Nombre:** completo «Jorge Alberto Gómez Chaparro» y corto «Jorge Gómez», con tilde en todo texto visible. Se definen una vez en `config/site.ts`. Los nombres de archivo, slugs y URLs van en ASCII, sin tilde.
 - **Sin inventar datos:** las etiquetas de stack salen de la descripción de cada repo en GitHub; tecnologías sin niveles ni porcentajes.
 - **DRY con regla de tres:** no extraigas una abstracción hasta la tercera repetición real.

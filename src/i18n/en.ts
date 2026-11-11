@@ -43,10 +43,14 @@ export const en: Dictionary = {
   about: {
     label: 'Profile',
     tag: 'from_business_to_code()',
-    phrase: { filled: 'From business to code.', outline: 'And from code to plain language.' },
-    // Translation of the one-line bio of the redesign v2 spec (§3.2): do not
-    // edit without the author's approval.
-    bio: 'Full-Stack developer grounded in Java and Spring Boot. I come from Social Communication: I listen before I code, and I explain what I build.',
+    phrase: { filled: 'Understand the challenge.', outline: 'Build the answer.' },
+    // Two-paragraph bio of the redesign v2.1 spec (§3.2), set by the author in
+    // both languages and approved on 2026-11-11, with typographic
+    // apostrophes: do not edit without the author's approval.
+    bio: [
+      'I’m a Full-Stack developer focused on Java and Spring Boot. My background in Social Communication and Journalism also shapes how I approach technology: it leads me to listen, analyze context and understand the needs behind each problem.',
+      'I want to build software that doesn’t just work, but makes sense to the people who use it. That’s why I connect technical decisions with business goals, a clear experience and the purpose of each solution.',
+    ],
     stats: {
       codingTime: {
         months: (count) => (count === 1 ? 'Month of coding' : 'Months of coding'),
