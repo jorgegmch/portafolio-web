@@ -1,12 +1,13 @@
 import type { ProjectId } from '@/data/projects'
 
 /**
- * Tramo de una línea de código del Traductor. `keyword` va en la voz de código y
- * `comment` en el gris de los comentarios; el resto, en el color del texto.
+ * Tramo de una línea de código. `keyword` va en la voz de código, `string`
+ * en el tono de las cadenas y `comment` en el gris de los comentarios; el
+ * resto, en el color del texto (spec v2.1 §2).
  */
 export interface CodeSegment {
   text: string
-  kind?: 'keyword' | 'comment'
+  kind?: 'keyword' | 'string' | 'comment'
 }
 
 export interface TranslatorExample<Id extends string = string> {

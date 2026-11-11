@@ -31,6 +31,7 @@ export const en: Dictionary = {
       'I combine software development, communication and strategic thinking to build solutions that meet real needs and make sense to the people who use them.',
     stackLine: 'Java · Spring Boot · AI & automation',
     motto: { first: 'Code solves.', second: 'Judgment makes the difference.' },
+    mainStack: 'main stack',
     stackLabel: 'Technologies',
     viewProjects: 'View projects',
     availability: 'Available for freelance',

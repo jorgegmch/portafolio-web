@@ -43,6 +43,7 @@
   --color-tile-text: #bdb8af; /* etiquetas de las cifras, sobre Tile */
   --color-paper-muted: #5b5750; /* rótulos sobre Paper */
   --color-code-comment: #8c8880; /* comentarios del código del Traductor */
+  --color-code-string: #e8c9a0; /* cadenas en los bloques de código (spec v2.1 §2) */
   /* Luz radial detrás de la foto del Hero: Signal al 38 %. */
   --color-signal-glow: rgba(255, 91, 36, 0.38);
 
@@ -144,6 +145,28 @@
   --hero-veil-width: 47.5rem; /* 760px */
   --hero-veil-height: 11.875rem; /* 190px */
   --color-hero-veil-mid: rgba(17, 17, 19, 0.92);
+  /* Paneles laterales (tablero desktop-page): de 304 px a 44 del borde. La
+     ventana de código, a 56 px de arriba, girada -3°, con radio de 20, barra
+     de tres puntos de 8 px y código mono de 13 px; las fichas, a 48 px,
+     giradas 2,5°, en tres columnas de 92 px de alto con el logo de 34 px. */
+  --hero-side-inset: 2.75rem; /* 44px */
+  /* 304 px, o el 21 % de la ventana si es menos: medido, a 1281 px de ancho
+     los de 304 rozaban el nombre (que mide el 17,5 % de la ventana). Con 269
+     aún cabe la línea más larga de la ventana de código. */
+  --hero-side-width: min(19rem, 21vw); /* 304px */
+  --hero-code-top: 3.5rem; /* 56px */
+  --hero-stack-top: 3rem; /* 48px */
+  --hero-code-tilt: -3deg;
+  --hero-stack-tilt: 2.5deg;
+  --radius-window: 1.25rem; /* 20px */
+  --hero-window-dot: 0.5rem; /* 8px */
+  --font-size-window-code: 0.8125rem; /* 13px */
+  --hero-tile-height: 5.75rem; /* 92px */
+  --hero-tile-logo: 2.125rem; /* 34px */
+  --color-code-window: #17171a;
+  --color-window-dot: #3a3936;
+  --shadow-window: 0 0.125rem 0.375rem var(--color-shadow-near), 0 1.5rem 3rem var(--color-shadow-far);
+  --shadow-tile: 0 0.125rem 0.375rem var(--color-shadow-near), 0 1rem 2rem var(--color-shadow-near);
   --hero-role-size: 1.75rem; /* 28px */
   --hero-intro-size: 1.0625rem; /* 17px */
   --hero-intro-measure: 23.75rem; /* 380px */

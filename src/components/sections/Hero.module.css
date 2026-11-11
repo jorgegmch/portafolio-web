@@ -79,6 +79,126 @@
   border: 1px solid var(--line-10);
 }
 
+/* Paneles laterales (spec v2.1 §3.1): señales de programador, decorativas,
+   detrás de la foto y delante del nombre. Solo en el Hero de dos columnas:
+   en el apilado no caben junto al nombre. */
+.side {
+  pointer-events: none;
+}
+
+/* Ventana de código, girada -3°: barra con tres puntos y el nombre del
+   archivo, y sus líneas reales. */
+.codeWindow {
+  position: absolute;
+  top: var(--hero-code-top);
+  left: var(--hero-side-inset);
+  z-index: 2;
+  width: var(--hero-side-width);
+  overflow: hidden;
+  border: 1px solid var(--line-12);
+  border-radius: var(--radius-window);
+  background-color: var(--color-code-window);
+  box-shadow: var(--shadow-window);
+  transform: rotate(var(--hero-code-tilt));
+}
+
+.windowBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--line-08);
+}
+
+.windowDot {
+  width: var(--hero-window-dot);
+  height: var(--hero-window-dot);
+  border-radius: var(--radius-full);
+  background-color: var(--color-window-dot);
+}
+
+.windowFile {
+  margin-left: var(--space-2);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.windowCode {
+  margin: 0;
+  padding: var(--space-4);
+  overflow: hidden;
+  color: var(--color-bone-soft);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-window-code);
+  line-height: var(--leading-code);
+  white-space: pre;
+}
+
+.windowLine {
+  display: block;
+}
+
+/* Resaltado de la voz de código (spec v2.1 §2). */
+.keyword {
+  color: var(--color-code);
+}
+
+.string {
+  color: var(--color-code-string);
+}
+
+.windowCode .comment {
+  color: var(--color-code-comment);
+}
+
+/* Fichas «// stack principal», giradas 2,5°: tres columnas con el logo de
+   cada tecnología sobre su nombre. */
+.mainStack {
+  position: absolute;
+  top: var(--hero-stack-top);
+  right: var(--hero-side-inset);
+  z-index: 2;
+  width: var(--hero-side-width);
+  transform: rotate(var(--hero-stack-tilt));
+}
+
+.mainStackLabel {
+  margin-bottom: var(--space-3);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--hero-tile-height);
+  border: 1px solid var(--line-12);
+  border-radius: var(--radius-window);
+  background-color: var(--color-code-window);
+  box-shadow: var(--shadow-tile);
+  color: var(--color-bone-soft);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+}
+
+.tileLogo {
+  width: var(--hero-tile-logo);
+  height: var(--hero-tile-logo);
+  object-fit: contain;
+}
+
 /* El nombre gigante, centrado y detrás de la foto. Las mayúsculas son solo
    visuales: el h1 se lee con el texto del diccionario. */
 .name {
@@ -307,6 +427,10 @@
     position: relative;
     inset: auto;
     grid-area: name;
+  }
+
+  .side {
+    display: none;
   }
 
   /* La luz y el anillo se centran en la celda de la foto, no en todo el

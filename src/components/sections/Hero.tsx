@@ -7,7 +7,8 @@ import { Ribbon } from '@/components/ui/Ribbon'
 import { AVAILABLE_FOR_FREELANCE } from '@/config/availability'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
-import { technologies, technologyName } from '@/data/technologies'
+import { heroCodeWindow, heroStack } from '@/data/heroSides'
+import { technologies, technologyLogoUrl, technologyName } from '@/data/technologies'
 import { useClock } from '@/hooks/useClock'
 import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
@@ -30,6 +31,15 @@ const COMMENT_PREFIX = '// '
 
 /** Las tecnologías del catálogo, en su orden, para la cinta. */
 const STACK_NAMES = technologies.map(({ id }) => technologyName(id))
+
+/** Las seis fichas del panel derecho, en su orden, con su logo del catálogo. */
+const MAIN_STACK = heroStack.flatMap((id) => technologies.filter((technology) => technology.id === id))
+
+/** Lado del logo de cada ficha, en px: reserva su caja antes de que cargue la imagen. */
+const TILE_LOGO_SIZE = 34
+
+/** Los tres puntos de la barra de la ventana de código. */
+const WINDOW_DOTS = ['close', 'minimize', 'zoom'] as const
 
 /**
  * Primera escena, en el panel Ink (spec §3.1). Arriba, el estado de
@@ -79,6 +89,52 @@ export function Hero() {
       <div className={styles.stage}>
         <div className={styles.glow} aria-hidden="true" />
         <div className={styles.ring} aria-hidden="true" />
+        {/* Paneles laterales (spec v2.1 §3.1): señales de programador, decorativas. */}
+        <div className={`${styles.side} ${styles.codeWindow}`} aria-hidden="true" data-hero-side="code">
+          <div className={styles.windowBar}>
+            {WINDOW_DOTS.map((dot) => (
+              <span key={dot} className={styles.windowDot} />
+            ))}
+            <span className={styles.windowFile}>{heroCodeWindow.file}</span>
+          </div>
+          <pre className={styles.windowCode}>
+            {/* Líneas y tramos fijos, que no cambian de orden: su posición es su clave. */}
+            {heroCodeWindow.lines.map((line, lineIndex) => (
+              <span key={lineIndex} className={styles.windowLine}>
+                {line.map((segment, segmentIndex) =>
+                  'kind' in segment ? (
+                    <span key={segmentIndex} className={styles[segment.kind]} data-kind={segment.kind}>
+                      {segment.text}
+                    </span>
+                  ) : (
+                    <span key={segmentIndex}>{segment.text}</span>
+                  ),
+                )}
+              </span>
+            ))}
+          </pre>
+        </div>
+        <div className={`${styles.side} ${styles.mainStack}`} aria-hidden="true" data-hero-side="stack">
+          <p className={styles.mainStackLabel}>
+            <span className={styles.comment}>{COMMENT_PREFIX}</span>
+            {t.hero.mainStack}
+          </p>
+          <ul className={styles.tiles}>
+            {MAIN_STACK.map((technology) => (
+              <li key={technology.id} className={styles.tile}>
+                <img
+                  className={styles.tileLogo}
+                  src={technologyLogoUrl(technology)}
+                  width={TILE_LOGO_SIZE}
+                  height={TILE_LOGO_SIZE}
+                  alt=""
+                  decoding="async"
+                />
+                {technology.name}
+              </li>
+            ))}
+          </ul>
+        </div>
         <h1 id={headingId} className={styles.name}>
           <span className={styles.first}>{first}</span>{' '}
           <span className={styles.last}>{last}</span>

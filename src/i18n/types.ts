@@ -63,6 +63,8 @@ export interface Dictionary {
      * en Signal. Las mayúsculas las pone el CSS.
      */
     motto: { first: string; second: string }
+    /** Rótulo de las fichas del panel derecho; el «//» lo pone el componente. */
+    mainStack: string
     /** Nombre accesible de la lista de tecnologías de la cinta. */
     stackLabel: string
     viewProjects: string
