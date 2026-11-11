@@ -18,7 +18,7 @@ const rule = (source: string, selector: string) => {
 
 describe('Services: estilos', () => {
   it('al llegar por el ancla, el panel queda a un hueco del borde', () => {
-    expect(rule(css, '.services')).toMatchObject({ 'scroll-margin-top': 'var(--panel-gap)' })
+    expect(rule(css, '.services')).toMatchObject({ 'scroll-margin-top': 'var(--scroll-offset)' })
   })
 
   it('es la escena clara: Paper con tinta encima', () => {

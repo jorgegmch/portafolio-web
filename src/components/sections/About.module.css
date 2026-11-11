@@ -5,8 +5,8 @@
   gap: var(--space-8);
   padding: var(--panel-padding-top) var(--panel-padding-x) var(--panel-padding-bottom);
   background-color: var(--color-graphite);
-  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
-  scroll-margin-top: var(--panel-gap);
+  /* Al llegar por el ancla, el panel queda bajo la barra fija. */
+  scroll-margin-top: var(--scroll-offset);
 }
 
 /* Rótulos en mono, a los dos lados: mayúsculas solo visuales. */

@@ -14,6 +14,62 @@
   padding: var(--nav-padding-block) var(--nav-padding-inline);
 }
 
+/* Marca invisible en el sitio de la barra arriba del todo: cuando sale de la
+   ventana, la barra se fija (useScrolledPast). */
+.sentinel {
+  position: absolute;
+  top: var(--panel-gap);
+  left: 0;
+  width: 1px;
+  height: var(--nav-height);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Barra que acompaña (spec v2.1 §3.0): fuera del Hero, la misma cabecera es
+   una píldora fija centrada arriba, sin «Hablemos». */
+.header[data-stuck] {
+  position: fixed;
+  top: var(--nav-fixed-top);
+  right: 0;
+  left: 0;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--nav-fixed-top));
+  height: var(--nav-pill-height);
+  min-height: 0;
+  margin-inline: auto;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  border: 1px solid var(--line-14);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-nav-glass);
+  box-shadow: var(--shadow-nav);
+  animation: nav-enter var(--dur-nav-enter) var(--ease-cine) both;
+}
+
+@keyframes nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--nav-enter-shift));
+  }
+}
+
+/* Fija, los enlaces van sueltos, sin la píldora translúcida ni los números. */
+.header[data-stuck] .links {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+}
+
+.header[data-stuck] .link {
+  min-height: var(--touch-target);
+}
+
+.header[data-stuck] .number {
+  display: none;
+}
+
 /* El alias en mono, con el guion bajo en la voz de código. */
 .brand {
   /* El texto mide 24 px de alto: el enlace llega a los 44 de un dedo. */
@@ -84,6 +140,29 @@
 
 .link:hover {
   background-color: var(--line-08);
+}
+
+/* La escena que se ve: rellena de Bone, con el texto en tinta. Sin cambiar
+   de peso (el tablero la pone en 700): la píldora fija va centrada, y un
+   enlace más ancho la movería cada vez que cambia la escena. */
+.link[aria-current='true'] {
+  background-color: var(--color-bone);
+  color: var(--color-ink-text);
+}
+
+.link[aria-current='true'] .number {
+  color: inherit;
+}
+
+/* Rótulo mono de la escena actual, en la píldora del teléfono. */
+.scene {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .number {
@@ -172,5 +251,37 @@
 
   .actions {
     flex-wrap: wrap;
+  }
+
+  /* Fija, en pantallas estrechas: píldora compacta a todo el ancho, con el
+     logo, la escena actual y el botón de menú de 44 px. El menú se
+     despliega bajo ella. */
+  .header[data-stuck] {
+    width: auto;
+    max-width: none;
+    margin-inline: var(--nav-fixed-top);
+    gap: var(--space-2);
+  }
+
+  .header[data-stuck] .menuToggle {
+    width: var(--touch-target);
+    height: var(--touch-target);
+  }
+
+  .header[data-stuck] .menu {
+    top: calc(100% + var(--space-2));
+    right: 0;
+    left: 0;
+  }
+
+  /* En el menú desplegado, los números de las escenas sí se ven. */
+  .header[data-stuck] .number {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header[data-stuck] {
+    animation: none;
   }
 }

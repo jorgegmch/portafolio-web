@@ -7,8 +7,8 @@
   gap: var(--space-8);
   padding: var(--projects-padding-top) var(--panel-padding-x) var(--panel-padding-bottom);
   background-color: var(--color-deep);
-  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
-  scroll-margin-top: var(--panel-gap);
+  /* Al llegar por el ancla, el panel queda bajo la barra fija. */
+  scroll-margin-top: var(--scroll-offset);
 }
 
 /* Cintas cruzadas: suben por encima del borde con Servicios. Su pie queda

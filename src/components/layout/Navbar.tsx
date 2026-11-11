@@ -6,10 +6,12 @@ import { PauseToggle } from '@/components/ui/PauseToggle'
 import { mediaQueries } from '@/config/media'
 import { routes, sections } from '@/config/routes'
 import { site } from '@/config/site'
+import { useActiveSection } from '@/hooks/useActiveSection'
 import { useDismissibleMenu } from '@/hooks/useDismissibleMenu'
 import { useLang } from '@/hooks/useLang'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useMotionPause } from '@/hooks/useMotionPause'
+import { useScrolledPast } from '@/hooks/useScrolledPast'
 import { useTextScramble } from '@/hooks/useTextScramble'
 import { LANGS } from '@/i18n/types'
 import { sceneNumber } from '@/lib/sceneNumber'
@@ -22,6 +24,12 @@ const SECTION_LINKS = [
   sections.projects,
   sections.contact,
 ] as const
+
+/** Todas las escenas, en su orden: el Hero también, para que en él no se marque ninguna. */
+const SCENES = [sections.hero, ...SECTION_LINKS] as const
+
+/** Separa el número de la escena de su nombre en el rótulo del teléfono. */
+const SCENE_LABEL_SEPARATOR = ' '
 
 // Trazos del icono del botón de menú: dos barras o una equis.
 const ICON_OPEN = 'M4 9h16M4 15h16'
@@ -36,11 +44,18 @@ const LOGO_LONGEST = [site.handle, site.shortName].reduce((a, b) =>
 )
 
 /**
- * Navegación del sitio, arriba del panel del Hero (no es fija). A la
+ * Navegación del sitio. Arriba del todo vive dentro del panel del Hero: a la
  * izquierda, el alias; en el centro, una píldora con las escenas numeradas;
  * a la derecha, la pausa de animaciones, el idioma y el CTA «Hablemos», que
  * lleva a Contacto. En pantallas estrechas la píldora y los controles se
  * pliegan en un menú que abre un botón circular.
+ *
+ * La barra acompaña (spec v2.1 §3.0): cuando la página deja atrás su sitio
+ * (una marca invisible, observada con IntersectionObserver), la misma
+ * cabecera pasa a píldora fija arriba, sin «Hablemos», porque Contacto ya
+ * está en la barra. Es un solo elemento: no hay dos navegaciones en el árbol
+ * accesible. Marca con aria-current la escena que se ve (useActiveSection);
+ * en el teléfono, la píldora la nombra junto al botón de menú.
  *
  * El logo se traduce (spec §4.2): en reposo «jorgegmch_»; con un puntero
  * fino encima o con el foco del teclado, «Jorge Gómez_», y al irse, vuelve.
@@ -54,6 +69,11 @@ export function Navbar() {
   const compact = useMediaQuery(mediaQueries.compactNav)
   const finePointer = useMediaQuery(mediaQueries.finePointer)
   const logo = useTextScramble(site.handle, site.shortName)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const stuck = useScrolledPast(sentinelRef)
+  const activeScene = useActiveSection(SCENES)
+  const activeIndex = SECTION_LINKS.findIndex((id) => id === activeScene)
+  const activeLink = SECTION_LINKS[activeIndex]
   // Por qué está traducido el logo: el puntero encima, el foco del teclado o
   // los dos. `pressed` marca que el foco llega de pulsarlo con el puntero.
   const logoReasons = useRef({ pointer: false, focus: false, pressed: false })
@@ -89,76 +109,92 @@ export function Navbar() {
   const closeMenu = () => setMenuOpen(false)
 
   return (
-    <header className={styles.header}>
-      <Link
-        className={styles.brand}
-        to={routes.home}
-        aria-label={`${site.shortName} (${site.handle}), ${t.nav.home}`}
-        onPointerEnter={onLogoPointerEnter}
-        onPointerLeave={onLogoPointerLeave}
-        onPointerDown={() => {
-          logoReasons.current.pressed = true
-        }}
-        onFocus={onLogoFocus}
-        onBlur={() => setLogoReason('focus', false)}
-      >
-        <span className={styles.logo} aria-hidden="true">
-          <span className={styles.logoSizer} data-logo-sizer="">
-            {LOGO_LONGEST}
-            <span className={styles.cursor}>{LOGO_CURSOR}</span>
-          </span>
-          <span data-logo-text="">
-            {logo.text}
-            <span className={styles.cursor}>{LOGO_CURSOR}</span>
-          </span>
-        </span>
-      </Link>
-      {compact && (
-        <button
-          ref={menuToggleRef}
-          type="button"
-          className={styles.menuToggle}
-          aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
-          aria-expanded={menuOpen}
-          aria-controls={menuId}
-          onClick={() => setMenuOpen((wasOpen) => !wasOpen)}
+    <>
+      {/* Ocupa el sitio de la barra arriba del todo: cuando sale de la ventana, la barra se fija. */}
+      <div ref={sentinelRef} className={styles.sentinel} aria-hidden="true" data-nav-sentinel="" />
+      <header className={styles.header} data-stuck={stuck ? '' : undefined}>
+        <Link
+          className={styles.brand}
+          to={routes.home}
+          aria-label={`${site.shortName} (${site.handle}), ${t.nav.home}`}
+          onPointerEnter={onLogoPointerEnter}
+          onPointerLeave={onLogoPointerLeave}
+          onPointerDown={() => {
+            logoReasons.current.pressed = true
+          }}
+          onFocus={onLogoFocus}
+          onBlur={() => setLogoReason('focus', false)}
         >
-          <svg className={styles.menuIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d={menuOpen ? ICON_CLOSE : ICON_OPEN} />
-          </svg>
-        </button>
-      )}
-      <div ref={menuRef} id={menuId} className={styles.menu} hidden={compact && !menuOpen}>
-        <nav className={styles.nav} aria-label={t.nav.main}>
-          <ul className={styles.links}>
-            {SECTION_LINKS.map((id, index) => (
-              <li key={id}>
-                <Link
-                  className={styles.link}
-                  to={{ pathname: routes.home, hash: `#${id}` }}
-                  onClick={closeMenu}
-                >
-                  <span className={styles.number} aria-hidden="true">
-                    {sceneNumber(index)}
-                  </span>
-                  {t.nav[id]}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className={styles.actions}>
-          <PauseToggle label={t.nav.pauseAnimations} pressed={paused} onToggle={togglePaused} />
-          <LangToggle label={t.nav.language} current={lang} langs={LANGS} onSelect={setLang} />
-          <Link
-            className={styles.cta}
-            to={{ pathname: routes.home, hash: `#${sections.contact}` }}
-            onClick={closeMenu}
+          <span className={styles.logo} aria-hidden="true">
+            <span className={styles.logoSizer} data-logo-sizer="">
+              {LOGO_LONGEST}
+              <span className={styles.cursor}>{LOGO_CURSOR}</span>
+            </span>
+            <span data-logo-text="">
+              {logo.text}
+              <span className={styles.cursor}>{LOGO_CURSOR}</span>
+            </span>
+          </span>
+        </Link>
+        {compact && stuck && activeLink && (
+          // Solo a la vista: los enlaces del menú ya dicen cuál es con aria-current.
+          <span className={styles.scene} aria-hidden="true" data-nav-scene="">
+            {sceneNumber(activeIndex)}
+            {SCENE_LABEL_SEPARATOR}
+            {t.nav[activeLink]}
+          </span>
+        )}
+        {compact && (
+          <button
+            ref={menuToggleRef}
+            type="button"
+            className={styles.menuToggle}
+            aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            onClick={() => setMenuOpen((wasOpen) => !wasOpen)}
           >
-            {t.nav.cta}
-          </Link>
+            <svg className={styles.menuIcon} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d={menuOpen ? ICON_CLOSE : ICON_OPEN} />
+            </svg>
+          </button>
+        )}
+        <div ref={menuRef} id={menuId} className={styles.menu} hidden={compact && !menuOpen}>
+          <nav className={styles.nav} aria-label={t.nav.main}>
+            <ul className={styles.links}>
+              {SECTION_LINKS.map((id, index) => (
+                <li key={id}>
+                  <Link
+                    className={styles.link}
+                    to={{ pathname: routes.home, hash: `#${id}` }}
+                    aria-current={id === activeScene ? 'true' : undefined}
+                    onClick={closeMenu}
+                  >
+                    <span className={styles.number} aria-hidden="true">
+                      {sceneNumber(index)}
+                    </span>
+                    {t.nav[id]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className={styles.actions}>
+            <PauseToggle label={t.nav.pauseAnimations} pressed={paused} onToggle={togglePaused} />
+            <LangToggle label={t.nav.language} current={lang} langs={LANGS} onSelect={setLang} />
+            {/* Fija, la barra no lo lleva: Contacto ya está entre sus enlaces. */}
+            {!stuck && (
+              <Link
+                className={styles.cta}
+                to={{ pathname: routes.home, hash: `#${sections.contact}` }}
+                onClick={closeMenu}
+              >
+                {t.nav.cta}
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   )
 }

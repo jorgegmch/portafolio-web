@@ -10,8 +10,8 @@
   overflow: hidden;
   background-color: var(--color-signal);
   color: var(--color-ink-text);
-  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
-  scroll-margin-top: var(--panel-gap);
+  /* Al llegar por el ancla, el panel queda bajo la barra fija. */
+  scroll-margin-top: var(--scroll-offset);
   transition: transform var(--dur-reveal) var(--ease-cine);
 }
 

@@ -8,8 +8,8 @@
   padding-top: var(--nav-height);
   overflow: hidden;
   background-color: var(--color-ink);
-  /* Al llegar por el ancla, el panel queda a un hueco del borde. */
-  scroll-margin-top: var(--panel-gap);
+  /* Al llegar por el ancla, el panel queda bajo la barra fija. */
+  scroll-margin-top: var(--scroll-offset);
 }
 
 /* Metadatos: disponibilidad a un lado y ciudad con su hora al otro. */
