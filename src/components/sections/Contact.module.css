@@ -1,25 +1,65 @@
-/* Panel Contacto, en Signal: la escena de acento. Todo el texto va en tinta,
-   y el anillo de foco también: el Signal de siempre no se vería encima. */
-.contact {
-  --color-focus: var(--color-ink-text);
-
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-7);
-  padding: var(--panel-padding-top) var(--panel-padding-x) var(--contact-padding-bottom);
-  overflow: hidden;
-  background-color: var(--color-signal);
-  color: var(--color-ink-text);
+/*
+ * Escena Contacto (spec v2.1 §3.5 y tablero desktop-page): dos paneles con
+ * 12 px de separación, en columnas de 1,15 fr y 1 fr. A la izquierda, el
+ * mensaje y los canales, en Signal, como un solo panel; a la derecha, el
+ * formulario, en Ink. La sección es la rejilla: su fondo es el Void, para
+ * que la cortina no deje ver por el hueco el panel de debajo, y sus esquinas
+ * son rectas (section.contact pesa más que la regla de los paneles).
+ */
+section.contact {
+  display: grid;
+  grid-template-areas:
+    'message form'
+    'channels form';
+  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  column-gap: var(--panel-gap);
+  border-radius: 0;
+  background-color: var(--color-void);
   /* Al llegar por el ancla, el panel queda bajo la barra fija. */
   scroll-margin-top: var(--scroll-offset);
-  transition: transform var(--dur-reveal) var(--ease-cine);
 }
 
-/* Con el formulario abierto, la escena queda detrás, un poco más pequeña
-   (spec §5); el fondo del diálogo la atenúa. El diálogo va en la capa
-   superior del navegador: esta escala no lo toca. */
-.contact[data-form-open] {
-  transform: scale(var(--curtain-scale));
+/* Las dos partes en Signal: todo el texto va en tinta, y el anillo de foco
+   también: el Signal de siempre no se vería encima. */
+.message,
+.channels {
+  --color-focus: var(--color-ink-text);
+
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  grid-area: message;
+  gap: var(--space-6);
+  padding: var(--panel-padding-top) var(--contact-panel-padding-x) var(--space-6);
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+}
+
+.channels {
+  display: flex;
+  flex-direction: column;
+  grid-area: channels;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--contact-panel-padding-x) var(--contact-panel-padding-x);
+  border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+}
+
+/* El formulario, en su panel Ink. */
+.formPanel {
+  display: flex;
+  grid-area: form;
+  padding: var(--panel-padding-top) var(--contact-panel-padding-x) var(--contact-form-padding-bottom);
+  border-radius: var(--radius-panel);
+  background-color: var(--color-ink);
+  color: var(--color-bone);
+}
+
+.formPanel > * {
+  flex: 1;
 }
 
 /* Rótulo a un lado y la ciudad con su hora al otro, en mono. */
@@ -34,7 +74,6 @@
   text-transform: uppercase;
 }
 
-/* «¿CONSTRUIMOS / ALGO?» a todo el ancho, una línea por palabra clave. */
 .title {
   font-family: var(--font-display);
   font-size: min(var(--font-size-contact-title), var(--contact-title-fit));
@@ -47,14 +86,6 @@
   display: block;
 }
 
-/* La frase y el botón circular, en fila. */
-.pitchRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-7);
-  align-items: center;
-}
-
 .pitch {
   max-width: var(--contact-pitch-measure);
   font-size: var(--font-size-contact-pitch);
@@ -62,42 +93,7 @@
   line-height: var(--leading-contact-pitch);
 }
 
-/* Envoltorio que se acerca al puntero (useMagnetic): el botón va dentro,
-   así su propio aspecto no se mezcla con el desplazamiento. La vuelta a su
-   sitio, al salir el puntero, es la transición. */
-.magnet {
-  display: flex;
-  transition: transform var(--duration-slow) var(--ease-cine);
-}
-
-.writeMe {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  width: var(--contact-write-size);
-  height: var(--contact-write-size);
-  border: 0;
-  border-radius: var(--radius-full);
-  background-color: var(--color-ink-text);
-  color: var(--color-bone);
-  font-size: var(--font-size-contact-write);
-  font-weight: var(--font-weight-extrabold);
-  cursor: pointer;
-}
-
-.writeArrow {
-  width: var(--contact-write-arrow);
-  height: var(--contact-write-arrow);
-  fill: none;
-  stroke: currentcolor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--icon-stroke-width);
-}
-
-/* Fila de píldoras: con borde de tinta, y las del CV rellenas. */
+/* Fila de píldoras: con borde de tinta, y la del CV rellena. */
 .links {
   display: flex;
   flex-wrap: wrap;
@@ -145,7 +141,7 @@
   stroke-width: var(--icon-stroke-width);
 }
 
-/* Aviso tras copiar: texto en tinta junto a la píldora. Vacío no ocupa. */
+/* Aviso tras copiar: texto junto a la píldora. Vacío no ocupa. */
 .status {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
@@ -155,36 +151,52 @@
   display: none;
 }
 
-/* Tablet y teléfono: la frase sobre el botón. */
+/* Tablet y teléfono (tablero mobile-home): tres paneles apilados, en el
+   orden del documento: mensaje, formulario y canales. Los canales van en
+   un panel Graphite, con las píldoras claras. */
 @media (max-width: 900px) {
-  .pitchRow {
+  section.contact {
+    grid-template-areas:
+      'message'
+      'form'
+      'channels';
+    grid-template-rows: auto;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-6);
+    row-gap: var(--panel-gap);
+  }
+
+  .message {
+    padding-bottom: var(--contact-panel-padding-x);
+    border-radius: var(--radius-panel);
+  }
+
+  .channels {
+    --color-focus: var(--color-signal);
+
+    padding-top: var(--contact-panel-padding-x);
+    border-radius: var(--radius-panel);
+    background-color: var(--color-graphite);
+    color: var(--color-bone);
+  }
+
+  .pill {
+    border-color: var(--line-45);
+    color: var(--color-bone);
+  }
+
+  .filled {
+    border-color: var(--color-bone);
+    background-color: var(--color-bone);
+    color: var(--color-ink-text);
   }
 }
 
-/* Teléfono (tablero móvil): «Escríbeme» pasa a ser una píldora a todo el
-   ancho, y las píldoras van de dos en dos. */
+/* Teléfono: menos relleno, y las píldoras de dos en dos. */
 @media (max-width: 480px) {
-  .contact {
-    gap: var(--space-5);
-  }
-
-  .magnet {
-    display: block;
-  }
-
-  .writeMe {
-    flex-direction: row;
-    width: 100%;
-    height: var(--hero-cta-height);
-    border-radius: var(--radius-pill);
-    font-size: var(--font-size-base);
-  }
-
-  .writeArrow {
-    width: var(--space-4);
-    height: var(--space-4);
+  .message,
+  .channels,
+  .formPanel {
+    padding-inline: var(--panel-padding-inline);
   }
 
   .links {

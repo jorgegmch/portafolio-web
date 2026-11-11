@@ -1,7 +1,7 @@
-import { useId, useRef, useState } from 'react'
+import { useId } from 'react'
 import styles from '@/components/sections/Contact.module.css'
 import { ContactButton } from '@/components/ui/ContactButton'
-import { ContactDialog } from '@/components/ui/ContactDialog'
+import { ContactForm } from '@/components/ui/ContactForm'
 import { CvDownload } from '@/components/ui/CvDownload'
 import { Reveal } from '@/components/ui/Reveal'
 import { sections } from '@/config/routes'
@@ -9,7 +9,6 @@ import { site, socialLinks } from '@/config/site'
 import { useClock } from '@/hooks/useClock'
 import { useCvOptions } from '@/hooks/useCvOptions'
 import { useLang } from '@/hooks/useLang'
-import { useMagnetic } from '@/hooks/useMagnetic'
 import { sceneNumber } from '@/lib/sceneNumber'
 import { sendContactMessage } from '@/lib/sendContactMessage'
 
@@ -24,13 +23,13 @@ const SEPARATOR = ' · '
 const ARROW_OUT = 'M7 17 17 7M9 7h8v8'
 
 /**
- * Escena Contacto (spec §3.5), en el panel Signal. Arriba, el rótulo y la
- * ciudad con su hora, que avanza sola. Debajo, el título a todo el ancho y,
- * en fila, la frase y el botón circular «Escríbeme», que se acerca al
- * puntero (useMagnetic) y abre el formulario en un diálogo. Mientras está
- * abierto, la escena queda detrás, un poco más pequeña. Al pie, las
- * píldoras: copiar el correo, WhatsApp, LinkedIn, GitHub y un botón de CV en
- * el idioma activo, que abre sus versiones como «Descargar CV» del Hero.
+ * Escena Contacto (spec v2.1 §3.5), en dos paneles. A la izquierda, en
+ * Signal: el rótulo y la ciudad con su hora, que avanza sola; el título y
+ * la frase; y al pie, los canales: copiar el correo, WhatsApp, GitHub,
+ * LinkedIn y un botón de CV en el idioma activo, que abre sus versiones como
+ * «Descargar CV» del Hero. A la derecha, en Ink, el formulario, siempre a la
+ * vista. En tablet y teléfono se apilan: mensaje, formulario y canales; ese
+ * es también su orden en el documento.
  *
  * El correo y el número no están en la página: los arma ContactButton
  * dentro del clic, y «Copiar correo» lo lleva al portapapeles sin
@@ -41,131 +40,98 @@ export function Contact() {
   const { contact: text, common } = t
   const labelId = useId()
   const clock = useClock(site.timeZone)
-  const magnetRef = useRef<HTMLDivElement>(null)
-  const writeMeRef = useRef<HTMLButtonElement>(null)
-  const [formOpen, setFormOpen] = useState(false)
-  useMagnetic(magnetRef)
   const whatsappName = `${text.whatsapp} (${common.opensInNewTab})`
-
-  // Al cerrar el formulario, el foco vuelve a quien lo abrió.
-  const closeForm = () => {
-    setFormOpen(false)
-    writeMeRef.current?.focus()
-  }
   // El CV del idioma activo del sitio, con sus versiones, como en el Hero.
   const { cv } = text
   const cvOptions = useCvOptions()
 
   return (
-    <section
-      id={sections.contact}
-      className={styles.contact}
-      aria-labelledby={labelId}
-      data-form-open={formOpen ? '' : undefined}
-    >
-      <div className={styles.labels}>
-        <p id={labelId}>
-          <span aria-hidden="true">
-            {sceneNumber(SCENE_INDEX)}
-            {LABEL_DASH}
-          </span>
-          {text.label}
-        </p>
-        <p>
-          {site.locationCredits}
-          {SEPARATOR}
-          <time>{clock}</time> {site.utcOffsetLabel}
-        </p>
-      </div>
-
-      <Reveal revealKey="contact-title" order={0}>
-        <h2 className={styles.title}>
-          <span className={styles.line}>{text.title[0]}</span>{' '}
-          <span className={styles.line}>{text.title[1]}</span>
-        </h2>
-      </Reveal>
-
-      <div className={styles.pitchRow}>
-        <p className={styles.pitch}>{text.pitch}</p>
-        <div ref={magnetRef} className={styles.magnet}>
-          <button
-            ref={writeMeRef}
-            type="button"
-            className={styles.writeMe}
-            aria-haspopup="dialog"
-            onClick={() => setFormOpen(true)}
-          >
-            {text.writeMe}
-            <svg className={styles.writeArrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path d={ARROW_OUT} />
-            </svg>
-          </button>
+    <section id={sections.contact} className={styles.contact} aria-labelledby={labelId}>
+      <div className={styles.message}>
+        <div className={styles.labels}>
+          <p id={labelId}>
+            <span aria-hidden="true">
+              {sceneNumber(SCENE_INDEX)}
+              {LABEL_DASH}
+            </span>
+            {text.label}
+          </p>
+          <p>
+            {site.locationCredits}
+            {SEPARATOR}
+            <time>{clock}</time> {site.utcOffsetLabel}
+          </p>
         </div>
+
+        <Reveal revealKey="contact-title" order={0}>
+          <h2 className={styles.title}>
+            <span className={styles.line}>{text.title[0]}</span>{' '}
+            <span className={styles.line}>{text.title[1]}</span>
+          </h2>
+        </Reveal>
+
+        <p className={styles.pitch}>{text.pitch}</p>
       </div>
 
-      <ContactDialog
-        open={formOpen}
-        onClose={closeForm}
-        text={text.form}
-        direct={{
-          copyEmail: text.copyEmail,
-          emailCopied: text.emailCopied,
-          copyFailed: text.copyFailed,
-          whatsapp: text.whatsapp,
-          whatsappName,
-        }}
-        send={sendContactMessage}
-      />
+      <div className={styles.formPanel}>
+        <ContactForm
+          text={text.form}
+          copy={{ copyEmail: text.copyEmail, emailCopied: text.emailCopied, copyFailed: text.copyFailed }}
+          send={sendContactMessage}
+        />
+      </div>
 
-      <ul className={styles.links} aria-label={text.linksLabel}>
-        <li className={styles.copyItem}>
-          <ContactButton
-            kind="copy-email"
-            label={text.copyEmail}
-            className={styles.pill}
-            copiedMessage={text.emailCopied}
-            copyFailedMessage={text.copyFailed}
-            statusClassName={styles.status}
-          />
-        </li>
-        <li>
-          <ContactButton
-            kind="whatsapp"
-            label={text.whatsapp}
-            accessibleLabel={whatsappName}
-            className={styles.pill}
-            trailing={
-              <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d={ARROW_OUT} />
-              </svg>
-            }
-          />
-        </li>
-        {socialLinks.map(({ id, label, url }) => (
-          <li key={id}>
-            <a
+      <div className={styles.channels}>
+        <ul className={styles.links} aria-label={text.linksLabel}>
+          <li className={styles.copyItem}>
+            <ContactButton
+              kind="copy-email"
+              label={text.copyEmail}
               className={styles.pill}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${label} (${common.opensInNewTab})`}
-            >
-              {label}
-              <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d={ARROW_OUT} />
-              </svg>
-            </a>
+              copiedMessage={text.emailCopied}
+              copyFailedMessage={text.copyFailed}
+              statusClassName={styles.status}
+            />
           </li>
-        ))}
-        <li>
-          <CvDownload
-            label={cv.short}
-            accessibleLabel={`${cv.short}: ${cv.name}`}
-            options={cvOptions}
-            toggleClassName={`${styles.pill} ${styles.filled}`}
-          />
-        </li>
-      </ul>
+          <li>
+            <ContactButton
+              kind="whatsapp"
+              label={text.whatsapp}
+              accessibleLabel={whatsappName}
+              className={styles.pill}
+              trailing={
+                <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d={ARROW_OUT} />
+                </svg>
+              }
+            />
+          </li>
+          {socialLinks.map(({ id, label, url }) => (
+            <li key={id}>
+              <a
+                className={styles.pill}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${label} (${common.opensInNewTab})`}
+              >
+                {label}
+                <svg className={styles.arrow} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d={ARROW_OUT} />
+                </svg>
+              </a>
+            </li>
+          ))}
+          <li>
+            <CvDownload
+              label={cv.short}
+              accessibleLabel={`${cv.short}: ${cv.name}`}
+              options={cvOptions}
+              toggleClassName={`${styles.pill} ${styles.filled}`}
+            />
+          </li>
+        </ul>
+      </div>
     </section>
   )
 }

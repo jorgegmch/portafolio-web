@@ -94,7 +94,7 @@ describe('scroll-margin-top de las escenas', () => {
     ['Perfil', 'src/components/sections/About.module.css', '.about'],
     ['Servicios', 'src/components/sections/Services.module.css', '.services'],
     ['Proyectos', 'src/components/sections/Projects.module.css', '.projects'],
-    ['Contacto', 'src/components/sections/Contact.module.css', '.contact'],
+    ['Contacto', 'src/components/sections/Contact.module.css', 'section.contact'],
   ])('%s', (_name, path, selector) => {
     expect(cssRule(readCss(path), selector)).toMatchObject({
       'scroll-margin-top': 'var(--scroll-offset)',

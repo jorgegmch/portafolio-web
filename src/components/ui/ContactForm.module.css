@@ -1,0 +1,281 @@
+/*
+ * Formulario de contacto a la vista (spec v2.1 §3.5 y tablero
+ * desktop-page): rótulo en la voz de código, título en Anton y los campos.
+ * El panel Ink que lo contiene lo pone la escena.
+ */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-gap);
+  min-width: 0;
+  color: var(--color-bone);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Rótulo tipo funcion(), en la voz de código. */
+.tag {
+  color: var(--color-code);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-form-title);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-stack-title);
+  text-transform: uppercase;
+}
+
+.form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--form-gap);
+}
+
+/* Nombre y correo en dos columnas. */
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.label {
+  padding: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+}
+
+.hint {
+  color: var(--color-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Campos: borde de 4,05:1 sobre Ink (spec v2.1 §2), Signal con el foco y el
+   tono de error si no valen. */
+.input {
+  width: 100%;
+  min-height: var(--field-height);
+  padding: var(--space-4) var(--field-padding-x);
+  border: var(--pill-border-width) solid var(--line-45);
+  border-radius: var(--radius-field);
+  background-color: var(--color-card);
+  color: var(--color-bone);
+  /* El textarea no hereda la fuente por defecto. */
+  font-family: inherit;
+  font-size: var(--font-size-base);
+}
+
+.input::placeholder {
+  color: var(--color-muted);
+  opacity: 1;
+}
+
+.input:focus {
+  border-color: var(--color-signal);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+
+.textarea {
+  min-height: var(--field-textarea-height);
+  line-height: var(--leading-body);
+  resize: vertical;
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+}
+
+.needs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Chip apagado con el borde de los campos; encendido, relleno en Signal con
+   texto de tinta. */
+.chip {
+  min-height: var(--touch-target);
+  padding: 0 var(--chip-padding-x);
+  border: var(--pill-border-width) solid var(--line-45);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-bone);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--color-signal);
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+}
+
+/* Error: el aviso y «Copiar correo» debajo. */
+.failure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.alert {
+  flex-basis: 100%;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-block);
+  background-color: var(--color-card);
+  line-height: var(--leading-body);
+}
+
+.copied {
+  color: var(--color-bone);
+  font-weight: var(--font-weight-bold);
+}
+
+.copied:empty {
+  display: none;
+}
+
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-5);
+  border: 1px solid var(--line-24);
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--color-bone);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+/* «Enviar mensaje →»: Signal de 60 px, a todo el ancho. */
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--submit-height);
+  padding: 0 var(--space-6);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+  font-size: var(--font-size-submit);
+  font-weight: var(--font-weight-extrabold);
+  cursor: pointer;
+}
+
+.submit[aria-disabled='true'] {
+  cursor: progress;
+}
+
+.arrow,
+.spinner {
+  width: var(--space-4);
+  height: var(--space-4);
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+.spinner {
+  animation: spin var(--dur-spin) linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Recibido: el círculo con la marca, el título y «Enviar otro». */
+.sent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-5);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sent-check-size);
+  height: var(--sent-check-size);
+  border-radius: var(--radius-full);
+  background-color: var(--color-signal);
+  color: var(--color-ink-text);
+}
+
+.checkIcon {
+  width: 45%;
+  height: 45%;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: var(--icon-stroke-width);
+}
+
+.sentTitle {
+  font-family: var(--font-display);
+  font-size: var(--font-size-sent-title);
+  line-height: var(--leading-stack-title);
+  text-transform: uppercase;
+}
+
+.sentLine {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-code);
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+/* Teléfono: los dos primeros campos, uno sobre otro. */
+@media (max-width: 480px) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
