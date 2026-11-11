@@ -16,6 +16,10 @@
 
 /* El alias en mono, con el guion bajo en la voz de código. */
 .brand {
+  /* El texto mide 24 px de alto: el enlace llega a los 44 de un dedo. */
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
   color: var(--color-bone);
   font-family: var(--font-mono);
   font-size: var(--font-size-brand);

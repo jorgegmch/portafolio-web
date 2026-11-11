@@ -46,7 +46,11 @@
   list-style: none;
 }
 
+/* 44 px de alto como mínimo: el texto solo mide 26. */
 .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
   color: var(--color-bone);
 }
 
