@@ -10,7 +10,7 @@ Tres comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano su
 
 **Retirados el 2026-11-11, porque las piezas que cambiaban se fueron con el rediseño v2:** `/update-hero-social` (la fila de redes y contacto del Hero) y `/update-hero-badge` (las cinco pastillas flotantes). El Hero v2.1 ya no tiene ninguna de las dos piezas: las redes van en la escena Contacto y en el pie, y las tecnologías en las seis fichas «// stack principal» y en «Mi stack» de Perfil, todas con datos de `src/data/`. Los dos comandos siguen en el historial de git.
 
-> **Estado:** su invocación real (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) está pendiente de probar, tras reiniciar Claude Code; lo que falle se arregla en un commit `fix` aparte. Esta nota se borra cuando esa prueba esté hecha. El párrafo del Hero se cambió en el rediseño v2.1 siguiendo los pasos de `/update-hero-intro` sin invocarlo, con la autorización del autor (`214f876`).
+> **Estado:** su invocación real (el diálogo de AskUserQuestion y que se descubran al iniciar sesión) está pendiente de probar, tras reiniciar Claude Code; lo que falle se arregla en un commit `fix` aparte. Esta nota se borra cuando esa prueba esté hecha. El párrafo del Hero se cambió en el rediseño v2.1 siguiendo los pasos de `/update-hero-intro` sin invocarlo, con la autorización del autor («feat(hero): add the motto and the v2.1 texts»).
 >
 > Lección de las pruebas: cada escenario de prueba se ejecuta con su propio permiso de copia, y los escenarios de parada nunca copian. Una prueba que copia a `public/cv/` o a `src/assets/hero/` se restaura desde la copia de seguridad, y se comprueban los SHA-256 antes de seguir.
 
@@ -67,6 +67,7 @@ Tres comandos manuales para cambiar lo que el Hero muestra sin rehacer a mano su
   - el protocolo de medición completo, antes y después.
 - **Qué cambia:** los cuatro archivos de `src/assets/hero/` (576, 800, 1152 y 1472 px de ancho), tras guardar fuera del repo una copia de los actuales con sus SHA-256.
 - **Qué tests toca:** ninguno. `src/assets/hero/portrait.test.ts` ya comprueba las dimensiones, la proporción, la transparencia y que ningún archivo lleva EXIF, XMP ni perfil de color, y `src/components/sections/Hero.portrait.test.tsx`, cómo se carga: se ejecutan, no se tocan. El test de la silueta (`Hero.badges.test.tsx`) se retiró con las pastillas en el rediseño v2.
+- **Tratamiento:** el blanco y negro, el contraste y el borde de luz Signal los pone el filtro CSS de `.photo` en `src/components/sections/Hero.module.css`, no el archivo: los WebP del repo están en color. Un WebP ya en blanco y negro se ve igual en pantalla (medido el 2026-11-17), así que no hace falta convertir la foto.
 - **Qué depende de la foto:** el lema y su velo van al pie de la foto, y el nombre detrás. El comando mide con el protocolo si el lema sigue leyéndose sobre el velo y si la cara queda tapada por el lema o cortada en la primera pantalla; si algo empeora, da las cifras y ofrece opciones.
 - **Qué no hace:** no recorta, no retoca ni quita el fondo; no mueve el lema ni los paneles; no cambia `hero.photoAlt`; no versiona un script de exportación.
 - **Avisa** de que el historial conserva la foto anterior si la rama ya se subió, y de que la rama se sube con la foto provisional.
@@ -137,4 +138,4 @@ Al repetir la verificación de `.claude/rules/contacto.md`, esto es normal y no 
 - **`wa.me` y `mailto:` aparecen una vez en el JS de `dist/`.** Es lo que exige el control positivo. Buscar esos prefijos esperando cero da un falso fallo.
 - **`public/tech/javascript.svg` contiene correos de terceros** dentro de su aviso de licencia MIT. `pre-push-check` los admite por nombre de archivo; no son datos del autor.
 - **La búsqueda del dominio del correo da una coincidencia,** en `public/tech/javascript.svg` y en su copia de `dist/`: uno de esos correos de terceros usa el mismo proveedor de correo que el autor. El correo completo, su parte local y el número siguen dando cero.
-- **Ningún test fija el correo de contacto** de `src/config/contact.ts`: los tests comprueban la forma, nunca el valor. El correo cambió en el commit `c35c60b`, con el mismo codificado, y no hubo que tocar ninguno.
+- **Ningún test fija el correo de contacto** de `src/config/contact.ts`: los tests comprueban la forma, nunca el valor. El correo cambió en el commit «chore(config): update contact email», con el mismo codificado, y no hubo que tocar ninguno.

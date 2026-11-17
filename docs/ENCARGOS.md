@@ -2,7 +2,7 @@
 
 Encargos del autor, aprobados y sin ejecutar. El texto es literal; la nota inicial de cada uno dice a qué fase de `docs/PLAN.md` corresponde. Ninguno se ejecuta sin que el autor lo pida.
 
-El encargo 1 (Hero) ya está hecho: su texto queda en el historial de `docs/PLAN.md`, en el commit `b1d9f75`.
+El encargo 1 (Hero) ya está hecho: su texto queda en el historial de `docs/PLAN.md`, en el commit «fix(about): shrink the map marker».
 
 ### Encargo 2 — Transición de idioma
 

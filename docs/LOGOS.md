@@ -7,7 +7,7 @@ Registro de los logos de marca y los iconos que usa el sitio: qué permite cada 
 ## Reglas de uso
 
 - **Rediseño v2.1 (spec §3.1 y §3.2):** los logos de tecnología van **solo** en «Mi stack» (Perfil) y en las fichas «// stack principal» del Hero, cada uno en una ficha Tile. La cinta del Hero y los chips de Proyectos van sin logos, solo con texto. Los logos de GitHub, LinkedIn y WhatsApp no son de tecnología: van en las píldoras de canales de Contacto, en «Sígueme en redes» del pie y, el de GitHub, en «Ver todos en GitHub»; no en los botones «Ver código».
-- **Rediseño v2.1 (2026-11-11):** los archivos de `public/tech/` y el chip blanco de AI Agents vuelven del historial (`f52f2c3^`), idénticos byte a byte a los que se retiraron con la rejilla del stack; sus hashes son los de la tabla.
+- **Rediseño v2.1 (2026-11-11):** los archivos de `public/tech/` y el chip blanco de AI Agents vuelven del historial (la versión anterior a «chore: remove the unused tech logos»), idénticos byte a byte a los que se retiraron con la rejilla del stack; sus hashes son los de la tabla.
 - **Rediseño v2, limpieza (2026-11-10):** se retiraron los iconos de la fila de redes y de las pastillas del Hero (el sobre, la base de datos y el chip negro de AI Agents). De `public/social/` solo se usaba `github.svg`; `linkedin.png` y `whatsapp.svg` vuelven a usarse en el rediseño v2.1 (Contacto y pie).
 - **Decisión del autor (2026-10-15):** todas las tecnologías del catálogo llevan su logo oficial, aunque la política de su marca no lo permita. El autor asume el riesgo. La política de cada marca se sigue leyendo y anotando aquí, pero ya no decide si va el logo.
 - **De dónde sale cada logo,** en este orden:

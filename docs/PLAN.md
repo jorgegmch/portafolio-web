@@ -8,7 +8,7 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 ## Cómo retomar
 
 1. Leer este archivo, `docs/MEMORY.md` y `AGENTS.md`, y contrastar con git (`git status -sb`, `git branch -vv`, `git log --oneline -3`).
-2. **Rama de trabajo: `redesign/v2`,** ya en `origin` (`origin/redesign/v2`, subida hasta `f7fb1a1`). Sale de `rebuild/vite-react` en `4f17b9c`; `rebuild/vite-react` está al día con su `origin`. Los commits del 2026-11-11 posteriores a `f7fb1a1` están solo en local hasta que el autor los suba: el push lo hace siempre el autor.
+2. **Rama de trabajo: `redesign/v2`,** que sale de `rebuild/vite-react` en «feat(services): flip the service cards». Qué está subido no se apunta aquí, porque cambia con cada push: se consulta con `git status -sb` y `git log origin/redesign/v2..HEAD` (el segundo lista los commits que faltan por subir). El push lo hace siempre el autor.
 3. **Fuente de verdad del diseño:** `docs/design/redesign-v2/DESIGN-SPEC.md` (v2.1) y sus tableros. Si discrepan, manda la spec.
 4. **Siguiente paso:** los pendientes del autor y las comprobaciones de «Pendientes del rediseño v2.1»; después, las fases 8 a 10.
 5. Los encargos 2 (transición de idioma) y 3 (cursor glitch) están en `docs/ENCARGOS.md`. No se ejecutan sin que el autor lo pida.
@@ -20,28 +20,28 @@ La memoria entre sesiones (estado actual, decisiones con su porqué, aprendizaje
 - [x] **Fase 2 — Config, datos e i18n:** `config/`, `data/` (17 proyectos, 14 de ellos construidos; 9 certificaciones, 14 tecnologías), diccionarios `es.ts` y `en.ts`, `detectLang`.
 - [x] **Fase 3 — Lógica pura y hooks:** `calculateAge`, `useAge`, `assembleContact`, `ContactButton`, `safeStorage`, `LangProvider` y los hooks de sesión, movimiento y scroll.
 
-- [x] **Fase 4 — Layout base:** `tokens.css`, `global.css` y fuentes `@fontsource`; `Navbar` con selector ES/EN y menú móvil; `Footer`; `ParticleBackground`; router con `Layout`, páginas mínimas de inicio y certificaciones, favicon y título. Detalle en el commit de cierre, `9acabbf`.
+- [x] **Fase 4 — Layout base:** `tokens.css`, `global.css` y fuentes `@fontsource`; `Navbar` con selector ES/EN y menú móvil; `Footer`; `ParticleBackground`; router con `Layout`, páginas mínimas de inicio y certificaciones, favicon y título. Detalle en el commit de cierre, «docs: update plan and memory after closing Phase 4».
 
-- [x] **Fase 5 — Animación de carga:** `LoadingIntro` (una frase que se escribe y se transforma en código), botón «Saltar animación», una vez por sesión y sin intro con `prefers-reduced-motion`; montada en `Layout` con el resto de la página inerte. Detalle en el commit de cierre, `96266ff`.
+- [x] **Fase 5 — Animación de carga:** `LoadingIntro` (una frase que se escribe y se transforma en código), botón «Saltar animación», una vez por sesión y sin intro con `prefers-reduced-motion`; montada en `Layout` con el resto de la página inerte. Detalle en el commit de cierre, «docs: update plan and memory after closing Phase 5».
 
 Lo que hicieron las fases 1 a 5 se describe como quedó entonces; el rediseño v2 cambió después varias piezas (ver la Fase 6).
 
 ### Fase 6 — Secciones de la home: hecha con el rediseño v2 y v2.1
 
-- [x] **Rediseño v2** (`6dfeb8d` a `2d9d512`, del 2026-10-19 al 2026-10-24) y **ajustes de diseño** (hasta `a244556`, 2026-11-10): paneles con cortina entre escenas, intro de cine con tachado a lápiz (sin botón, ≤ 5 s), Hero, Perfil con Traductor, Servicios en acordeón numerado, cintas cruzadas, Proyectos apilados, Contacto y pie de «créditos finales». Retiró la página `/certificaciones`, el fondo de partículas, la terminal de `java Developer` con la edad, el mapa, las pastillas del Hero y su fila de redes, y la fecha de nacimiento del código.
-- [x] **Rediseño v2.1** (`26ae3c0` a `b4b681c`, 2026-11-11): voz de código (color Code), barra que acompaña (píldora fija con la escena actual), Hero con lema, ventana de código real y fichas «// stack principal», textos nuevos de Hero, Perfil y Contacto, «Mi stack» con los logos oficiales, Contacto en dos paneles con el formulario a la vista (sin el diálogo «Escríbeme» ni el efecto magnético) y pie con «Sígueme en redes» y la marca en SVG. Corrigió dos fallos de la auditoría de Vercel: la restauración del scroll con Atrás/Adelante y los objetivos táctiles de menos de 44 px.
-- [x] **Correcciones del 2026-11-11** (`7b58543` a `8e41591`), con la spec actualizada por el autor:
-  - spec y tableros nuevos (`7b58543`);
-  - logos negros oficiales de un solo color en las píldoras de canales de Contacto, sobre Signal; a 900 px o menos, donde los canales pasan a Graphite, las blancas, con un `<picture>` (`9e044b3`);
-  - «Ver código» sin logo, con nombre accesible «Ver código de {proyecto} en GitHub» (`f389ea4`);
-  - hover de la ventana de código y de las fichas del Hero, solo con puntero fino, con realce en Signal sobre un pseudo-elemento que solo anima su opacidad (`b03b175`);
-  - texto nuevo de «Comunicación estratégica» en ES y EN (`8e41591`).
+- [x] **Rediseño v2** (de «docs(design): add the redesign v2 handoff» a «fix(contact): give the title room for the opening question mark», del 2026-10-19 al 2026-10-24) y **ajustes de diseño** (hasta «chore: remove the unused code», 2026-11-10): paneles con cortina entre escenas, intro de cine con tachado a lápiz (sin botón, ≤ 5 s), Hero, Perfil con Traductor, Servicios en acordeón numerado, cintas cruzadas, Proyectos apilados, Contacto y pie de «créditos finales». Retiró la página `/certificaciones`, el fondo de partículas, la terminal de `java Developer` con la edad, el mapa, las pastillas del Hero y su fila de redes, y la fecha de nacimiento del código.
+- [x] **Rediseño v2.1** (de «docs(design): update the redesign handoff to v2.1» a «docs(logos): record the footer social logos», 2026-11-11): voz de código (color Code), barra que acompaña (píldora fija con la escena actual), Hero con lema, ventana de código real y fichas «// stack principal», textos nuevos de Hero, Perfil y Contacto, «Mi stack» con los logos oficiales, Contacto en dos paneles con el formulario a la vista (sin el diálogo «Escríbeme» ni el efecto magnético) y pie con «Sígueme en redes» y la marca en SVG. Corrigió dos fallos de la auditoría de Vercel: la restauración del scroll con Atrás/Adelante y los objetivos táctiles de menos de 44 px.
+- [x] **Correcciones del 2026-11-11** (de «docs(design): update redesign v2 spec and artboards» a «feat(services): update the strategic communication text»), con la spec actualizada por el autor:
+  - spec y tableros nuevos («docs(design): update redesign v2 spec and artboards»);
+  - logos negros oficiales de un solo color en las píldoras de canales de Contacto, sobre Signal; a 900 px o menos, donde los canales pasan a Graphite, las blancas, con un `<picture>` («feat(contact): use official single-color social logos»);
+  - «Ver código» sin logo, con nombre accesible «Ver código de {proyecto} en GitHub» («feat(projects): drop the github logo from the view code links»);
+  - hover de la ventana de código y de las fichas del Hero, solo con puntero fino, con realce en Signal sobre un pseudo-elemento que solo anima su opacidad («feat(hero): add hover to the code window and stack tiles»);
+  - texto nuevo de «Comunicación estratégica» en ES y EN («feat(services): update the strategic communication text»).
 - [x] Verificación de `.claude/rules/contacto.md` con la escena Contacto montada: cero coincidencias en `dist/` y en `src/`, con control positivo; solo la excepción documentada del dominio en `javascript.svg`. Los PDFs del CV no cambiaron. Repetida el 2026-11-11 tras los logos negros, con el mismo resultado.
 - El detalle de cada lote está en los mensajes de sus commits; las medidas y capturas de la verificación se tomaron con scripts locales de `.playwright-mcp/`, que no se versionan.
 
 ### Fase 7 — Página `/certificaciones`: retirada
 
-El rediseño v2 retiró la página (`85625b0`): de las certificaciones solo queda la Formación de Perfil. La transición de idioma, que estaba en esta fase, sigue aprobada sin fase (encargo 2).
+El rediseño v2 retiró la página («refactor(pages): remove the certifications page»): de las certificaciones solo queda la Formación de Perfil. La transición de idioma, que estaba en esta fase, sigue aprobada sin fase (encargo 2).
 
 ### Fase 8 — SEO, accesibilidad y rendimiento
 
@@ -71,12 +71,12 @@ Depende de la decisión de hosting.
 
 Hechas el 2026-11-11:
 
-- [x] **Logos de redes en negro oficial en el panel Signal de Contacto** (`9e044b3`), registrados en `docs/LOGOS.md`. LinkedIn va en PNG: su paquete oficial no trae SVG.
-- [x] **«Ver código» sin logo de GitHub** (`f389ea4`); la spec y los tableros ya venían actualizados por el autor (`7b58543`).
+- [x] **Logos de redes en negro oficial en el panel Signal de Contacto** («feat(contact): use official single-color social logos»), registrados en `docs/LOGOS.md`. LinkedIn va en PNG: su paquete oficial no trae SVG.
+- [x] **«Ver código» sin logo de GitHub** («feat(projects): drop the github logo from the view code links»); la spec y los tableros ya venían actualizados por el autor («docs(design): update redesign v2 spec and artboards»).
 
 Material y decisiones del autor:
 
-- [ ] **Foto real del Hero:** la actual es provisional. Se cambia con `/update-hero-photo`.
+- [x] **Foto real del Hero:** la foto final sustituyó a la provisional el 2026-11-17, con `/update-hero-photo` («feat(hero): replace the hero portrait with the final photo»). El WebP está en color; el blanco y negro lo pone el filtro CSS (`docs/COMANDOS-HERO.md`).
 - [ ] **Backend del formulario y hosting:** decisión abierta sobre Vercel, cuyo plan Hobby es solo para uso personal no comercial. Hoy el adaptador del formulario no envía nada (`docs/FORMULARIO-CONTACTO.md`).
 - [ ] **Capturas reales de los 5 proyectos:** hoy cada tarjeta muestra «Captura pendiente».
 - [ ] **PDFs del CV con «Gómez»:** los cuatro llevan el nombre sin tilde (comprobado el 2026-11-11). Se regeneran y se sustituyen con `/update-hero-cv`. El autor revisa además a ojo los dos infográficos (un texto convertido a contornos no sale al extraer el texto) y decide si LinkedIn y GitHub deben ser clicables en el PDF.
