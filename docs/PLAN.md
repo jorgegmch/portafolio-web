@@ -77,6 +77,7 @@ Hechas el 2026-11-11:
 Material y decisiones del autor:
 
 - [x] **Foto real del Hero:** la foto final sustituyó a la provisional el 2026-11-17, con `/update-hero-photo` («feat(hero): replace the hero portrait with the final photo»). El WebP está en color; el blanco y negro lo pone el filtro CSS (`docs/COMANDOS-HERO.md`).
+- [x] **Favicon nuevo:** el «JG» en Ink y Signal del autor sustituyó al monograma cian del diseño anterior el 2026-11-18 («feat(favicon): replace the favicon with the ink and signal JG design» y «fix(favicon): fill the whole tab icon with the logo»). Sale de un PNG de 512 px: ya no hay `favicon.svg`. Fuente, recorte, script para regenerarlo y SHA-256 en `docs/FAVICON.md`.
 - [ ] **Backend del formulario y hosting:** decisión abierta sobre Vercel, cuyo plan Hobby es solo para uso personal no comercial. Hoy el adaptador del formulario no envía nada (`docs/FORMULARIO-CONTACTO.md`).
 - [ ] **Capturas reales de los 5 proyectos:** hoy cada tarjeta muestra «Captura pendiente».
 - [ ] **PDFs del CV con «Gómez»:** los cuatro llevan el nombre sin tilde (comprobado el 2026-11-11). Se regeneran y se sustituyen con `/update-hero-cv`. El autor revisa además a ojo los dos infográficos (un texto convertido a contornos no sale al extraer el texto) y decide si LinkedIn y GitHub deben ser clicables en el PDF.
@@ -139,9 +140,7 @@ Cada pieza nueva exige su excepción en el `.gitignore` del repo, en el mismo co
 - **Página 404 propia:** hoy una ruta desconocida redirige al inicio.
 - **Aviso «Todos los derechos reservados»** del pie frente a la licencia del repo.
 - **Meta description:** usa `legalName`; el `alt` de la foto ya usa `shortName`.
-- **Trazo superior de la G** en la variante simplificada del favicon: posible retoque si en la pestaña real molesta.
 - **Espacio libre y tamaño mínimo de los logos de redes:** los paquetes descargados el 2026-11-11 no traen guía; GitHub incluye variantes `_Clearspace` sin decir cuánto espacio exige. Comprobarlo en las guías de marca publicadas.
-- **Favicon sin hash registrado:** `apple-touch-icon.png`, `favicon.svg` y `favicon.ico`, en la raíz de `public/`, no tienen su SHA-256 anotado en ningún documento; `docs/LOGOS.md` y su test solo cubren las carpetas.
 
 ## Riesgos conocidos
 

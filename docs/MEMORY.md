@@ -4,7 +4,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 ## Estado actual
 - Fases 1 a 5 en rebuild/vite-react. La Fase 6 se hizo con el rediseño v2 y v2.1 en redesign/v2; la Fase 7 (/certificaciones) se retiró. Qué está subido no se apunta aquí: se consulta con `git status -sb` y `git log origin/redesign/v2..HEAD`.
 - Rediseño v2.1 cerrado el 2026-11-11: fuente de verdad, docs/design/redesign-v2/DESIGN-SPEC.md. Pendientes en PLAN.md, «Pendientes del rediseño v2.1».
-- Correcciones del 2026-11-11 (de «docs(design): update redesign v2 spec and artboards» a «feat(services): update the strategic communication text», más «chore: add .gitattributes to normalize line endings»): spec nueva, logos negros oficiales en Contacto, «Ver código» sin logo, hover del Hero con realce Signal y texto nuevo de «Comunicación estratégica».
+- Después del cierre: correcciones del 2026-11-11 (Fase 6 de PLAN.md), foto final del Hero (2026-11-17) y favicon nuevo (2026-11-18), ambos en PLAN.md, «Material y decisiones del autor».
 - Hosting y backend del formulario sin decidir (Vercel Hobby es solo para uso personal no comercial); el adaptador del formulario no envía nada.
 
 ## Decisiones (y por qué)
@@ -31,6 +31,7 @@ Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo qu
 - Atrás/Adelante: las entradas del historial con ancla las coloca useScrollToHash (con la cortina, el navegador acababa en otro sitio); las demás las restaura el navegador.
 - El retrato del Hero se guarda en color: el blanco y negro lo pone el filtro CSS de `.photo` en Hero.module.css (grayscale y contraste), no el archivo. Un WebP ya en blanco y negro se ve igual en pantalla (medido el 2026-11-17).
 - Logos de redes en el color del texto de su panel: negros oficiales sobre Signal y blancos sobre Graphite (Contacto a ≤ 900 px), con <picture>; un logo negro sobre fondo oscuro no se lee.
+- Favicon: el PNG del autor, recortado sin su margen transparente para que llene el cuadro de 16 px de la pestaña como el anterior (con margen se veía pequeño). Se conserva el diseño completo aunque a 16 px el anillo y los < > no se lean: el autor descartó la variante de solo letras (2026-11-18). Sin SVG: el logo solo existe en mapa de bits. Script y hashes en docs/FAVICON.md.
 
 ## Aprendizajes y errores a evitar
 - git mv no sirve con archivos sin commitear: usar mv y git add.
