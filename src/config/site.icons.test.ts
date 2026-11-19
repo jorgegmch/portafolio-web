@@ -32,17 +32,14 @@ describe('iconos del sitio', () => {
     expect(existsSync(`${PUBLIC_DIR}${href}`)).toBe(true)
   })
 
-  // Entre iconos igual de apropiados el navegador usa el último: el SVG va
-  // después del .ico, que queda como respaldo.
-  it('declara el .ico de respaldo y, después, el SVG', () => {
-    expect(hrefsOf('icon')).toEqual(['/favicon.ico', '/favicon.svg'])
+  // El logo solo existe en mapa de bits: no hay SVG, y el .ico es el único
+  // icono de pestaña (16, 32 y 48 px).
+  it('declara solo el .ico como icono de pestaña', () => {
+    expect(hrefsOf('icon')).toEqual(['/favicon.ico'])
   })
 
-  it('el .ico lleva sizes="any" y el SVG su tipo', () => {
+  it('el .ico lleva sizes="any"', () => {
     expect(iconLinks.find(({ href }) => href === '/favicon.ico')).toMatchObject({ sizes: 'any' })
-    expect(iconLinks.find(({ href }) => href === '/favicon.svg')).toMatchObject({
-      type: 'image/svg+xml',
-    })
   })
 
   it('declara un apple-touch-icon', () => {

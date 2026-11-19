@@ -109,7 +109,7 @@ describe('registro de logos e iconos (docs/LOGOS.md)', () => {
 
   it('la búsqueda en disco encuentra las imágenes de public/', () => {
     expect(published).toContain('public/social/github.svg')
-    expect(published).not.toContain('public/favicon.svg')
+    expect(published).not.toContain('public/favicon.ico')
     expect(published.length).toBeGreaterThanOrEqual(rows.length)
   })
 
